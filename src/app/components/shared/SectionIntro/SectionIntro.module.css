@@ -1,0 +1,12 @@
+.container {
+  background-color: var(--accent);
+  padding: 6px 12px;
+  width: fit-content;
+}
+
+.text {
+  font-family: var(--GeistMono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}

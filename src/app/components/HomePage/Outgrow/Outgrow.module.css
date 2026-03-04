@@ -1,6 +1,8 @@
 .parent {
   border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
   position: relative;
+  margin-top: 10rem;
 }
 
 .dot1,
@@ -201,7 +203,7 @@
   .content {
     padding: 5rem 2rem;
   }
-  
+
   .top {
     align-items: flex-start;
     justify-content: flex-start;
@@ -215,6 +217,6 @@
   }
 
   .card {
-    border: 1px solid var(--lightGray)
+    border: 1px solid var(--lightGray);
   }
 }

@@ -87,7 +87,7 @@ export default function Outgrow() {
                 </div>
                 <div className={styles.imgCaptionTitle}>Is this you?</div>
                 <div className={styles.imgCaptionDesc}>
-                  A black car operator or dispatcher at a desk — slightly
+                  A black car operator at a desk — slightly
                   overwhelmed, frustrated with his existing platform.
                 </div>
               </div>

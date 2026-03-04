@@ -4,6 +4,7 @@
   --gray: #ffffff80;
   --grayii: #ebebeb;
   --lightGray: #8c898980;
+  --lightGrayii: #FAFAFA;
   --text: #0f0f0f99;
   --accent: #ffc809;
 }
@@ -55,8 +56,6 @@ h6 {
   color: var(--black);
   hyphens: auto;
   text-transform: uppercase;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -68,26 +67,28 @@ h1,
   font-style: normal;
   text-transform: uppercase;
   font-feature-settings:
-    "blwf" on,
-    "cv09" on,
-    "cv03" on,
-    "cv04" on,
-    "cv11" on,
-    "pnum" on;
+  "blwf" on,
+  "cv09" on,
+  "cv03" on,
+  "cv04" on,
+  "cv11" on,
+  "pnum" on;
   font-variation-settings:
-    "opsz" 144,
-    "wght" 700,
-    "GRAD" 0,
-    "wdth" 81,
-    "slnt" 0,
-    "XOPQ" 96,
-    "YOPQ" 72,
-    "XTRA" 468,
-    "YTUC" 760,
-    "YTLC" 514,
-    "YTAS" 750,
-    "YTDE" -203,
-    "YTFI" 738;
+  "opsz" 144,
+  "wght" 700,
+  "GRAD" 0,
+  "wdth" 81,
+  "slnt" 0,
+  "XOPQ" 96,
+  "YOPQ" 72,
+  "XTRA" 468,
+  "YTUC" 760,
+  "YTLC" 514,
+  "YTAS" 750,
+  "YTDE" -203,
+  "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h2,
@@ -99,25 +100,27 @@ h2,
   letter-spacing: -2.7px;
   line-height: 0.9em;
   font-feature-settings:
-    "blwf" on,
-    "cv09" on,
-    "cv03" on,
-    "cv04" on,
-    "cv11" on;
+  "blwf" on,
+  "cv09" on,
+  "cv03" on,
+  "cv04" on,
+  "cv11" on;
   font-variation-settings:
-    "opsz" 98,
-    "wght" 700,
-    "GRAD" 0,
-    "wdth" 81,
-    "slnt" 0,
-    "XOPQ" 96,
-    "YOPQ" 72,
-    "XTRA" 468,
-    "YTUC" 760,
-    "YTLC" 514,
-    "YTAS" 750,
-    "YTDE" -203,
-    "YTFI" 738;
+  "opsz" 98,
+  "wght" 700,
+  "GRAD" 0,
+  "wdth" 81,
+  "slnt" 0,
+  "XOPQ" 96,
+  "YOPQ" 72,
+  "XTRA" 468,
+  "YTUC" 760,
+  "YTLC" 514,
+  "YTAS" 750,
+  "YTDE" -203,
+  "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h3,
@@ -245,6 +248,13 @@ textarea:focus {
 @media screen and (max-width: 568px) {
   html {
     font-size: 50%;
+  }
+
+  h3, .h3 {
+    font-size: 28px;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+
   }
 
   p {
