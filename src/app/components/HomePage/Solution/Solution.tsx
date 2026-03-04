@@ -20,7 +20,6 @@ export default function Solution() {
                 <SectionIntro text='Solution' />
                 <h2 className={styles.heading}>
                   We Build You the Platform, You Run
-                  <br />
                   Your Business.
                 </h2>
               </div>

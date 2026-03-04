@@ -140,6 +140,14 @@
     margin-top: 20rem;
   }
 
+  .heading {
+    width: 80%;
+  }
+
+  .top {
+    padding: 7rem 3rem;
+  }
+
   .cardHeading {
     width: 100%;
   }
@@ -177,6 +185,14 @@
     margin-top: 15rem;
   }
 
+  .top {
+    padding: 7rem 2rem;
+  }
+
+  .copy {
+    width: 100%;
+  }
+
   .card {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -195,6 +211,20 @@
 @media screen and (max-width: 568px) {
   .content {
     margin-top: 10rem;
+  }
+
+  .top,
+  .topLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    text-align: right;
+    gap: 2rem;
+  }
+
+  .heading {
+    width: 100%;
   }
 
   .bottom {
@@ -216,4 +246,10 @@
   .img {
     object-position: top;
   }
+
+  .btnContainer {
+   display: grid;
+   grid-template-columns: repeat(1, 1fr);
+    width: 100%;
+  } 
 }
