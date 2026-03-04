@@ -10,6 +10,10 @@ export default function Hero() {
     <section className={styles.container}>
       <LayoutWrapper>
         <div className={styles.parent}>
+          <div className={styles.dot1} />
+          <div className={styles.dot2} />
+          <div className={styles.dot3} />
+          <div className={styles.dot4} />
           <div className={styles.backgroundImgContainer}>
             <div />
             <div className={styles.imgContainer}>
