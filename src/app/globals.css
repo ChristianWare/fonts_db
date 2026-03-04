@@ -2,6 +2,7 @@
   --black: #0f0f0f;
   --white: #ffffff;
   --gray: #ffffff80;
+  --lightGray: #8c898980;
   --text: #0f0f0f99;
   --accent: #ffd942;
 }
@@ -48,8 +49,7 @@ h2,
 h3,
 h4,
 h5,
-h6,
-span {
+h6 {
   font-family: var(--RobotoFlexii);
   color: var(--black);
   hyphens: auto;

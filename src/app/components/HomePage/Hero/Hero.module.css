@@ -1,18 +1,139 @@
 .container {
   background-color: var(--black);
-  /* padding: 10rem 0rem; */
   min-height: 100vh;
+  display: flex;
+}
+
+.parent {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+}
+
+.backgroundImgContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  z-index: 0;
+}
+
+.backgroundImgContainer::before {
+  content: "";
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  border-top: 1px solid var(--lightGray);
+  left: 50%;
+  top: -1px;
+  transform: translateX(-50%);
+}
+
+.backgroundImgContainer::after {
+  content: "";
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  border-top: 1px solid var(--lightGray);
+  left: 50%;
+  bottom: -2px;
+  transform: translateX(-50%);
+}
+
+.imgContainer {
+  position: relative;
+  width: 100%;
+}
+
+.img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1.5fr 2fr;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 5rem;
+  width: 100%;
+  flex: 1;
+}
+
+.top {
+  width: 100%;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+  margin-top: auto;
+}
+
+.topCopy {
+  color: var(--white);
+  font-size: 1.4rem;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  position: relative;
+  margin-left: 1.6rem;
+  letter-spacing: 0.56px;
+}
+
+.topCopy::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: var(--accent);
+  left: -12px;
+  bottom: 0px; 
+}
+
+.accent {
+  color: var(--accent);
 }
 
 .heading {
   color: var(--white);
 }
 
-.copy {
+.copyBtnContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80%;
+  gap: 5rem;
+  margin-top: 6rem;
+}
+
+.copy,
+.span {
   color: var(--white);
+  font-size: 2.2rem;
+  letter-spacing: -0.7px;
+}
+
+.span {
+  color: var(--gray);
 }

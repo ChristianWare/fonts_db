@@ -6,15 +6,16 @@
 }
 
 .logo {
-  width: 27px;
-  height: 15px;
+  width: 29px;
+  height: 17px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
 
 .text {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   color: var(--white);
   font-family: var(--GeistMono);
   line-height: 1;
+  text-transform: uppercase;
 }

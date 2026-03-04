@@ -1,24 +1,61 @@
+import styles from "./Hero.module.css";
+import Image from "next/image";
+import Button from "../../shared/Button/Button";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
-import styles from "./Hero.module.css";
+import BgImage from "../../../../../public/images/heroii.jpg";
 
 export default function Hero() {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
-        <Nav />
-            <h1 className={styles.heading}>
-              Your Business Is Premium. Your Booking Experience Should Be
-              Too.{" "}
-            </h1>
-        <div className={styles.content}>
-          <div className={styles.left}>
-            <p className={styles.copy}>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              Aspernatur quae soluta architecto quam quidem excepturi neque
-              consequuntur dolorem voluptates nam, dolore placeat nemo nisi
-              incidunt pariatur sint quis non veritatis.
-            </p>
+        <div className={styles.parent}>
+          <div className={styles.backgroundImgContainer}>
+            <div />
+            <div className={styles.imgContainer}>
+              <Image
+                src={BgImage}
+                alt='Background Image'
+                fill
+                className={styles.img}
+              />
+              <div className={styles.overlay} />
+            </div>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.top}>
+              <Nav />
+            </div>
+            <div className={styles.bottom}>
+              <p className={styles.topCopy}>
+                Websites Built exclusively for{" "}
+                <span className={styles.accent}>
+                  black car & limo companies
+                </span>
+              </p>
+              <h1 className={styles.heading}>
+                Premium rides. <br /> Premium platform.
+              </h1>
+              <div className={styles.copyBtnContainer}>
+                <p className={styles.copy}>
+                  We build custom direct-booking websites and platforms
+                  exclusively for black car and limousine companies — complete
+                  with a{" "}
+                  <span className={styles.span}>
+                    branded booking engine, admin dashboard, driver portal,
+                    corporate accounts, payment processing, and more.
+                  </span>{" "}
+                  One platform. Everything included.
+                </p>
+                <div className={styles.btnContainer}>
+                  <Button
+                    href='/'
+                    text='Book your discovery call'
+                    btnType='accent'
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </LayoutWrapper>

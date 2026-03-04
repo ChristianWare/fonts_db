@@ -2,12 +2,13 @@
   width: 100%;
   margin: 0 auto;
   z-index: 99999999;
-  background-color: var(--black);
+  max-width: 1600px;
+  /* background-color: var(--black); */
 }
 
 .navbar {
   display: grid;
-  grid-template-columns: 1.5fr 2fr;
+  grid-template-columns: 1fr 1.5fr;
   width: 100%;
 }
 
@@ -16,6 +17,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
+  padding-right: 3rem;
 }
 
 .logoContainer {
