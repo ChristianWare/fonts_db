@@ -198,12 +198,17 @@ textarea:focus {
   outline: none;
 }
 
-@media screen and (max-width: 1068px) {
-  h1 {
-    font-size: 7vw;
-    line-height: 100%;
-    letter-spacing: -0.03vw;
-    font-weight: 500;
+@media screen and (max-width: 1268px) {
+  h1,
+  .h1 {
+    font-size: 8rem;
+    letter-spacing: -1.6px;
+  }
+
+  h2,
+  .h2 {
+    font-size: 6.4rem;
+    letter-spacing: -1.9px;
   }
 }
 
@@ -218,19 +223,21 @@ textarea:focus {
 }
 
 @media screen and (max-width: 768px) {
+  h1,
+  .h1 {
+    font-size: 4.9rem;
+    letter-spacing: -0.9px;
+  }
+
   h2,
-  h3 {
-    font-size: 8vw;
+  .h2 {
+    font-size: 4.4rem;
+    letter-spacing: -1.3px;
   }
 }
 
 @media screen and (max-width: 568px) {
   html {
     font-size: 50%;
-  }
-
-  h1 {
-    font-size: 8vw;
-    letter-spacing: -0.05vw;
   }
 }
