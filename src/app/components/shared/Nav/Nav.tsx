@@ -7,8 +7,8 @@ import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import Img1 from "../../../../public/images/whydb.jpg";
-import SectionIntroii from "../SectionIntroii/SectionIntroii";
+import Img1 from "../../../../../public/images/whydb.jpg";
+// import SectionIntroii from "../SectionIntroii/SectionIntroii";
 import { usePathname } from "next/navigation";
 
 export default function Nav({
@@ -136,9 +136,9 @@ export default function Nav({
 
           <div className={styles.menuImage}>
             <Image src={Img1} alt='Menu image' fill className={styles.img} />
-            <div className={styles.menuImageOverlay}>
+            {/* <div className={styles.menuImageOverlay}>
               <SectionIntroii title='Fonts & Footers' color='tan' />
-            </div>
+            </div> */}
           </div>
 
           <div className={styles.btnContainerii}>

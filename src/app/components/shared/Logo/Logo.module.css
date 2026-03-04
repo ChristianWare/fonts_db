@@ -1,0 +1,26 @@
+/* .text {
+  font-family: var(--SuisseIntlCondBold);
+  color: var(--primary);
+  padding: 0rem 1.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+} */
+
+
+.container {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 1.5rem),
+    calc(100% - 1.5rem) 100%,
+    0 100%,
+    0 0
+  );
+  background-color: var(--accent);
+    padding: .6rem 1.5rem;
+      border-radius: 0.4rem;
+
+
+}
