@@ -1,26 +1,20 @@
-/* .text {
-  font-family: var(--SuisseIntlCondBold);
-  color: var(--primary);
-  padding: 0rem 1.5rem;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  white-space: nowrap;
-} */
-
-
 .container {
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 1.5rem),
-    calc(100% - 1.5rem) 100%,
-    0 100%,
-    0 0
-  );
-  background-color: var(--accent);
-    padding: .6rem 1.5rem;
-      border-radius: 0.4rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
 
+.logo {
+  width: 27px;
+  height: 15px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
 
+.text {
+  font-size: 1.6rem;
+  color: var(--white);
+  font-family: var(--GeistMono);
+  line-height: 1;
 }

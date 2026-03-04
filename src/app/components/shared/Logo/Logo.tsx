@@ -1,13 +1,20 @@
-// import SectionIntroii from "../SectionIntroii/SectionIntroii";
 import styles from "./Logo.module.css";
+import Image from "next/image";
 import Link from "next/link";
+import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
 
 const Logo = () => {
   return (
     <Link href='/' className={styles.container}>
-      {/* Fonts & Footers */}
-      Logo
-      {/* <SectionIntroii title='Fonts & Footers' dot={false}  /> */}
+      <Image
+        src={LogoImg}
+        alt='Fonts & Footers Logo'
+        title='Fonts & Footers Logo'
+        className={styles.logo}
+      />
+      <span className={styles.text}>
+        Fonts & Footers
+      </span>
     </Link>
   );
 };

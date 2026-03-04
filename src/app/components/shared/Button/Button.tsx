@@ -8,11 +8,9 @@ interface Props {
   href?: string;
   text?: string;
   btnType: string;
-  direction?: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   disabled?: boolean;
   children?: ReactNode;
-  image?: boolean;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
   ) => void;
@@ -27,7 +25,6 @@ export default function Button({
   disabled,
   children,
   onClick,
-  direction = "",
   type = "button",
 }: Props) {
   const content = text || children;
@@ -39,7 +36,7 @@ export default function Button({
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
         onClick={onClick as any}
-        className={`${styles.btn} ${styles[btnType]} ${styles[direction]}`}
+        className={`${styles.btn} ${styles[btnType]} $`}
       >
         {content}
       </Link>
