@@ -1,0 +1,46 @@
+
+.parent {
+  /* margin-top: 3rem; */
+  border-top: 1px solid var(--lightGray);
+  position: relative;
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--black);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+  top: unset;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+  top: unset;
+  left: unset;
+}
+
+
+.content {
+    padding: 5rem;
+}
