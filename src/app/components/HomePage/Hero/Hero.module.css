@@ -166,11 +166,11 @@
 
 .copy,
 .span {
-  color: var(--white);
+  color: var(--gray);
   font-size: 2.2rem;
   letter-spacing: -0.7px;
 }
 
 .span {
-  color: var(--gray);
+  color: var(--white);
 }
