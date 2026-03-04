@@ -3,7 +3,6 @@
   margin: 0 auto;
   z-index: 99999999;
   max-width: 1600px;
-  /* background-color: var(--black); */
 }
 
 .navbar {
@@ -41,7 +40,6 @@
   font-size: 1.5rem;
   line-height: 1;
   color: var(--gray);
-
   white-space: nowrap;
   padding: 0.2rem 0rem;
   border-radius: 50px;
@@ -84,20 +82,26 @@
   z-index: 10000;
   position: relative;
   cursor: pointer;
+  background-color: var(--black);
 }
 
 .whiteBar {
   position: relative;
   z-index: 10000;
   display: block;
-  width: 35px;
+  width: 28px;
   height: 3px;
-  margin: 5px auto;
+  margin: 3px auto;
   border-radius: 15px;
-  background-color: var(--accent);
+  background-color: var(--white);
   transition:
     transform 0.3s ease-in-out,
     opacity 0.2s ease-in-out;
+}
+
+/* bars turn black when menu is open */
+.barOpen {
+  background-color: var(--black) !important;
 }
 
 .hamburgerBlack {
@@ -149,7 +153,6 @@
 
 .menuImageText {
   color: var(--white);
-  font-family: var(--DotSansMedium);
   font-size: 1.4rem;
   letter-spacing: -0.02em;
 }
@@ -159,54 +162,38 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 2.5rem;
     color: var(--black) !important;
   }
 
   .navItems {
     position: fixed;
-    top: 70px;
+    top: 0;           /* flush to top — no gap */
     left: 0;
     right: 0;
-    margin: 1rem;
-    border-radius: 10px;
+    margin: 0;        /* no margin so it's edge-to-edge */
+    border-radius: 0; /* no rounding at top */
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 3rem;
     padding: 2rem;
-    padding-top: 3rem;
-    background: var(--white);
+    padding-top: 8rem; /* push content below the hamburger bar */
+    background: var(--accent);
     height: auto;
     max-height: 90vh;
     overflow-y: auto;
-    transform: translateX(110%);
+    transform: translateY(-110%); /* slides UP off screen */
     transition: transform 0.35s ease-in-out;
-    z-index: 9998;
+    z-index: 9995;
     box-sizing: border-box;
   }
 
   .navItems.active {
-    transform: translateX(0);
+    transform: translateY(0); /* slides DOWN into view */
   }
 
   .navItem {
     color: var(--black) !important;
-    font-size: 1.6rem;
-    letter-spacing: -0.5px;
-    width: 100%;
-    border-bottom: 1px solid var(--gray);
-    border-radius: 0px;
-    padding-bottom: 1rem;
-  }
-
-  .navItemActive {
-    color: var(--accent) !important;
-    text-decoration: line-through !important;
-    background-color: var(--black);
-    border-radius: 50px;
-    padding: 1rem;
-    padding-left: 2rem;
   }
 
   .menuImage {
@@ -218,8 +205,46 @@
     display: none;
   }
 
+  .hamburgerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    background-color: var(--white); /* default state */
+    transition: background-color 0.2s ease;
+  }
+
+  /* hamburgerContainer when menu is open */
+  .hamburgerContainerOpen {
+    background-color: var(--black) !important;
+    position: relative;
+    z-index: 9999; /* always on top of the menu */
+  }
+
+  .menuText {
+    font-family: var(--GeistMono);
+    font-size: 1.1rem;
+    color: var(--black); /* default */
+    transition: color 0.2s ease;
+  }
+
+  /* menuText turns white when open */
+  .menuTextOpen {
+    color: var(--white) !important;
+  }
+
   .hamburger {
     display: block;
+    background-color: var(--black) !important;
+    padding: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+
+  /* hamburger bg turns white when open */
+  .hamburger.active {
+    background-color: var(--white) !important;
   }
 
   .btnContainerii {
@@ -240,21 +265,19 @@
   }
 
   .hamburger.active .whiteBar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-    /* background-color: var(--black); */
+    transform: translateY(6px) rotate(45deg);
   }
   .hamburger.active .whiteBar:nth-child(2) {
     opacity: 0;
   }
   .hamburger.active .whiteBar:nth-child(3) {
-    /* background-color: var(--black); */
-    transform: translateY(-8px) rotate(-45deg);
+    transform: translateY(-6px) rotate(-45deg);
   }
 }
 
 @media screen and (max-width: 870px) {
   .navItems {
-    top: 60px;
+    top: 0;
   }
 }
 
@@ -264,7 +287,7 @@
   }
 
   .navItems {
-    top: 50px;
+    top: 0;
   }
 
   .btnContainerii {

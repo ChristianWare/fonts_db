@@ -5,8 +5,8 @@ import Link from "next/link";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent } from "react";
-import Image from "next/image";
-import Img1 from "../../../../../public/images/whydb.jpg";
+// import Image from "next/image";
+// import Img1 from "../../../../../public/images/whydb.jpg";
 
 export default function Nav({
   hamburgerColor = "",
@@ -69,17 +69,17 @@ export default function Nav({
                 </Link>
               );
             })}
-            <div className={styles.menuImage}>
+            {/* <div className={styles.menuImage}>
               <Image src={Img1} alt='Menu image' fill className={styles.img} />
-            </div>
-
+            </div> */}
             <div className={styles.btnContainerii}>
               <Button
                 href='https://calendly.com/chris-ware-dev/discovery-call'
                 target='_blank'
                 text='Book your discovery call'
-                btnType='black'
+                btnType='navWhite'
                 onClick={closeMenu}
+                arrow
               />
             </div>
           </div>
@@ -94,25 +94,31 @@ export default function Nav({
               btnType='navWhite'
             />
           </div>
-
-          <span
-            className={
-              isOpen ? `${styles.hamburger} ${styles.active}` : styles.hamburger
-            }
-            onClick={handleHamburgerClick}
-            aria-expanded={isOpen}
-            role='button'
+          <div
+            className={`${styles.hamburgerContainer} ${isOpen ? styles.hamburgerContainerOpen : ""}`}
           >
+            <div
+              className={`${styles.menuText} ${isOpen ? styles.menuTextOpen : ""}`}
+            >
+              MENU
+            </div>
             <span
-              className={`${styles.whiteBar} ${styles[hamburgerColor]}`}
-            ></span>
-            <span
-              className={`${styles.whiteBar} ${styles[hamburgerColor]}`}
-            ></span>
-            <span
-              className={`${styles.whiteBar} ${styles[hamburgerColor]}`}
-            ></span>
-          </span>
+              className={`${styles.hamburger} ${isOpen ? styles.active : ""}`}
+              onClick={handleHamburgerClick}
+              aria-expanded={isOpen}
+              role='button'
+            >
+              <span
+                className={`${styles.whiteBar} ${isOpen ? styles.barOpen : ""} ${styles[hamburgerColor]}`}
+              ></span>
+              <span
+                className={`${styles.whiteBar} ${isOpen ? styles.barOpen : ""} ${styles[hamburgerColor]}`}
+              ></span>
+              <span
+                className={`${styles.whiteBar} ${isOpen ? styles.barOpen : ""} ${styles[hamburgerColor]}`}
+              ></span>
+            </span>
+          </div>
         </div>
       </nav>
     </header>

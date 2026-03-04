@@ -21,7 +21,7 @@
   width: 10px;
   height: 10px;
   background-color: var(--white);
-  z-index: 5;
+  z-index: 1;
 }
 
 .dot1 {
