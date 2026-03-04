@@ -54,6 +54,8 @@ h6 {
   color: var(--black);
   hyphens: auto;
   text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -181,7 +183,6 @@ textarea {
   text-transform: none;
   letter-spacing: -0.4px;
   line-height: 1.4em;
-  margin-bottom: 20px;
   font-variation-settings:
     "wght" 450,
     "wdth" 100;

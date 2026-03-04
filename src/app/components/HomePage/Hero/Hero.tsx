@@ -31,12 +31,12 @@ export default function Hero() {
               <Nav />
             </div>
             <div className={styles.bottom}>
-              <p className={styles.topCopy}>
+              <div className={styles.topCopy}>
                 Websites Built exclusively for{" "}
                 <span className={styles.accent}>
                   black car & limo companies
                 </span>
-              </p>
+              </div>
               <h1 className={styles.heading}>
                 Premium rides. <br /> Premium platform.
               </h1>
@@ -58,6 +58,15 @@ export default function Hero() {
                     btnType='accent'
                   />
                 </div>
+              </div>
+              <div className={styles.imgContainerii}>
+                <Image
+                  src={BgImage}
+                  alt='Background Image'
+                  fill
+                  className={styles.img}
+                />
+                <div className={styles.overlay} />
               </div>
             </div>
           </div>

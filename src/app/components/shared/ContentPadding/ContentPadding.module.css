@@ -8,7 +8,7 @@
   } */
 
 .container {
-  padding: 5rem 0rem;
+  padding: 3rem 0rem;
   background-color: transparent;
   border-left: 1px solid var(--lightGray);
   border-right: 1px solid var(--lightGray);
@@ -17,14 +17,14 @@
   flex: 1;
 }
 
-@media screen and (max-width: 870px) {
+/* @media screen and (max-width: 870px) {
   .container {
-    padding: 5rem 2rem;
+    padding: 3rem 0rem;
   }
-}
+} */
 
 @media screen and (max-width: 568px) {
   .container {
-    padding: 5rem 1rem;
+    padding: 4rem 0rem;
   }
 }
