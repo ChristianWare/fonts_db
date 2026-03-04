@@ -2,9 +2,10 @@
   --black: #0f0f0f;
   --white: #ffffff;
   --gray: #ffffff80;
+  --grayii: #ebebeb;
   --lightGray: #8c898980;
   --text: #0f0f0f99;
-  --accent: #ffd942;
+  --accent: #ffc809;
 }
 
 * {
@@ -97,7 +98,6 @@ h2,
   text-transform: uppercase;
   letter-spacing: -2.7px;
   line-height: 0.9em;
-  margin-bottom: 40px; /* paragraph-spacing */
   font-feature-settings:
     "blwf" on,
     "cv09" on,
@@ -128,7 +128,6 @@ h3,
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.9em;
-  margin-bottom: 40px;
   font-feature-settings:
     "blwf" on,
     "cv09" on,
@@ -212,6 +211,11 @@ textarea:focus {
     font-size: 6.4rem;
     letter-spacing: -1.9px;
   }
+
+  p {
+    font-size: 1.7rem;
+    letter-spacing: -0.3px;
+  }
 }
 
 @media screen and (max-width: 968px) {
@@ -241,5 +245,10 @@ textarea:focus {
 @media screen and (max-width: 568px) {
   html {
     font-size: 50%;
+  }
+
+  p {
+    font-size: 15px;
+    letter-spacing: -0.3px;
   }
 }
