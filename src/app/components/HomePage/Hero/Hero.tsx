@@ -56,6 +56,7 @@ export default function Hero() {
                     href='/'
                     text='Book your discovery call'
                     btnType='accent'
+                    arrow
                   />
                 </div>
               </div>

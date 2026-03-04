@@ -4,8 +4,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  padding: 1.5rem 2rem;
+  gap: 5rem;
+  padding: 2rem 2.4rem;
   font-family: var(--GeistMono);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -35,8 +35,23 @@
 }
 
 .navWhite {
+  padding: 1.5rem 2rem;
   background-color: var(--white);
   color: var(--black);
+}
+
+.arrowContainer {
+  background-color: var(--black);
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  color: var(--white);
+  transform: rotate(45deg);
 }
 
 @media (hover: hover) and (pointer: fine) {

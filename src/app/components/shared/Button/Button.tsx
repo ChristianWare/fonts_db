@@ -2,7 +2,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import styles from "./Button.module.css";
-
+import Arrow from "../icons/Arrow/Arrow";
 
 interface Props {
   href?: string;
@@ -10,6 +10,7 @@ interface Props {
   btnType: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   disabled?: boolean;
+  arrow?: boolean;
   children?: ReactNode;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
@@ -23,6 +24,7 @@ export default function Button({
   btnType,
   target,
   disabled,
+  arrow,
   children,
   onClick,
   type = "button",
@@ -36,9 +38,14 @@ export default function Button({
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
         onClick={onClick as any}
-        className={`${styles.btn} ${styles[btnType]} $`}
+        className={`${styles.btn} ${styles[btnType]} `}
       >
         {content}
+        {arrow && (
+          <div className={styles.arrowContainer}>
+            <Arrow className={styles.arrow} />
+          </div>
+        )}
       </Link>
     );
   }
@@ -46,12 +53,16 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`${styles.btn} ${styles[btnType]}`}
+      className={`${styles.btn} ${styles[btnType]} ${arrow ? styles.arrow : ""}`}
       disabled={disabled}
       onClick={onClick}
     >
-     
       {content}
+      {arrow && (
+        <div className={styles.arrowContainer}>
+          <Arrow className={styles.arrow} />
+        </div>
+      )}
     </button>
   );
 }
