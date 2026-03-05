@@ -1,0 +1,177 @@
+.parent {
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  position: relative;
+  margin-top: 30rem;
+  padding-bottom: 10rem;
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--black);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+  top: unset;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+  top: unset;
+  left: unset;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.top {
+  padding: 10rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.heading {
+  text-align: center;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.copy {
+  text-align: center;
+  max-width: 800px;
+}
+
+.accentii {
+  color: var(--black);
+}
+
+.mapDataContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  height: 100%;
+  padding: 2rem;
+  padding-top: 5rem;
+}
+
+.card:nth-child(even) {
+  background-color: var(--lightGrayiii);
+}
+
+.card:nth-child(-n + 5) {
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.cardTitle {
+  font-family: var(--Roboto) !important;
+  font-weight: normal;
+  font-size: 1.6rem;
+  text-align: center;
+  line-height: 1.2;
+  /* width: 80%; */
+}
+
+@media screen and (max-width: 1268px) {
+  .parent {
+    margin-top: 20rem;
+  }
+
+  .top {
+    padding: 10rem 3rem;
+  }
+}
+
+@media screen and (max-width: 1068px) {
+  .mapDataContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    border-bottom: 1px solid var(--lightGray);
+  }
+
+  .card:last-child,
+  .card:nth-last-child(2) {
+    border-bottom: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .parent {
+    margin-top: 15rem;
+  }
+
+  .top {
+    padding: 5rem 2rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .parent {
+    margin-top: 10rem;
+  }
+
+  .content {
+    gap: 5rem;
+  }
+
+  .top {
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align-last: left;
+  }
+
+  .heading,
+  .copy {
+    text-align: left;
+  }
+
+  .br {
+    display: none;
+  }
+
+  .card {
+    padding-top: 3rem;
+  }
+}
