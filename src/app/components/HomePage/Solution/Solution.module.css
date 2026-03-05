@@ -35,7 +35,7 @@
   border-top: 1px solid var(--lightGray);
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 2rem;
 }
 
 .card {
@@ -156,7 +156,7 @@
   }
 
   .imgContainer {
-    height: 475px;
+    height: 370px;
   }
 
   .top,
