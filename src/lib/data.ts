@@ -1,8 +1,8 @@
 import Img1 from "../../public/images/branded.jpg";
-import Img2 from "../../public/images/WhyWeExist.jpg";
-import Img3 from "../../public/images/operation.jpg";
-import Img4 from "../../public/images/everyRole.jpg";
-import Img5 from "../../public/images/earnings.jpg";
+import Img2 from "../../public/images/work.jpg";
+import Img3 from "../../public/images/proven.jpg";
+import Img4 from "../../public/images/system.jpg";
+import Img5 from "../../public/images/earningsii.jpg";
 
 export const SolutionData = [
   {
