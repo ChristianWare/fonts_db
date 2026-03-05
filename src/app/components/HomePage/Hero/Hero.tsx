@@ -48,7 +48,7 @@ export default function Hero() {
                     {" "}
                     complete with a branded booking engine, admin dashboard,
                     driver portal, corporate accounts, payment processing, and
-                    more. One platform. Everything included.
+                    more.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>
