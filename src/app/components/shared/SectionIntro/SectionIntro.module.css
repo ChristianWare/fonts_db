@@ -10,3 +10,12 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+
+.colorWhite {
+  color: var(--white);
+}
+
+.bgBlack {
+  background-color: var(--black);
+}
+  

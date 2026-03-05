@@ -1,3 +1,4 @@
+import AdminDashboardFeatures from "./components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
 import Features from "./components/HomePage/Features/Features";
 import Hero from "./components/HomePage/Hero/Hero";
 import Outgrow from "./components/HomePage/Outgrow/Outgrow";
@@ -9,7 +10,8 @@ export default function HomePage() {
       <Hero />
       <Outgrow />
       <Solution />
-     <Features />
+      <Features />
+      <AdminDashboardFeatures />
     </main>
   );
 }

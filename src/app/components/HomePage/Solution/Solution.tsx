@@ -1,7 +1,7 @@
+import styles from "./Solution.module.css";
 import Button from "../../shared/Button/Button";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
-import styles from "./Solution.module.css";
 import Image from "next/image";
 import { SolutionData } from "@/lib/data";
 

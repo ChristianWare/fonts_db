@@ -61,6 +61,7 @@ h6 {
 
 h1,
 .h1 {
+  font-family: var(--RobotoFlexii);
   font-size: 14rem;
   letter-spacing: -2.8px;
   font-weight: 400;

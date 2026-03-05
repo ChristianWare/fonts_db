@@ -1,0 +1,44 @@
+.container {
+  margin-top: 10rem;
+}
+
+.parallax {
+  position: relative;
+  padding-top: 1rem;
+  overflow: hidden;
+}
+
+.scroller {
+  display: flex;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: -0.02em;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.scroller span {
+  flex-shrink: 0;
+  line-height: 1;
+  font-size: 6vw;
+  line-height: 95%;
+  letter-spacing: -0.08vw;
+  font-weight: 500;
+  /* -webkit-text-stroke: 1px black; */
+    -webkit-text-fill-color: var(--lightGray);
+    color: var(--lightGray);
+}
+
+@media screen and (max-width: 768px) {
+  .scroller span {
+    font-size: 16vw;
+    letter-spacing: -2.5px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .scroller span {
+    font-size: 5.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+}
