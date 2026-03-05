@@ -146,6 +146,17 @@ export default function AdminDashboardFeatures() {
               </div>
             </div>
           </div>
+          <div className={styles.bottomMsg}>
+            <h2 className={styles.bottomMsgHeading}>
+              <span>The admin dashboard </span>
+              gives you full visibility and control over{" "}
+              <span>
+                every booking, every driver, every payment, and every
+                customer{" "}
+              </span>
+              {" "}on your platform.
+            </h2>
+          </div>
         </div>
       </LayoutWrapper>
     </section>
