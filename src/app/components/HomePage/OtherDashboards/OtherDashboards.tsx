@@ -2,10 +2,11 @@ import Image, { StaticImageData } from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import styles from "./OtherDashboards.module.css";
-import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
+// import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
 import DriverImg from "../../../../../public/images/WhyWeExist.jpg";
 import CustomerImg from "../../../../../public/images/brandStoryii.jpg";
 import CorporateImg from "../../../../../public/images/whydb.jpg";
+import Speedometer from "../../shared/icons/Speedometer/Speedometer";
 
 type Card = {
   id: number;
@@ -70,16 +71,17 @@ export default function OtherDashboards() {
             <div className={styles.top}>
               <div className={styles.topLeft}>
                 <div className={styles.imagContainer}>
-                  <Image
+                  {/* <Image
                     src={LogoImg}
                     alt='Fonts & Footers Logo'
                     title='Fonts & Footers Logo'
                     className={styles.logo}
-                  />
+                  /> */}
+                  <Speedometer className={styles.icon} />
                 </div>
               </div>
               <div className={styles.topRight}>
-                <SectionIntro text='Problem' />
+                <SectionIntro text='Dashboards' />
                 <h2 className={styles.heading}>
                   Different dashboards. <br />{" "}
                   <span className={styles.accent}>same clarity.</span>
@@ -105,7 +107,6 @@ export default function OtherDashboards() {
                         alt={x.heading}
                         fill
                         className={styles.img}
-                        
                       />{" "}
                     </div>
                     <div className={styles.cardBottom}>

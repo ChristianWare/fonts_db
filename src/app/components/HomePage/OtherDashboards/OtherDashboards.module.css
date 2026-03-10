@@ -10,10 +10,17 @@
 
 .top {
   padding: 20rem 5rem;
-  padding-bottom: 10rem;
+  padding-bottom: 5rem;
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-gap: 5rem;
+}
+
+.icon {
+  color: var(--lightGray);
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
 }
 
 .topRight {
@@ -124,6 +131,31 @@
 @media screen and (max-width: 1268px) {
   .top {
     padding: 10rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0rem;
+    text-align: center;
+  }
+
+  .topRight {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .heading,
+  .copy {
+    text-align: center;
+  }
+
+  .copy {
+    max-width: 500px;
+  }
+
+  .icon {
+    width: 15rem;
+    height: 15rem;
   }
 
   .mapDataContainer {

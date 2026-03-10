@@ -1,3 +1,4 @@
+import styles from "./Features.module.css";
 import Clock from "../../shared/Clock/Clock";
 import Hosting from "../../shared/Hosting/Hosting";
 import Analytics from "../../shared/icons/Analytics/Analytics";
@@ -9,7 +10,7 @@ import Multiple from "../../shared/icons/Multiple/Multiple";
 import Payment from "../../shared/icons/Payment/Payment";
 import Stariii from "../../shared/icons/Stariii/Stariii";
 import LayoutWrapper from "../../shared/LayoutWrapper";
-import styles from "./Features.module.css";
+import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
 type Feature = {
   icon: React.ReactNode;
@@ -70,9 +71,10 @@ export default function Features() {
           <div className={styles.dot4} />
           <div className={styles.content}>
             <div className={styles.top}>
+              <SectionIntro text='Features' />
               <h2 className={styles.heading}>
-                Everything your <br className={styles.br} /> black car business needs. <br />
-                <span className={styles.accent}>Nothing you don&apos;t.</span>
+              
+                A reservation experience <br /> your riders will <span className={styles.accent}>actually trust</span>
               </h2>
               <p className={styles.copy}>
                 The booking tool is where your business lives. We don&apos;t use
@@ -82,17 +84,20 @@ export default function Features() {
                   integrated directly into your website and branded entirely to
                   your company. It looks and feels like yours, because it is.
                 </span>
+               
               </p>
             </div>
             <div className={styles.bottom}>
-              <div className={styles.mapDataContainer}>
+              <div className={styles.bottomLeft}></div>
+              <div className={styles.bottomRight}></div>
+              {/* <div className={styles.mapDataContainer}>
                 {featureData.map((x) => (
                   <div className={styles.card} key={x.title}>
                     {x.icon}
                     <h3 className={styles.cardTitle}>{x.title}</h3>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
