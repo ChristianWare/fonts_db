@@ -49,7 +49,6 @@ export default function Outgrow() {
           <div className={styles.content}>
             <div className={styles.top}>
               <SectionIntro text='Problem' />
-
               <h2 className={styles.heading}>
                 Have you outgrown <br /> the{" "}
                 <span className={styles.accent}>

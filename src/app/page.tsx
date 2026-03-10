@@ -12,8 +12,8 @@ export default function HomePage() {
       <Outgrow />
       <Solution />
       <Features />
-      <AdminDashboardFeatures />
       <OtherDashboards />
+      <AdminDashboardFeatures />
     </main>
   );
 }

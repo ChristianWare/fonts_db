@@ -63,6 +63,7 @@ h1,
 .h1 {
   font-family: var(--RobotoFlexii);
   font-size: 14rem;
+  /* font-size: 8.6vw; */
   letter-spacing: -2.8px;
   font-weight: 400;
   line-height: 0.9em;
@@ -153,6 +154,8 @@ h3,
     "YTAS" 750,
     "YTDE" -203,
     "YTFI" 738;
+      -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 h5,
 .h5 {

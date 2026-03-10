@@ -38,7 +38,8 @@ export default function Hero() {
                 </span>
               </div>
               <h1 className={styles.heading}>
-                Premium rides. <br /> Premium platform.
+                {/* Premium rides. <br /> Premium platform. */}
+                Your fleet. <br /> Your platform.{" "}
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
