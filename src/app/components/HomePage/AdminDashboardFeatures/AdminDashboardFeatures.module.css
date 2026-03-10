@@ -129,7 +129,8 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: var(--black);
+  background-color: var(--white);
+  border: 5px solid var(--accent);
   transition:
     transform 0.4s ease,
     opacity 0.4s ease,
@@ -149,12 +150,12 @@
 .imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.88),
     rgba(0, 0, 0, 0.3),
     rgba(0, 0, 0, 0.1)
-  );
+  ); */
 }
 
 .projectInfo {
@@ -166,30 +167,37 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  color: var(--white);
+  color: var(--black);
 }
 
 .projectText {
   max-width: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 3rem;
 }
 
 .projectTitle {
-  font-size: 2.4rem;
+  /* font-size: 3rem;
   font-family: var(--RobotoFlexii);
   text-transform: uppercase;
-  color: var(--white);
-  letter-spacing: -0.02em;
+  color: var(--black);
+  letter-spacing: -0.02em; */
+  font-size: 100px;
+  font-family: var(--RobotoCondensed);
+  font-weight: 900;
+  color: var(--black);
+  letter-spacing: -0.07em;
 }
 
 .projectH1 {
   font-size: 1.6rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--GeistMono);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .projectCta {
@@ -270,7 +278,7 @@
   }
 
   .bottomRight {
-    height: 360px;
+    /* height: 360px; */
     width: 80%;
   }
 
@@ -278,7 +286,11 @@
     font-size: 3.8rem;
     letter-spacing: -1.1px;
     width: 90%;
-  
+  }
+
+  .projectTitle {
+    font-size: 60px;
+    letter-spacing: -0.05em;
   }
 }
 
@@ -299,6 +311,7 @@
   .bottomRight {
     padding-right: 0rem;
     width: 73%;
+    height: 450px;
   }
 
   .projectInfo {
@@ -307,5 +320,10 @@
 
   .projectText {
     max-width: 100%;
+  }
+
+  .projectTitle {
+    font-size: 40px;
+    letter-spacing: -0.03em;
   }
 }

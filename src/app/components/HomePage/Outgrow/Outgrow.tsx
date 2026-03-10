@@ -2,6 +2,7 @@ import LayoutWrapper from "../../shared/LayoutWrapper";
 import styles from "./Outgrow.module.css";
 import Image from "next/image";
 import Img1 from "../../../../../public/images/stressed.jpg";
+import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
 const data = [
   {
@@ -47,6 +48,8 @@ export default function Outgrow() {
           <div className={styles.dot4} />
           <div className={styles.content}>
             <div className={styles.top}>
+              <SectionIntro text='Problem' />
+
               <h2 className={styles.heading}>
                 Have you outgrown <br /> the{" "}
                 <span className={styles.accent}>
@@ -87,8 +90,8 @@ export default function Outgrow() {
                 </div>
                 <div className={styles.imgCaptionTitle}>Is this you?</div>
                 <div className={styles.imgCaptionDesc}>
-                  A black car operator at a desk — slightly
-                  overwhelmed, frustrated with his existing platform.
+                  A black car operator at a desk — slightly overwhelmed,
+                  frustrated with his existing platform.
                 </div>
               </div>
             </div>

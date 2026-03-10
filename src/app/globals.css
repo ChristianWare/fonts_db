@@ -190,6 +190,8 @@ textarea {
   font-variation-settings:
     "wght" 450,
     "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 strong,

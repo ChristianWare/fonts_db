@@ -3,7 +3,7 @@
 import styles from "./AdminDashboardFeatures.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Arrow from "../../shared/icons/Arrow/Arrow";
-import Image from "next/image";
+// import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DashboardFeatures } from "@/lib/data";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
@@ -117,13 +117,13 @@ export default function AdminDashboardFeatures() {
                       }}
                     >
                       <div className={styles.imageWrapper}>
-                        <Image
+                        {/* <Image
                           src={feature.src}
                           alt={feature.title}
                           fill
                           className={styles.projectImage}
                           priority={index === 0}
-                        />
+                        /> */}
                         <div className={styles.imageOverlay} />
                       </div>
                       <div className={styles.projectInfo}>
