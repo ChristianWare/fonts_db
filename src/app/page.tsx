@@ -1,3 +1,4 @@
+import Faq from "@/components/HomePage/Faq/Faq";
 import AdminDashboardFeatures from "../components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
 import ComparisonChart from "../components/HomePage/ComparisonChart/ComparisonChart";
 import Features from "../components/HomePage/Features/Features";
@@ -24,6 +25,7 @@ export default function HomePage() {
       <PricingPreview />
       <ComparisonChart />
       <HowItWorks />
+      <Faq />
     </main>
   );
 }
