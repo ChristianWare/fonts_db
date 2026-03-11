@@ -1,6 +1,6 @@
 "use client";
 
-import  { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./Faq.module.css";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
@@ -25,8 +25,8 @@ const SECTION_META: Record<
 > = {
   home: {
     title: "FAQ",
-    headingSpan: "Questions, answered",
-    headingRest: "with clarity.",
+    headingSpan: "Questions teams",
+    headingRest: "Ask us the most",
   },
   pricing: {
     title: "Pricing FAQ",
@@ -99,26 +99,28 @@ export default function Faq() {
       <section className={styles.container}>
         <LayoutWrapper>
           <div className={styles.content}>
-            <div className={styles.left}>
-              <div className={styles.imgContainer1}>
-                {/* <Image
-                  src={ServiceIllustration}
-                  alt='Service Illustration'
-                  fill
-                  className={styles.img}
-                  priority
-                /> */}
+            <div className={styles.top}>
+              <div className={styles.dot1} />
+              <div className={styles.dot2} />
+              {/* <div className={styles.dot3} />
+              <div className={styles.dot4} /> */}
+              <div className={styles.topLeft}>
+                <SectionIntro text='Help & oinfo' />
+                <h2 className={styles.heading}>
+                  <span className={styles.span}>{meta.headingSpan}</span> <br />
+                  {meta.headingRest}
+                </h2>
               </div>
-              <h2 className={`${styles.heading} h5`}>
-                <span className={styles.span}>{meta.headingSpan}</span> <br />
-                {meta.headingRest}
-              </h2>
-              <p className={styles.copy}>
-                We’ve gathered the most common questions our clients ask about
-                working with us. If you don’t find what you’re looking for, our
-                team is just a message away.
-              </p>
-             
+              <div className={styles.topRight}>
+                <p className={styles.copy}>
+                  We’ve gathered the most common questions our clients ask about
+                  working with us.{" "}
+                  <span className={styles.accent}>
+                    If you don’t find what you’re looking for, our team is just
+                    a message away.
+                  </span>
+                </p>
+              </div>
             </div>
 
             <div className={styles.right}>
