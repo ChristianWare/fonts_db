@@ -1,0 +1,235 @@
+.parent {
+  background-color: var(--lightGray);
+  padding: 1rem;
+}
+
+.container {
+  padding: 10rem 0;
+  padding-top: 5rem;
+  position: relative;
+  background-color: var(--white);
+  border-radius: 20px;
+}
+
+.cornerContainer {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 3;
+  pointer-events: auto;
+  width: fit-content;
+}
+
+.corner {
+  position: relative;
+  background-color: var(--lightGray);
+  padding: 1rem 1rem 1.5rem;
+  border-radius: 15px;
+  border-top-left-radius: 0;
+}
+
+.corner::after {
+  position: absolute;
+  content: "";
+  width: 40px;
+  height: 40px;
+  bottom: -40px;
+  left: 0;
+  background-color: transparent;
+  border-top-left-radius: 15px;
+  box-shadow: -1em -1rem var(--lightGray);
+}
+
+.corner::before {
+  position: absolute;
+  content: "";
+  width: 30px;
+  height: 30px;
+  right: -30px;
+  top: 1px;
+  background-color: transparent;
+  border-top-left-radius: 15px;
+  box-shadow: -1em -1rem var(--lightGray);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.top {
+  margin-top: 4rem;
+}
+
+.heading {
+  max-width: 700px;
+}
+
+/* ── Main card ── */
+.card {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  background-color: var(--black);
+  border-radius: 20px;
+  padding: 5rem;
+  align-items: start;
+}
+
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  position: sticky;
+  top: 12rem;
+}
+
+.priceBlock {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  line-height: 1;
+}
+
+.price {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 8rem;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.pricePer {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  padding-bottom: 1.2rem;
+}
+
+.setupFee {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: -1.6rem;
+}
+
+.foundingBox {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.foundingTitle {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.foundingCopy {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.btnContainer {
+  margin-top: 0.8rem;
+}
+
+/* ── Right column ── */
+.cardRight {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.listBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.listHeading {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.check {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+.cross {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 1068px) {
+  .card {
+    grid-template-columns: 1fr;
+    padding: 3rem;
+  }
+
+  .cardLeft {
+    position: static;
+  }
+
+  .price {
+    font-size: 6rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .card {
+    padding: 2.4rem;
+    border-radius: 14px;
+  }
+
+  .price {
+    font-size: 5rem;
+  }
+}
