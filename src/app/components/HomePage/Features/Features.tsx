@@ -57,7 +57,7 @@ export default function Features() {
                     <div className={styles.dot1} />
                     <div className={styles.dot2} />
                     <span className={styles.index} key={activeIndex}>
-                      {activeIndex + 1}
+                      {String(activeIndex + 1).padStart(2, "0")}
                     </span>
                   </div>
                   <div className={styles.bottomRight}>
@@ -69,7 +69,7 @@ export default function Features() {
                             : styles.cardInactive
                         }`}
                         key={x.title}
-                        data-index={`0${index + 1}`}
+                        data-index={String(index + 1).padStart(2, "0")}
                         ref={(el) => {
                           cardRefs.current[index] = el;
                         }}
