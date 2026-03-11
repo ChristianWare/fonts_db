@@ -7,6 +7,7 @@
   --lightGrayii: #fafafa;
   --lightGrayiii: #f2f2f2;
   --text: #0f0f0f99;
+  --textii: #d9d9d9;
   --accent: #ffc809;
 }
 
@@ -154,7 +155,7 @@ h3,
     "YTAS" 750,
     "YTDE" -203,
     "YTFI" 738;
-      -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 h5,

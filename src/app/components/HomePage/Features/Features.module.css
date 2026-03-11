@@ -1,9 +1,138 @@
+.container {
+  background-color: var(--black);
+}
+
 .parent {
   border-top: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
   position: relative;
   margin-top: 30rem;
   padding-bottom: 10rem;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.top {
+  padding: 10rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.heading {
+  color: var(--white);
+}
+
+.copy {
+  max-width: 800px;
+}
+
+.accentii {
+  color: var(--black);
+}
+
+/* ── Desktop layout: index left | cards right ── */
+.dataParent {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  color: var(--white);
+}
+
+.index {
+  font-size: 7rem;
+  letter-spacing: -1.4px;
+  font-family: var(--RobotoFlexii);
+  color: var(--white);
+  line-height: 0.9em;
+  font-style: normal;
+  text-transform: uppercase;
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on,
+    "pnum" on;
+  font-variation-settings:
+    "opsz" 144,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  align-self: flex-start;
+  position: sticky;
+  top: 90px;
+
+  animation: indexFadeIn 0.35s ease forwards;
+}
+
+@keyframes indexFadeIn {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+.bottomLeft {
+  border: 1px solid var(--lightGray);
+  border-left: none;
+  padding: 80px 40px;
+  position: relative;
+  height: 100%;
+}
+
+.bottomRight {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding: 80px 40px;
+  position: relative;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  align-self: flex-start;
+  position: sticky;
+  top: 90px;
+  background-color: var(--black);
+}
+
+/* Active — text fully visible */
+.cardActive .cardTitle,
+.cardActive .desc {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+/* Inactive — only text dims, background stays solid */
+.cardInactive .cardTitle,
+.cardInactive .desc {
+  opacity: 0.25;
+  transition: opacity 0.5s ease;
 }
 
 .dot1,
@@ -13,7 +142,7 @@
   position: absolute;
   width: 7px;
   height: 7px;
-  background-color: var(--black);
+  background-color: var(--white);
   z-index: 1;
 }
 
@@ -41,77 +170,16 @@
   left: unset;
 }
 
-.content {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-}
-
-.top {
-  padding: 10rem 5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.heading {
-  text-align: center;
-}
-
-.accent {
+.cardTitle {
   color: var(--accent);
 }
 
-.copy {
-  text-align: center;
-  max-width: 800px;
+.desc {
+  color: var(--textii);
+  max-width: 70%;
 }
 
-.accentii {
-  color: var(--black);
-}
-
-.mapDataContainer {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4rem;
-  height: 100%;
-  padding: 2rem;
-  padding-top: 5rem;
-}
-
-.card:nth-child(even) {
-  background-color: var(--lightGrayiii);
-}
-
-.card:nth-child(-n + 5) {
-  border-bottom: 1px solid var(--lightGray);
-}
-
-.icon {
-  width: 3rem;
-  height: 3rem;
-}
-
-.cardTitle {
-  font-family: var(--Roboto) !important;
-  font-weight: normal;
-  font-size: 1.6rem;
-  text-align: center;
-  line-height: 1.2;
-  /* width: 80%; */
-}
-
+/* ── 1268px ── */
 @media screen and (max-width: 1268px) {
   .parent {
     margin-top: 20rem;
@@ -122,21 +190,14 @@
   }
 }
 
+/* ── 1068px ── */
 @media screen and (max-width: 1068px) {
   .mapDataContainer {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .card {
-    border-bottom: 1px solid var(--lightGray);
-  }
-
-  .card:last-child,
-  .card:nth-last-child(2) {
-    border-bottom: none;
-  }
 }
 
+/* ── 768px ── */
 @media screen and (max-width: 768px) {
   .parent {
     margin-top: 15rem;
@@ -145,33 +206,100 @@
   .top {
     padding: 5rem 2rem;
   }
+
+  .heading {
+    max-width: 100%;
+  }
 }
 
+/* ── 568px — full mobile reflow ── */
 @media screen and (max-width: 568px) {
   .parent {
     margin-top: 10rem;
-  }
-
-  .content {
-    gap: 5rem;
+    padding-bottom: 6rem;
   }
 
   .top {
-    align-items: flex-start;
-    justify-content: flex-start;
-    text-align-last: left;
+    padding: 5rem 2rem;
+    gap: 1.5rem;
   }
 
-  .heading,
-  .copy {
-    text-align: left;
+  /* Stack index above each card instead of side-by-side */
+  .dataParent {
+    display: flex;
+    flex-direction: column;
   }
 
-  .br {
+  /* Hide the sticky left column entirely on mobile */
+  .bottomLeft {
     display: none;
   }
 
+  .bottomRight {
+    width: 100%;
+  }
+
+  /* Each card becomes a normal stacked block — no sticky, no dimming */
   .card {
-    padding-top: 3rem;
+    position: relative;
+    top: unset;
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--lightGray);
+    border-bottom: none;
+    gap: 2rem;
+  }
+
+  /* Show the index inline above each card title using a data attribute */
+  .card::before {
+    content: attr(data-index);
+    display: block;
+    font-size: 3.8rem;
+    letter-spacing: -1.1px;
+    font-family: var(--RobotoFlexii);
+    color: var(--white);
+    line-height: 0.9em;
+    font-style: normal;
+    font-feature-settings:
+      "blwf" on,
+      "cv09" on,
+      "cv03" on,
+      "cv04" on,
+      "cv11" on,
+      "pnum" on;
+    font-variation-settings:
+      "opsz" 144,
+      "wght" 700,
+      "GRAD" 0,
+      "wdth" 81,
+      "slnt" 0,
+      "XOPQ" 96,
+      "YOPQ" 72,
+      "XTRA" 468,
+      "YTUC" 760,
+      "YTLC" 514,
+      "YTAS" 750,
+      "YTDE" -203,
+      "YTFI" 738;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-bottom: 1rem;
+  }
+
+  /* Reset all dimming on mobile — every card fully visible */
+  .cardInactive .cardTitle,
+  .cardInactive .desc,
+  .cardActive .cardTitle,
+  .cardActive .desc {
+    opacity: 1;
+  }
+
+  .desc {
+    max-width: 100%;
+  }
+
+  /* Remove corner dots on mobile for cleaner look */
+  .card .dot1,
+  .card .dot2 {
+    display: none;
   }
 }
