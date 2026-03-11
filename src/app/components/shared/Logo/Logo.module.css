@@ -19,3 +19,9 @@
   line-height: 1;
   text-transform: uppercase;
 }
+
+@media screen and (max-width: 380px) {
+  .text {
+    display: none;
+  }
+}

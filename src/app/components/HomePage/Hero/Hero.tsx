@@ -39,11 +39,11 @@ export default function Hero() {
               </div>
               <h1 className={styles.heading}>
                 {/* Premium rides. <br /> Premium platform. */}
-                Your fleet. <br /> Your platform.{" "}
+                Premium Rides. <br /> Premium websites.{" "}
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
-                  We build custom direct-booking websites and platforms
+                  We build custom direct-booking websites and websites
                   exclusively for black car and limousine companies —{" "}
                   <span className={styles.span}>
                     {" "}
