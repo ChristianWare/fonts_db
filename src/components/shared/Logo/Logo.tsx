@@ -1,7 +1,7 @@
 import styles from "./Logo.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
+import LogoImg from "../../../../public/logos/fnf_logo_black.png";
 
 const Logo = () => {
   return (

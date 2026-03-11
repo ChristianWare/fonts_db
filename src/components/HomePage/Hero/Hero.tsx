@@ -3,7 +3,7 @@ import Image from "next/image";
 import Button from "../../shared/Button/Button";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
-import BgImage from "../../../../../public/images/heroii.jpg";
+import BgImage from "../../../../public/images/heroii.jpg";
 
 export default function Hero() {
   return (

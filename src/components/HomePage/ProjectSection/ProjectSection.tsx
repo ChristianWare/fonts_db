@@ -1,8 +1,8 @@
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import styles from "./ProjectSection.module.css";
-import Nier from "../../../../../public/images/nierLogo.png";
+import Nier from "../../../../public/images/nierLogo.png";
 import Image from "next/image";
-import NierHomePage from "../../../../../public/images/nierHomePage.png";
+import NierHomePage from "../../../../public/images/nierHomePage.png";
 import Button from "../../shared/Button/Button";
 
 export default function ProjectSection() {

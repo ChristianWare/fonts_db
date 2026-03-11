@@ -1,7 +1,7 @@
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import styles from "./Outgrow.module.css";
 import Image from "next/image";
-import Img1 from "../../../../../public/images/stressed.jpg";
+import Img1 from "../../../../public/images/stressed.jpg";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
 const data = [

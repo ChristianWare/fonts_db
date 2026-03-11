@@ -3,10 +3,10 @@ import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import styles from "./OtherDashboards.module.css";
 // import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
-import DriverImg from "../../../../../public/images/WhyWeExist.jpg";
-import CustomerImg from "../../../../../public/images/brandStoryii.jpg";
-import CorporateImg from "../../../../../public/images/whydb.jpg";
-import Speedometer from "../../shared/icons/Speedometer/Speedometer";
+import DriverImg from "../../../../public/images/WhyWeExist.jpg";
+import CustomerImg from "../../../../public/images/brandStoryii.jpg";
+import CorporateImg from "../../../../public/images/whydb.jpg";
+import Speedometer from "@/components/shared/icons/Speedometer/Speedometer";
 
 type Card = {
   id: number;

@@ -3,7 +3,7 @@
 import styles from "./HowItWorks.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
-import IndustriesIllustration from "../../../../../public/logos/fnf_logo_black.png";
+import IndustriesIllustration from "../../../../public/logos/fnf_logo_black.png";
 import Image from "next/image";
 
 const process = [
