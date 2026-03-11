@@ -1,0 +1,265 @@
+.container {
+  background-color: var(--accent);
+}
+
+.top {
+  padding: 10rem 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.heading,
+.copy {
+  text-align: center;
+}
+
+.content {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobileTabs {
+  display: none;
+  margin-bottom: 1.5rem;
+  gap: 0.6rem;
+  overflow-x: auto;
+}
+
+.tab {
+  border: 1px solid var(--black);
+  color: var(--black);
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  font-size: 1.4rem;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.activeTab {
+  background: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(var(--plan-count), 1fr);
+  border: 1px solid var(--black);
+  border-bottom: none;
+  margin: 2rem;
+  background: var(--tan);
+}
+
+.row {
+  display: contents;
+}
+
+.headerRow .headerCell,
+.headerRowii .headerCell {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--tan);
+}
+
+/* Fonts & Footers is column 2 (first competitor) */
+.headerRow .headerCell:nth-child(2),
+.headerRowii .headerCell:nth-child(2) {
+  background-color: var(--black);
+}
+
+.headerRow .headerCell:nth-child(2) .planHeadTop .planName,
+.headerRowii .headerCell:nth-child(2) .planHeadTop .planNameii {
+  color: var(--accent) !important;
+}
+
+.cornerCell {
+  z-index: 5;
+}
+
+.cell {
+  padding: 2rem;
+  border-right: 1px solid var(--black);
+  border-bottom: 1px solid var(--black);
+}
+
+.cell:nth-last-child(1) {
+  border-right: none;
+}
+
+.featureColHead {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  font-family: var(--RobotoCondensed);
+  text-transform: uppercase;
+  font-size: 1.8rem;
+  letter-spacing: -0.2px;
+  color: var(--black);
+}
+
+.featureCol {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: var(--tan);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.featureName {
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  color: var(--black);
+}
+
+.featureInfo {
+  font-size: 1.4rem;
+  font-family: var(--Roboto);
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.35;
+  max-width: 56ch;
+}
+
+.planHead {
+  background: var(--darkerTan);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.planHeadTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.planName,
+.planNameii {
+  font-family: var(--RobotoCondensed);
+  text-transform: uppercase;
+  font-size: 1.8rem;
+  letter-spacing: -0.2px;
+  color: var(--black);
+  text-align: center;
+  width: 100%;
+}
+
+.featured {
+  background: var(--black);
+  color: var(--accent);
+}
+
+.featured .planName {
+  color: var(--accent);
+}
+
+.valueCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.valueYes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+/* Checkmark accent color only in the Fonts & Footers column */
+.row > .valueCell:nth-child(2) .icon {
+  color: var(--accent);
+}
+
+.icon {
+  display: block;
+  color: var(--black);
+  width: 30px;
+  height: 30px;
+}
+
+.valueNo {
+  color: var(--blackii);
+  font-size: 1.6rem;
+}
+
+.valuePartial {
+  font-size: 1.3rem;
+  font-family: var(--SuisseIntlMedium);
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+@media screen and (max-width: 1268px) {
+  .top {
+    padding: 10rem 3rem;
+    padding-bottom: 0rem;
+  }
+}
+
+@media screen and (max-width: 1140px) {
+  .grid {
+    grid-template-columns: 1.6fr repeat(var(--plan-count), 1fr);
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .planHeadTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mobileTabs {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .grid {
+    grid-template-columns: 1.6fr repeat(var(--plan-count), 1fr);
+  }
+
+  .featureInfo {
+    display: none;
+  }
+
+  .featured {
+    background: var(--accent);
+    color: var(--black);
+  }
+
+  .planName {
+    color: var(--black) !important;
+  }
+
+  .headerRowii .headerCell:nth-child(2) {
+    border-top-right-radius: 0px;
+  }
+
+  .row > .valueCell:nth-child(2) .icon {
+    color: var(--black);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top {
+    padding: 5rem 2rem;
+    padding-bottom: 0rem;
+  }
+}

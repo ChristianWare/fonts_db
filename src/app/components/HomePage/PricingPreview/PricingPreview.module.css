@@ -1,5 +1,7 @@
 .container {
   background-color: var(--white);
+  /* padding-bottom: 10rem; */
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .content {

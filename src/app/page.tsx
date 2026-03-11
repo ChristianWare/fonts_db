@@ -1,6 +1,8 @@
 import AdminDashboardFeatures from "./components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
+import ComparisonChart from "./components/HomePage/ComparisonChart/ComparisonChart";
 import Features from "./components/HomePage/Features/Features";
 import Hero from "./components/HomePage/Hero/Hero";
+import HowItWorks from "./components/HomePage/HowItWorks/HowItWorks";
 import OtherDashboards from "./components/HomePage/OtherDashboards/OtherDashboards";
 import Outgrow from "./components/HomePage/Outgrow/Outgrow";
 import ParallaxArea from "./components/HomePage/ParallaxArea/ParallaxArea";
@@ -20,6 +22,8 @@ export default function HomePage() {
       <ProjectSection />
       <ParallaxArea />
       <PricingPreview />
+      <ComparisonChart />
+      <HowItWorks />
     </main>
   );
 }
