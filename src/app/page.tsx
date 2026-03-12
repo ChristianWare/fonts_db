@@ -15,7 +15,7 @@ import ContactSection from "@/components/HomePage/ContactSection/ContactSection"
 export default function HomePage() {
   return (
     <main>
-      {/* <Hero />
+      <Hero />
       <Outgrow />
       <Solution />
       <Features />
@@ -26,7 +26,7 @@ export default function HomePage() {
       <PricingPreview />
       <ComparisonChart />
       <HowItWorks />
-      <Faq /> */}
+      <Faq />
       <ContactSection />
     </main>
   );

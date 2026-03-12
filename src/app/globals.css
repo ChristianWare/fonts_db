@@ -9,6 +9,7 @@
   --text: #0f0f0f99;
   --textii: #d9d9d9;
   --accent: #ffc809;
+  --accent300: #FFE16C;
 }
 
 * {
@@ -171,7 +172,7 @@ h6,
   font-size: 2.4rem;
   letter-spacing: -0.7px;
   line-height: 1;
-    -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 

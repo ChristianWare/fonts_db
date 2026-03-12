@@ -38,7 +38,7 @@ export default function Button({
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
         onClick={onClick as any}
-        className={`${styles.btn} ${styles[btnType]} `}
+        className={`${styles.btn} ${styles[btnType]}`}
       >
         {content}
         {arrow && (
@@ -53,7 +53,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`${styles.btn} ${styles[btnType]} ${arrow ? styles.arrow : ""}`}
+      className={`${styles.btn} ${styles[btnType]}`}
       disabled={disabled}
       onClick={onClick}
     >

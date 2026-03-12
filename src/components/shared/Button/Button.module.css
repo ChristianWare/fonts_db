@@ -15,7 +15,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .btn:link,
@@ -34,6 +34,18 @@
   color: var(--white);
 }
 
+.black,
+.black:link,
+.black:visited {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.black:hover .arrow {
+  background-color: var(--white);
+  color: var(--black);
+}
+
 .navWhite {
   padding: 1.5rem 2rem;
   background-color: var(--white);
@@ -49,9 +61,17 @@
   justify-content: center;
 }
 
+.black .arrowContainer {
+  background-color: var(--white);
+}
+
 .arrow {
   color: var(--white);
   transform: rotate(45deg);
+}
+
+.black .arrow {
+  color: var(--black);
 }
 
 @media (hover: hover) and (pointer: fine) {

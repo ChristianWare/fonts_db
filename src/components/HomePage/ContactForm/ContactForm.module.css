@@ -1,0 +1,268 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* padding: 3rem; */
+  position: relative;
+}
+
+.formHeading {
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+.namesContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.namesContainer label,
+.namesContainer .labelInputBox input {
+  border-right: 1px solid var(--lightGray);
+}
+
+.everythingElse {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* gap: 1rem; */
+  width: 100%;
+  /* padding: 2rem; */
+}
+
+.labelInputBox {
+  display: flex;
+  flex-direction: column;
+  /* gap: 0.5rem; */
+  /* margin-bottom: 1.5rem; */
+  width: 100%;
+}
+
+.labelInputBox label {
+  padding: 1.6rem 2rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.2px;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  color: var(--black);
+  width: 100%;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.labelInputBox input,
+.labelInputBox textarea {
+  height: 40px;
+  width: 100%;
+  border: none;
+  background-color: var(--accent300);
+  color: var(--black);
+  padding: 1rem 2rem;
+  font-weight: 400;
+  box-sizing: border-box;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: normal;
+}
+
+.labelInputBox span {
+  font-size: 1.4rem;
+  color: var(--blue);
+  width: 100%;
+}
+
+.labelInputBox textarea {
+  height: 130px;
+  resize: vertical;
+}
+
+.labelInputBox ::placeholder {
+  color: var(--black);
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-size: 1.4rem;
+}
+
+.error {
+  font-family: var(--Roboto);
+  color: red !important;
+  padding: 1rem;
+  /* margin-top: 0.5rem; */
+  width: 100%;
+}
+
+.btnBtnContainer {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 50%;
+}
+
+.servicesSection {
+  background-color: var(--tan);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  display: none;
+}
+
+.servicesLabel {
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-weight: 600;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  display: block;
+  width: 100%;
+}
+
+.serviceButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.serviceButton {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--gray);
+  background-color: var(--white);
+  color: var(--black);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.serviceButton:hover {
+  background-color: var(--lightGray);
+}
+
+.serviceButton.selected {
+  background-color: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.required {
+  color: var(--yellow);
+}
+
+.btnContainer {
+  display: grid;
+  width: 100%;
+  /* margin-top: 3rem; */
+  grid-template-columns: repeat(1, 1fr);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.serviceOption {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.serviceCheckboxes {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.checkbox {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--darkGray);
+  background-color: var(--white);
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.checkbox:checked {
+  background-color: var(--lime);
+  border-color: var(--blue);
+}
+
+.checkboxLabel {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  color: var(--black);
+  font-size: 1.4rem;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.serviceOption.selected .checkboxLabel {
+  background-color: var(--lightBlack);
+  color: var(--tan);
+}
+
+@media screen and (max-width: 1100px) {
+  .form {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .serviceButtons {
+    gap: 0.75rem;
+  }
+  .serviceButton {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .labelInputBox input,
+  .labelInputBox textarea {
+    height: auto;
+    resize: vertical;
+    border-bottom: 1px solid var(--gray);
+    border-radius: 0;
+  }
+  .namesContainer,
+  .everythingElse {
+    flex: 1;
+    width: 100%;
+  }
+  .namesContainer {
+    flex-direction: column;
+  }
+
+  .btnBtnContainer {
+    margin-top: 2rem;
+    display: grid;
+    width: 100%;
+  }
+  .checkboxLabel {
+    font-size: 1.6rem;
+  }
+}
