@@ -3,5 +3,73 @@
 }
 
 .content {
-  padding: 10rem 5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  position: relative;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--black);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+  top: unset;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+  top: unset;
+  left: unset;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  /* gap: 5rem; */
+  height: 100%;
+  border-right: 1px solid var(--lightGray);
+}
+
+.leftTop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
+  border-bottom: 1px solid var(--lightGray);
+  padding: 5rem;
+  width: 100%;
+}
+
+.leftBottom {
+  padding: 5rem;
+}
+
+.text {
+  font-family: var(--RobotoCondensed);
 }
