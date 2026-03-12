@@ -72,26 +72,28 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className={styles.footerSocials}>
-          {data3.map((x) => (
-            <Link
-              key={x.id}
-              href={x.href}
-              target='_blank'
-              className={styles.socialIconContainer}
-            >
-              {x.icon}
-            </Link>
-          ))}
-        </div>
-        <div className={styles.footerBottom}>
-          <div className={styles.footerBottomLeft}>
-            <small className={styles.small}>© 2025 Fonts & Footers</small>
+        <div className={styles.bottomii}>
+          <div className={styles.footerSocials}>
+            {data3.map((x) => (
+              <Link
+                key={x.id}
+                href={x.href}
+                target='_blank'
+                className={styles.socialIconContainer}
+              >
+                {x.icon}
+              </Link>
+            ))}
           </div>
-          <div className={styles.footerBottomRight}>
-            <small className={styles.small}>
-              This site was designed and developed by Fonts & Footers
-            </small>
+          <div className={styles.footerBottom}>
+            <div className={styles.footerBottomLeft}>
+              <small className={styles.small}>© 2025 Fonts & Footers</small>
+            </div>
+            <div className={styles.footerBottomRight}>
+              <small className={styles.small}>
+                This site was designed and developed by Fonts & Footers
+              </small>
+            </div>
           </div>
         </div>
       </LayoutWrapper>
