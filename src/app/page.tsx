@@ -10,6 +10,7 @@ import ParallaxArea from "../components/HomePage/ParallaxArea/ParallaxArea";
 import PricingPreview from "../components/HomePage/PricingPreview/PricingPreview";
 import ProjectSection from "../components/HomePage/ProjectSection/ProjectSection";
 import Solution from "../components/HomePage/Solution/Solution";
+import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 
 export default function HomePage() {
   return (
@@ -26,6 +27,7 @@ export default function HomePage() {
       <ComparisonChart />
       <HowItWorks />
       <Faq />
+      <ContactSection />
     </main>
   );
 }

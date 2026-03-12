@@ -1,0 +1,7 @@
+.container {
+  background-color: var(--accent);
+}
+
+.content {
+  padding: 10rem 5rem;
+}
