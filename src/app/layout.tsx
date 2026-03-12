@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import { Geist } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
+import SessionProviderWrap from "@/components/shared/Providers/SessionProvider/SessionProvider";
 
 const RobotoFlex = localFont({
   src: "../../public/fonts/RobotoFlex.woff2",
@@ -48,7 +49,8 @@ export default function RootLayout({
       <body
         className={`${RobotoFlex.variable} ${RobotoFlexii.variable} ${RobotoCondensed.variable} ${Roboto.variable} ${GeistMono.variable}`}
       >
-        {children}
+        {" "}
+        <SessionProviderWrap>{children}</SessionProviderWrap>
       </body>
     </html>
   );
