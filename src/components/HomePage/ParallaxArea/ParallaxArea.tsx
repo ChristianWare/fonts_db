@@ -2,7 +2,7 @@
 
 import styles from "./ParallaxArea.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
-import Img1 from "../../../../public/images/hero.jpg";
+import Img1 from "../../../../public/images/range.png";
 import ParallaxImageLarge from "../ParallaxImageLarge/ParallaxImageLarge";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 

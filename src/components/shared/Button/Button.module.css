@@ -46,6 +46,18 @@
   color: var(--black);
 }
 
+.white,
+.white:link,
+.white:visited {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.white:hover .arrow {
+  background-color: var(--black);
+  color: var(--white);
+}
+
 .navWhite {
   padding: 1.5rem 2rem;
   background-color: var(--white);

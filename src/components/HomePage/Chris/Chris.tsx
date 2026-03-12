@@ -25,7 +25,7 @@ export default function Chris() {
           <div className={styles.right}>
             <SectionIntro text='Chris Ware — Founder' color='black' />
             <h2 className={styles.heading}>
-              A quick hello — <br />
+              A quick hello <br />
               from the builder
             </h2>
             <p className={styles.copy}>
