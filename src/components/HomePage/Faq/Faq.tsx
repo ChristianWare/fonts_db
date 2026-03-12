@@ -102,8 +102,7 @@ export default function Faq() {
             <div className={styles.top}>
               <div className={styles.dot1} />
               <div className={styles.dot2} />
-              {/* <div className={styles.dot3} />
-              <div className={styles.dot4} /> */}
+
               <div className={styles.topLeft}>
                 <SectionIntro text='Help & oinfo' />
                 <h2 className={styles.heading}>
@@ -123,47 +122,53 @@ export default function Faq() {
               </div>
             </div>
 
-            <div className={styles.right}>
-              {routeQuestions.map((q, i) => {
-                const k = `${currentSection}-${q.id}-${i}`;
-                const open = openKey === k;
-                return (
-                  <div
-                    key={q.id}
-                    className={
-                      open
-                        ? `${styles.qaContainer} ${styles.show}`
-                        : styles.qaContainer
-                    }
-                    onClick={() => toggle(k)}
-                  >
-                    <div className={styles.headingArrowContainer}>
-                      <div className={styles.h3Container}>
-                        <h3 className={styles.question} lang='en'>
-                          {q.question}
-                        </h3>
-                      </div>
-                      <div className={styles.arrowContainer}>
-                        <Arrow
-                          className={open ? styles.iconFlip : styles.icon}
-                        />
-                      </div>
-                    </div>
-
+            <div className={styles.bottom}>
+              <div className={styles.bottomLeft} />
+              <div className={styles.bottomRight}>
+                {routeQuestions.map((q, i) => {
+                  const k = `${currentSection}-${q.id}-${i}`;
+                  const open = openKey === k;
+                  return (
                     <div
+                      key={q.id}
                       className={
                         open
-                          ? `${styles.answerContainer} ${styles.show}`
-                          : styles.answerContainer
+                          ? `${styles.qaContainer} ${styles.show}`
+                          : styles.qaContainer
                       }
+                      onClick={() => toggle(k)}
                     >
-                      <p className={styles.answer} lang='en'>
-                        {q.answer}
-                      </p>
+                      <div className={styles.headingArrowContainer}>
+                        <div className={styles.h3Container}>
+                          <h3 className={styles.question} lang='en'>
+                            <span style={{ marginRight: "3rem", }}>
+                              0{i + 1}.
+                              </span>
+                               {q.question}
+                          </h3>
+                        </div>
+                        <div className={styles.arrowContainer}>
+                          <Arrow
+                            className={open ? styles.iconFlip : styles.icon}
+                          />
+                        </div>
+                      </div>
+
+                      <div
+                        className={
+                          open
+                            ? `${styles.answerContainer} ${styles.show}`
+                            : styles.answerContainer
+                        }
+                      >
+                        <p className={styles.answer} lang='en'>
+                          {q.answer}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </LayoutWrapper>
@@ -210,7 +215,7 @@ export default function Faq() {
                       <div className={styles.headingArrowContainer}>
                         <div className={styles.h3Container}>
                           <h3 className={styles.question} lang='en'>
-                            {q.question}
+                            {i + 1}. {q.question}
                           </h3>
                         </div>
                         <div className={styles.arrowContainer}>
