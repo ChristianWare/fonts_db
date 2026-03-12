@@ -116,7 +116,7 @@
 
 .img {
   object-fit: cover;
-  object-position: top;
+  object-position: center 20%;
 }
 
 .imgOverlay {
@@ -246,9 +246,9 @@
     width: 100%;
   }
 
-  .img {
+  /* .img {
     object-position: top;
-  }
+  } */
 
   .btnContainer {
     display: grid;

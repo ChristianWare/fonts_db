@@ -1,4 +1,4 @@
-import Img1 from "../../public/images/branded.jpg";
+import Img1 from "../../public/images/reliefii.jpg";
 import Img2 from "../../public/images/work.jpg";
 import Img3 from "../../public/images/proven.jpg";
 import Img4 from "../../public/images/system.jpg";
