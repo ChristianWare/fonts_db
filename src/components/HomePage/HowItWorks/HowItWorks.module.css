@@ -150,7 +150,8 @@
 
 @media screen and (max-width: 768px) {
   .mapDataBox {
-    padding-bottom: 2rem;
+    padding: 0rem;
+    border: none;
   }
   
   .card {

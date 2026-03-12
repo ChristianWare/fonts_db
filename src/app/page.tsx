@@ -11,6 +11,8 @@ import PricingPreview from "../components/HomePage/PricingPreview/PricingPreview
 import ProjectSection from "../components/HomePage/ProjectSection/ProjectSection";
 import Solution from "../components/HomePage/Solution/Solution";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
+import Footer from "@/components/HomePage/Footer/Footer";
+import Chris from "@/components/HomePage/Chris/Chris";
 
 export default function HomePage() {
   return (
@@ -27,7 +29,9 @@ export default function HomePage() {
       <ComparisonChart />
       <HowItWorks />
       <Faq />
+      <Chris />
       <ContactSection />
+      <Footer />
     </main>
   );
 }

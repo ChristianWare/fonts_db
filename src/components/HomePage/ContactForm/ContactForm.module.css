@@ -259,8 +259,7 @@
 }
 
 @media screen and (max-width: 568px) {
-  .labelInputBox input,
-  .labelInputBox textarea {
+  .labelInputBox input {
     height: auto;
     resize: vertical;
     border-bottom: 1px solid var(--gray);
