@@ -1,0 +1,289 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: var(--black);
+}
+
+/* ---- LEFT PANEL ---- */
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4rem;
+  background-color: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+
+.left::after {
+  content: "";
+  position: absolute;
+  bottom: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.brandName {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.brandTagline {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.quote {
+  padding-bottom: 6rem;
+}
+
+.quoteText {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 7rem;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.quoteText span {
+  color: var(--accent);
+}
+
+/* ---- RIGHT PANEL ---- */
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--lightGray);
+  padding: 4rem;
+  overflow-y: auto;
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 2rem 0rem;
+}
+
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- FORM ---- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.label {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.input {
+  width: 100%;
+  padding: 1.4rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--black);
+  transition: border-color 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--lightText);
+}
+
+.input:focus {
+  border-color: var(--black);
+}
+
+.inputError {
+  border-color: #e53e3e;
+}
+
+.fieldError {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: #e53e3e;
+  text-transform: none;
+}
+
+.errorBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #fed7d7;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 1.6rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  border: none;
+}
+
+.submitBtn:hover {
+  opacity: 0.85;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- SUCCESS STATE ---- */
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.successIcon {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+
+.successText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+.backToLogin {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-transform: none;
+}
+
+/* ---- FOOTER ---- */
+.loginPrompt {
+  text-align: center;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+.loginLink {
+  font-family: var(--SuisseIntlMedium);
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .left {
+    display: none;
+  }
+
+  .right {
+    padding: 3rem 2rem;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

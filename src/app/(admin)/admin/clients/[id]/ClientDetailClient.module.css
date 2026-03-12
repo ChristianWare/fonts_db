@@ -1,0 +1,1117 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 900px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.backBtn {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--gray);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-transform: none;
+  transition: color 0.2s ease;
+  text-align: left;
+}
+
+.backBtn:hover {
+  color: var(--black);
+}
+
+.clientMeta {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.clientAvatar {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 3.6rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.clientEmail {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.stageBadge {
+  padding: 0.8rem 1.6rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* ---- TABS ---- */
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--lighterGray);
+  padding-bottom: 0;
+}
+
+.tab {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem 1.6rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--black);
+}
+
+.tabActive {
+  color: var(--black);
+  border-bottom-color: var(--black);
+}
+
+/* ---- TAB CONTENT ---- */
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ---- CARD ---- */
+.card {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.cardHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.cardDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.5;
+  margin-top: -0.8rem;
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- STAGE SELECTOR ---- */
+.stageSelector {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.select {
+  flex: 1;
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.advanceBtn {
+  padding: 1.2rem 2.4rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.advanceBtn:hover {
+  opacity: 0.85;
+}
+
+.advanceBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- STAGE LOG ---- */
+.stageLog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.stageLogLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+}
+
+.stageLogEntry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.stageLogText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.stageLogMeta {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+  flex-shrink: 0;
+}
+
+/* ---- INFO GRID ---- */
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--lightGray);
+  gap: 2rem;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gray);
+}
+
+.infoValue {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+/* ---- UPLOAD FORM ---- */
+.uploadForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.uploadRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.2rem;
+}
+
+.input {
+  width: 100%;
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--lightText);
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 1.6rem;
+  height: 1.6rem;
+  accent-color: var(--black);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadBtn {
+  padding: 1.2rem 2.4rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  align-self: flex-start;
+}
+
+.uploadBtn:hover {
+  opacity: 0.85;
+}
+
+.uploadBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.errorBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #fed7d7;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+/* ---- DOC LIST ---- */
+.docList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.docRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.docRow:last-child {
+  border-bottom: none;
+}
+
+.docInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.docTitle {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.docMeta {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.viewBtn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.viewBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* ---- QUESTIONNAIRE ANSWERS ---- */
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.submittedDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--lightGray);
+  margin-bottom: 0.4rem;
+}
+
+.answerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.answerRow:last-child {
+  border-bottom: none;
+}
+
+.answerKey {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: capitalize;
+  color: var(--gray);
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+.answerValue {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+/* ---- ASSET LIST ---- */
+.assetList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.assetRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.assetRow:last-child {
+  border-bottom: none;
+}
+
+.assetInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.assetName {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.assetMeta {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+  text-transform: capitalize;
+}
+
+/* ---- DESIGN OPTIONS ---- */
+.selectionRow {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.selectionThumb {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  flex-shrink: 0;
+}
+
+.selectionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.selectionName {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.selectionNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.selectionNotesLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gray);
+}
+
+.selectionNotesText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.selectedTag {
+  font-family: var(--SuisseIntlMedium);
+  color: var(--accent);
+}
+
+.docActions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.deleteBtn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  border: 1.5px solid #fed7d7;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: #c53030;
+  text-transform: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #fff5f5;
+}
+
+.inlineLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  color: var(--darkGray);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.inlineLink:hover {
+  color: var(--black);
+}
+
+/* ---- TRACKER (appended) ---- */
+
+.trackerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.4rem;
+}
+
+.trackerCount {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stages {
+  display: flex;
+  flex-direction: column;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0 1.4rem;
+  position: relative;
+  padding-bottom: 2.4rem;
+  align-items: start;
+}
+
+.stage:last-child {
+  padding-bottom: 0;
+}
+
+.connector {
+  position: absolute;
+  left: 0.9rem;
+  top: 2rem;
+  width: 2px;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.connectorCompleted {
+  background-color: var(--black);
+}
+
+.connectorUpcoming {
+  background-color: var(--lighterGray);
+}
+
+.stageDot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: 0.1rem;
+}
+
+.stageCompleted .stageDot {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.stageUpcoming .stageDot {
+  background-color: var(--white);
+  border: 2px solid var(--lighterGray);
+}
+
+.stageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.1rem;
+}
+
+.stageLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stageLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--black);
+}
+
+.stageUpcoming .stageLabel {
+  color: var(--darkGray);
+}
+
+.stageDate {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #16a34a;
+  padding: 0.2rem 0.7rem;
+  background-color: #f0fdf4;
+  border-radius: 999px;
+}
+
+/* ---- TOGGLE DIVIDER ---- */
+.toggleDivider {
+  height: 1px;
+  background-color: var(--lighterGray);
+  margin: 2.8rem 0 2.4rem;
+}
+
+/* ---- SITE LIVE TOGGLE ---- */
+.liveToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.liveToggleLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.liveToggleLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.liveToggleDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* The toggle pill */
+.toggle {
+  flex-shrink: 0;
+  width: 5.2rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.25s ease;
+  padding: 0;
+}
+
+.toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggleOff {
+  background-color: var(--lighterGray);
+}
+
+.toggleOn {
+  background-color: var(--black);
+}
+
+/* The sliding thumb */
+.toggleThumb {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background-color: var(--white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease;
+  display: block;
+}
+
+.toggleOn .toggleThumb {
+  transform: translateX(2.4rem);
+}
+
+.toggleOff .toggleThumb {
+  transform: translateX(0);
+}
+
+/* ---- TRACKER (appended) ---- */
+
+.trackerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.4rem;
+}
+
+.trackerCount {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stages {
+  display: flex;
+  flex-direction: column;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0 1.4rem;
+  position: relative;
+  padding-bottom: 2.4rem;
+  align-items: start;
+}
+
+.stage:last-child {
+  padding-bottom: 0;
+}
+
+.connector {
+  position: absolute;
+  left: 0.9rem;
+  top: 2rem;
+  width: 2px;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.connectorCompleted {
+  background-color: var(--black);
+}
+
+.connectorUpcoming {
+  background-color: var(--lighterGray);
+}
+
+.stageDot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: 0.1rem;
+}
+
+.stageCompleted .stageDot {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.stageUpcoming .stageDot {
+  background-color: var(--white);
+  border: 2px solid var(--lighterGray);
+}
+
+.stageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.1rem;
+}
+
+.stageLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stageLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--black);
+}
+
+.stageUpcoming .stageLabel {
+  color: var(--darkGray);
+}
+
+.stageDate {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #16a34a;
+  padding: 0.2rem 0.7rem;
+  background-color: #f0fdf4;
+  border-radius: 999px;
+}
+
+/* ---- TOGGLE DIVIDER ---- */
+.toggleDivider {
+  height: 1px;
+  background-color: var(--lighterGray);
+  margin: 2.8rem 0 2.4rem;
+}
+
+/* ---- SITE LIVE TOGGLE ---- */
+.liveToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.liveToggleLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.liveToggleLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.liveToggleDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* The toggle pill */
+.toggle {
+  flex-shrink: 0;
+  width: 5.2rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.25s ease;
+  padding: 0;
+}
+
+.toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggleOff {
+  background-color: var(--lighterGray);
+}
+
+.toggleOn {
+  background-color: var(--black);
+}
+
+/* The sliding thumb */
+.toggleThumb {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background-color: var(--white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease;
+  display: block;
+}
+
+.toggleOn .toggleThumb {
+  transform: translateX(2.4rem);
+}
+
+.toggleOff .toggleThumb {
+  transform: translateX(0);
+}
+
+/* ── DESIGN TAB — CLIENT SELECTION ──────────────────────────────────── */
+
+.selectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.6rem;
+  margin-bottom: 2.4rem;
+}
+
+.selectionBadge {
+  flex-shrink: 0;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #16a34a;
+  padding: 0.4rem 1rem;
+  background-color: #f0fdf4;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.selectionBody {
+  display: grid;
+  grid-template-columns: 28rem 1fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .selectionBody {
+    grid-template-columns: 1fr;
+  }
+}
+
+.selectionThumb {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.selectionThumbImg {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.selectionViewBtn {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--black);
+  text-decoration: none;
+  text-align: center;
+  padding: 1rem;
+  background-color: var(--lightGray);
+  transition: background-color 0.15s ease;
+}
+
+.selectionViewBtn:hover {
+  background-color: var(--lighterGray);
+}
+
+.selectionMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.infoLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.infoLink:hover {
+  text-decoration: underline;
+}
+
+.selectionNotesBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.selectionNotesText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.6;
+  background-color: var(--lightGray);
+  border-radius: 8px;
+  padding: 1.4rem;
+  margin: 0;
+}
+
+/* Dot indicator on tab when client has made a selection */
+.tabDot {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: #16a34a;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+  position: relative;
+  top: -0.1rem;
+}

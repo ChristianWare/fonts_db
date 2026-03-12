@@ -1,0 +1,284 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 860px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sectionHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.ticketList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.ticketCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.ticketTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.ticketTopLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ticketClient {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.ticketBusiness {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.2rem 0.8rem;
+  border-radius: 999px;
+}
+
+.ticketEmail {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.ticketSubject {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.ticketDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.ticketStatus {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.statusOpen {
+  background-color: #fefce8;
+  color: #ca8a04;
+}
+
+.statusClosed {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.ticketMessage {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+.existingReply {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.6rem;
+  background-color: var(--lightGray);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.replyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.replyLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.replyDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.replyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+.replyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.textarea {
+  width: 100%;
+  padding: 1.3rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.replyBtns {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.cancelBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.sendBtn {
+  padding: 1rem 2.4rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.sendBtn:hover {
+  opacity: 0.85;
+}
+
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.replyBtn {
+  align-self: flex-start;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.replyBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.emptyState {
+  padding: 8rem 4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  text-align: center;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--gray);
+  text-transform: none;
+}

@@ -1,0 +1,721 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 900px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+.successBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 1.6rem;
+  background-color: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 10px;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: #16a34a;
+  text-transform: none;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 8rem 4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--lighterGray);
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- INSTRUCTIONS ---- */
+.instructions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.6rem 2rem;
+  background-color: var(--white);
+  border: 1.5px solid var(--lighterGray);
+  border-radius: 12px;
+}
+
+.instructionStep {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.instructionNum {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.instructionText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.4;
+}
+
+.instructionDivider {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.6rem;
+  color: var(--lighterGray);
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   LIGHTBOX
+   - overlay: position fixed, flex column, no overflow clip
+   - panel: flex column with fixed height, overflow hidden on panel
+   - lightboxScroll: flex 1 + overflow-y auto — the only scroll zone
+   - Lenis is stopped via useLenis() so wheel events reach this container
+================================================================ */
+
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.lightboxPanel {
+  background-color: var(--white);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lightboxHeader {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid var(--lightGray);
+  gap: 1.6rem;
+  background-color: var(--white);
+}
+
+.lightboxMeta {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.lightboxNum {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.lightboxName {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.lightboxActions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-left: auto;
+}
+
+.lightboxSourceLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-decoration: none;
+  text-transform: none;
+  transition: color 0.2s ease;
+}
+
+.lightboxSourceLink:hover {
+  color: var(--black);
+}
+
+.lightboxSelectBtn {
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--black);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  background: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  white-space: nowrap;
+}
+
+.lightboxSelectBtn:hover {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.lightboxSelectBtnActive {
+  background-color: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+.lightboxSelectBtnActive:hover {
+  opacity: 0.85;
+  color: var(--accent);
+}
+
+.lightboxChosenBadge {
+  padding: 0.6rem 1.4rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.lightboxClose {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lightboxClose:hover {
+  background-color: var(--lightGray);
+}
+
+/* flex:1 + overflow-y:auto = fills remaining space and scrolls.
+   Works because Lenis is stopped when this is visible. */
+.lightboxScroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lightboxImage {
+  display: block;
+  width: 100%;
+}
+
+.lightboxFooter {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 2rem;
+  border-top: 1px solid var(--lightGray);
+  gap: 1.6rem;
+  background-color: var(--white);
+}
+
+.lightboxFooterHint {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ================================================================
+   GALLERY CARDS
+================================================================ */
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.optionCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 2px solid var(--lighterGray);
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.optionActive {
+  border-color: var(--black);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.optionChosen {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+/* Card header */
+.optionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 2rem;
+  border-bottom: 1px solid var(--lightGray);
+  gap: 1.6rem;
+}
+
+.optionHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  min-width: 0;
+}
+
+.optionHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* ---- RADIO INPUT ---- */
+/* Native browser radio — immune to global button resets */
+.radio {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: var(--black);
+}
+
+/* ---- OPTION LABELS ---- */
+.optionNumber {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  white-space: nowrap;
+}
+
+.templateName {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chosenBadge {
+  padding: 0.4rem 1.2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+}
+
+.activeBadge {
+  padding: 0.4rem 1.2rem;
+  background-color: var(--lightGray);
+  color: var(--black);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+}
+
+/* Preview image */
+.preview {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  cursor: pointer;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.preview:hover .previewImage {
+  transform: scale(1.015);
+}
+
+.previewOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 2.4rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.preview:hover .previewOverlay {
+  opacity: 1;
+}
+
+.previewHint {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 2rem;
+  background-color: rgba(255, 255, 255, 0.96);
+  border-radius: 999px;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  pointer-events: none;
+}
+
+/* Card footer */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.4rem 2rem;
+  flex-wrap: wrap;
+}
+
+.previewBtn {
+  padding: 0.9rem 1.8rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.previewBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.selectBtn {
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--black);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  cursor: pointer;
+  background: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.selectBtn:hover {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.selectBtnActive {
+  background-color: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+.selectBtnActive:hover {
+  opacity: 0.85;
+  color: var(--accent);
+}
+
+.sourceLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-decoration: none;
+  text-transform: none;
+  margin-left: auto;
+  transition: color 0.2s ease;
+}
+
+.sourceLink:hover {
+  color: var(--black);
+}
+
+/* ================================================================
+   CONFIRM CARD
+================================================================ */
+
+.confirmCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 2px dashed var(--lighterGray);
+  padding: 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: border-color 0.2s ease;
+}
+
+.confirmCardActive {
+  border-style: solid;
+  border-color: var(--black);
+}
+
+.confirmLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.confirmHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+
+.confirmDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.confirmRight {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.textarea {
+  width: 100%;
+  padding: 1.3rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.textarea::placeholder {
+  color: var(--lightText);
+}
+
+.errorBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #fed7d7;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+.confirmBtn {
+  align-self: flex-end;
+  padding: 1.3rem 3.2rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.confirmBtn:hover {
+  opacity: 0.85;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- NOTES CARD (post-submit) ---- */
+.notesCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1.5px solid var(--lighterGray);
+  border-left: 3px solid var(--accent);
+}
+
+.notesLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.notesText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+/* ---- MOBILE ---- */
+@media screen and (max-width: 768px) {
+  .instructions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+
+  .instructionDivider {
+    display: none;
+  }
+
+  .cardFooter {
+    flex-wrap: wrap;
+  }
+
+  .sourceLink {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .confirmBtn {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .lightboxOverlay {
+    padding: 0;
+  }
+
+  .lightboxPanel {
+    border-radius: 16px 16px 0 0;
+    margin-top: auto;
+    height: 95vh;
+  }
+
+  .lightboxActions {
+    gap: 0.8rem;
+  }
+
+  .lightboxFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .lightboxSelectBtn {
+    text-align: center;
+  }
+}

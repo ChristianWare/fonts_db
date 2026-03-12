@@ -1,0 +1,295 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 860px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- EMPTY STATE ---- */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: 8rem 4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+}
+
+.emptyHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2.4rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+/* ---- DOCUMENT LIST ---- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.docCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--lighterGray);
+  transition: border-color 0.2s ease;
+}
+
+.docCard:hover {
+  border-color: var(--lightText);
+}
+
+.docLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.6rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.docIcon {
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 10px;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--darkGray);
+  flex-shrink: 0;
+}
+
+.docInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.docTopRow {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.docType {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+}
+
+.docStatus {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+}
+
+.statusSigned {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.statusPending {
+  background-color: #fefce8;
+  color: #ca8a04;
+}
+
+.statusUploaded {
+  background-color: var(--lightGray);
+  color: var(--darkGray);
+}
+
+.docTitle {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.docMeta {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- DOC ACTIONS ---- */
+.docActions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.downloadBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.signBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--accent);
+  text-transform: none;
+  transition: opacity 0.2s ease;
+}
+
+.signBtn:hover {
+  opacity: 0.85;
+}
+
+.signedConfirm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: #16a34a;
+  text-transform: none;
+}
+
+/* ---- SIGNATURE RECORD ---- */
+.signatureRecord {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.signatureRecordHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.signatureEntry {
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.signatureEntryLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.signatureDocTitle {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.signatureDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.signatureDetails span {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  font-family: var(--SuisseIntlRegular);
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 768px) {
+  .docCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .docActions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

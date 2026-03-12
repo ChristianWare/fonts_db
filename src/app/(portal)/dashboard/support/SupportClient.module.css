@@ -1,0 +1,283 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 720px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- FORM CARD ---- */
+.formCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.formHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.label {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 1.3rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  transition: border-color 0.2s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--lightText);
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.successBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: #16a34a;
+  text-transform: none;
+}
+
+.errorBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #fed7d7;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+.formFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitBtn {
+  padding: 1.2rem 3rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s ease;
+}
+
+.submitBtn:hover {
+  opacity: 0.85;
+}
+
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- TICKET SECTION ---- */
+.ticketSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.ticketSectionHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.ticketList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.ticketCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.ticketTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.6rem;
+}
+
+.ticketTopLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ticketSubject {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.ticketDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.ticketStatus {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.ticketOpen {
+  background-color: #fefce8;
+  color: #ca8a04;
+}
+
+.ticketClosed {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.ticketMessage {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+/* ---- ADMIN REPLY ---- */
+.adminReply {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.6rem;
+  background-color: var(--lightGray);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.adminReplyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adminReplyLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.adminReplyDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.adminReplyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 768px) {
+  .ticketTop {
+    flex-direction: column;
+  }
+
+  .formFooter {
+    justify-content: stretch;
+  }
+
+  .submitBtn {
+    width: 100%;
+    text-align: center;
+  }
+}

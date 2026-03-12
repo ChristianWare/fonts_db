@@ -1,0 +1,339 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 860px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sectionHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.requestList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.requestCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--lighterGray);
+  overflow: hidden;
+}
+
+.requestTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 2.4rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.requestTop:hover {
+  background-color: var(--lightGray);
+}
+
+.requestTopLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.requestClient {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.requestBusiness {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.2rem 0.8rem;
+  border-radius: 999px;
+}
+
+.requestTitle {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.requestDate {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.requestTopRight {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.requestStatus {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+}
+
+.statusPending {
+  background-color: #fefce8;
+  color: #ca8a04;
+}
+
+.statusInProgress {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.statusCompleted {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.statusDeclined {
+  background-color: #fff5f5;
+  color: #c53030;
+}
+
+.chevron {
+  color: var(--gray);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}
+
+.requestBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 0 2.4rem 2.4rem;
+  border-top: 1px solid var(--lightGray);
+  padding-top: 2rem;
+}
+
+.requestDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+.adminNotes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.4rem 1.6rem;
+  background-color: var(--lightGray);
+  border-radius: 10px;
+  border-left: 3px solid var(--accent);
+}
+
+.adminNotesLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.adminNotesText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.editRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.editLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+}
+
+.select {
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.textarea {
+  width: 100%;
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  background-color: var(--white);
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--black);
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: var(--black);
+  outline: none;
+}
+
+.editBtns {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.cancelBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.saveBtn {
+  padding: 1rem 2.4rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.saveBtn:hover {
+  opacity: 0.85;
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.editBtn {
+  align-self: flex-start;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.editBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.emptyState {
+  padding: 8rem 4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  text-align: center;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--gray);
+  text-transform: none;
+}

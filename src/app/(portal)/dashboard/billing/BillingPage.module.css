@@ -1,0 +1,317 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 860px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- SUBSCRIPTION CARD ---- */
+.subscriptionCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.subscriptionTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.subscriptionLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.subscriptionLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray);
+}
+
+.subscriptionPlan {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 3.2rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subscriptionStatus {
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.statusActive {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.statusPastDue {
+  background-color: #fff7ed;
+  color: #c2410c;
+}
+
+.statusInactive {
+  background-color: var(--lightGray);
+  color: var(--gray);
+}
+
+.subscriptionDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detailLabel {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+.detailValue {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.noSubscription {
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.noSubscriptionText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.pastDueBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 1.6rem;
+  background-color: #fff7ed;
+  border: 1.5px solid #fed7aa;
+  border-radius: 10px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c2410c;
+  text-transform: none;
+  line-height: 1.4;
+}
+
+/* ---- INVOICE SECTION ---- */
+.invoiceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.invoiceSectionHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+/* ---- EMPTY STATE ---- */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 6rem 4rem;
+  background-color: var(--white);
+  border-radius: 16px;
+  text-align: center;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.emptyIcon {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- INVOICE LIST ---- */
+.invoiceList {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--lighterGray);
+  overflow: hidden;
+}
+
+.invoiceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.8rem 2.4rem;
+  border-bottom: 1px solid var(--lightGray);
+  transition: background-color 0.15s ease;
+}
+
+.invoiceRow:last-child {
+  border-bottom: none;
+}
+
+.invoiceRow:hover {
+  background-color: var(--lightGray);
+}
+
+.invoiceLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.invoiceNumber {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.invoiceDesc {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.invoiceRight {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-shrink: 0;
+}
+
+.invoiceAmount {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.invoiceStatus {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+}
+
+.invoicePaid {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.invoiceOpen {
+  background-color: #fefce8;
+  color: #ca8a04;
+}
+
+.invoiceOther {
+  background-color: var(--lightGray);
+  color: var(--gray);
+}
+
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  color: var(--darkGray);
+  text-transform: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.downloadBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 768px) {
+  .subscriptionTop {
+    flex-direction: column;
+  }
+
+  .invoiceRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+}

@@ -1,0 +1,339 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 860px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.6rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- LABEL SELECTOR ---- */
+.labelSelector {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.labelBtn {
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  cursor: pointer;
+  background: var(--white);
+  transition: all 0.15s ease;
+}
+
+.labelBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.labelBtnActive {
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--accent);
+}
+
+.labelBtnActive:hover {
+  color: var(--accent);
+}
+
+/* ---- DROPZONE ---- */
+.dropzone {
+  border: 2px dashed var(--lighterGray);
+  border-radius: 16px;
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  background-color: var(--white);
+  min-height: 220px;
+}
+
+.dropzone:hover {
+  border-color: var(--black);
+  background-color: var(--lightGray);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.dropzoneInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  text-align: center;
+}
+
+.dropzoneIcon {
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--darkGray);
+}
+
+.dropzoneText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dropzoneMain {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.dropzoneSub {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+  max-width: 360px;
+}
+
+.dropzoneFormats {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.browseBtn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  text-transform: none;
+}
+
+/* ---- UPLOADING STATE ---- */
+.uploadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.spinner {
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 3px solid var(--lightGray);
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.uploadingText {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+/* ---- ERROR ---- */
+.errorBanner {
+  padding: 1.2rem 1.6rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #fed7d7;
+  border-radius: 8px;
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+/* ---- ASSET LIST ---- */
+.assetList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.assetListHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.assets {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.assetCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.6rem 2rem;
+  background-color: var(--white);
+  border-radius: 12px;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.assetLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.assetIcon {
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 8px;
+  background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--darkGray);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.assetThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.assetInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.assetName {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.assetMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.assetLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+}
+
+.assetSize {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.2rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- ASSET ACTIONS ---- */
+.assetActions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-shrink: 0;
+}
+
+.viewBtn {
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--lighterGray);
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.viewBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.deleteBtn {
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  border: 1.5px solid #fed7d7;
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: #c53030;
+  text-transform: none;
+  cursor: pointer;
+  background: none;
+  transition: background-color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #fff5f5;
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 768px) {
+  .dropzone {
+    padding: 3rem 2rem;
+  }
+
+  .assetCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .assetActions {
+    width: 100%;
+  }
+}

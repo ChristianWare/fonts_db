@@ -1,0 +1,247 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 1000px;
+}
+
+/* ---- HEADER ---- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.heading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+
+.subheading {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.4rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- STATS ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2rem;
+}
+
+.statCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border: 1.5px solid var(--lighterGray);
+}
+
+.statLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+}
+
+.statValue {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 3.6rem;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  line-height: 1;
+}
+
+.statAlert {
+  color: #c2410c;
+}
+
+.statSub {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.statLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--black);
+  text-transform: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- PIPELINE CARD ---- */
+.pipelineCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--lighterGray);
+  overflow: hidden;
+}
+
+.pipelineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.4rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.pipelineHeading {
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+
+.viewAllLink {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+  transition: color 0.2s ease;
+}
+
+.viewAllLink:hover {
+  color: var(--black);
+}
+
+.emptyState {
+  padding: 4rem;
+  text-align: center;
+}
+
+.emptyText {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.5rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+/* ---- CLIENT LIST ---- */
+.clientList {
+  display: flex;
+  flex-direction: column;
+}
+
+.clientRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.8rem 2.4rem;
+  border-bottom: 1px solid var(--lightGray);
+  transition: background-color 0.15s ease;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.clientRow:last-child {
+  border-bottom: none;
+}
+
+.clientRow:hover {
+  background-color: var(--lightGray);
+}
+
+.clientLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.clientAvatar {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--SuisseIntlCondBold);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.clientInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.clientName {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.clientEmail {
+  font-family: var(--SuisseIntlRegular);
+  font-size: 1.3rem;
+  color: var(--gray);
+  text-transform: none;
+}
+
+.clientRight {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  color: var(--gray);
+}
+
+.clientStage {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stageDot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stageLabel {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: var(--darkGray);
+  text-transform: none;
+}
+
+.mrrBadge {
+  font-family: var(--SuisseIntlMedium);
+  font-size: 1.3rem;
+  color: #16a34a;
+  text-transform: none;
+}
+
+/* ---- RESPONSIVE ---- */
+@media screen and (max-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .clientRight {
+    display: none;
+  }
+}
