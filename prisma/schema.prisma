@@ -1,0 +1,467 @@
+// prisma/schema.prisma
+// Fonts & Footers — Client Portal
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  engineType    = "library"
+  binaryTargets = ["native", "darwin", "darwin-arm64"]
+}
+
+// =========================
+// ENUMS
+// =========================
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+// The stage a client is at in the onboarding lifecycle.
+// You (admin) manually advance clients through these stages.
+// Each stage gates what's visible in the client portal.
+enum OnboardingStage {
+  REGISTERED
+  AGREEMENT_PENDING
+  AGREEMENT_SIGNED
+  QUESTIONNAIRE_PENDING
+  QUESTIONNAIRE_SUBMITTED
+  ASSETS_PENDING
+  ASSETS_UPLOADED
+  DESIGN_SELECTION
+  DESIGN_REVIEW
+  SITE_LIVE
+}
+
+enum DocumentType {
+  SERVICE_AGREEMENT
+  DESIGN_APPROVAL
+  CONTENT_REVIEW
+  GO_LIVE_CONFIRMATION
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING_SIGNATURE
+  SIGNED
+  UPLOADED // For docs that don't need a signature (just for reference)
+}
+
+enum AssetLabel {
+  LOGO
+  PHOTO
+  BRAND_GUIDE
+  DESIGN_OPTION
+  OTHER
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  PAUSED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+}
+
+enum ChangeRequestStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DECLINED
+}
+
+enum SupportTicketStatus {
+  OPEN
+  CLOSED
+}
+
+// =========================
+// AUTH MODELS
+// (mirrors your standard pattern exactly)
+// =========================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  phone         String?
+  password      String?
+
+  passwordSetToken       String?   @unique
+  passwordSetTokenExpiry DateTime?
+
+  roles Role[] @default([CLIENT])
+
+  // One-to-one client profile (only exists if role includes CLIENT)
+  clientProfile ClientProfile?
+
+  accounts Account[]
+  sessions Session[]
+
+  // Admin actions
+  documentsUploaded   Document[]       @relation("DocumentUploadedBy")
+  stageChangesCreated StageChangeLog[] @relation("StageChangedBy")
+  supportReplies      SupportTicket[]  @relation("SupportRepliedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model EmailVerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+  @@index([email])
+  @@index([expires])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+  @@index([email])
+  @@index([expires])
+}
+
+// =========================
+// CLIENT PROFILE
+// Extended info attached to a CLIENT user
+// =========================
+
+model ClientProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Business info collected at signup
+  businessName String
+  phone        String?
+  city         String?
+  state        String?
+  website      String? // Their current site if they have one
+
+  // Where they are in the onboarding process
+  onboardingStage OnboardingStage @default(REGISTERED)
+
+  // Internal admin notes (never visible to client)
+  internalNotes String? @db.Text
+
+  // Stripe
+  stripeCustomerId     String? @unique
+  stripeSubscriptionId String? @unique
+
+  // Relations
+  questionnaire  Questionnaire?
+  documents      Document[]
+  brandAssets    BrandAsset[]
+  subscription   Subscription?
+  invoices       Invoice[]
+  changeRequests ChangeRequest[]
+  supportTickets SupportTicket[]
+  stageLog       StageChangeLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([onboardingStage])
+}
+
+// =========================
+// STAGE CHANGE LOG
+// Audit trail every time admin advances a client's stage
+// =========================
+
+model StageChangeLog {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  fromStage OnboardingStage
+  toStage   OnboardingStage
+  note      String?         @db.Text // Optional internal note about why
+
+  changedById String?
+  changedBy   User?   @relation("StageChangedBy", fields: [changedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([clientProfileId])
+  @@index([createdAt])
+}
+
+// =========================
+// QUESTIONNAIRE
+// One per client. Hard-coded questions, answers stored as JSON.
+// Locked after submission.
+// =========================
+
+model Questionnaire {
+  id              String        @id @default(cuid())
+  clientProfileId String        @unique
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  // Structured answers keyed by question ID
+  // e.g. { "business_name": "Elite Black Car", "service_areas": ["Phoenix", "Scottsdale"], ... }
+  answers Json?
+
+  // Progress — saved as they go, locked on submit
+  submittedAt DateTime?
+  lastSavedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =========================
+// DOCUMENTS
+// Admin uploads docs to client accounts.
+// Clients can view, download, and sign where required.
+// =========================
+
+model Document {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  title  String
+  type   DocumentType
+  status DocumentStatus @default(PENDING_SIGNATURE)
+
+  // Cloudinary URL of the document file
+  fileUrl  String
+  fileName String // Original filename for display
+
+  requiresSignature Boolean @default(false)
+
+  // Signature capture
+  // We use a simple approach: checkbox consent + timestamp + IP
+  // This is sufficient for internal agency agreements
+  signedAt         DateTime?
+  signedByIp       String?
+  signatureConsent Boolean? // true = "I agree this constitutes my electronic signature"
+
+  // Who uploaded it (admin)
+  uploadedById String?
+  uploadedBy   User?   @relation("DocumentUploadedBy", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  // Visibility control — admin can hide a doc before it's ready
+  visible Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientProfileId])
+  @@index([type])
+  @@index([status])
+}
+
+// =========================
+// BRAND ASSETS
+// Files uploaded BY the client
+// =========================
+
+model BrandAsset {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  label    AssetLabel
+  fileName String
+  fileUrl  String // Cloudinary secure_url
+  fileSize Int? // bytes
+  mimeType String?
+
+  // Admin can leave a note on a specific asset (e.g. "Need higher resolution")
+  adminNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  selected     Boolean @default(false)
+  clientNotes  String?
+  templateName String?
+  sourceUrl    String?
+
+  @@index([clientProfileId])
+  @@index([label])
+}
+
+// =========================
+// SUBSCRIPTION
+// One per client. Mirrors their Stripe subscription.
+// =========================
+
+model Subscription {
+  id              String        @id @default(cuid())
+  clientProfileId String        @unique
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  stripeSubscriptionId String? @unique
+  stripePriceId        String?
+  stripeCustomerId     String?
+
+  status          SubscriptionStatus @default(INACTIVE)
+  planAmountCents Int                @default(0) // e.g. 49900 = $499/mo
+  currency        String             @default("usd")
+
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  billingAnchorDate  Int? // Day of month billing hits (1–28)
+
+  cancelledAt DateTime?
+  pausedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =========================
+// INVOICES
+// Mirrors Stripe invoices locally for display in portal
+// =========================
+
+model Invoice {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  invoiceNumber   String  @unique // e.g. "INV-2026-0001"
+  stripeInvoiceId String? @unique
+
+  amountCents Int
+  currency    String @default("usd")
+
+  status  InvoiceStatus @default(DRAFT)
+  paidAt  DateTime?
+  dueDate DateTime?
+
+  // PDF from Stripe or Cloudinary
+  pdfUrl String?
+
+  // Period this invoice covers
+  periodStart DateTime?
+  periodEnd   DateTime?
+
+  description String? // e.g. "Monthly subscription — March 2026"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientProfileId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// =========================
+// CHANGE REQUESTS
+// Post-launch only. Client submits, admin manages.
+// =========================
+
+model ChangeRequest {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String @db.Text
+
+  status ChangeRequestStatus @default(PENDING)
+
+  // Admin response / notes (internal)
+  adminNotes String? @db.Text
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientProfileId])
+  @@index([status])
+}
+
+// =========================
+// SUPPORT TICKETS
+// Simple message thread between client and admin
+// =========================
+
+model SupportTicket {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  subject String
+  message String @db.Text
+
+  status SupportTicketStatus @default(OPEN)
+
+  // Admin reply (single reply per ticket — simple for v1)
+  adminReply  String?   @db.Text
+  repliedAt   DateTime?
+  repliedById String?
+  repliedBy   User?     @relation("SupportRepliedBy", fields: [repliedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientProfileId])
+  @@index([status])
+}
