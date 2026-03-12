@@ -7,6 +7,7 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
 import { questions, type SectionKey, type QuestionItem } from "@/lib/data";
+import Button from "@/components/shared/Button/Button";
 // import Image from "next/image";
 // import ServiceIllustration from "../../../public/illustrations/cadiFleet.png";
 
@@ -141,10 +142,10 @@ export default function Faq() {
                       <div className={styles.headingArrowContainer}>
                         <div className={styles.h3Container}>
                           <h3 className={styles.question} lang='en'>
-                            <span style={{ marginRight: "3rem", }}>
+                            <span style={{ marginRight: "3rem" }}>
                               0{i + 1}.
-                              </span>
-                               {q.question}
+                            </span>
+                            {q.question}
                           </h3>
                         </div>
                         <div className={styles.arrowContainer}>
@@ -168,6 +169,30 @@ export default function Faq() {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+            <div className={styles.bottomii}>
+              <div className={styles.bottomiiContent}>
+                <div className={styles.bcLeft}>
+                  <h3 className={styles.headingii}>
+                    Still need <br /> a hand?
+                  </h3>
+                </div>
+                <div className={styles.bcRight}>
+                  <p className={styles.copyii}>
+                    We’re here to help you find the right setup for your team.
+                    If you didn’t find what you were looking for, our success
+                    team will point you in the right direction.
+                  </p>
+                  <div className={styles.btnContainer}>
+                    <Button
+                      href='/'
+                      text='Book your discovery call'
+                      btnType='accent'
+                      arrow
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -241,9 +266,6 @@ export default function Faq() {
                 })}
               </div>
             </div>
-
-            {/* Optional divider */}
-            {/* <hr className={styles.groupDivider} /> */}
           </div>
         ))}
       </LayoutWrapper>
