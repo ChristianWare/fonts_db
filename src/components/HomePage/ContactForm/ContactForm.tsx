@@ -134,7 +134,7 @@ export default function ContactForm() {
       <div className={styles.everythingElse}>
         <div className={styles.labelInputBox}>
           <label htmlFor='email'>
-            Email 
+            Email
             <span className={styles.required}>*</span>
           </label>
           <input
@@ -252,6 +252,12 @@ export default function ContactForm() {
           text={loading ? "Sending..." : "Submit"}
           arrow
         />
+      </div>
+      <div className={styles.smallParent}>
+        <small className={styles.small}>
+          You’ll hear from us within one business day. By submitting, you agree
+          to our Terms and Privacy Policy.
+        </small>
       </div>
     </form>
   );

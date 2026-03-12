@@ -40,7 +40,8 @@
   width: 100%;
 }
 
-.labelInputBox label {
+.labelInputBox label,
+.small {
   padding: 1.6rem 2rem;
   font-size: 1.2rem;
   letter-spacing: -0.2px;
@@ -222,6 +223,23 @@
 .serviceOption.selected .checkboxLabel {
   background-color: var(--lightBlack);
   color: var(--tan);
+}
+
+.smallParent {
+  width: 100%;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: none !important;
+  padding: 1.6rem 2rem;
+}
+
+.small {
+  width: 100%;
+  border: none !important;
+  text-align: center;
+  max-width: 500px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media screen and (max-width: 1100px) {
