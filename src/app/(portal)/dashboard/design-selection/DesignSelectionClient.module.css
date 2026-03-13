@@ -1,102 +1,96 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 900px;
 }
 
+/* ── Header ── */
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-}
-
-.heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  line-height: 1;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
   max-width: 640px;
-  line-height: 1.5;
+  line-height: 1.6;
+  margin-top: 0.4rem;
 }
 
+/* ── Success banner ── */
 .successBanner {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.4rem 1.6rem;
+  padding: 1.4rem 5rem;
   background-color: #f0fdf4;
-  border: 1.5px solid #bbf7d0;
-  border-radius: 10px;
-  font-family: var(--SuisseIntlMedium);
+  border-bottom: 1px solid #bbf7d0;
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #16a34a;
   text-transform: none;
+  line-height: 1.5;
 }
 
+/* ── Empty state ── */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 1.6rem;
   padding: 8rem 4rem;
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 1.5px solid var(--lighterGray);
   text-align: center;
 }
 
 .emptyIcon {
   width: 6rem;
   height: 6rem;
-  border-radius: 50%;
-  background-color: var(--lightGray);
+  border: 1px solid var(--lightGray);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray);
+  color: var(--text);
 }
 
 .emptyText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
 }
 
-/* ---- INSTRUCTIONS ---- */
+/* ── Instructions ── */
 .instructions {
   display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  padding: 1.6rem 2rem;
-  background-color: var(--white);
-  border: 1.5px solid var(--lighterGray);
-  border-radius: 12px;
+  align-items: stretch;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .instructionStep {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  padding: 1.6rem 3rem;
+  flex: 1;
+  border-right: 1px solid var(--lightGray);
+}
+
+.instructionStep:last-of-type {
+  border-right: none;
 }
 
 .instructionNum {
   width: 2.4rem;
   height: 2.4rem;
-  border-radius: 50%;
   background-color: var(--black);
   color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
+  font-family: var(--GeistMono);
   font-size: 1.3rem;
   display: flex;
   align-items: center;
@@ -105,26 +99,25 @@
 }
 
 .instructionText {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
-  color: var(--darkGray);
+  color: var(--text);
   text-transform: none;
   line-height: 1.4;
 }
 
 .instructionDivider {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.6rem;
-  color: var(--lighterGray);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--lightGray);
   flex-shrink: 0;
+  padding: 0 0.8rem;
+  display: flex;
+  align-items: center;
 }
 
 /* ================================================================
    LIGHTBOX
-   - overlay: position fixed, flex column, no overflow clip
-   - panel: flex column with fixed height, overflow hidden on panel
-   - lightboxScroll: flex 1 + overflow-y auto — the only scroll zone
-   - Lenis is stopped via useLenis() so wheel events reach this container
 ================================================================ */
 
 .lightboxOverlay {
@@ -140,7 +133,6 @@
 
 .lightboxPanel {
   background-color: var(--white);
-  border-radius: 16px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -154,7 +146,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.4rem 2rem;
+  padding: 1.4rem 2.4rem;
   border-bottom: 1px solid var(--lightGray);
   gap: 1.6rem;
   background-color: var(--white);
@@ -167,17 +159,17 @@
 }
 
 .lightboxNum {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.8rem;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
 .lightboxName {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
 }
 
@@ -189,12 +181,13 @@
 }
 
 .lightboxSourceLink {
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.3rem;
-  color: var(--darkGray);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
   text-decoration: none;
-  text-transform: none;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .lightboxSourceLink:hover {
@@ -202,19 +195,16 @@
 }
 
 .lightboxSelectBtn {
-  padding: 0.8rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
+  padding: 0.9rem 2rem;
+  border: 1px solid var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
   background: none;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
   white-space: nowrap;
 }
 
@@ -234,39 +224,24 @@
   color: var(--accent);
 }
 
-.lightboxChosenBadge {
-  padding: 0.6rem 1.4rem;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
 .lightboxClose {
   width: 3.6rem;
   height: 3.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  border: 1px solid var(--lightGray);
   background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--black);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
   flex-shrink: 0;
 }
 
 .lightboxClose:hover {
-  background-color: var(--lightGray);
+  background-color: var(--lightlightGrayi);
 }
 
-/* flex:1 + overflow-y:auto = fills remaining space and scrolls.
-   Works because Lenis is stopped when this is visible. */
 .lightboxScroll {
   flex: 1;
   overflow-y: auto;
@@ -285,16 +260,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.4rem 2rem;
+  padding: 1.4rem 2.4rem;
   border-top: 1px solid var(--lightGray);
   gap: 1.6rem;
   background-color: var(--white);
 }
 
 .lightboxFooterHint {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
-  color: var(--gray);
+  color: var(--text);
   text-transform: none;
 }
 
@@ -305,35 +280,31 @@
 .gallery {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .optionCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 2px solid var(--lighterGray);
+  border-bottom: 1px solid var(--lightGray);
   overflow: hidden;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background-color 0.15s ease;
+}
+
+.optionCard:last-child {
+  border-bottom: none;
 }
 
 .optionActive {
-  border-color: var(--black);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+  background-color: var(--lightlightGrayi);
 }
 
 .optionChosen {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+  background-color: #fffbeb;
 }
 
-/* Card header */
 .optionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.6rem 2rem;
+  padding: 1.6rem 5rem;
   border-bottom: 1px solid var(--lightGray);
   gap: 1.6rem;
 }
@@ -352,30 +323,27 @@
   flex-shrink: 0;
 }
 
-/* ---- RADIO INPUT ---- */
-/* Native browser radio — immune to global button resets */
 .radio {
-  width: 2rem;
-  height: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   cursor: pointer;
   flex-shrink: 0;
   accent-color: var(--black);
 }
 
-/* ---- OPTION LABELS ---- */
 .optionNumber {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.7rem;
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
   white-space: nowrap;
 }
 
 .templateName {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
-  color: var(--gray);
+  color: var(--text);
   text-transform: none;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -383,28 +351,25 @@
 }
 
 .chosenBadge {
-  padding: 0.4rem 1.2rem;
+  padding: 0.3rem 1rem;
   background-color: var(--black);
   color: var(--accent);
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.2rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-radius: 999px;
+  letter-spacing: 0.06em;
 }
 
 .activeBadge {
-  padding: 0.4rem 1.2rem;
-  background-color: var(--lightGray);
+  padding: 0.3rem 1rem;
+  border: 1px solid var(--lightGray);
   color: var(--black);
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.2rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-radius: 999px;
+  letter-spacing: 0.06em;
 }
 
-/* Preview image */
 .preview {
   position: relative;
   width: 100%;
@@ -430,11 +395,7 @@
 .previewOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 30%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.55) 100%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -453,36 +414,33 @@
   gap: 0.8rem;
   padding: 0.9rem 2rem;
   background-color: rgba(255, 255, 255, 0.96);
-  border-radius: 999px;
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--black);
-  text-transform: none;
   pointer-events: none;
 }
 
-/* Card footer */
 .cardFooter {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding: 1.4rem 2rem;
+  padding: 1.4rem 5rem;
   flex-wrap: wrap;
 }
 
 .previewBtn {
   padding: 0.9rem 1.8rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
   font-size: 1.3rem;
-  color: var(--darkGray);
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
   cursor: pointer;
   background: none;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .previewBtn:hover {
@@ -492,18 +450,15 @@
 
 .selectBtn {
   padding: 0.9rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
+  border: 1px solid var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
   cursor: pointer;
   background: none;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .selectBtn:hover {
@@ -523,13 +478,14 @@
 }
 
 .sourceLink {
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.3rem;
-  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
   text-decoration: none;
-  text-transform: none;
   margin-left: auto;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .sourceLink:hover {
@@ -537,23 +493,21 @@
 }
 
 /* ================================================================
-   CONFIRM CARD
+   CONFIRM BLOCK
 ================================================================ */
 
 .confirmCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 2px dashed var(--lighterGray);
-  padding: 2.8rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  transition: border-color 0.2s ease;
+  padding: 3rem 5rem;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  transition: background-color 0.15s ease;
 }
 
 .confirmCardActive {
-  border-style: solid;
-  border-color: var(--black);
+  background-color: var(--lightlightGrayi);
 }
 
 .confirmLeft {
@@ -563,17 +517,17 @@
 }
 
 .confirmHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2.2rem;
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
 .confirmDesc {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
   line-height: 1.5;
 }
@@ -586,47 +540,46 @@
 
 .textarea {
   width: 100%;
-  padding: 1.3rem 1.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--lightGray);
   background-color: var(--white);
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   color: var(--black);
   resize: vertical;
-  transition: border-color 0.2s ease;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
 .textarea:focus {
   border-color: var(--black);
-  outline: none;
 }
 
 .textarea::placeholder {
-  color: var(--lightText);
+  color: var(--text);
 }
 
 .errorBanner {
-  padding: 1.2rem 1.6rem;
+  padding: 1.4rem;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
-  border: 1.5px solid #fed7d7;
-  border-radius: 8px;
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #c53030;
   text-transform: none;
+  line-height: 1.5;
 }
 
 .confirmBtn {
   align-self: flex-end;
-  padding: 1.3rem 3.2rem;
-  border-radius: 8px;
+  padding: 1.2rem 3.2rem;
   background-color: var(--black);
   color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.7rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -641,81 +594,55 @@
   cursor: not-allowed;
 }
 
-/* ---- NOTES CARD (post-submit) ---- */
+/* ── Notes card (post-submit) ── */
 .notesCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 2.4rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  border: 1.5px solid var(--lighterGray);
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
   border-left: 3px solid var(--accent);
 }
 
 .notesLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
 .notesText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
   line-height: 1.6;
 }
 
-/* ---- MOBILE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .instructions {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.2rem;
-  }
+  .header { padding: 3rem 2rem; }
+  .successBanner { padding: 1.4rem 2rem; }
 
-  .instructionDivider {
-    display: none;
-  }
+  .instructions { flex-direction: column; }
+  .instructionStep { padding: 1.2rem 2rem; border-right: none; border-bottom: 1px solid var(--lightGray); }
+  .instructionStep:last-of-type { border-bottom: none; }
+  .instructionDivider { display: none; }
 
-  .cardFooter {
-    flex-wrap: wrap;
-  }
+  .optionHeader { padding: 1.4rem 2rem; }
+  .cardFooter { padding: 1.2rem 2rem; }
+  .sourceLink { margin-left: 0; width: 100%; }
 
-  .sourceLink {
-    margin-left: 0;
-    width: 100%;
-  }
+  .confirmCard { padding: 2.4rem 2rem; }
+  .confirmBtn { align-self: stretch; text-align: center; }
 
-  .confirmBtn {
-    align-self: stretch;
-    text-align: center;
-  }
+  .notesCard { padding: 2rem 2rem; }
 
-  .lightboxOverlay {
-    padding: 0;
-  }
-
-  .lightboxPanel {
-    border-radius: 16px 16px 0 0;
-    margin-top: auto;
-    height: 95vh;
-  }
-
-  .lightboxActions {
-    gap: 0.8rem;
-  }
-
-  .lightboxFooter {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .lightboxSelectBtn {
-    text-align: center;
-  }
+  .lightboxOverlay { padding: 0; }
+  .lightboxPanel { margin-top: auto; height: 95vh; }
+  .lightboxHeader { padding: 1.2rem 1.6rem; }
+  .lightboxFooter { flex-direction: column; align-items: stretch; gap: 1rem; padding: 1.2rem 1.6rem; }
+  .lightboxSelectBtn { text-align: center; }
+  .lightboxActions { gap: 0.8rem; }
 }

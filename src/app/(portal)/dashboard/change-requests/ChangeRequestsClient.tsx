@@ -65,7 +65,7 @@ export default function ChangeRequestsClient({
     return (
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.heading}>Change Requests</h1>
+          <h1 className={`${styles.heading} h2`}>Change Requests</h1>
         </div>
         <div className={styles.lockedState}>
           <div className={styles.lockedIcon}>
@@ -96,7 +96,7 @@ export default function ChangeRequestsClient({
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Change Requests</h1>
+        <h1 className={`${styles.heading} h2`}>Change Requests</h1>
         <p className={styles.subheading}>
           Need something updated on your site? Submit a request and we&apos;ll
           take care of it.

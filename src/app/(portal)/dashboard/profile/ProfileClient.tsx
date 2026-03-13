@@ -74,7 +74,7 @@ export default function ProfileClient({
       {/* Header */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.heading}>Profile</h1>
+          <h1 className={`${styles.heading} h2`}>Profile</h1>
           <p className={styles.subheading}>
             Manage your personal and business information.
           </p>

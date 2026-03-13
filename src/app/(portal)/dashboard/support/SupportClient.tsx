@@ -51,10 +51,10 @@ export default function SupportClient({ tickets }: { tickets: Ticket[] }) {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Support</h1>
+        <h1 className={`${styles.heading} h2`}>Support</h1>
         <p className={styles.subheading}>
-          Have a question or need help? Send us a message and we&apos;ll get back to
-          you shortly.
+          Have a question or need help? Send us a message and we&apos;ll get
+          back to you shortly.
         </p>
       </div>
 

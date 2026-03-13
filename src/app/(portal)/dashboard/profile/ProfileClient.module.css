@@ -9,7 +9,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 4rem 5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .heading {
@@ -20,7 +20,9 @@
   line-height: 0.9em;
   color: var(--black);
   text-transform: uppercase;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -40,7 +42,7 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightGray);
   padding: 0.6rem 1.4rem;
   white-space: nowrap;
   margin-top: 0.6rem;
@@ -52,7 +54,7 @@
   flex-direction: column;
   gap: 2.4rem;
   padding: 3rem 5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .cardHeading {
@@ -95,7 +97,7 @@
   font-size: 1.4rem;
   color: var(--black);
   background-color: var(--white);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightGray);
   padding: 1.1rem 1.4rem;
   outline: none;
   transition: border-color 0.15s ease;
@@ -108,7 +110,7 @@
 }
 
 .inputReadonly {
-  background-color: var(--lightGrayiii);
+  background-color: var(--lightlightGrayi);
   color: var(--text);
   cursor: not-allowed;
 }
@@ -132,7 +134,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.6rem 0;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .infoRow:first-child {
@@ -169,7 +171,7 @@
   position: sticky;
   bottom: 0;
   background-color: var(--white);
-  border-top: 1px solid var(--grayii);
+  border-top: 1px solid var(--lightGray);
   padding: 2rem 5rem;
 }
 
@@ -216,19 +218,26 @@
 
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .header { padding: 3rem 2rem; }
-  .heading { font-size: 4.8rem; }
-  .card { padding: 2.4rem 2rem; }
-
-  .fieldRow { grid-template-columns: 1fr; }
-
-  .header { flex-direction: column; gap: 1.2rem; }
-
+  .header {
+    padding: 3rem 2rem;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .heading {
+    font-size: 4.8rem;
+  }
+  .card {
+    padding: 2.4rem 2rem;
+  }
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
   .saveBar {
     flex-direction: column;
     align-items: stretch;
     padding: 2rem 2rem;
   }
-
-  .saveBtn { text-align: center; }
+  .saveBtn {
+    text-align: center;
+  }
 }

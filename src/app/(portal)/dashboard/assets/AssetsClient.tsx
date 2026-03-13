@@ -17,10 +17,26 @@ type Asset = {
 };
 
 const assetLabels = [
-  { value: "LOGO",        label: "Logo",        desc: "Your primary logo file (SVG, PNG, or AI preferred)" },
-  { value: "PHOTO",       label: "Photos",      desc: "Vehicle photos, team photos, or lifestyle imagery" },
-  { value: "BRAND_GUIDE", label: "Brand Guide", desc: "Brand guidelines, color swatches, or style docs" },
-  { value: "OTHER",       label: "Other",       desc: "Any other files you want to share with us" },
+  {
+    value: "LOGO",
+    label: "Logo",
+    desc: "Your primary logo file (SVG, PNG, or AI preferred)",
+  },
+  {
+    value: "PHOTO",
+    label: "Photos",
+    desc: "Vehicle photos, team photos, or lifestyle imagery",
+  },
+  {
+    value: "BRAND_GUIDE",
+    label: "Brand Guide",
+    desc: "Brand guidelines, color swatches, or style docs",
+  },
+  {
+    value: "OTHER",
+    label: "Other",
+    desc: "Any other files you want to share with us",
+  },
 ];
 
 function formatBytes(bytes: number) {
@@ -66,7 +82,7 @@ export default function AssetsClient({
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${sigData.cloudName}/auto/upload`,
-        { method: "POST", body: formData }
+        { method: "POST", body: formData },
       );
 
       const data = await response.json();
@@ -136,7 +152,7 @@ export default function AssetsClient({
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Brand Assets</h1>
+        <h1 className={`${styles.heading} h2`}>Brand Assets</h1>
         <p className={styles.subheading}>
           Upload your logo, photos, and any brand files so we can build your
           platform to spec.
@@ -167,10 +183,10 @@ export default function AssetsClient({
       >
         <input
           ref={fileInputRef}
-          type="file"
+          type='file'
           className={styles.hiddenInput}
           onChange={handleFileChange}
-          accept="image/*,.pdf,.ai,.eps,.svg,.zip"
+          accept='image/*,.pdf,.ai,.eps,.svg,.zip'
         />
 
         {uploading ? (
@@ -181,15 +197,28 @@ export default function AssetsClient({
         ) : (
           <div className={styles.dropzoneInner}>
             <div className={styles.dropzoneIcon}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
+              <svg
+                width='28'
+                height='28'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4' />
+                <polyline points='17 8 12 3 7 8' />
+                <line x1='12' y1='3' x2='12' y2='15' />
               </svg>
             </div>
             <div className={styles.dropzoneText}>
               <p className={styles.dropzoneMain}>
-                Drop your {assetLabels.find((a) => a.value === activeLabel)?.label.toLowerCase()} here
+                Drop your{" "}
+                {assetLabels
+                  .find((a) => a.value === activeLabel)
+                  ?.label.toLowerCase()}{" "}
+                here
               </p>
               <p className={styles.dropzoneSub}>
                 {assetLabels.find((a) => a.value === activeLabel)?.desc}
@@ -224,9 +253,18 @@ export default function AssetsClient({
                         className={styles.assetThumb}
                       />
                     ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
+                      <svg
+                        width='20'
+                        height='20'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        stroke='currentColor'
+                        strokeWidth='2'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      >
+                        <path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z' />
+                        <polyline points='14 2 14 8 20 8' />
                       </svg>
                     )}
                   </div>
@@ -234,7 +272,10 @@ export default function AssetsClient({
                     <span className={styles.assetName}>{asset.fileName}</span>
                     <div className={styles.assetMeta}>
                       <span className={styles.assetLabel}>
-                        {assetLabels.find((a) => a.value === asset.label)?.label}
+                        {
+                          assetLabels.find((a) => a.value === asset.label)
+                            ?.label
+                        }
                       </span>
                       {asset.fileSize && (
                         <span className={styles.assetSize}>
@@ -247,8 +288,8 @@ export default function AssetsClient({
                 <div className={styles.assetActions}>
                   <a
                     href={asset.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                     className={styles.viewBtn}
                   >
                     View

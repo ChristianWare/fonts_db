@@ -1,49 +1,40 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 720px;
 }
 
-/* ---- HEADER ---- */
+/* ── Header ── */
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-}
-
-.heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  line-height: 1;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
+  line-height: 1.6;
+  margin-top: 0.4rem;
 }
 
-/* ---- FORM CARD ---- */
+/* ── Form block ── */
 .formCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  border: 1.5px solid var(--lighterGray);
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .formHeading {
-  font-family: var(--SuisseIntlCondBold);
+  font-family: var(--GeistMono);
   font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
@@ -54,35 +45,35 @@
 }
 
 .label {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 1.3rem 1.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--lightGray);
   background-color: var(--white);
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   color: var(--black);
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
+  outline: none;
+  appearance: none;
 }
 
 .input::placeholder,
 .textarea::placeholder {
-  color: var(--lightText);
+  color: var(--text);
 }
 
 .input:focus,
 .textarea:focus {
   border-color: var(--black);
-  outline: none;
 }
 
 .textarea {
@@ -91,25 +82,27 @@
 }
 
 .successBanner {
-  padding: 1.2rem 1.6rem;
+  padding: 1.4rem;
   background-color: #f0fdf4;
-  border: 1.5px solid #bbf7d0;
-  border-radius: 8px;
-  font-family: var(--SuisseIntlMedium);
+  border-top: 1px solid #bbf7d0;
+  border-bottom: 1px solid #bbf7d0;
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #16a34a;
   text-transform: none;
+  line-height: 1.5;
 }
 
 .errorBanner {
-  padding: 1.2rem 1.6rem;
+  padding: 1.4rem;
   background-color: #fff5f5;
-  border: 1.5px solid #fed7d7;
-  border-radius: 8px;
-  font-family: var(--SuisseIntlRegular);
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #c53030;
   text-transform: none;
+  line-height: 1.5;
 }
 
 .formFooter {
@@ -119,12 +112,11 @@
 
 .submitBtn {
   padding: 1.2rem 3rem;
-  border-radius: 8px;
   background-color: var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
   color: var(--accent);
   cursor: pointer;
   border: none;
@@ -140,35 +132,42 @@
   cursor: not-allowed;
 }
 
-/* ---- TICKET SECTION ---- */
+/* ── Ticket section ── */
 .ticketSection {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
 }
 
 .ticketSectionHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.1em;
   color: var(--black);
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .ticketList {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
 }
 
 .ticketCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 2.4rem;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  border: 1.5px solid var(--lighterGray);
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
+  transition: background-color 0.15s ease;
+}
+
+.ticketCard:last-child {
+  border-bottom: none;
+}
+
+.ticketCard:hover {
+  background-color: var(--lightlightGrayi);
 }
 
 .ticketTop {
@@ -181,59 +180,59 @@
 .ticketTopLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .ticketSubject {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.5rem;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--black);
-  text-transform: none;
 }
 
 .ticketDate {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
 }
 
 .ticketStatus {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 1rem;
+  border: 1px solid;
   flex-shrink: 0;
 }
 
 .ticketOpen {
-  background-color: #fefce8;
   color: #ca8a04;
+  border-color: #ca8a04;
 }
 
 .ticketClosed {
-  background-color: #f0fdf4;
   color: #16a34a;
+  border-color: #16a34a;
 }
 
 .ticketMessage {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
   line-height: 1.6;
 }
 
-/* ---- ADMIN REPLY ---- */
+/* ── Admin reply ── */
 .adminReply {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1.6rem;
-  background-color: var(--lightGray);
-  border-radius: 10px;
+  gap: 1rem;
+  padding: 1.6rem 2rem;
+  background-color: var(--lightlightGrayi);
   border-left: 3px solid var(--accent);
 }
 
@@ -241,33 +240,47 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.6rem;
 }
 
 .adminReplyLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
 .adminReplyDate {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
   text-transform: none;
 }
 
 .adminReplyText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
   line-height: 1.6;
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
+  .formCard {
+    padding: 2.4rem 2rem;
+  }
+  .ticketSectionHeading {
+    padding: 2rem 2rem;
+  }
+  .ticketCard {
+    padding: 2rem 2rem;
+  }
+
   .ticketTop {
     flex-direction: column;
   }
@@ -275,7 +288,6 @@
   .formFooter {
     justify-content: stretch;
   }
-
   .submitBtn {
     width: 100%;
     text-align: center;

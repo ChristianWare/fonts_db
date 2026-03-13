@@ -36,13 +36,13 @@ export default async function BillingPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Billing</h1>
+        <h1 className={`${styles.heading} h2`}>Billing</h1>
         <p className={styles.subheading}>
           Manage your subscription and view your invoice history.
         </p>
       </div>
 
-      {/* Subscription card */}
+      {/* Subscription block */}
       <div className={styles.subscriptionCard}>
         <div className={styles.subscriptionTop}>
           <div className={styles.subscriptionLeft}>

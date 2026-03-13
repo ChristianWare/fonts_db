@@ -63,7 +63,6 @@ export default function DesignSelectionClient({
   const handleSelect = (id: string) => {
     setActiveId(id);
     setError(null);
-    // Allow changing selection after a prior submission
     if (submitted && id !== selectedOption?.id) {
       setSubmitted(false);
     }
@@ -106,7 +105,7 @@ export default function DesignSelectionClient({
     return (
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.heading}>Choose Your Design</h1>
+          <h1 className={`${styles.heading} h2`}>Choose Your Design</h1>
           <p className={styles.subheading}>
             We&apos;re curating design options tailored to your brand. Check
             back soon — we&apos;ll notify you when they&apos;re ready.
@@ -228,7 +227,7 @@ export default function DesignSelectionClient({
 
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.heading}>Choose Your Design</h1>
+          <h1 className={`${styles.heading} h2`}>Choose Your Design</h1>
           <p className={styles.subheading}>
             {submitted
               ? "Your selection has been submitted. You can update your choice at any time before we begin building."
@@ -379,7 +378,7 @@ export default function DesignSelectionClient({
           })}
         </div>
 
-        {/* Confirm block — always visible */}
+        {/* Confirm block */}
         <div
           className={`${styles.confirmCard} ${activeId ? styles.confirmCardActive : ""}`}
         >

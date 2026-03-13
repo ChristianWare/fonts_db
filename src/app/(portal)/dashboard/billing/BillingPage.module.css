@@ -1,42 +1,32 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 860px;
 }
 
-/* ---- HEADER ---- */
+/* ── Header ── */
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-}
-
-.heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  line-height: 1;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
+  line-height: 1.6;
+  margin-top: 0.4rem;
 }
 
-/* ---- SUBSCRIPTION CARD ---- */
+/* ── Subscription block ── */
 .subscriptionCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  border: 1.5px solid var(--lighterGray);
+  gap: 0;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .subscriptionTop {
@@ -44,167 +34,172 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .subscriptionLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.8rem;
 }
 
 .subscriptionLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--gray);
+  letter-spacing: 0.1em;
+  color: var(--text);
 }
 
 .subscriptionPlan {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 3.2rem;
-  letter-spacing: -0.03em;
+  font-family: var(--RobotoFlexii);
+  font-size: 5rem;
+  font-weight: 400;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -1px;
   text-transform: uppercase;
   color: var(--black);
-  line-height: 1;
+  line-height: 0.95em;
+  -webkit-font-smoothing: antialiased;
 }
 
 .subscriptionStatus {
-  padding: 0.5rem 1.2rem;
-  border-radius: 999px;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  padding: 0.3rem 1rem;
+  border: 1px solid;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   flex-shrink: 0;
+  margin-top: 0.4rem;
 }
 
 .statusActive {
-  background-color: #f0fdf4;
   color: #16a34a;
+  border-color: #16a34a;
 }
 
 .statusPastDue {
-  background-color: #fff7ed;
   color: #c2410c;
+  border-color: #c2410c;
 }
 
 .statusInactive {
-  background-color: var(--lightGray);
-  color: var(--gray);
+  color: var(--text);
+  border-color: var(--lightGray);
 }
 
 .subscriptionDetails {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--lightGray);
 }
 
 .detailRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 1.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
+  gap: 2rem;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
 }
 
 .detailLabel {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--GeistMono);
   font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
 }
 
 .detailValue {
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
 }
 
 .noSubscription {
-  padding-top: 1.6rem;
-  border-top: 1px solid var(--lightGray);
+  padding: 2.4rem 5rem;
 }
 
 .noSubscriptionText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.5;
+  line-height: 1.6;
+  max-width: 560px;
 }
 
 .pastDueBanner {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.4rem 1.6rem;
+  padding: 1.4rem 5rem;
   background-color: #fff7ed;
-  border: 1.5px solid #fed7aa;
-  border-radius: 10px;
-  font-family: var(--SuisseIntlRegular);
+  border-top: 1px solid #fed7aa;
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #c2410c;
   text-transform: none;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* ---- INVOICE SECTION ---- */
+/* ── Invoice section ── */
 .invoiceSection {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
 }
 
 .invoiceSectionHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.1em;
   color: var(--black);
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
-/* ---- EMPTY STATE ---- */
+/* ── Empty state ── */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
-  padding: 6rem 4rem;
-  background-color: var(--white);
-  border-radius: 16px;
+  gap: 1.6rem;
+  padding: 8rem 4rem;
   text-align: center;
-  border: 1.5px solid var(--lighterGray);
 }
 
 .emptyIcon {
   width: 5.6rem;
   height: 5.6rem;
-  border-radius: 50%;
-  background-color: var(--lightGray);
+  border: 1px solid var(--lightGray);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray);
+  color: var(--text);
 }
 
 .emptyText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
 }
 
-/* ---- INVOICE LIST ---- */
+/* ── Invoice list ── */
 .invoiceList {
   display: flex;
   flex-direction: column;
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 1.5px solid var(--lighterGray);
-  overflow: hidden;
 }
 
 .invoiceRow {
@@ -212,7 +207,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.8rem 2.4rem;
+  padding: 1.8rem 5rem;
   border-bottom: 1px solid var(--lightGray);
   transition: background-color 0.15s ease;
 }
@@ -222,7 +217,7 @@
 }
 
 .invoiceRow:hover {
-  background-color: var(--lightGray);
+  background-color: var(--lightlightGrayi);
 }
 
 .invoiceLeft {
@@ -233,69 +228,73 @@
 }
 
 .invoiceNumber {
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
   font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--black);
-  text-transform: none;
 }
 
 .invoiceDesc {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
 }
 
 .invoiceRight {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.6rem;
   flex-shrink: 0;
 }
 
 .invoiceAmount {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
 }
 
 .invoiceStatus {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid;
 }
 
 .invoicePaid {
-  background-color: #f0fdf4;
   color: #16a34a;
+  border-color: #16a34a;
 }
 
 .invoiceOpen {
-  background-color: #fefce8;
   color: #ca8a04;
+  border-color: #ca8a04;
 }
 
 .invoiceOther {
-  background-color: var(--lightGray);
-  color: var(--gray);
+  color: var(--text);
+  border-color: var(--lightGray);
 }
 
 .downloadBtn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
-  color: var(--darkGray);
-  text-transform: none;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .downloadBtn:hover {
@@ -303,13 +302,29 @@
   color: var(--black);
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
   .subscriptionTop {
+    padding: 2.4rem 2rem;
     flex-direction: column;
   }
-
+  .detailRow {
+    padding: 1.4rem 2rem;
+  }
+  .noSubscription {
+    padding: 2rem 2rem;
+  }
+  .pastDueBanner {
+    padding: 1.4rem 2rem;
+  }
+  .invoiceSectionHeading {
+    padding: 2rem 2rem;
+  }
   .invoiceRow {
+    padding: 1.6rem 2rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 1.2rem;
