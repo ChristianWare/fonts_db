@@ -1,57 +1,109 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 720px;
 }
 
-/* ---- HEADER ---- */
+/* ── Header ── */
 .header {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
-.heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  line-height: 1;
+.headerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
+  line-height: 1.6;
+  margin-top: 0.4rem;
 }
 
-/* ---- PROGRESS BAR ---- */
+.editBtn {
+  flex-shrink: 0;
+  padding: 1rem 2.4rem;
+  background-color: var(--accent);
+  color: var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-top: 0.4rem;
+}
+
+.editBtn:hover {
+  opacity: 0.85;
+}
+
+.cancelEditBtn {
+  flex-shrink: 0;
+  padding: 1rem 2.4rem;
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+  margin-top: 0.4rem;
+}
+
+.cancelEditBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* ── Progress bar ── */
 .progressBar {
   width: 100%;
-  height: 4px;
-  background-color: var(--lighterGray);
-  border-radius: 999px;
-  overflow: hidden;
+  height: 3px;
+  background-color: var(--lightGray);
 }
 
 .progressFill {
   height: 100%;
   background-color: var(--black);
-  border-radius: 999px;
   transition: width 0.4s ease;
 }
 
-/* ---- SECTION CARD ---- */
+/* ── Locked banner ── */
+.lockedBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 5rem;
+  background-color: var(--lightlightGrayi);
+  border-bottom: 1px solid var(--lightGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+/* ── Section card ── */
 .sectionCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .sectionHeader {
@@ -63,22 +115,25 @@
 }
 
 .sectionTitle {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2.4rem;
+  /* font-family: var(--GeistMono); */
+  font-size: 3rem;
+  background-color: var(--black);
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: var(--black);
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
 }
 
 .sectionDesc {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* ---- QUESTIONS ---- */
+/* ── Questions ── */
 .questions {
   display: flex;
   flex-direction: column;
@@ -92,11 +147,11 @@
 }
 
 .questionLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--black);
-  text-transform: none;
-  letter-spacing: normal;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -104,43 +159,45 @@
 
 .required {
   color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
+  background-color: var(--black);
+  padding: 0 0.3rem;
+  font-size: 1.2rem;
 }
 
 .helpText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* ---- INPUTS ---- */
+/* ── Inputs ── */
 .input,
 .textarea,
 .select {
   width: 100%;
-  padding: 1.3rem 1.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--lightGray);
   background-color: var(--white);
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
   color: var(--black);
-  transition: border-color 0.2s ease;
+  letter-spacing: normal;
+  transition: border-color 0.15s ease;
   appearance: none;
+  outline: none;
 }
 
 .input::placeholder,
 .textarea::placeholder {
-  color: var(--lightText);
+  color: var(--text);
 }
 
 .input:focus,
 .textarea:focus,
 .select:focus {
   border-color: var(--black);
-  outline: none;
 }
 
 .textarea {
@@ -148,11 +205,11 @@
   min-height: 100px;
 }
 
-/* ---- RADIO ---- */
+/* ── Radio ── */
 .radioGroup {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .radioLabel {
@@ -161,8 +218,7 @@
   gap: 1rem;
   cursor: pointer;
   padding: 1.2rem 1.4rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  border: 1px solid var(--lightGray);
   transition:
     border-color 0.15s ease,
     background-color 0.15s ease;
@@ -170,7 +226,7 @@
 
 .radioLabel:hover {
   border-color: var(--black);
-  background-color: var(--lightGray);
+  background-color: var(--lightlightGrayi);
 }
 
 .radio {
@@ -181,13 +237,13 @@
 }
 
 .radioText {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
 }
 
-/* ---- MULTISELECT ---- */
+/* ── Multiselect ── */
 .checkboxGroup {
   display: flex;
   flex-direction: column;
@@ -200,8 +256,7 @@
   gap: 1rem;
   cursor: pointer;
   padding: 1.2rem 1.4rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  border: 1px solid var(--lightGray);
   transition:
     border-color 0.15s ease,
     background-color 0.15s ease;
@@ -209,7 +264,7 @@
 
 .checkboxLabel:hover {
   border-color: var(--black);
-  background-color: var(--lightGray);
+  background-color: var(--lightlightGrayi);
 }
 
 .checkbox {
@@ -220,29 +275,32 @@
 }
 
 .checkboxText {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
 }
 
-/* ---- ERROR ---- */
+/* ── Error ── */
 .errorBanner {
-  padding: 1.2rem 1.6rem;
+  padding: 1.4rem 5rem;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
-  border: 1.5px solid #fed7d7;
-  border-radius: 8px;
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: #c53030;
   text-transform: none;
+  line-height: 1.5;
 }
 
-/* ---- NAV ROW ---- */
+/* ── Nav row ── */
 .navRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 2.4rem 5rem;
+  border-top: 1px solid var(--lightGray);
 }
 
 .navLeft {
@@ -258,17 +316,17 @@
 
 .backBtn {
   padding: 1.2rem 2.4rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
   font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
   cursor: pointer;
   background: none;
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .backBtn:hover {
@@ -278,17 +336,17 @@
 
 .saveBtn {
   padding: 1.2rem 2.4rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
   font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
   cursor: pointer;
   background: none;
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .saveBtn:hover {
@@ -303,12 +361,11 @@
 
 .nextBtn {
   padding: 1.2rem 2.8rem;
-  border-radius: 8px;
   background-color: var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
   color: var(--accent);
   cursor: pointer;
   border: none;
@@ -318,7 +375,6 @@
 .nextBtn:hover {
   opacity: 0.85;
 }
-
 .nextBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -326,12 +382,11 @@
 
 .submitBtn {
   padding: 1.2rem 2.8rem;
-  border-radius: 8px;
   background-color: var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
   color: var(--accent);
   cursor: pointer;
   border: none;
@@ -341,139 +396,32 @@
 .submitBtn:hover {
   opacity: 0.85;
 }
-
 .submitBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* ---- SUBMITTED STATE ---- */
-.submittedState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 8rem 4rem;
-  background-color: var(--white);
-  border-radius: 16px;
-  text-align: center;
-}
-
-.submittedIcon {
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.submittedHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 3rem;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: var(--black);
-}
-
-.submittedText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
-  text-transform: none;
-  max-width: 420px;
-  line-height: 1.5;
-}
-
-/* ---- HEADER TOP ROW ---- */
-.headerTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.editBtn {
-  flex-shrink: 0;
-  padding: 1rem 2.4rem;
-  border-radius: 8px;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.editBtn:hover {
-  opacity: 0.85;
-}
-
-.cancelEditBtn {
-  flex-shrink: 0;
-  padding: 1rem 2.4rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
-  cursor: pointer;
-  background: none;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.cancelEditBtn:hover {
-  border-color: var(--black);
-  color: var(--black);
-}
-
-/* ---- LOCKED BANNER ---- */
-.lockedBanner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.4rem 1.6rem;
-  background-color: var(--lightGray);
-  border: 1.5px solid var(--lighterGray);
-  border-radius: 10px;
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
-  line-height: 1.4;
-}
-
-/* ---- READ-ONLY VIEW ---- */
+/* ── Read-only view ── */
 .readOnlyList {
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
 }
 
 .readOnlySection {
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 1.5px solid var(--lighterGray);
-  overflow: hidden;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.readOnlySection:last-child {
+  border-bottom: none;
 }
 
 .readOnlySectionTitle {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.8rem;
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
   color: var(--black);
-  padding: 2rem 2.4rem;
+  padding: 2.4rem 5rem;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -486,36 +434,53 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 2rem;
-  padding: 1.4rem 2.4rem;
+  padding: 1.6rem 5rem;
   border-bottom: 1px solid var(--lightGray);
+  transition: background-color 0.15s ease;
 }
 
 .readOnlyRow:last-child {
   border-bottom: none;
 }
 
+.readOnlyRow:hover {
+  background-color: var(--lightlightGrayi);
+}
+
 .readOnlyLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: var(--gray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
   line-height: 1.5;
 }
 
 .readOnlyValue {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
   text-transform: none;
   line-height: 1.5;
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
+
+  .sectionCard {
+    padding: 2.4rem 2rem;
+  }
   .navRow {
+    padding: 2rem 2rem;
     flex-direction: column;
     gap: 1.2rem;
     align-items: stretch;
+  }
+  .lockedBanner {
+    padding: 1.4rem 2rem;
   }
 
   .navLeft,
@@ -530,6 +495,13 @@
   .submitBtn {
     width: 100%;
     text-align: center;
+  }
+
+  .readOnlySectionTitle {
+    padding: 2rem 2rem;
+  }
+  .readOnlyRow {
+    padding: 1.4rem 2rem;
   }
 }
 

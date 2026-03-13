@@ -78,6 +78,25 @@ function shouldShowQuestion(questionId: string, answers: Answers): boolean {
 
   return (dependentAnswer as string) === (rule.showWhen as string);
 }
+
+// Returns the label of the first unanswered required visible question, or null if all good
+function validateSection(
+  sectionIndex: number,
+  answers: Answers,
+): string | null {
+  const section = questionnaireSections[sectionIndex];
+  const visibleRequired = section.questions.filter(
+    (q) => q.required && shouldShowQuestion(q.id, answers),
+  );
+  for (const q of visibleRequired) {
+    const answer = answers[q.id];
+    if (!answer || (Array.isArray(answer) && answer.length === 0)) {
+      return `Please answer: ${q.label}`;
+    }
+  }
+  return null;
+}
+
 export default function QuestionnaireClient({
   isSubmitted,
   isLocked,
@@ -126,6 +145,14 @@ export default function QuestionnaireClient({
   };
 
   const handleNext = async () => {
+    const validationError = validateSection(currentSection, answers);
+    if (validationError) {
+      setError(validationError);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setError(null);
     setSaving(true);
     await saveQuestionnaire(answers, false);
     setSaving(false);
@@ -134,21 +161,16 @@ export default function QuestionnaireClient({
   };
 
   const handleBack = () => {
+    setError(null);
     setCurrentSection((prev) => Math.max(prev - 1, 0));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSubmit = async () => {
-    // Validate required visible questions in current section
-    const visibleRequired = section.questions.filter(
-      (q) => q.required && shouldShowQuestion(q.id, answers),
-    );
-    for (const q of visibleRequired) {
-      const answer = answers[q.id];
-      if (!answer || (Array.isArray(answer) && answer.length === 0)) {
-        setError(`Please answer: ${q.label}`);
-        return;
-      }
+    const validationError = validateSection(currentSection, answers);
+    if (validationError) {
+      setError(validationError);
+      return;
     }
 
     setError(null);
@@ -256,7 +278,7 @@ export default function QuestionnaireClient({
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div>
-            <h1 className={styles.heading}>
+            <h1 className={`${styles.heading} h2`}>
               {isSubmitted ? "Edit Questionnaire" : "Intake Questionnaire"}
             </h1>
             <p className={styles.subheading}>
@@ -281,6 +303,9 @@ export default function QuestionnaireClient({
           style={{ width: `${progress}%` }}
         />
       </div>
+
+      {/* Validation error — shown between progress bar and section */}
+      {error && <div className={styles.errorBanner}>{error}</div>}
 
       {/* Section */}
       <div className={styles.sectionCard}>
@@ -387,8 +412,6 @@ export default function QuestionnaireClient({
           })}
         </div>
       </div>
-
-      {error && <div className={styles.errorBanner}>{error}</div>}
 
       {/* Navigation */}
       <div className={styles.navRow}>

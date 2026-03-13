@@ -1,68 +1,69 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 860px;
 }
 
-/* ---- HEADER ---- */
+/* ── Header ── */
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  font-family: var(--RobotoFlexii);
+  font-size: 7rem;
+  letter-spacing: -2.4px;
+  font-weight: 400;
+  line-height: 0.9em;
   color: var(--black);
-  line-height: 1;
+  text-transform: uppercase;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  margin-top: 0.6rem;
+  margin-top: 0.8rem;
+  line-height: 1.6;
 }
 
 .stagePill {
   flex-shrink: 0;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--darkGray);
-  border: 1.5px solid var(--lighterGray);
-  border-radius: 999px;
+  letter-spacing: 0.07em;
+  color: var(--text);
+  border: 1px solid var(--grayii);
   padding: 0.6rem 1.4rem;
   white-space: nowrap;
   margin-top: 0.6rem;
 }
 
-/* ---- CARDS ---- */
+/* ── Cards ── */
 .card {
-  background-color: var(--white);
-  border-radius: 16px;
-  border: 1.5px solid var(--lighterGray);
-  padding: 2.4rem;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .cardHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.8rem;
-  letter-spacing: -0.01em;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--black);
 }
 
-/* ---- FIELDS ---- */
+/* ── Fields ── */
 .fieldGrid {
   display: flex;
   flex-direction: column;
@@ -82,23 +83,22 @@
 }
 
 .label {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--gray);
+  letter-spacing: 0.07em;
+  color: var(--text);
 }
 
 .input {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
   background-color: var(--white);
-  border: 1.5px solid var(--lighterGray);
-  border-radius: 8px;
+  border: 1px solid var(--grayii);
   padding: 1.1rem 1.4rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
   width: 100%;
   text-transform: none;
 }
@@ -108,20 +108,20 @@
 }
 
 .inputReadonly {
-  background-color: var(--lightGray);
-  color: var(--gray);
+  background-color: var(--lightGrayiii);
+  color: var(--text);
   cursor: not-allowed;
 }
 
 .fieldHint {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--gray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* ---- ACCOUNT INFO ---- */
+/* ── Account info ── */
 .infoGrid {
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.6rem 0;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--grayii);
 }
 
 .infoRow:first-child {
@@ -145,61 +145,62 @@
 }
 
 .infoLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  text-transform: none;
-  color: var(--darkGray);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
 }
 
 .infoValue {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
   color: var(--black);
-  text-transform: none;
+  text-transform: uppercase;
 }
 
-/* ---- SAVE BAR ---- */
+/* ── Save bar ── */
 .saveBar {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 1.6rem;
   position: sticky;
-  bottom: 2.4rem;
+  bottom: 0;
   background-color: var(--white);
-  border: 1.5px solid var(--lighterGray);
-  border-radius: 16px;
-  padding: 1.6rem 2.4rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--grayii);
+  padding: 2rem 5rem;
 }
 
 .errorText {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: #dc2626;
-  text-transform: none;
   margin-right: auto;
 }
 
 .savedText {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: #16a34a;
-  text-transform: none;
   margin-right: auto;
 }
 
 .saveBtn {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: var(--black);
-  background-color: var(--accent);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background-color: var(--black);
   border: none;
   cursor: pointer;
-  padding: 1.2rem 2.4rem;
-  border-radius: 8px;
+  padding: 1.2rem 2.8rem;
   transition: opacity 0.2s ease;
   white-space: nowrap;
 }
@@ -213,23 +214,21 @@
   cursor: not-allowed;
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .fieldRow {
-    grid-template-columns: 1fr;
-  }
+  .header { padding: 3rem 2rem; }
+  .heading { font-size: 4.8rem; }
+  .card { padding: 2.4rem 2rem; }
 
-  .header {
-    flex-direction: column;
-    gap: 1.2rem;
-  }
+  .fieldRow { grid-template-columns: 1fr; }
+
+  .header { flex-direction: column; gap: 1.2rem; }
 
   .saveBar {
     flex-direction: column;
     align-items: stretch;
+    padding: 2rem 2rem;
   }
 
-  .saveBtn {
-    text-align: center;
-  }
+  .saveBtn { text-align: center; }
 }

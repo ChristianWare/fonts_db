@@ -24,7 +24,7 @@ export default async function DocumentsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Documents</h1>
+        <h1 className={`${styles.heading} h2`}>Documents</h1>
         <p className={styles.subheading}>
           Review, sign, and download your project documents.
         </p>
@@ -94,7 +94,7 @@ export default async function DocumentsPage() {
                         {statusLabels[doc.status]}
                       </span>
                     </div>
-                    <h3 className={styles.docTitle}>{doc.title}</h3>
+                    <div className={styles.docTitle}>{doc.title}</div>
                     <p className={styles.docMeta}>
                       {isSigned && doc.signedAt
                         ? `Signed ${format(new Date(doc.signedAt), "MMMM d, yyyy 'at' h:mm a")}`

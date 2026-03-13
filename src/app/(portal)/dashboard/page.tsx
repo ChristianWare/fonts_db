@@ -114,7 +114,7 @@ export default async function DashboardPage() {
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <p className={styles.greeting}>Welcome back,</p>
-          <h1 className={styles.heading}>{firstName}</h1>
+          <h1 className={`${styles.heading} h2`}>{firstName}</h1>
           {profile?.businessName && (
             <p className={styles.businessName}>{profile.businessName}</p>
           )}

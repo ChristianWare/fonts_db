@@ -20,49 +20,21 @@
 
 .greeting {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
-}
-
-.heading {
-  font-family: var(--RobotoFlexii);
-  font-size: 7rem;
-  letter-spacing: -2.4px;
-  font-weight: 400;
-  line-height: 0.9em;
-  color: var(--black);
-  text-transform: uppercase;
-  font-feature-settings:
-    "blwf" on,
-    "cv09" on,
-    "cv03" on,
-    "cv04" on,
-    "cv11" on,
-    "pnum" on;
-  font-variation-settings:
-    "opsz" 72,
-    "wght" 700,
-    "GRAD" 0,
-    "wdth" 81,
-    "slnt" 0,
-    "XOPQ" 96,
-    "YOPQ" 72,
-    "XTRA" 468,
-    "YTUC" 760,
-    "YTLC" 514,
-    "YTAS" 750,
-    "YTDE" -203,
-    "YTFI" 738;
-  -webkit-font-smoothing: antialiased;
+  margin-bottom: 1rem;
 }
 
 .businessName {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 2rem;
   letter-spacing: 0.06em;
-  color: var(--text);
+  background-color: var(--black);
+  padding: 1rem;
+  width: fit-content;
+  color: var(--accent);
   text-transform: uppercase;
   margin-top: 0.4rem;
 }
@@ -367,9 +339,7 @@
   .header {
     padding: 3rem 2rem;
   }
-  .heading {
-    font-size: 4.8rem;
-  }
+ 
 
   .actionCard {
     flex-direction: column;
