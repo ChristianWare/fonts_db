@@ -19,22 +19,38 @@
   letter-spacing: -2px;
   font-weight: 400;
   line-height: 0.9em;
-  color: var(--white);
+  color: var(--black);
   text-transform: uppercase;
-  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on,
+    "pnum" on;
   font-variation-settings:
-    "opsz" 56, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
-    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
-    "YTAS" 750, "YTDE" -203, "YTFI" 738;
+    "opsz" 56,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
   -webkit-font-smoothing: antialiased;
 }
 
 .subheading {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
   margin-left: auto;
 }
 
@@ -47,10 +63,10 @@
 
 .sectionHeading {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--lightGray);
+  color: var(--text);
   padding: 2rem 5rem;
   border-bottom: 1px solid var(--lightGray);
 }
@@ -81,7 +97,7 @@
 }
 
 .requestTop:hover {
-  background-color: #1a1a1a;
+  background-color: var(--lightlightGrayi);
 }
 
 .requestTopLeft {
@@ -98,11 +114,11 @@
 
 .requestBusiness {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
-  background-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--black);
   padding: 0.3rem 0.8rem;
 }
 
@@ -110,17 +126,19 @@
   font-family: var(--RobotoFlexii);
   font-size: 2rem;
   letter-spacing: -0.03em;
-  color: var(--white);
+  color: var(--black);
   text-transform: uppercase;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
 .requestDate {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--lightGray);
+  color: var(--text);
   text-transform: none;
 }
 
@@ -135,38 +153,35 @@
 /* ── Status badges ── */
 .requestStatus {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0.4rem 1rem;
+  padding: 0.3rem 1rem;
+  border: 1px solid;
 }
 
 .statusPending {
   color: #ca8a04;
-  border: 1px solid #ca8a04;
-  background-color: rgba(202, 138, 4, 0.08);
+  border-color: #ca8a04;
 }
 
 .statusInProgress {
-  color: #60a5fa;
-  border: 1px solid #60a5fa;
-  background-color: rgba(96, 165, 250, 0.08);
+  color: #2563eb;
+  border-color: #2563eb;
 }
 
 .statusCompleted {
   color: #16a34a;
-  border: 1px solid #16a34a;
-  background-color: rgba(22, 163, 74, 0.08);
+  border-color: #16a34a;
 }
 
 .statusDeclined {
-  color: #fc8181;
-  border: 1px solid #fc8181;
-  background-color: rgba(252, 129, 129, 0.08);
+  color: #c53030;
+  border-color: #c53030;
 }
 
 .chevron {
-  color: var(--lightGray);
+  color: var(--text);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -182,14 +197,14 @@
   gap: 2rem;
   padding: 2.4rem 5rem 3rem;
   border-top: 1px solid var(--lightGray);
-  background-color: #111111;
+  background-color: var(--lightlightGrayi);
 }
 
 .requestDesc {
-  font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.03em;
-  color: var(--lightGray);
+  color: var(--text);
   text-transform: none;
   line-height: 1.7;
 }
@@ -199,23 +214,23 @@
   flex-direction: column;
   gap: 0.8rem;
   padding: 1.6rem;
-  background-color: rgba(255, 200, 9, 0.06);
+  background-color: var(--white);
   border-left: 3px solid var(--accent);
 }
 
 .adminNotesLabel {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--accent);
+  color: var(--black);
 }
 
 .adminNotesText {
-  font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.03em;
-  color: var(--white);
+  color: var(--black);
   text-transform: none;
   line-height: 1.6;
 }
@@ -241,52 +256,51 @@
 
 .editLabel {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .select {
-  padding: 1.2rem 1.6rem;
+  padding: 1.2rem 1.4rem;
   border: 1px solid var(--lightGray);
-  background-color: var(--black);
+  background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
   appearance: none;
   cursor: pointer;
+  outline: none;
 }
 
 .select:focus {
-  border-color: var(--accent);
-  outline: none;
+  border-color: var(--black);
 }
 
 .textarea {
   width: 100%;
-  padding: 1.2rem 1.6rem;
+  padding: 1.2rem 1.4rem;
   border: 1px solid var(--lightGray);
-  background-color: var(--black);
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  background-color: var(--white);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.03em;
-  color: var(--white);
+  color: var(--black);
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
   text-transform: none;
-}
-
-.textarea:focus {
-  border-color: var(--accent);
   outline: none;
 }
 
+.textarea:focus {
+  border-color: var(--black);
+}
+
 .textarea::placeholder {
-  color: var(--lightGray);
-  font-size: 1.1rem;
+  color: var(--text);
 }
 
 .editBtns {
@@ -300,26 +314,28 @@
   padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--lightGray);
+  color: var(--text);
   cursor: pointer;
   background: none;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .cancelBtn:hover {
-  border-color: var(--white);
-  color: var(--white);
+  border-color: var(--black);
+  color: var(--black);
 }
 
 .saveBtn {
   padding: 1rem 2.4rem;
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -327,26 +343,33 @@
   transition: opacity 0.2s ease;
 }
 
-.saveBtn:hover { opacity: 0.85; }
-.saveBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.saveBtn:hover {
+  opacity: 0.85;
+}
+.saveBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
 .editBtn {
   align-self: flex-start;
   padding: 0.8rem 2rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--lightGray);
+  color: var(--text);
   cursor: pointer;
   background: none;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .editBtn:hover {
-  border-color: var(--white);
-  color: var(--white);
+  border-color: var(--black);
+  color: var(--black);
 }
 
 /* ── Empty ── */
@@ -356,16 +379,24 @@
 
 .emptyText {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .header { padding: 3rem 2rem; }
-  .sectionHeading { padding: 1.6rem 2rem; }
-  .requestTop { padding: 2rem 2rem; }
-  .requestBody { padding: 2rem 2rem 2.4rem; }
+  .header {
+    padding: 3rem 2rem;
+  }
+  .sectionHeading {
+    padding: 1.6rem 2rem;
+  }
+  .requestTop {
+    padding: 2rem 2rem;
+  }
+  .requestBody {
+    padding: 2rem 2rem 2.4rem;
+  }
 }

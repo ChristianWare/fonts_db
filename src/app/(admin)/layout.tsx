@@ -106,7 +106,6 @@ export default function AdminLayout({
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
-
   const userName = session?.user?.name;
   const initials = getInitials(userName);
 

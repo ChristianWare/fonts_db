@@ -315,12 +315,12 @@
 }
 
 .avatar {
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 4rem;
+  height: 4rem;
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  /* font-size: 1.1rem; */
   font-weight: 700;
   display: flex;
   align-items: center;

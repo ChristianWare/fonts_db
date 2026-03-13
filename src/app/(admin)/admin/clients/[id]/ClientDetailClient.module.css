@@ -22,20 +22,20 @@
 
 .backBtn {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
   text-align: left;
 }
 
 .backBtn:hover {
-  color: var(--white);
+  color: var(--black);
 }
 
 .clientMeta {
@@ -47,8 +47,8 @@
 .clientAvatar {
   width: 4.8rem;
   height: 4.8rem;
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
   font-size: 1.6rem;
   font-weight: 700;
@@ -64,7 +64,7 @@
   letter-spacing: -1.6px;
   font-weight: 400;
   line-height: 0.9em;
-  color: var(--white);
+  color: var(--black);
   text-transform: uppercase;
   font-feature-settings:
     "blwf" on,
@@ -92,20 +92,20 @@
 
 .clientEmail {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   letter-spacing: 0.05em;
-  color: var(--lightGray);
+  color: var(--text);
   text-transform: none;
 }
 
 .stageBadge {
   flex-shrink: 0;
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
-  background-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--black);
   padding: 0.5rem 1.2rem;
   align-self: flex-start;
 }
@@ -120,10 +120,10 @@
 
 .tab {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
   background: none;
   border: none;
   cursor: pointer;
@@ -131,18 +131,18 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
+    color 0.15s ease,
+    border-color 0.15s ease;
   white-space: nowrap;
 }
 
 .tab:hover {
-  color: var(--white);
+  color: var(--black);
 }
 
 .tabActive {
-  color: var(--white);
-  border-bottom-color: var(--accent);
+  color: var(--black);
+  border-bottom-color: var(--black);
 }
 
 .tabDot {
@@ -160,19 +160,18 @@
 .tabContent {
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 3rem;
   padding: 4rem 5rem 5rem;
 }
 
 /* ── Card ── */
 .card {
-  background-color: #141414;
+  background-color: var(--white);
   border: 1px solid var(--lightGray);
   padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-  margin-bottom: 2px;
 }
 
 .cardHeader {
@@ -184,36 +183,43 @@
 
 .cardEyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .cardCount {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
+}
+
+.cardHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--black);
 }
 
 .cardDesc {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--lightGray);
-  text-transform: uppercase;
+  color: var(--text);
+  text-transform: none;
   line-height: 1.6;
   margin-top: -0.8rem;
 }
 
 .emptyText {
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--lightGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
 }
 
 /* ── Info grid ── */
@@ -237,20 +243,34 @@
 
 .infoLabel {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--lightGray);
+  color: var(--text);
   flex-shrink: 0;
 }
 
 .infoValue {
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--white);
+  color: var(--black);
   text-transform: none;
   text-align: right;
+}
+
+.infoLink {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  color: var(--black);
+  text-decoration: underline;
+  text-transform: uppercase;
+  transition: opacity 0.15s ease;
+}
+
+.infoLink:hover {
+  opacity: 0.6;
 }
 
 /* ── Stage selector ── */
@@ -264,27 +284,27 @@
   flex: 1;
   padding: 1.2rem 1.6rem;
   border: 1px solid var(--lightGray);
-  background-color: var(--black);
+  background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
   appearance: none;
   cursor: pointer;
+  outline: none;
 }
 
 .select:focus {
-  border-color: var(--accent);
-  outline: none;
+  border-color: var(--black);
 }
 
 .advanceBtn {
   padding: 1.2rem 2.4rem;
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -306,18 +326,6 @@
 .stageLog {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  padding-top: 2rem;
-  border-top: 1px solid var(--lightGray);
-}
-
-.stageLogLabel {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--lightGray);
-  margin-bottom: 0.8rem;
 }
 
 .stageLogEntry {
@@ -325,7 +333,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1rem 0;
+  padding: 1.2rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -335,17 +343,17 @@
 
 .stageLogText {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .stageLogMeta {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--lightGray);
+  color: var(--text);
   flex-shrink: 0;
 }
 
@@ -364,25 +372,24 @@
 
 .input {
   width: 100%;
-  padding: 1.2rem 1.6rem;
+  padding: 1.2rem 1.4rem;
   border: 1px solid var(--lightGray);
-  background-color: var(--black);
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  background-color: var(--white);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--white);
-  transition: border-color 0.2s ease;
+  color: var(--black);
+  transition: border-color 0.15s ease;
   text-transform: none;
-}
-
-.input:focus {
-  border-color: var(--accent);
   outline: none;
 }
 
+.input:focus {
+  border-color: var(--black);
+}
+
 .input::placeholder {
-  color: var(--lightGray);
-  font-size: 1.1rem;
+  color: var(--text);
 }
 
 .hiddenInput {
@@ -391,16 +398,17 @@
 
 .uploadBtn {
   padding: 1.2rem 2.4rem;
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
   align-self: flex-start;
+  white-space: nowrap;
 }
 
 .uploadBtn:hover {
@@ -412,14 +420,15 @@
 }
 
 .errorBanner {
-  padding: 1.2rem 1.6rem;
-  border: 1px solid #c53030;
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
-  letter-spacing: 0.04em;
-  color: #fc8181;
-  background-color: rgba(197, 48, 48, 0.08);
-  text-transform: uppercase;
+  padding: 1.4rem;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
+  background-color: #fff5f5;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+  line-height: 1.5;
 }
 
 /* ── Doc list ── */
@@ -429,9 +438,9 @@
 }
 
 .docRow {
-  display: grid;
-  grid-template-columns: 4rem 1fr auto;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 2rem;
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--lightGray);
@@ -441,111 +450,97 @@
   border-bottom: none;
 }
 
-.docIndex {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-  color: var(--lightGray);
-  flex-shrink: 0;
-}
-
 .docInfo {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   overflow: hidden;
+  flex: 1;
 }
 
 .docTitle {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .docMeta {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--lightGray);
+  color: var(--text);
   text-transform: none;
 }
 
-.docActions {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex-shrink: 0;
-}
-
 .viewBtn {
-  padding: 0.5rem 1.2rem;
+  padding: 0.7rem 1.4rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--lightGray);
+  color: var(--text);
   text-decoration: none;
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
+    border-color 0.15s ease,
+    color 0.15s ease;
   flex-shrink: 0;
 }
 
 .viewBtn:hover {
-  border-color: var(--white);
-  color: var(--white);
+  border-color: var(--black);
+  color: var(--black);
 }
 
 .deleteBtn {
-  padding: 0.5rem 1.2rem;
-  border: 1px solid #c53030;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid #fed7d7;
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fc8181;
+  color: #c53030;
   background: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .deleteBtn:hover {
-  background-color: rgba(197, 48, 48, 0.1);
+  background-color: #fff5f5;
 }
 
-/* ── Design selection ── */
-.selectedBadge {
+/* ── Selection display ── */
+.selectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.selectionBadge {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--black);
+  color: var(--white);
   background-color: #16a34a;
   padding: 0.4rem 1rem;
   flex-shrink: 0;
 }
 
-.selectedTag {
-  color: var(--accent);
-  text-transform: uppercase;
-  font-size: 1rem;
-  letter-spacing: 0.06em;
-}
-
-.selectionGrid {
+.selectionBody {
   display: grid;
   grid-template-columns: 20rem 1fr;
   gap: 3rem;
   align-items: start;
 }
 
-.selectionThumbWrap {
+.selectionThumb {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -562,10 +557,10 @@
 
 .selectionViewBtn {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--lightGray);
+  color: var(--text);
   text-decoration: none;
   text-align: center;
   padding: 0.8rem;
@@ -574,7 +569,7 @@
 }
 
 .selectionViewBtn:hover {
-  color: var(--white);
+  color: var(--black);
 }
 
 .selectionMeta {
@@ -583,61 +578,46 @@
   gap: 0;
 }
 
-.notesBlock {
+.selectionNotesBlock {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   padding-top: 1.2rem;
 }
 
-.notesText {
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
+.selectionNotesText {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.03em;
-  color: var(--lightGray);
+  color: var(--text);
   text-transform: none;
   line-height: 1.6;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--lightlightGrayi);
   border: 1px solid var(--lightGray);
   padding: 1.4rem;
   margin: 0;
 }
 
-.inlineLink {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  color: var(--accent);
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: opacity 0.15s ease;
-}
-
-.inlineLink:hover {
-  opacity: 0.7;
-}
-
 /* ── Questionnaire answers ── */
-.answers {
+.answerList {
   display: flex;
   flex-direction: column;
 }
 
 .submittedDate {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--lightGray);
+  color: var(--text);
   padding-bottom: 1.6rem;
   border-bottom: 1px solid var(--lightGray);
-  margin-bottom: 0.4rem;
 }
 
 .answerRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
@@ -648,17 +628,17 @@
 
 .answerKey {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .answerValue {
-  font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.03em;
-  color: var(--white);
+  color: var(--black);
   text-transform: none;
   line-height: 1.5;
 }
@@ -690,18 +670,18 @@
 
 .assetName {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .assetMeta {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
-  color: var(--lightGray);
-  text-transform: capitalize;
+  color: var(--text);
+  text-transform: none;
 }
 
 /* ── Tracker ── */
@@ -709,19 +689,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2.4rem;
-}
-
-.cardHeading {
-  color: var(--white);
 }
 
 .trackerCount {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .stages {
@@ -752,7 +727,7 @@
 }
 
 .connectorCompleted {
-  background-color: var(--accent);
+  background-color: var(--black);
 }
 .connectorUpcoming {
   background-color: var(--lightGray);
@@ -771,12 +746,12 @@
 }
 
 .stageCompleted .stageDot {
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
 }
 
 .stageUpcoming .stageDot {
-  background-color: var(--black);
+  background-color: var(--white);
   border: 1px solid var(--lightGray);
 }
 
@@ -795,19 +770,19 @@
 
 .stageLabel {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .stageUpcoming .stageLabel {
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .stageDate {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
@@ -819,7 +794,6 @@
 .toggleDivider {
   height: 1px;
   background-color: var(--lightGray);
-  margin: 2.4rem 0;
 }
 
 /* ── Site live toggle ── */
@@ -838,18 +812,18 @@
 
 .liveToggleLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .liveToggleDesc {
-  font-family: var(--GeistMono);
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--lightGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
 }
 
 .toggle {
@@ -867,11 +841,13 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
 .toggleOff {
   background-color: var(--lightGray);
 }
+
 .toggleOn {
-  background-color: var(--accent);
+  background-color: var(--black);
 }
 
 .toggleThumb {
@@ -880,14 +856,16 @@
   left: 0.3rem;
   width: 2.2rem;
   height: 2.2rem;
-  background-color: var(--black);
+  background-color: var(--white);
   transition: transform 0.25s ease;
   display: block;
 }
 
 .toggleOn .toggleThumb {
   transform: translateX(2.4rem);
+  background-color: var(--accent);
 }
+
 .toggleOff .toggleThumb {
   transform: translateX(0);
 }
@@ -903,17 +881,17 @@
 .checkbox {
   width: 1.6rem;
   height: 1.6rem;
-  accent-color: var(--accent);
+  accent-color: var(--black);
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .checkboxText {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
 }
 
 /* ── Responsive ── */
@@ -931,11 +909,11 @@
   .card {
     padding: 2rem;
   }
-  .selectionGrid {
+  .selectionBody {
     grid-template-columns: 1fr;
   }
-  .docRow {
-    grid-template-columns: 3rem 1fr auto;
-    gap: 1.2rem;
+  .answerRow {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
   }
 }

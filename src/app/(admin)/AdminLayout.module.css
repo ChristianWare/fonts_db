@@ -2,13 +2,13 @@
   display: grid;
   grid-template-columns: auto 1fr;
   min-height: 100vh;
-  background-color: var(--black);
+  background-color: var(--white);
 }
 
 /* ── Sidebar ── */
 .sidebar {
   width: 240px;
-  background-color: var(--black);
+  background-color: var(--white);
   border-right: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
@@ -45,7 +45,7 @@
 .brandName {
   font-family: var(--RobotoFlexii);
   font-size: 1.8rem;
-  color: var(--white);
+  color: var(--black);
   text-transform: uppercase;
   letter-spacing: -0.03em;
   font-weight: 400;
@@ -58,9 +58,11 @@
   font-family: var(--GeistMono);
   font-size: 1rem;
   color: var(--accent);
+  background-color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   white-space: nowrap;
+  padding: 0.2rem 0.6rem;
 }
 
 .collapseBtn {
@@ -78,8 +80,13 @@
 }
 
 .collapseBtn:hover {
-  color: var(--white);
-  border-color: var(--white);
+  color: var(--black);
+  border-color: var(--black);
+}
+
+.sidebarCollapsed .brand {
+  justify-content: center;
+  padding: 0;
 }
 
 .collapseIcon {
@@ -105,7 +112,7 @@
   align-items: center;
   gap: 1.2rem;
   padding: 1.1rem 2rem;
-  color: var(--lightGray);
+  color: var(--black);
   text-decoration: none;
   position: relative;
   white-space: nowrap;
@@ -114,18 +121,17 @@
 }
 
 .navItem:hover {
-  color: var(--white);
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--textii);
 }
 
 .navItemActive {
-  color: var(--accent);
-  border-left-color: var(--accent);
-  background-color: rgba(255, 200, 9, 0.06);
+  color: var(--black);
+  border-left-color: var(--black);
+  background-color: var(--textii);
 }
 
 .navItemActive:hover {
-  color: var(--accent);
+  color: var(--black);
 }
 
 .navIcon {
@@ -143,7 +149,6 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   overflow: hidden;
-  text-transform: uppercase;
 }
 
 /* ── Tooltip (collapsed) ── */
@@ -152,8 +157,8 @@
   left: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -173,7 +178,7 @@
   top: 50%;
   transform: translateY(-50%);
   border: 5px solid transparent;
-  border-right-color: var(--accent);
+  border-right-color: var(--black);
 }
 
 .navItem:hover .tooltip {
@@ -199,8 +204,8 @@
 .userAvatar {
   width: 2.8rem;
   height: 2.8rem;
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
   font-family: var(--GeistMono);
   font-size: 1.1rem;
   font-weight: 700;
@@ -223,7 +228,7 @@
   font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--white);
+  color: var(--black);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -232,7 +237,7 @@
 .userRole {
   font-family: var(--GeistMono);
   font-size: 1rem;
-  color: var(--accent);
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
@@ -255,8 +260,8 @@
 }
 
 .signOutBtn:hover {
-  color: var(--white);
-  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--black);
+  background-color: var(--textii);
 }
 
 /* ── Topbar ── */
@@ -264,9 +269,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 3rem;
+  padding: 0 5rem;
   height: 56px;
-  background-color: var(--black);
+  background-color: var(--white);
   border-bottom: 1px solid var(--lightGray);
   position: sticky;
   top: 0;
@@ -300,7 +305,7 @@
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--white);
+  color: var(--black);
 }
 
 .adminBadge {
@@ -308,8 +313,8 @@
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
-  background-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--black);
   padding: 0.4rem 1rem;
 }
 
@@ -319,7 +324,7 @@
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--black);
+  background-color: var(--white);
 }
 
 .content {

@@ -12,7 +12,7 @@ const items = [
   { text: "Pricing", href: "/#pricing" },
   { text: "About", href: "/#about" },
   { text: "Contact", href: "/#contact" },
-  { text: "My Account", href: "/account" },
+  { text: "My Account", href: "/dashboard" },
 ];
 
 const data3 = [
