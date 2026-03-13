@@ -1,15 +1,15 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 860px;
 }
 
-/* ---- HEADER ---- */
+/* ── Header ── */
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .headerLeft {
@@ -19,48 +19,56 @@
 }
 
 .greeting {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lightGray);
 }
 
 .heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 5rem;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
+  font-family: var(--RobotoFlexii);
+  font-size: 7rem;
+  letter-spacing: -2.4px;
+  font-weight: 400;
+  line-height: 0.9em;
   color: var(--black);
-  line-height: 0.9;
+  text-transform: uppercase;
+  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
+  font-variation-settings:
+    "opsz" 72, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
+    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
+    "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
 }
 
 .businessName {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  color: var(--gray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: var(--lightGray);
+  text-transform: uppercase;
   margin-top: 0.4rem;
 }
 
 .liveBadge {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.4rem;
-  background-color: var(--black);
-  border-radius: 999px;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: var(--accent);
+  gap: 0.8rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  background-color: #16a34a;
+  padding: 0.5rem 1.2rem;
+  flex-shrink: 0;
 }
 
 .liveDot {
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 50%;
-  background-color: var(--accent);
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: var(--white);
   animation: pulse 2s infinite;
 }
 
@@ -69,15 +77,15 @@
   50% { opacity: 0.4; }
 }
 
-/* ---- ACTION CARD ---- */
+/* ── Action card ── */
 .actionCard {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 2.4rem;
-  background-color: var(--black);
-  border-radius: 16px;
+  padding: 3rem 5rem;
+  background-color: var(--accent);
+  border-bottom: 1px solid var(--grayii);
 }
 
 .actionCardLeft {
@@ -87,126 +95,112 @@
 }
 
 .actionLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
+  letter-spacing: 0.1em;
+  color: var(--black);
+  opacity: 0.6;
 }
 
 .actionText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--white);
-  text-transform: none;
-  max-width: 480px;
+  font-family: var(--RobotoFlexii);
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  max-width: 560px;
 }
 
 .actionBtn {
   flex-shrink: 0;
-  padding: 1.2rem 2.4rem;
-  background-color: var(--accent);
-  color: var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
+  padding: 1.2rem 2.8rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  border-radius: 8px;
+  letter-spacing: 0.08em;
   transition: opacity 0.2s ease;
   white-space: nowrap;
   text-decoration: none;
 }
 
-.actionBtn:hover {
-  opacity: 0.85;
-}
+.actionBtn:hover { opacity: 0.85; }
 
-/* ---- TRACKER CARD ---- */
+/* ── Tracker ── */
 .trackerCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .trackerHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .trackerHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2.4rem;
-  letter-spacing: -0.02em;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--black);
 }
 
 .trackerCount {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: var(--gray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  color: var(--lightGray);
 }
 
-/* ---- STAGES ---- */
+/* ── Stages ── */
 .stages {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .stage {
   display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 0 1.6rem;
+  grid-template-columns: 4rem 2rem 1fr;
+  gap: 0 2rem;
   position: relative;
-  padding-bottom: 5rem;
+  padding: 2.8rem 5rem;
   align-items: start;
+  border-bottom: 1px solid var(--grayii);
   text-decoration: none;
-}
-
-.stage:last-child {
-  padding-bottom: 0;
-}
-
-.stageClickable {
-  cursor: pointer;
-  border-radius: 8px;
   transition: background-color 0.15s ease;
+  width: 100%;
 }
 
-.stageClickable:hover {
-  background-color: var(--lightGray);
-}
+.stage:last-child { border-bottom: none; }
 
-/* Vertical connector line */
+.stageClickable { cursor: pointer; }
+.stageClickable:hover { background-color: var(--lightGrayiii); }
+
+/* Vertical connector */
 .connector {
   position: absolute;
-  left: 0.9rem;
-  top: 2rem;
+  left: calc(5rem + 1rem - 1px);
+  top: calc(2.8rem + 2rem);
   width: 2px;
   bottom: 0;
-  transform: translateX(-50%);
 }
 
-.connectorCompleted {
-  background-color: var(--black);
-}
-
-.connectorUpcoming {
-  background-color: var(--lighterGray);
-}
+.connectorCompleted { background-color: var(--black); }
+.connectorUpcoming { background-color: var(--grayii); }
 
 /* Dot */
 .stageDot {
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,19 +216,18 @@
 }
 
 .stageCurrent .stageDot {
-  background-color: var(--accent);
+  background-color: var(--white);
   border: 2px solid var(--black);
 }
 
 .stageUpcoming .stageDot {
   background-color: var(--white);
-  border: 2px solid var(--lighterGray);
+  border: 1px solid var(--grayii);
 }
 
 .stageDotInner {
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
   background-color: var(--black);
 }
 
@@ -242,108 +235,115 @@
 .stageText {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding-top: 1rem;
+  gap: 0.6rem;
+  padding-top: 0.1rem;
 }
 
 .stageLabelRow {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  flex-wrap: wrap;
 }
 
 .stageLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  text-transform: none;
-  letter-spacing: normal;
-  /* All stages use full black — no ghost */
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--black);
 }
 
-.stageUpcoming .stageLabel {
-  /* Upcoming is slightly muted but still readable — NOT ghost */
-  color: var(--darkGray);
-}
+.stageUpcoming .stageLabel { color: var(--lightGray); }
 
-/* Green completion date next to label */
 .stageDate {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   color: #16a34a;
-  padding: 0.2rem 0.7rem;
-  background-color: #f0fdf4;
-  border-radius: 999px;
+  border: 1px solid #16a34a;
+  padding: 0.2rem 0.8rem;
 }
 
 .stageDesc {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--darkGray);
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+  color: var(--lightGray);
   text-transform: none;
+  line-height: 1.6;
 }
 
-/* Blue "More info →" link */
 .moreInfo {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: #2563eb;
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
   margin-top: 0.2rem;
   display: inline-block;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
-.stageClickable:hover .moreInfo {
-  text-decoration: underline;
-}
+.stageClickable:hover .moreInfo { opacity: 1; }
 
-/* ---- QUICK LINKS ---- */
+/* ── Quick links ── */
 .quickLinks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.2rem;
+  border-top: 1px solid var(--grayii);
 }
 
 .quickLink {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem;
-  background-color: var(--white);
-  border-radius: 12px;
-  border: 1.5px solid var(--lighterGray);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  padding: 2.4rem 5rem;
+  border-right: 1px solid var(--grayii);
+  transition: background-color 0.2s ease, color 0.2s ease;
   color: var(--black);
   text-decoration: none;
+  gap: 2rem;
 }
 
+.quickLink:last-child { border-right: none; }
+
 .quickLink:hover {
-  border-color: var(--black);
   background-color: var(--black);
   color: var(--accent);
 }
 
 .quickLinkLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
+  .header { padding: 3rem 2rem; }
+  .heading { font-size: 4.8rem; }
+
   .actionCard {
     flex-direction: column;
     align-items: flex-start;
+    padding: 2.4rem 2rem;
   }
 
-  .actionBtn {
-    width: 100%;
-    text-align: center;
+  .actionBtn { width: 100%; text-align: center; }
+  .trackerHeader { padding: 2rem 2rem; }
+  .stage { padding: 2.4rem 2rem; grid-template-columns: 3rem 2rem 1fr; }
+
+  .quickLinks { grid-template-columns: 1fr; }
+
+  .quickLink {
+    border-right: none;
+    border-bottom: 1px solid var(--grayii);
+    padding: 2rem 2rem;
   }
 
-  .quickLinks {
-    grid-template-columns: 1fr;
-  }
+  .quickLink:last-child { border-bottom: none; }
 }
