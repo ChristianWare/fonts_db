@@ -36,8 +36,11 @@ export default async function ClientsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
+        <span className={styles.eyebrow}>Admin</span>
         <h1 className={styles.heading}>Clients</h1>
-        <p className={styles.subheading}>{clients.length} total clients</p>
+        <span className={styles.count}>
+          {String(clients.length).padStart(2, "0")} total
+        </span>
       </div>
 
       <div className={styles.clientList}>
@@ -46,50 +49,35 @@ export default async function ClientsPage() {
             <p className={styles.emptyText}>No clients yet.</p>
           </div>
         ) : (
-          clients.map((client) => (
+          clients.map((client, index) => (
             <Link
               key={client.id}
               href={`/admin/clients/${client.id}`}
               className={styles.clientRow}
             >
-              <div className={styles.clientLeft}>
-                <div className={styles.clientAvatar}>
-                  {(client.user.name ?? "?")[0].toUpperCase()}
-                </div>
-                <div className={styles.clientInfo}>
-                  <span className={styles.clientName}>
-                    {client.businessName}
-                  </span>
-                  <span className={styles.clientEmail}>
-                    {client.user.email}
-                  </span>
-                </div>
+              <div className={styles.clientIndex}>
+                {String(index + 1).padStart(2, "0")}
               </div>
-              <div className={styles.clientRight}>
-                <div className={styles.stageChip}>
-                  <div
-                    className={styles.stageDot}
-                    style={{
-                      backgroundColor:
-                        stageDotColor[client.onboardingStage] ?? "#979797",
-                    }}
-                  />
-                  <span>{stageLabels[client.onboardingStage]}</span>
-                </div>
-                <svg
-                  width='16'
-                  height='16'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <line x1='5' y1='12' x2='19' y2='12' />
-                  <polyline points='12 5 19 12 12 19' />
-                </svg>
+
+              <div className={styles.clientInfo}>
+                <span className={styles.clientName}>{client.businessName}</span>
+                <span className={styles.clientEmail}>{client.user.email}</span>
               </div>
+
+              <div className={styles.clientStage}>
+                <div
+                  className={styles.stageDot}
+                  style={{
+                    backgroundColor:
+                      stageDotColor[client.onboardingStage] ?? "#979797",
+                  }}
+                />
+                <span className={styles.stageLabel}>
+                  {stageLabels[client.onboardingStage]}
+                </span>
+              </div>
+
+              <span className={styles.arrow}>→</span>
             </Link>
           ))
         )}

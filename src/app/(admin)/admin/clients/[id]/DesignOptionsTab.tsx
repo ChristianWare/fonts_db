@@ -47,40 +47,32 @@ export default function DesignOptionsTab({
       setUploadError("Please enter a template name before uploading.");
       return;
     }
-
     setUploadError(null);
     setUploading(true);
-
     try {
       const folder = `fonts-and-footers/clients/${clientId}/design-options`;
       const sigData = await getCloudinarySignature(folder);
-
       if ("error" in sigData) {
         setUploadError("Failed to get upload signature.");
         setUploading(false);
         return;
       }
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("api_key", sigData.apiKey);
       formData.append("timestamp", String(sigData.timestamp));
       formData.append("signature", sigData.signature);
       formData.append("folder", folder);
-
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`,
         { method: "POST", body: formData },
       );
-
       const data = await response.json();
-
       if (!response.ok) {
         setUploadError("Upload failed. Please try again.");
         setUploading(false);
         return;
       }
-
       const result = await uploadDesignOption({
         clientProfileId: clientId,
         imageUrl: data.secure_url,
@@ -88,20 +80,17 @@ export default function DesignOptionsTab({
         templateName,
         sourceUrl: sourceUrl.trim() || undefined,
       });
-
       if (result?.error) {
         setUploadError(result.error);
         setUploading(false);
         return;
       }
-
       setTemplateName("");
       setSourceUrl("");
       router.refresh();
     } catch {
       setUploadError("Something went wrong.");
     }
-
     setUploading(false);
   };
 
@@ -112,25 +101,53 @@ export default function DesignOptionsTab({
 
   return (
     <>
+      {/* ── Client's selection ── */}
       {selectedOption && (
         <div className={styles.card}>
-          <h3 className={styles.cardHeading}>Client&apos;s Selection</h3>
-          <div className={styles.selectionRow}>
-            <img
-              src={selectedOption.fileUrl}
-              alt={selectedOption.templateName ?? "Selected design"}
-              className={styles.selectionThumb}
-            />
-            <div className={styles.selectionInfo}>
-              <span className={styles.selectionName}>
-                {selectedOption.templateName ?? "Unnamed template"}
-              </span>
+          <div className={styles.cardHeader}>
+            <span className={styles.cardEyebrow}>Design Selection</span>
+            <span className={styles.selectedBadge}>Client&apos;s choice</span>
+          </div>
+          <div className={styles.selectionGrid}>
+            <div className={styles.selectionThumbWrap}>
+              <img
+                src={selectedOption.fileUrl}
+                alt={selectedOption.templateName ?? "Selected design"}
+                className={styles.selectionThumbImg}
+              />
+              <a
+                href={selectedOption.fileUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+                className={styles.selectionViewBtn}
+              >
+                View full →
+              </a>
+            </div>
+            <div className={styles.selectionMeta}>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Template</span>
+                <span className={styles.infoValue}>
+                  {selectedOption.templateName ?? "Unnamed"}
+                </span>
+              </div>
+              {selectedOption.sourceUrl && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>Source</span>
+                  <a
+                    href={selectedOption.sourceUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className={styles.inlineLink}
+                  >
+                    Open URL →
+                  </a>
+                </div>
+              )}
               {selectedOption.clientNotes && (
-                <div className={styles.selectionNotes}>
-                  <span className={styles.selectionNotesLabel}>
-                    Client notes
-                  </span>
-                  <p className={styles.selectionNotesText}>
+                <div className={styles.notesBlock}>
+                  <span className={styles.infoLabel}>Client notes</span>
+                  <p className={styles.notesText}>
                     {selectedOption.clientNotes}
                   </p>
                 </div>
@@ -140,22 +157,24 @@ export default function DesignOptionsTab({
         </div>
       )}
 
+      {/* ── Upload form ── */}
       <div className={styles.card}>
-        <h3 className={styles.cardHeading}>Upload Design Option</h3>
+        <div className={styles.cardHeader}>
+          <span className={styles.cardEyebrow}>Upload Design Option</span>
+          <span className={styles.cardCount}>{designOptions.length} / 5</span>
+        </div>
         <p className={styles.cardDesc}>
-          Upload a full-page screenshot. Add up to 5 options for the client to
-          choose from.
+          Upload a full-page screenshot. The client will choose from up to 5
+          options.
         </p>
         <div className={styles.uploadForm}>
-          <div className={styles.uploadRow}>
-            <input
-              type='text'
-              className={styles.input}
-              placeholder='Template name (e.g. Velocity, Obsidian, Luxe)'
-              value={templateName}
-              onChange={(e) => setTemplateName(e.target.value)}
-            />
-          </div>
+          <input
+            type='text'
+            className={styles.input}
+            placeholder='Template name (e.g. Velocity, Obsidian, Luxe)'
+            value={templateName}
+            onChange={(e) => setTemplateName(e.target.value)}
+          />
           <input
             type='text'
             className={styles.input}
@@ -191,24 +210,26 @@ export default function DesignOptionsTab({
         </div>
       </div>
 
+      {/* ── Options list ── */}
       <div className={styles.card}>
-        <h3 className={styles.cardHeading}>
-          Design Options ({designOptions.length} / 5)
-        </h3>
+        <div className={styles.cardHeader}>
+          <span className={styles.cardEyebrow}>Design Options</span>
+          <span className={styles.cardCount}>{designOptions.length} / 5</span>
+        </div>
         {designOptions.length === 0 ? (
           <p className={styles.emptyText}>No design options uploaded yet.</p>
         ) : (
           <div className={styles.docList}>
             {designOptions.map((option, index) => (
               <div key={option.id} className={styles.docRow}>
+                <div className={styles.docIndex}>
+                  {String(index + 1).padStart(2, "0")}
+                </div>
                 <div className={styles.docInfo}>
                   <span className={styles.docTitle}>
-                    Option {index + 1}
-                    {option.templateName ? ` — ${option.templateName}` : ""}
+                    {option.templateName ?? `Option ${index + 1}`}
                     {option.selected && (
-                      <span className={styles.selectedTag}>
-                        {" · Client's choice"}
-                      </span>
+                      <span className={styles.selectedTag}> · Selected</span>
                     )}
                   </span>
                   <span className={styles.docMeta}>

@@ -2,13 +2,14 @@
   display: grid;
   grid-template-columns: auto 1fr;
   min-height: 100vh;
-  background-color: var(--lightGray);
+  background-color: var(--black);
 }
 
-/* ---- SIDEBAR ---- */
+/* ── Sidebar ── */
 .sidebar {
-  width: 260px;
-  background-color: #1a1a18;
+  width: 240px;
+  background-color: var(--black);
+  border-right: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -20,62 +21,65 @@
 }
 
 .sidebarCollapsed {
-  width: 68px;
+  width: 56px;
 }
 
-/* ---- BRAND ---- */
+/* ── Brand ── */
 .brand {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.4rem 1.6rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  min-height: 72px;
+  padding: 0 2rem;
+  height: 56px;
+  border-bottom: 1px solid var(--lightGray);
+  flex-shrink: 0;
 }
 
 .brandText {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  align-items: baseline;
+  gap: 0.8rem;
   overflow: hidden;
 }
 
 .brandName {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--RobotoFlexii);
+  font-size: 1.8rem;
   color: var(--white);
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
   white-space: nowrap;
 }
 
 .brandSub {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   white-space: nowrap;
 }
 
 .collapseBtn {
   flex-shrink: 0;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
+  width: 2.8rem;
+  height: 2.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: var(--gray);
-  border: none;
+  color: var(--lightGray);
+  border: 1px solid var(--lightGray);
+  background: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .collapseBtn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
   color: var(--white);
+  border-color: var(--white);
 }
 
 .collapseIcon {
@@ -86,46 +90,42 @@
   transform: rotate(180deg);
 }
 
-/* ---- NAV ---- */
+/* ── Nav ── */
 .nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 1.6rem 1rem;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 1.2rem 0;
 }
 
 .navItem {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding: 1.1rem 1.2rem;
-  border-radius: 8px;
-  color: var(--gray);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  padding: 1.1rem 2rem;
+  color: var(--lightGray);
+  text-decoration: none;
   position: relative;
   white-space: nowrap;
-  text-decoration: none;
-  background-color: var(--lighterGray);
+  border-left: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .navItem:hover {
-  background-color: var(--accent);
+  color: var(--white);
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .navItemActive {
-  background-color: var(--accent);
-  color: var(--black);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background-color: rgba(255, 200, 9, 0.06);
 }
 
 .navItemActive:hover {
-  background-color: var(--accent);
-  color: var(--black);
-  opacity: 0.9;
+  color: var(--accent);
 }
 
 .navIcon {
@@ -133,36 +133,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .navLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  text-transform: none;
-  letter-spacing: normal;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   overflow: hidden;
+  text-transform: uppercase;
 }
 
+/* ── Tooltip (collapsed) ── */
 .tooltip {
   position: absolute;
   left: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--white);
+  background-color: var(--accent);
   color: var(--black);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  text-transform: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.5rem 1rem;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s ease;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .tooltip::before {
@@ -172,38 +173,37 @@
   top: 50%;
   transform: translateY(-50%);
   border: 5px solid transparent;
-  border-right-color: var(--white);
+  border-right-color: var(--accent);
 }
 
 .navItem:hover .tooltip {
   opacity: 1;
 }
 
-/* ---- SIDEBAR BOTTOM ---- */
+/* ── Sidebar bottom ── */
 .sidebarBottom {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--lightGray);
+  padding: 1.2rem 0;
+  flex-shrink: 0;
 }
 
 .userInfo {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding: 1.2rem;
+  padding: 1rem 2rem;
   margin-bottom: 0.4rem;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.04);
   overflow: hidden;
 }
 
 .userAvatar {
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 50%;
+  width: 2.8rem;
+  height: 2.8rem;
   background-color: var(--accent);
   color: var(--black);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,21 +219,22 @@
 }
 
 .userName {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--white);
-  text-transform: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .userRole {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
@@ -241,81 +242,87 @@
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding: 1.1rem 1.2rem;
-  border-radius: 8px;
-  color: var(--gray);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-  position: relative;
-  white-space: nowrap;
+  padding: 1.1rem 2rem;
+  color: var(--lightGray);
   cursor: pointer;
   width: 100%;
   background: none;
   border: none;
   text-align: left;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .signOutBtn:hover {
-  background-color: rgba(255, 255, 255, 0.06);
   color: var(--white);
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* ---- TOPBAR ---- */
+/* ── Topbar ── */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 3rem;
-  height: 72px;
-  background-color: var(--white);
-  border-bottom: 1px solid var(--lighterGray);
+  height: 56px;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--lightGray);
   position: sticky;
   top: 0;
   z-index: 5;
+  flex-shrink: 0;
 }
 
-.pageIndicator {
+.topbarLeft {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
-.dot {
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
-  background-color: var(--accent);
-}
-
-.pageIndicatorText {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+.topbarBrand {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--darkGray);
+  letter-spacing: 0.08em;
+  color: var(--lightGray);
+}
+
+.topbarDivider {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  color: var(--lightGray);
+  opacity: 0.4;
+}
+
+.topbarSection {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--white);
 }
 
 .adminBadge {
-  padding: 0.5rem 1.2rem;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-radius: 999px;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 0.4rem 1rem;
 }
 
-/* ---- MAIN ---- */
+/* ── Main ── */
 .main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--black);
 }
 
 .content {
   flex: 1;
-  padding: 3rem;
+  padding: 0;
 }

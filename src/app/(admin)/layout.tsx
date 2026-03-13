@@ -12,8 +12,8 @@ const navItems = [
     label: "Overview",
     icon: (
       <svg
-        width='20'
-        height='20'
+        width='16'
+        height='16'
         viewBox='0 0 24 24'
         fill='none'
         stroke='currentColor'
@@ -33,8 +33,8 @@ const navItems = [
     label: "Clients",
     icon: (
       <svg
-        width='20'
-        height='20'
+        width='16'
+        height='16'
         viewBox='0 0 24 24'
         fill='none'
         stroke='currentColor'
@@ -54,8 +54,8 @@ const navItems = [
     label: "Change Requests",
     icon: (
       <svg
-        width='20'
-        height='20'
+        width='16'
+        height='16'
         viewBox='0 0 24 24'
         fill='none'
         stroke='currentColor'
@@ -73,8 +73,8 @@ const navItems = [
     label: "Support",
     icon: (
       <svg
-        width='20'
-        height='20'
+        width='16'
+        height='16'
         viewBox='0 0 24 24'
         fill='none'
         stroke='currentColor'
@@ -119,7 +119,7 @@ export default function AdminLayout({
         <div className={styles.brand}>
           {!collapsed && (
             <div className={styles.brandText}>
-              <span className={styles.brandName}>Fonts & Footers</span>
+              <span className={styles.brandName}>F&F</span>
               <span className={styles.brandSub}>Admin</span>
             </div>
           )}
@@ -129,8 +129,8 @@ export default function AdminLayout({
             aria-label='Toggle sidebar'
           >
             <svg
-              width='18'
-              height='18'
+              width='14'
+              height='14'
               viewBox='0 0 24 24'
               fill='none'
               stroke='currentColor'
@@ -187,8 +187,8 @@ export default function AdminLayout({
           >
             <span className={styles.navIcon}>
               <svg
-                width='20'
-                height='20'
+                width='16'
+                height='16'
                 viewBox='0 0 24 24'
                 fill='none'
                 stroke='currentColor'
@@ -209,9 +209,10 @@ export default function AdminLayout({
 
       <main className={styles.main}>
         <div className={styles.topbar}>
-          <div className={styles.pageIndicator}>
-            <div className={styles.dot} />
-            <span className={styles.pageIndicatorText}>Admin Portal</span>
+          <div className={styles.topbarLeft}>
+            <span className={styles.topbarBrand}>Fonts & Footers</span>
+            <span className={styles.topbarDivider}>/</span>
+            <span className={styles.topbarSection}>Admin Portal</span>
           </div>
           <div className={styles.adminBadge}>Administrator</div>
         </div>

@@ -41,63 +41,88 @@ export default async function AdminPage() {
 
   const { clients, mrr, activeCount, openTickets, pendingRequests } = data;
 
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <h1 className={styles.heading}>Overview</h1>
-        <p className={styles.subheading}>
-          {new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div className={styles.stats}>
-        <div className={styles.statCard}>
-          <span className={styles.statLabel}>Monthly Recurring Revenue</span>
-          <span className={styles.statValue}>{formatCents(mrr)}</span>
-          <span className={styles.statSub}>{activeCount} active clients</span>
+      {/* ── Hero header ── */}
+      <div className={styles.hero}>
+        <div className={styles.dot1} />
+        <div className={styles.dot2} />
+        <div className={styles.dot3} />
+        <div className={styles.dot4} />
+        <div className={styles.heroLeft}>
+          <span className={styles.eyebrow}>Admin Dashboard</span>
+          <h1 className={styles.mrrDisplay}>{formatCents(mrr)}</h1>
+          <span className={styles.mrrLabel}>Monthly Recurring Revenue</span>
         </div>
-        <div className={styles.statCard}>
-          <span className={styles.statLabel}>Total Clients</span>
-          <span className={styles.statValue}>{clients.length}</span>
-          <span className={styles.statSub}>All time</span>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statLabel}>Open Support Tickets</span>
-          <span
-            className={`${styles.statValue} ${openTickets > 0 ? styles.statAlert : ""}`}
-          >
-            {openTickets}
-          </span>
-          <Link href='/admin/support' className={styles.statLink}>
-            View all →
-          </Link>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statLabel}>Pending Change Requests</span>
-          <span
-            className={`${styles.statValue} ${pendingRequests > 0 ? styles.statAlert : ""}`}
-          >
-            {pendingRequests}
-          </span>
-          <Link href='/admin/change-requests' className={styles.statLink}>
-            View all →
-          </Link>
+        <div className={styles.heroRight}>
+          <span className={styles.dateLabel}>{today}</span>
+          <div className={styles.heroStats}>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatValue}>{activeCount}</span>
+              <span className={styles.heroStatLabel}>Active clients</span>
+            </div>
+            <div className={styles.heroStat}>
+              <span
+                className={`${styles.heroStatValue} ${openTickets > 0 ? styles.alertValue : ""}`}
+              >
+                {openTickets}
+              </span>
+              <span className={styles.heroStatLabel}>Open tickets</span>
+            </div>
+            <div className={styles.heroStat}>
+              <span
+                className={`${styles.heroStatValue} ${pendingRequests > 0 ? styles.alertValue : ""}`}
+              >
+                {pendingRequests}
+              </span>
+              <span className={styles.heroStatLabel}>Pending requests</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Client pipeline */}
-      <div className={styles.pipelineCard}>
+      {/* ── Quick links strip ── */}
+      <div className={styles.quickLinks}>
+        <Link href='/admin/clients' className={styles.quickLink}>
+          <span className={styles.quickLinkLabel}>All Clients</span>
+          <span className={styles.quickLinkArrow}>→</span>
+        </Link>
+        <Link href='/admin/support' className={styles.quickLink}>
+          <span className={styles.quickLinkLabel}>
+            Support Tickets
+            {openTickets > 0 && (
+              <span className={styles.badge}>{openTickets}</span>
+            )}
+          </span>
+          <span className={styles.quickLinkArrow}>→</span>
+        </Link>
+        <Link href='/admin/change-requests' className={styles.quickLink}>
+          <span className={styles.quickLinkLabel}>
+            Change Requests
+            {pendingRequests > 0 && (
+              <span className={styles.badge}>{pendingRequests}</span>
+            )}
+          </span>
+          <span className={styles.quickLinkArrow}>→</span>
+        </Link>
+      </div>
+
+      {/* ── Pipeline ── */}
+      <div className={styles.pipeline}>
         <div className={styles.pipelineHeader}>
-          <h2 className={styles.pipelineHeading}>Client Pipeline</h2>
-          <Link href='/admin/clients' className={styles.viewAllLink}>
-            View all clients →
-          </Link>
+          <div className={styles.dot1} />
+          <div className={styles.dot2} />
+          <span className={styles.pipelineEyebrow}>Client Pipeline</span>
+          <span className={styles.pipelineCount}>
+            {String(clients.length).padStart(2, "0")} total
+          </span>
         </div>
 
         {clients.length === 0 ? (
@@ -106,59 +131,47 @@ export default async function AdminPage() {
           </div>
         ) : (
           <div className={styles.clientList}>
-            {clients.map((client) => (
+            {clients.map((client, index) => (
               <Link
                 key={client.id}
                 href={`/admin/clients/${client.id}`}
                 className={styles.clientRow}
               >
-                <div className={styles.clientLeft}>
-                  <div className={styles.clientAvatar}>
-                    {(client.user.name ?? "?")[0].toUpperCase()}
-                  </div>
-                  <div className={styles.clientInfo}>
-                    <span className={styles.clientName}>
-                      {client.businessName}
-                    </span>
-                    <span className={styles.clientEmail}>
-                      {client.user.email}
-                    </span>
-                  </div>
+                <div className={styles.clientIndex}>
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+
+                <div className={styles.clientInfo}>
+                  <span className={styles.clientName}>
+                    {client.businessName}
+                  </span>
+                  <span className={styles.clientEmail}>
+                    {client.user.email}
+                  </span>
+                </div>
+
+                <div className={styles.clientStage}>
+                  <div
+                    className={styles.stageDot}
+                    style={{
+                      backgroundColor:
+                        stageDotColor[client.onboardingStage] ?? "#979797",
+                    }}
+                  />
+                  <span className={styles.stageLabel}>
+                    {stageLabels[client.onboardingStage]}
+                  </span>
                 </div>
 
                 <div className={styles.clientRight}>
-                  <div className={styles.clientStage}>
-                    <div
-                      className={styles.stageDot}
-                      style={{
-                        backgroundColor:
-                          stageDotColor[client.onboardingStage] ?? "#979797",
-                      }}
-                    />
-                    <span className={styles.stageLabel}>
-                      {stageLabels[client.onboardingStage]}
-                    </span>
-                  </div>
-
-                  {client.subscription?.status === "ACTIVE" && (
+                  {client.subscription?.status === "ACTIVE" ? (
                     <span className={styles.mrrBadge}>
                       {formatCents(client.subscription.planAmountCents)}/mo
                     </span>
+                  ) : (
+                    <span className={styles.mrrBadgeEmpty}>—</span>
                   )}
-
-                  <svg
-                    width='16'
-                    height='16'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='2'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <line x1='5' y1='12' x2='19' y2='12' />
-                    <polyline points='12 5 19 12 12 19' />
-                  </svg>
+                  <span className={styles.arrow}>→</span>
                 </div>
               </Link>
             ))}

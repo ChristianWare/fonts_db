@@ -1,60 +1,76 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  max-width: 860px;
 }
 
+/* ── Header ── */
 .header {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  align-items: baseline;
+  gap: 2rem;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
+  flex-wrap: wrap;
 }
 
 .heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
+  font-family: var(--RobotoFlexii);
+  font-size: 5rem;
+  letter-spacing: -2px;
+  font-weight: 400;
+  line-height: 0.9em;
+  color: var(--white);
   text-transform: uppercase;
-  color: var(--black);
-  line-height: 1;
+  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
+  font-variation-settings:
+    "opsz" 56, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
+    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
+    "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.4rem;
-  color: var(--gray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--lightGray);
+  margin-left: auto;
 }
 
+/* ── Sections ── */
 .section {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .sectionHeading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: var(--black);
+  letter-spacing: 0.1em;
+  color: var(--lightGray);
+  padding: 2rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .ticketList {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
 }
 
+/* ── Ticket card ── */
 .ticketCard {
-  background-color: var(--white);
-  border-radius: 16px;
-  padding: 2.4rem;
+  border-bottom: 1px solid var(--lightGray);
+  padding: 2.8rem 5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
-  border: 1.5px solid var(--lighterGray);
+  gap: 2rem;
+}
+
+.ticketCard:last-child {
+  border-bottom: none;
 }
 
 .ticketTop {
@@ -67,83 +83,90 @@
 .ticketTopLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.6rem;
 }
 
 .ticketClient {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
 }
 
 .ticketBusiness {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--accent);
-  background-color: var(--black);
-  padding: 0.2rem 0.8rem;
-  border-radius: 999px;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 0.3rem 0.8rem;
 }
 
 .ticketEmail {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--gray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--lightGray);
   text-transform: none;
 }
 
 .ticketSubject {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.6rem;
-  color: var(--black);
-  text-transform: none;
-  letter-spacing: normal;
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  text-transform: uppercase;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
 }
 
 .ticketDate {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--gray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--lightGray);
   text-transform: none;
 }
 
+/* ── Status badges ── */
 .ticketStatus {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   padding: 0.4rem 1rem;
-  border-radius: 999px;
   flex-shrink: 0;
 }
 
 .statusOpen {
-  background-color: #fefce8;
   color: #ca8a04;
+  border: 1px solid #ca8a04;
+  background-color: rgba(202, 138, 4, 0.08);
 }
 
 .statusClosed {
-  background-color: #f0fdf4;
   color: #16a34a;
+  border: 1px solid #16a34a;
+  background-color: rgba(22, 163, 74, 0.08);
 }
 
+/* ── Message ── */
 .ticketMessage {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--darkGray);
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  color: var(--lightGray);
   text-transform: none;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
+/* ── Existing reply ── */
 .existingReply {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   padding: 1.6rem;
-  background-color: var(--lightGray);
-  border-radius: 10px;
+  background-color: rgba(255, 200, 9, 0.06);
   border-left: 3px solid var(--accent);
 }
 
@@ -154,28 +177,31 @@
 }
 
 .replyLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--black);
+  letter-spacing: 0.1em;
+  color: var(--accent);
 }
 
 .replyDate {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--gray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--lightGray);
   text-transform: none;
 }
 
 .replyText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  color: var(--white);
   text-transform: none;
   line-height: 1.6;
 }
 
+/* ── Reply form ── */
 .replyForm {
   display: flex;
   flex-direction: column;
@@ -185,20 +211,26 @@
 .textarea {
   width: 100%;
   padding: 1.3rem 1.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  background-color: var(--white);
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--black);
+  border: 1px solid var(--lightGray);
+  background-color: var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+  color: var(--white);
   resize: vertical;
   min-height: 100px;
   transition: border-color 0.2s ease;
+  text-transform: none;
 }
 
 .textarea:focus {
-  border-color: var(--black);
+  border-color: var(--accent);
   outline: none;
+}
+
+.textarea::placeholder {
+  color: var(--lightGray);
+  font-size: 1.1rem;
 }
 
 .replyBtns {
@@ -210,75 +242,73 @@
 
 .cancelBtn {
   padding: 1rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lightGray);
   cursor: pointer;
   background: none;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .cancelBtn:hover {
-  border-color: var(--black);
-  color: var(--black);
+  border-color: var(--white);
+  color: var(--white);
 }
 
 .sendBtn {
   padding: 1rem 2.4rem;
-  border-radius: 8px;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.5rem;
+  background-color: var(--accent);
+  color: var(--black);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.08em;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
 
-.sendBtn:hover {
-  opacity: 0.85;
-}
-
-.sendBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.sendBtn:hover { opacity: 0.85; }
+.sendBtn:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .replyBtn {
   align-self: flex-start;
   padding: 0.8rem 2rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: var(--darkGray);
-  text-transform: none;
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--lightGray);
   cursor: pointer;
   background: none;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .replyBtn:hover {
-  border-color: var(--black);
-  color: var(--black);
+  border-color: var(--white);
+  color: var(--white);
 }
 
+/* ── Empty ── */
 .emptyState {
-  padding: 8rem 4rem;
-  background-color: var(--white);
-  border-radius: 16px;
-  text-align: center;
-  border: 1.5px solid var(--lighterGray);
+  padding: 6rem 5rem;
 }
 
 .emptyText {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.5rem;
-  color: var(--gray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--lightGray);
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .header { padding: 3rem 2rem; }
+  .sectionHeading { padding: 1.6rem 2rem; }
+  .ticketCard { padding: 2.4rem 2rem; }
 }
