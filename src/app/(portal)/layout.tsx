@@ -93,7 +93,6 @@ const navItems = [
   {
     href: "/dashboard/design-selection",
     label: "Design Selection",
-    stage: "DESIGN_SELECTION",
     icon: (
       <svg
         width='20'
@@ -203,10 +202,14 @@ export default function PortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  // Collapsed by default on mobile (<=768px), expanded on desktop
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth <= 768;
+  });
+
   const pathname = usePathname();
   const { data: session } = useSession();
-
   const userName = session?.user?.name;
   const userEmail = session?.user?.email;
   const initials = getInitials(userName);
