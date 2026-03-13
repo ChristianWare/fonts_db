@@ -195,8 +195,6 @@ export default async function DashboardPage() {
                     <div className={styles.stageDotInner} />
                   ) : null}
                 </div>
-
-                {/* Text */}
                 <div className={styles.stageText}>
                   <div className={styles.stageLabelRow}>
                     <span className={styles.stageLabel}>{step.label}</span>
@@ -216,8 +214,6 @@ export default async function DashboardPage() {
                 </div>
               </>
             );
-
-            // Every step with an href is a Link — no exceptions
             if (step.href) {
               return (
                 <Link key={step.key} href={step.href} className={stageClass}>
@@ -225,7 +221,6 @@ export default async function DashboardPage() {
                 </Link>
               );
             }
-
             return (
               <div key={step.key} className={stageClass}>
                 {inner}
@@ -235,7 +230,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick links — visible once site is live */}
       {isLive && (
         <div className={styles.quickLinks}>
           <Link href='/dashboard/change-requests' className={styles.quickLink}>

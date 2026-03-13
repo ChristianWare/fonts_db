@@ -2,10 +2,10 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background-color: var(--black);
+  background-color: var(--white);
 }
 
-/* ---- LEFT PANEL ---- */
+/* ── Left panel ── */
 .left {
   display: flex;
   flex-direction: column;
@@ -16,97 +16,98 @@
   overflow: hidden;
 }
 
-.left::after {
-  content: "";
-  position: absolute;
-  bottom: -200px;
-  left: -200px;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  opacity: 0.04;
-  pointer-events: none;
-}
-
 .brand {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  align-items: baseline;
+  gap: 1rem;
 }
 
 .brandName {
-  font-family: var(--SuisseIntlCondBold);
+  font-family: var(--RobotoFlexii);
   font-size: 2rem;
-  color: var(--accent);
+  color: var(--white);
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
 }
 
 .brandTagline {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--gray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background-color: rgba(255, 200, 9, 0.12);
+  padding: 0.2rem 0.7rem;
+  border: 1px solid rgba(255, 200, 9, 0.3);
 }
 
 .quote {
-  padding-bottom: 6rem;
+  padding-bottom: 5rem;
 }
 
 .quoteText {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 7rem;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  font-family: var(--RobotoFlexii);
+  font-size: 8rem;
+  line-height: 0.9em;
+  letter-spacing: -3px;
   text-transform: uppercase;
   color: var(--white);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
 }
 
 .quoteText span {
   color: var(--accent);
 }
 
-/* ---- RIGHT PANEL ---- */
+/* ── Right panel ── */
 .right {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--lightGray);
+  background-color: var(--white);
   padding: 4rem;
+  border-left: 1px solid var(--grayii);
 }
 
 .card {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 3.2rem;
 }
 
 .cardTop {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
+  font-family: var(--RobotoFlexii);
+  font-size: 4.8rem;
+  letter-spacing: -2px;
   text-transform: uppercase;
   color: var(--black);
-  line-height: 1;
+  line-height: 0.9em;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
 }
 
 .subheading {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--lightGray);
 }
 
-/* ---- FORM ---- */
+/* ── Form ── */
 .form {
   display: flex;
   flex-direction: column;
@@ -126,27 +127,28 @@
 }
 
 .label {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--black);
 }
 
 .input {
   width: 100%;
-  padding: 1.4rem 1.6rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--grayii);
   background-color: var(--white);
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
   color: var(--black);
-  transition: border-color 0.2s ease;
+  transition: border-color 0.15s ease;
+  outline: none;
 }
 
 .input::placeholder {
-  color: var(--lightText);
+  color: var(--lightGray);
 }
 
 .input:focus {
@@ -158,18 +160,21 @@
 }
 
 .fieldError {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
   color: #e53e3e;
-  text-transform: none;
+  text-transform: uppercase;
 }
 
 .forgotLink {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.3rem;
-  color: var(--darkGray);
-  text-transform: none;
-  transition: color 0.2s ease;
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lightGray);
+  transition: color 0.15s ease;
+  text-decoration: none;
 }
 
 .forgotLink:hover {
@@ -177,14 +182,14 @@
 }
 
 .errorBanner {
-  padding: 1.2rem 1.6rem;
+  padding: 1.2rem 1.4rem;
   background-color: #fff5f5;
-  border: 1.5px solid #fed7d7;
-  border-radius: 8px;
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.4rem;
+  border: 1px solid #fed7d7;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
   color: #c53030;
-  text-transform: none;
+  text-transform: uppercase;
 }
 
 .submitBtn {
@@ -192,42 +197,43 @@
   padding: 1.6rem;
   background-color: var(--black);
   color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.8rem;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  border-radius: 8px;
+  letter-spacing: 0.1em;
   cursor: pointer;
   transition: opacity 0.2s ease;
   border: none;
 }
 
-.submitBtn:hover {
-  opacity: 0.85;
-}
+.submitBtn:hover { opacity: 0.85; }
 
 .submitBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* ---- FOOTER ---- */
+/* ── Footer ── */
 .registerPrompt {
   text-align: center;
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.4rem;
-  color: var(--darkGray);
-  text-transform: none;
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lightGray);
 }
 
 .registerLink {
-  font-family: var(--SuisseIntlMedium);
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--black);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
 }
 
-/* ---- RESPONSIVE ---- */
+/* ── Responsive ── */
 @media screen and (max-width: 768px) {
   .page {
     grid-template-columns: 1fr;
@@ -239,5 +245,6 @@
 
   .right {
     padding: 3rem 2rem;
+    border-left: none;
   }
 }
