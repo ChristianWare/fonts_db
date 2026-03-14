@@ -1,32 +1,30 @@
 .page {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 4rem 2.4rem 8rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
 }
 
-/* ── HEADER ── */
+/* ── Header ── */
 .header {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .backBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
-  color: var(--gray);
+  gap: 1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--text);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   transition: color 0.15s ease;
   width: fit-content;
 }
@@ -38,39 +36,42 @@
 .docMeta {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  margin-top: 0.4rem;
+  gap: 2rem;
+  margin-top: 1rem;
 }
 
 .docType {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--gray);
+  color: var(--text);
 }
 
 .docDate {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--lightText);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
 }
 
 .heading {
-  font-family: var(--SuisseIntlBold);
-  font-size: 2.8rem;
-  font-weight: 700;
+  font-family: var(--RobotoFlexii);
+  font-size: 5rem;
+  font-weight: 400;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -2px;
+  line-height: 0.95em;
   color: var(--black);
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── PDF PREVIEW ── */
+/* ── PDF Preview ── */
 .previewCard {
-  background: var(--white);
-  border-radius: 12px;
-  border: 1.5px solid var(--lighterGray);
+  border-bottom: 1px solid var(--lightGray);
   overflow: hidden;
 }
 
@@ -78,28 +79,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.4rem 2rem;
-  border-bottom: 1.5px solid var(--lighterGray);
+  padding: 2rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .previewLabel {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--gray);
+  letter-spacing: 0.07em;
+  color: var(--text);
 }
 
 .openBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.2rem;
+  gap: 1rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   color: var(--black);
   text-decoration: none;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   transition: opacity 0.15s ease;
 }
 
@@ -112,57 +113,56 @@
   height: 70rem;
   border: none;
   display: block;
-  background: var(--lightGray);
+  background: var(--lightlightGrayi);
 }
 
-/* ── SIGN CARD ── */
+/* ── Sign block ── */
 .signCard {
-  background: var(--white);
-  border-radius: 12px;
-  border: 1.5px solid var(--lighterGray);
-  padding: 3.2rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 3rem;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .signCardHeader {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .signHeading {
-  font-family: var(--SuisseIntlBold);
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--black);
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.07em;
+  color: var(--black);
 }
 
 .signDesc {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
-  color: var(--darkGray);
+  color: var(--text);
+  text-transform: none;
   line-height: 1.6;
 }
 
-/* ── CONSENT CHECKBOX ── */
+/* ── Consent checkbox ── */
 .consentLabel {
   display: flex;
   align-items: flex-start;
-  gap: 1.4rem;
+  gap: 2rem;
   cursor: pointer;
   padding: 2rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--lighterGray);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  border: 1px solid var(--lightGray);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .consentLabel:has(.consentCheckbox:checked) {
   border-color: var(--black);
-  background-color: var(--lightGray);
+  background-color: var(--lightlightGrayi);
 }
 
 .consentCheckbox {
@@ -175,65 +175,69 @@
 }
 
 .consentText {
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
   font-size: 1.4rem;
   color: var(--black);
+  text-transform: none;
   line-height: 1.6;
 }
 
-/* ── ACTIONS ── */
+/* ── Error ── */
 .errorBanner {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  border-radius: 8px;
-  padding: 1.2rem 1.6rem;
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  padding: 1.4rem;
+  background-color: #fff5f5;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+  line-height: 1.5;
 }
 
+/* ── Actions ── */
 .signActions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 1.2rem;
+  gap: 2rem;
 }
 
 .cancelBtn {
-  font-family: var(--SuisseIntlMedium);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--gray);
+  letter-spacing: 0.07em;
+  color: var(--text);
   background: none;
-  border: none;
+  border: 1px solid var(--lightGray);
   cursor: pointer;
-  padding: 1rem 1.6rem;
-  border-radius: 8px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  padding: 1rem 2rem;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .cancelBtn:hover {
+  border-color: var(--black);
   color: var(--black);
-  background-color: var(--lightGray);
 }
 
 .signBtn {
-  font-family: var(--SuisseIntlBold);
-  font-size: 1.3rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--white);
+  letter-spacing: 0.07em;
+  color: var(--accent);
   background-color: var(--black);
   border: none;
   cursor: pointer;
-  padding: 1.2rem 2.4rem;
-  border-radius: 8px;
+  padding: 1rem 3rem;
   transition: opacity 0.15s ease;
 }
 
 .signBtn:hover:not(:disabled) {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 .signBtn:disabled {
@@ -241,12 +245,41 @@
   cursor: not-allowed;
 }
 
-/* ── LEGAL NOTE ── */
+/* ── Legal note ── */
 .legalNote {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.2rem;
-  color: var(--lightText);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-align: center;
+  text-transform: none;
   line-height: 1.6;
-  padding: 0 2rem;
+  padding: 3rem 5rem;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
+  .heading {
+    font-size: 3.6rem;
+  }
+  .previewHeader {
+    padding: 2rem 2rem;
+  }
+  .signCard {
+    padding: 3rem 2rem;
+  }
+  .legalNote {
+    padding: 3rem 2rem;
+  }
+  .signActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cancelBtn,
+  .signBtn {
+    text-align: center;
+    width: 100%;
+  }
 }
