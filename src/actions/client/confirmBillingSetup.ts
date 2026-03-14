@@ -39,25 +39,44 @@ export async function confirmBillingSetup({
     invoice_settings: { default_payment_method: paymentMethodId },
   });
 
-  // Charge setup fee immediately (if > $0)
+  // ── Setup fee via Stripe Invoice (generates a downloadable PDF) ──────────
   if (profile.setupFeeAmountCents > 0) {
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Add a line item to the next invoice
+    await stripe.invoiceItems.create({
+      customer: customerId,
       amount: profile.setupFeeAmountCents,
       currency: "usd",
-      customer: customerId,
-      payment_method: paymentMethodId,
-      confirm: true,
       description: "Fonts & Footers — One-time setup fee",
       metadata: { clientProfileId: profile.id, type: "setup_fee" },
-      automatic_payment_methods: { enabled: true, allow_redirects: "never" },
     });
 
-    if (paymentIntent.status !== "succeeded") {
+    // Create the invoice
+    const setupInvoice = await stripe.invoices.create({
+      customer: customerId,
+      collection_method: "charge_automatically",
+      default_payment_method: paymentMethodId,
+      metadata: { clientProfileId: profile.id, type: "setup_fee" },
+    });
+
+    // Finalize so it gets a PDF
+    const finalizedInvoice = await stripe.invoices.finalizeInvoice(
+      setupInvoice.id,
+    );
+
+    // Only call pay if not already paid (auto_advance may have paid it during finalization)
+    const paidInvoice =
+      finalizedInvoice.status === "paid"
+        ? finalizedInvoice
+        : await stripe.invoices.pay(setupInvoice.id);
+
+    if (paidInvoice.status !== "paid") {
       return { error: "Setup fee payment failed. Please try again." };
     }
+    // The invoice.paid webhook will fire and create the Invoice record in our DB
+    // including the pdfUrl — no need to manually create it here
   }
 
-  // Create subscription starting on the 1st of next month
+  // ── Subscription starting 1st of next month ──────────────────────────────
   const now = new Date();
   const firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   const anchorTimestamp = Math.floor(firstOfNextMonth.getTime() / 1000);
@@ -81,7 +100,7 @@ export async function confirmBillingSetup({
     metadata: { clientProfileId: profile.id },
   });
 
-  // Update DB
+  // ── Update DB ─────────────────────────────────────────────────────────────
   await db.clientProfile.update({
     where: { id: profile.id },
     data: {

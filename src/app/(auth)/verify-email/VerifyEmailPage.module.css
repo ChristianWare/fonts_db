@@ -11,28 +11,31 @@
   width: 100%;
   max-width: 440px;
   background-color: var(--white);
-  border-radius: 16px;
   padding: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 3rem;
 }
 
 .brandName {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--RobotoFlexii);
+  font-size: 1.8rem;
   color: var(--black);
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  align-self: flex-start;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  /* align-self: flex-start; */
 }
 
 .state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.6rem;
+  gap: 2rem;
   text-align: center;
   width: 100%;
 }
@@ -40,9 +43,8 @@
 .icon {
   width: 6rem;
   height: 6rem;
-  border-radius: 50%;
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 2.4rem;
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,39 +57,38 @@
 
 .iconError {
   background-color: #fff5f5;
+  border: 1px solid #fed7d7;
   color: #c53030;
 }
 
 .spinner {
   width: 4rem;
   height: 4rem;
-  border: 3px solid var(--lightGray);
+  border: 2px solid var(--lightGray);
   border-top-color: var(--black);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .heading {
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 3rem;
+  font-family: var(--GeistMono);
+  font-size: 2rem;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.07em;
   color: var(--black);
   line-height: 1;
 }
 
 .text {
-  font-family: var(--SuisseIntlRegular);
-  font-size: 1.6rem;
-  color: var(--darkGray);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.5;
+  line-height: 1.6;
   max-width: 320px;
 }
 
@@ -96,11 +97,10 @@
   padding: 1.4rem 3rem;
   background-color: var(--black);
   color: var(--accent);
-  font-family: var(--SuisseIntlCondBold);
-  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  border-radius: 8px;
+  letter-spacing: 0.08em;
   transition: opacity 0.2s ease;
 }
 
