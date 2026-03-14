@@ -1,0 +1,173 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Header ── */
+.editorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+}
+
+.editorLabel {
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.lockedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  padding: 0.3rem 1rem;
+}
+
+/* ── Fields ── */
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.label {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.lockedHint {
+  color: var(--lightGray);
+}
+
+.inputWrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  transition: border-color 0.15s ease;
+}
+
+.inputWrap:focus-within {
+  border-color: var(--black);
+}
+
+.prefix {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--text);
+  padding: 1.1rem 1rem 1.1rem 1.4rem;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.input {
+  flex: 1;
+  padding: 1.1rem 1.4rem 1.1rem 0.4rem;
+  border: none;
+  background: none;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--black);
+  outline: none;
+  width: 100%;
+}
+
+.input:disabled {
+  background-color: var(--lightlightGrayi);
+  color: var(--text);
+  cursor: not-allowed;
+}
+
+/* remove number input spinners */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.hint {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+/* ── Error ── */
+.errorBanner {
+  padding: 1.4rem;
+  background-color: #fff5f5;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+  line-height: 1.5;
+}
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.6rem;
+}
+
+.savedText {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #16a34a;
+}
+
+.saveBtn {
+  padding: 1rem 2.4rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.saveBtn:hover {
+  opacity: 0.85;
+}
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}

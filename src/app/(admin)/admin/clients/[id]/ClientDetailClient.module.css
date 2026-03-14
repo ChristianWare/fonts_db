@@ -198,11 +198,18 @@
 }
 
 .cardHeading {
-  font-family: var(--GeistMono);
+  /* font-family: var(--GeistMono);
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
+  color: var(--black); */
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
+  font-size: 2rem;
 }
 
 .cardDesc {

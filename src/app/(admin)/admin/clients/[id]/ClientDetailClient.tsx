@@ -11,6 +11,7 @@ import { uploadDocumentToClient } from "@/actions/admin/uploadDocumentToClient";
 import { questionnaireSections } from "@/lib/questionnaire.config";
 import styles from "./ClientDetailClient.module.css";
 import DesignOptionsTab from "./DesignOptionsTab";
+import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -405,6 +406,14 @@ export default function ClientDetailClient({
                 </span>
               </div>
             </div>
+          </div>
+          <div className={styles.card}>
+            <BillingRatesEditor
+              clientProfileId={client.id}
+              setupFeeAmountCents={client.setupFeeAmountCents}
+              monthlyAmountCents={client.monthlyAmountCents}
+              setupFeePaid={client.setupFeePaid}
+            />
           </div>
         </div>
       )}

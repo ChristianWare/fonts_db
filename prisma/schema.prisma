@@ -222,6 +222,11 @@ model ClientProfile {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Per-client billing rates (admin-editable before setup fee is paid)
+  setupFeeAmountCents Int     @default(50000) // $500 default
+  monthlyAmountCents  Int     @default(49900) // $499 default
+  setupFeePaid        Boolean @default(false)
+
   @@index([onboardingStage])
 }
 
@@ -372,6 +377,10 @@ model Subscription {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  setupFeeAmountCents Int     @default(50000) // $500 default, admin-editable
+  monthlyAmountCents  Int     @default(49900) // $499 default, admin-editable
+  setupFeePaid        Boolean @default(false)
 }
 
 // =========================
