@@ -1,0 +1,203 @@
+/* ── Summary ── */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--lightGray);
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.6rem 2rem;
+}
+
+.summaryRowDesc {
+  padding: 0 2rem 1.6rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.summaryRowDesc:last-of-type {
+  border-bottom: none;
+}
+
+.summaryLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+}
+
+.summaryValue {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.8rem;
+  font-weight: 400;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  letter-spacing: -0.5px;
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+.summaryDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.summaryDivider {
+  height: 1px;
+  background-color: var(--lightGray);
+}
+
+/* ── Card input ── */
+.cardWrap {
+  padding: 2.4rem 0;
+}
+
+/* ── Error ── */
+.errorBanner {
+  padding: 1.4rem;
+  background-color: #fff5f5;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+  line-height: 1.5;
+}
+
+/* ── Submit ── */
+.submitBtn {
+  width: 100%;
+  padding: 1.6rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.submitBtn:hover { opacity: 0.85; }
+.submitBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Legal ── */
+.legal {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ── Loading ── */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 4rem 0;
+}
+
+.spinner {
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 2px solid var(--lightGray);
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+/* ── Error state ── */
+.errorState {
+  padding: 3rem 0;
+}
+
+.errorStateText {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+/* ── Success state ── */
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.successIcon {
+  width: 5.6rem;
+  height: 5.6rem;
+  background-color: var(--black);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+
+.successText {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.successBtn {
+  padding: 1.2rem 2.8rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-top: 0.8rem;
+}
+
+.successBtn:hover { opacity: 0.85; }
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}

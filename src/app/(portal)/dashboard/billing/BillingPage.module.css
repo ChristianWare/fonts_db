@@ -21,6 +21,76 @@
   margin-top: 0.4rem;
 }
 
+/* ── Checkout section (pre-billing) ── */
+.checkoutSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.checkoutLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  padding: 4rem 5rem;
+  border-right: 1px solid var(--lightGray);
+}
+
+.checkoutHeading {
+  font-family: var(--GeistMono);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+}
+
+.checkoutDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+  margin-top: -1rem;
+}
+
+.checkoutDetails {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--lightGray);
+}
+
+.checkoutDetailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.checkoutDetailRow:last-child {
+  border-bottom: none;
+}
+
+.checkoutDetailLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.checkoutDetailValue {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+}
+
+.checkoutRight {
+  padding: 4rem 5rem;
+}
+
 /* ── Subscription block ── */
 .subscriptionCard {
   display: flex;
@@ -70,7 +140,7 @@
   padding: 0.3rem 1rem;
   border: 1px solid;
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   flex-shrink: 0;
@@ -258,7 +328,7 @@
 
 .invoiceStatus {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.2rem 0.8rem;
@@ -287,7 +357,7 @@
   padding: 0.7rem 1.4rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -303,8 +373,25 @@
 }
 
 /* ── Responsive ── */
+@media screen and (max-width: 1024px) {
+  .checkoutSection {
+    grid-template-columns: 1fr;
+  }
+
+  .checkoutLeft {
+    border-right: none;
+    border-bottom: 1px solid var(--lightGray);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .header {
+    padding: 3rem 2rem;
+  }
+  .checkoutLeft {
+    padding: 3rem 2rem;
+  }
+  .checkoutRight {
     padding: 3rem 2rem;
   }
   .subscriptionTop {

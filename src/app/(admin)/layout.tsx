@@ -118,8 +118,8 @@ export default function AdminLayout({
         <div className={styles.brand}>
           {!collapsed && (
             <div className={styles.brandText}>
-              <span className={styles.brandName}>F&F</span>
-              <span className={styles.brandSub}>Admin</span>
+              <span className={styles.brandName}>Fonts & Footers</span>
+              {/* <span className={styles.brandSub}>Admin</span> */}
             </div>
           )}
           <button
