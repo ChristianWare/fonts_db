@@ -41,20 +41,23 @@ export async function confirmBillingSetup({
 
   // ── Setup fee via Stripe Invoice (generates a downloadable PDF) ──────────
   if (profile.setupFeeAmountCents > 0) {
-    // Add a line item to the next invoice
-    await stripe.invoiceItems.create({
-      customer: customerId,
-      amount: profile.setupFeeAmountCents,
-      currency: "usd",
-      description: "Fonts & Footers — One-time setup fee",
-      metadata: { clientProfileId: profile.id, type: "setup_fee" },
-    });
-
-    // Create the invoice
+    // Create the invoice FIRST so we can pin the item directly to it
     const setupInvoice = await stripe.invoices.create({
       customer: customerId,
       collection_method: "charge_automatically",
       default_payment_method: paymentMethodId,
+      description: "One-time setup fee — Fonts & Footers platform onboarding",
+      metadata: { clientProfileId: profile.id, type: "setup_fee" },
+    });
+
+    // Attach the line item directly to this invoice so Stripe can't
+    // sweep it into the subscription's auto-generated $0 invoice
+    await stripe.invoiceItems.create({
+      customer: customerId,
+      invoice: setupInvoice.id,
+      amount: profile.setupFeeAmountCents,
+      currency: "usd",
+      description: "One-time platform setup fee — Fonts & Footers",
       metadata: { clientProfileId: profile.id, type: "setup_fee" },
     });
 

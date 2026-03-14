@@ -17,19 +17,22 @@ export function buildAgreementHTML({
   <title>Web Services Agreement — ${businessName}</title>
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+@page {
+  margin: 48px 0;
+}
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 11pt;
-      color: #111;
-      background: #fff;
-      padding: 72px 80px;
-      line-height: 1.6;
-    }
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 11pt;
+  color: #111;
+  background: #fff;
+  padding: 24px 80px;
+  line-height: 1.6;
+}
 
     /* ── HEADER ── */
     .header {
@@ -123,17 +126,20 @@ export function buildAgreementHTML({
     }
 
     .section-title {
-      font-size: 11pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #111;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #e5e5e5;
-      page-break-after: avoid;
-      break-after: avoid;
-    }
+  font-size: 11pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #111;
+  margin-bottom: 10px;
+  margin-top: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e5e5;
+  page-break-after: avoid;
+  break-after: avoid;
+  page-break-before: auto;
+  break-before: auto;
+}
 
     .section p {
       margin-bottom: 10px;

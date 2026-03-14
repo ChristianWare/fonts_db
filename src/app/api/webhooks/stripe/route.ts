@@ -90,6 +90,10 @@ export async function POST(req: NextRequest) {
 
         if (!customerId) break;
 
+        // Skip $0 invoices — these are subscription creation invoices
+        // with a future billing anchor, nothing was actually charged
+        if (invoice.amount_paid === 0) break;
+
         const profile = await db.clientProfile.findFirst({
           where: { stripeCustomerId: customerId },
           select: { id: true },
@@ -138,12 +142,8 @@ export async function POST(req: NextRequest) {
           await db.subscription.updateMany({
             where: { clientProfileId: profile.id },
             data: {
-              currentPeriodStart: invoice.period_start
-                ? new Date(invoice.period_start * 1000)
-                : undefined,
-              currentPeriodEnd: invoice.period_end
-                ? new Date(invoice.period_end * 1000)
-                : undefined,
+              currentPeriodStart: new Date(invoice.period_start * 1000),
+              currentPeriodEnd: new Date(invoice.period_end * 1000),
               status: "ACTIVE",
             },
           });
@@ -165,42 +165,6 @@ export async function POST(req: NextRequest) {
           where: { stripeCustomerId: customerId },
           data: { status: "PAST_DUE" },
         });
-        break;
-      }
-
-      // ── Payment intent succeeded (setup fee) ─────────────────────────────
-      case "payment_intent.succeeded": {
-        const pi = event.data.object as Stripe.PaymentIntent;
-        if (pi.metadata?.type !== "setup_fee") break;
-
-        const clientProfileId = pi.metadata?.clientProfileId;
-        if (!clientProfileId) break;
-
-        // Record setup fee as an invoice entry
-        const count = await db.invoice.count({
-          where: { clientProfileId },
-        });
-        const invoiceNumber = `INV-${new Date().getFullYear()}-${String(count + 1).padStart(4, "0")}`;
-
-        const existing = await db.invoice.findFirst({
-          where: {
-            clientProfileId,
-            description: "One-time setup fee",
-          },
-        });
-
-        if (!existing) {
-          await db.invoice.create({
-            data: {
-              clientProfileId,
-              invoiceNumber,
-              amountCents: pi.amount,
-              status: "PAID",
-              paidAt: new Date(),
-              description: "One-time setup fee",
-            },
-          });
-        }
         break;
       }
 
