@@ -11,7 +11,6 @@ import PricingPreview from "../components/HomePage/PricingPreview/PricingPreview
 import ProjectSection from "../components/HomePage/ProjectSection/ProjectSection";
 import Solution from "../components/HomePage/Solution/Solution";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
-import Footer from "@/components/HomePage/Footer/Footer";
 import Chris from "@/components/HomePage/Chris/Chris";
 
 export default function HomePage() {
@@ -20,17 +19,39 @@ export default function HomePage() {
       <Hero />
       <Outgrow />
       <Solution />
-      <Features />
-      <AdminDashboardFeatures />
-      <OtherDashboards />
-      <ProjectSection />
-      <ParallaxArea />
-      <PricingPreview />
-      <ComparisonChart />
+
+      {/* features */}
+      <div id='features'>
+        <Features />
+        <AdminDashboardFeatures />
+        <OtherDashboards />
+      </div>
+
+      {/* work */}
+      <div id='work'>
+        <ProjectSection />
+        <ParallaxArea />
+      </div>
+
+      {/* pricing */}
+      <div id='pricing'>
+        <PricingPreview />
+        <ComparisonChart />
+      </div>
+
       <HowItWorks />
       <Faq />
-      <Chris />
-      <ContactSection />
+
+      {/* about */}
+      <div id='about'>
+        <Chris />
+      </div>
+
+      {/* contact */}
+      <div id='contact'>
+        <ContactSection />
+      </div>
+
       {/* <Footer /> */}
     </main>
   );

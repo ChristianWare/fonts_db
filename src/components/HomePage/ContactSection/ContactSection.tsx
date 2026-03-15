@@ -17,26 +17,26 @@ export default function ContactSection() {
           <div className={styles.left}>
             <div className={styles.leftTop}>
               <SectionIntro
-                text='Your command center'
+                text='Book a discovery call'
                 color='colorWhite'
                 background='bgBlack'
               />
               <h2 className={styles.heading}>
-                SEE HOW STRATIV <br /> FITS INTO YOUR <br /> WORKFLOW.
+                Ready To <br /> Get started?
               </h2>
             </div>
             <div className={styles.leftBottom}>
               <h6 className={styles.text}>
-                &ldquo;Strativ helped us uncover gaps in our decision-making
-                that we didn’t even realize were slowing us down. The clarity we
-                gained in a single session changed the way our team
-                operates.&rdquo;
+                &ldquo;Fonts &amp; Footers built us a direct booking platform
+                that looks better than anything our competitors are running —
+                and our clients actually use it. It paid for itself in the first
+                month.&rdquo;
               </h6>
               <div className={styles.imgCaptionContainer}>
                 <Image
                   src={Img1}
-                  alt='Testimonial Image'
-                  title='Testimonial Image'
+                  alt='Barry LaNier - Nier Transportation'
+                  title='Barry LaNier - Nier Transportation'
                   className={styles.img}
                   width={56}
                   height={56}
@@ -53,12 +53,14 @@ export default function ContactSection() {
           <div className={styles.right}>
             <div className={styles.rightTop}>
               <p className={styles.copy}>
-                Teams often know their goals — the challenge is connecting
-                decisions, planning, and execution in a way that stays coherent.
+                Most black car operators are still taking bookings over the
+                phone or through third-party platforms that take a cut of every
+                ride.
                 <br />
                 <br />
-                Tell us how your team currently operates, and we’ll prepare a
-                walkthrough that reflects your reality, not a generic demo.
+                Tell us about your business and we&apos;ll show you exactly what
+                a custom direct booking platform looks like for your operation —
+                no generic demos, no sales pressure.
               </p>
             </div>
             <ContactForm />

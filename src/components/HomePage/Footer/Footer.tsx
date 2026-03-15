@@ -64,7 +64,8 @@ export default function Footer() {
             <div className={styles.bottomRight}>
               <div className={styles.btnContainer}>
                 <Button
-                  href='/'
+                  href='https://calendly.com/chris-ware-dev/discovery-call'
+                  target='_blank'
                   text='Book your discovery call'
                   btnType='white'
                   arrow
