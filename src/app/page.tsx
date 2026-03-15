@@ -31,7 +31,7 @@ export default function HomePage() {
       <Faq />
       <Chris />
       <ContactSection />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

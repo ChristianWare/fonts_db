@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import SessionProviderWrap from "@/components/shared/Providers/SessionProvider/SessionProvider";
+import Footer from "@/components/HomePage/Footer/Footer";
 
 const RobotoFlex = localFont({
   src: "../../public/fonts/RobotoFlex.woff2",
@@ -50,7 +51,10 @@ export default function RootLayout({
         className={`${RobotoFlex.variable} ${RobotoFlexii.variable} ${RobotoCondensed.variable} ${Roboto.variable} ${GeistMono.variable}`}
       >
         {" "}
-        <SessionProviderWrap>{children}</SessionProviderWrap>
+        <SessionProviderWrap>
+          {children}
+          <Footer />
+        </SessionProviderWrap>
       </body>
     </html>
   );

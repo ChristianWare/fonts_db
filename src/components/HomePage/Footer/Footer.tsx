@@ -7,6 +7,7 @@ import Instagram from "@/components/shared/icons/Instagram/Instagram";
 import Facebook from "@/components/shared/icons/Facebook/Facebook";
 
 const items = [
+  { text: "Home", href: "/" },
   { text: "Features", href: "/#features" },
   { text: "Work", href: "/#work" },
   { text: "Pricing", href: "/#pricing" },
