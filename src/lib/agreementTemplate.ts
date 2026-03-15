@@ -180,6 +180,8 @@ export function buildAgreementHTML({
       margin-top: 48px;
       padding-top: 32px;
       border-top: 2px solid #111;
+      page-break-inside: avoid;
+  break-inside: avoid;
     }
 
     .signature-title {
@@ -248,12 +250,14 @@ export function buildAgreementHTML({
 
     /* ── FOOTER ── */
     .footer {
-      margin-top: 48px;
+  margin-top: 24px;
       padding-top: 16px;
       border-top: 1px solid #e5e5e5;
       font-size: 8pt;
       color: #999;
       text-align: center;
+      page-break-before: avoid;
+  break-before: avoid;
     }
   </style>
 </head>
