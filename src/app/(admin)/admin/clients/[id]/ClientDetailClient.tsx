@@ -13,6 +13,7 @@ import styles from "./ClientDetailClient.module.css";
 import DesignOptionsTab from "./DesignOptionsTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
 import SiteUrlsEditor from "./SiteUrlsEditor";
+import { deleteClient } from "@/actions/admin/deleteClient";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -71,6 +72,9 @@ export default function ClientDetailClient({
   const [requiresSignature, setRequiresSignature] = useState(true);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [docError, setDocError] = useState<string | null>(null);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const handleToggleLive = async () => {
     setTogglingLive(true);
@@ -422,6 +426,90 @@ export default function ClientDetailClient({
               previewUrl={client.previewUrl ?? null}
               liveUrl={client.liveUrl ?? null}
             />
+          </div>
+          <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
+            <h3
+              className={styles.cardHeading}
+              style={{ backgroundColor: "#c53030", color: "#ffffff" }}
+            >
+              Danger Zone
+            </h3>
+            <div className={styles.infoRow}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.4rem",
+                }}
+              >
+                <span className={styles.liveToggleLabel}>
+                  Delete this client
+                </span>
+                <span className={styles.liveToggleDesc}>
+                  Permanently deletes the client, all documents, assets,
+                  invoices, and their user account. This cannot be undone.
+                </span>
+              </div>
+              {!showDeleteConfirm ? (
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  style={{
+                    flexShrink: 0,
+                    padding: "1rem 2rem",
+                    border: "1px solid #c53030",
+                    background: "none",
+                    color: "#c53030",
+                    fontFamily: "var(--GeistMono)",
+                    fontSize: "1.4rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.07em",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete client
+                </button>
+              ) : (
+                <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    style={{
+                      padding: "1rem 2rem",
+                      border: "1px solid var(--lightGray)",
+                      background: "none",
+                      color: "var(--text)",
+                      fontFamily: "var(--GeistMono)",
+                      fontSize: "1.4rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.07em",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setDeleting(true);
+                      await deleteClient(client.id);
+                    }}
+                    disabled={deleting}
+                    style={{
+                      padding: "1rem 2rem",
+                      border: "none",
+                      background: "#c53030",
+                      color: "#ffffff",
+                      fontFamily: "var(--GeistMono)",
+                      fontSize: "1.4rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.07em",
+                      cursor: deleting ? "not-allowed" : "pointer",
+                      opacity: deleting ? 0.5 : 1,
+                    }}
+                  >
+                    {deleting ? "Deleting..." : "Yes, delete"}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
