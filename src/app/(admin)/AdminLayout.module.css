@@ -337,3 +337,10 @@
   flex: 1;
   padding: 0;
 }
+
+/* ── Responsive ── */
+@media screen and (max-width: 568px) {
+  .topbar {
+    padding: 0 2rem;
+  }
+}

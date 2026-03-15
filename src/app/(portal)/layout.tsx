@@ -205,7 +205,7 @@ export default function PortalLayout({
   // Collapsed by default on mobile (<=768px), expanded on desktop
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.innerWidth <= 768;
+    return window.innerWidth <= 568;
   });
 
   const pathname = usePathname();

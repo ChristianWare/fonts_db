@@ -103,7 +103,11 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") return window.innerWidth <= 568;
+    return false;
+  });
+
   const pathname = usePathname();
   const { data: session } = useSession();
   const userName = session?.user?.name;
@@ -119,7 +123,6 @@ export default function AdminLayout({
           {!collapsed && (
             <div className={styles.brandText}>
               <span className={styles.brandName}>Fonts & Footers</span>
-              {/* <span className={styles.brandSub}>Admin</span> */}
             </div>
           )}
           <button
