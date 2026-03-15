@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
+import { sendAdminDesignSelectedEmail } from "@/lib/emails";
 
-// Stages that should auto-advance to DESIGN_REVIEW when a design is selected
 const PRE_REVIEW_STAGES = [
   "REGISTERED",
   "AGREEMENT_PENDING",
@@ -27,30 +28,27 @@ export const selectDesignOption = async ({
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
+    include: { user: true },
   });
 
   if (!profile) return { error: "Profile not found" };
 
-  // Deselect all first
   await db.brandAsset.updateMany({
     where: { clientProfileId: profile.id, label: "DESIGN_OPTION" },
     data: { selected: false, clientNotes: null },
   });
 
-  // Select the chosen one
-  await db.brandAsset.update({
+  const selectedAsset = await db.brandAsset.update({
     where: { id: assetId },
     data: { selected: true, clientNotes: clientNotes ?? null },
   });
 
-  // Auto-advance to DESIGN_REVIEW if not already there or beyond
   if (PRE_REVIEW_STAGES.includes(profile.onboardingStage)) {
     await db.clientProfile.update({
       where: { id: profile.id },
       data: { onboardingStage: "DESIGN_REVIEW" },
     });
 
-    // Log the stage change
     await db.stageChangeLog.create({
       data: {
         clientProfileId: profile.id,
@@ -60,6 +58,14 @@ export const selectDesignOption = async ({
       },
     });
   }
+
+  // Notify admin
+  await sendAdminDesignSelectedEmail({
+    clientName: profile.user.name ?? "Client",
+    businessName: profile.businessName,
+    templateName: (selectedAsset as any).templateName ?? "Design option",
+    clientProfileId: profile.id,
+  });
 
   return { success: true };
 };

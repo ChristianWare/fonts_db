@@ -3,6 +3,7 @@
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import stripe from "@/lib/stripe";
+import { sendBillingConfirmedEmail } from "@/lib/emails";
 
 export async function confirmBillingSetup({
   paymentMethodId,
@@ -20,7 +21,7 @@ export async function confirmBillingSetup({
       setupFeePaid: true,
       setupFeeAmountCents: true,
       monthlyAmountCents: true,
-      user: { select: { email: true } },
+      user: { select: { email: true, name: true } },
     },
   });
 
@@ -30,18 +31,13 @@ export async function confirmBillingSetup({
 
   const customerId = profile.stripeCustomerId;
 
-  // Attach payment method to customer and set as default
-  await stripe.paymentMethods.attach(paymentMethodId, {
-    customer: customerId,
-  });
+  await stripe.paymentMethods.attach(paymentMethodId, { customer: customerId });
 
   await stripe.customers.update(customerId, {
     invoice_settings: { default_payment_method: paymentMethodId },
   });
 
-  // ── Setup fee via Stripe Invoice (generates a downloadable PDF) ──────────
   if (profile.setupFeeAmountCents > 0) {
-    // Create the invoice FIRST so we can pin the item directly to it
     const setupInvoice = await stripe.invoices.create({
       customer: customerId,
       collection_method: "charge_automatically",
@@ -50,8 +46,6 @@ export async function confirmBillingSetup({
       metadata: { clientProfileId: profile.id, type: "setup_fee" },
     });
 
-    // Attach the line item directly to this invoice so Stripe can't
-    // sweep it into the subscription's auto-generated $0 invoice
     await stripe.invoiceItems.create({
       customer: customerId,
       invoice: setupInvoice.id,
@@ -61,12 +55,10 @@ export async function confirmBillingSetup({
       metadata: { clientProfileId: profile.id, type: "setup_fee" },
     });
 
-    // Finalize so it gets a PDF
     const finalizedInvoice = await stripe.invoices.finalizeInvoice(
       setupInvoice.id,
     );
 
-    // Only call pay if not already paid (auto_advance may have paid it during finalization)
     const paidInvoice =
       finalizedInvoice.status === "paid"
         ? finalizedInvoice
@@ -75,23 +67,17 @@ export async function confirmBillingSetup({
     if (paidInvoice.status !== "paid") {
       return { error: "Setup fee payment failed. Please try again." };
     }
-    // The invoice.paid webhook will fire and create the Invoice record in our DB
-    // including the pdfUrl — no need to manually create it here
   }
 
-  // ── Subscription starting 1st of next month ──────────────────────────────
   const now = new Date();
   const firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   const anchorTimestamp = Math.floor(firstOfNextMonth.getTime() / 1000);
 
-  // Create a one-off price for this client's monthly rate
   const price = await stripe.prices.create({
     unit_amount: profile.monthlyAmountCents,
     currency: "usd",
     recurring: { interval: "month" },
-    product_data: {
-      name: "Fonts & Footers — Monthly Platform Fee",
-    },
+    product_data: { name: "Fonts & Footers — Monthly Platform Fee" },
   });
 
   const subscription = await stripe.subscriptions.create({
@@ -103,13 +89,9 @@ export async function confirmBillingSetup({
     metadata: { clientProfileId: profile.id },
   });
 
-  // ── Update DB ─────────────────────────────────────────────────────────────
   await db.clientProfile.update({
     where: { id: profile.id },
-    data: {
-      setupFeePaid: true,
-      stripeSubscriptionId: subscription.id,
-    },
+    data: { setupFeePaid: true, stripeSubscriptionId: subscription.id },
   });
 
   await db.subscription.upsert({
@@ -146,6 +128,16 @@ export async function confirmBillingSetup({
       ),
     },
   });
+
+  // Billing confirmed email to client
+  if (profile.user.email) {
+    await sendBillingConfirmedEmail({
+      to: profile.user.email,
+      name: profile.user.name ?? "Client",
+      setupFeeCents: profile.setupFeeAmountCents,
+      monthlyCents: profile.monthlyAmountCents,
+    });
+  }
 
   return { success: true };
 }

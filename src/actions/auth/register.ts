@@ -8,6 +8,7 @@ import {
   sendEmailVerificationToken,
 } from "@/lib/emailVerification";
 import { generateServiceAgreement } from "@/lib/generateServiceAgreement";
+import { sendWelcomeEmail, sendAdminNewClientEmail } from "@/lib/emails";
 import bcrypt from "bcryptjs";
 
 export const register = async (values: RegisterSchemaType) => {
@@ -28,23 +29,17 @@ export const register = async (values: RegisterSchemaType) => {
       password: hashedPassword,
       roles: ["CLIENT"],
       clientProfile: {
-        create: {
-          businessName,
-        },
+        create: { businessName },
       },
     },
-    include: {
-      clientProfile: true,
-    },
+    include: { clientProfile: true },
   });
 
-  // Auto-generate the service agreement PDF as soon as the profile exists
   if (user.clientProfile?.id) {
     const agreementResult = await generateServiceAgreement(
       user.clientProfile.id,
     );
     if ("error" in agreementResult) {
-      // Don't block registration — log and continue
       console.error(
         "[register] Agreement generation failed:",
         agreementResult.error,
@@ -63,6 +58,19 @@ export const register = async (values: RegisterSchemaType) => {
       error:
         "Account created but failed to send verification email. Try logging in to resend.",
     };
+  }
+
+  // Welcome email to client
+  await sendWelcomeEmail({ to: email, name, businessName });
+
+  // Notify admin
+  if (user.clientProfile?.id) {
+    await sendAdminNewClientEmail({
+      clientName: name,
+      businessName,
+      email,
+      clientProfileId: user.clientProfile.id,
+    });
   }
 
   return { success: "Account created! Please check your email to verify." };

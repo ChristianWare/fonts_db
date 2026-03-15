@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { headers } from "next/headers";
 import { buildAgreementHTML } from "@/lib/agreementTemplate";
 import { v2 as cloudinary } from "cloudinary";
+import { sendAdminDocumentSignedEmail } from "@/lib/emails";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
@@ -26,7 +27,6 @@ async function regenerateSignedPDF(
     signedDate,
   });
 
-  // Import puppeteer the same way as generateServiceAgreement
   const puppeteer = (await import("puppeteer-core")).default;
 
   let executablePath: string;
@@ -58,13 +58,12 @@ async function regenerateSignedPDF(
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,
-    margin: { top: "0", bottom: "0", left: "0", right: "0" },
+    margin: { top: "48px", bottom: "48px", left: "0", right: "0" },
   });
   await browser.close();
 
   const buffer = Buffer.from(pdf);
 
-  // Upload signed version to Cloudinary
   return new Promise((resolve, reject) => {
     const folder = `fonts-and-footers/clients/${clientProfileId}/documents`;
     const publicId = `service-agreement-signed-${Date.now()}`;
@@ -124,7 +123,6 @@ export const signDocument = async (documentId: string) => {
     day: "numeric",
   });
 
-  // Regenerate PDF with signature filled in
   let signedFileUrl = document.fileUrl;
   try {
     signedFileUrl = await regenerateSignedPDF(
@@ -139,7 +137,6 @@ export const signDocument = async (documentId: string) => {
       profile.id,
     );
   } catch (err) {
-    // Don't block signing if PDF regeneration fails — still mark as signed
     console.error("[signDocument] PDF regeneration failed:", err);
   }
 
@@ -152,6 +149,14 @@ export const signDocument = async (documentId: string) => {
       signatureConsent: true,
       fileUrl: signedFileUrl,
     },
+  });
+
+  // Notify admin
+  await sendAdminDocumentSignedEmail({
+    clientName: profile.user.name ?? "Client",
+    businessName: profile.businessName,
+    documentTitle: document.title,
+    clientProfileId: profile.id,
   });
 
   return { success: true };

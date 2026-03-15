@@ -3,6 +3,7 @@
 
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
+import { sendAdminAssetsUploadedEmail } from "@/lib/emails";
 
 export const saveBrandAsset = async ({
   label,
@@ -22,6 +23,7 @@ export const saveBrandAsset = async ({
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
+    include: { user: true },
   });
 
   if (!profile) return { error: "Profile not found" };
@@ -44,6 +46,14 @@ export const saveBrandAsset = async ({
       data: { onboardingStage: "ASSETS_UPLOADED" },
     });
   }
+
+  // Notify admin
+  await sendAdminAssetsUploadedEmail({
+    clientName: profile.user.name ?? "Client",
+    businessName: profile.businessName,
+    fileName,
+    clientProfileId: profile.id,
+  });
 
   return { success: true };
 };

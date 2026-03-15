@@ -2,6 +2,7 @@
 
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
+import { sendAdminQuestionnaireSubmittedEmail } from "@/lib/emails";
 
 const lockedStages = [
   "ASSETS_PENDING",
@@ -19,7 +20,7 @@ export const saveQuestionnaire = async (
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
-    include: { questionnaire: true },
+    include: { questionnaire: true, user: true },
   });
 
   if (!profile) return { error: "Profile not found" };
@@ -39,16 +40,20 @@ export const saveQuestionnaire = async (
   await db.questionnaire.upsert({
     where: { clientProfileId: profile.id },
     update: data,
-    create: {
-      clientProfileId: profile.id,
-      ...data,
-    },
+    create: { clientProfileId: profile.id, ...data },
   });
 
   if (submit) {
     await db.clientProfile.update({
       where: { id: profile.id },
       data: { onboardingStage: "QUESTIONNAIRE_SUBMITTED" },
+    });
+
+    // Notify admin
+    await sendAdminQuestionnaireSubmittedEmail({
+      clientName: profile.user.name ?? "Client",
+      businessName: profile.businessName,
+      clientProfileId: profile.id,
     });
   }
 

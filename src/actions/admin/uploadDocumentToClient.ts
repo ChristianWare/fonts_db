@@ -3,6 +3,7 @@
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import { DocumentType } from "@prisma/client";
+import { sendDocumentReadyEmail } from "@/lib/emails";
 
 export const uploadDocumentToClient = async ({
   clientProfileId,
@@ -23,7 +24,7 @@ export const uploadDocumentToClient = async ({
   if (!session?.user?.roles?.includes("ADMIN"))
     return { error: "Unauthorized" };
 
-  await db.document.create({
+  const document = await db.document.create({
     data: {
       clientProfileId,
       title,
@@ -36,6 +37,23 @@ export const uploadDocumentToClient = async ({
       visible: true,
     },
   });
+
+  // If signature required, email the client
+  if (requiresSignature) {
+    const profile = await db.clientProfile.findUnique({
+      where: { id: clientProfileId },
+      include: { user: true },
+    });
+
+    if (profile?.user?.email) {
+      await sendDocumentReadyEmail({
+        to: profile.user.email,
+        name: profile.user.name ?? "Client",
+        documentTitle: title,
+        documentId: document.id,
+      });
+    }
+  }
 
   return { success: true };
 };

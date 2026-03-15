@@ -2,6 +2,10 @@
 
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
+import {
+  sendSupportTicketConfirmationEmail,
+  sendAdminSupportTicketEmail,
+} from "@/lib/emails";
 
 export const submitSupportTicket = async ({
   subject,
@@ -15,6 +19,7 @@ export const submitSupportTicket = async ({
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
+    include: { user: true },
   });
 
   if (!profile) return { error: "Profile not found" };
@@ -25,6 +30,24 @@ export const submitSupportTicket = async ({
       subject,
       message,
     },
+  });
+
+  // Confirm to client
+  if (profile.user.email) {
+    await sendSupportTicketConfirmationEmail({
+      to: profile.user.email,
+      name: profile.user.name ?? "Client",
+      subject,
+    });
+  }
+
+  // Notify admin
+  await sendAdminSupportTicketEmail({
+    clientName: profile.user.name ?? "Client",
+    businessName: profile.businessName,
+    subject,
+    message,
+    clientProfileId: profile.id,
   });
 
   return { success: true };
