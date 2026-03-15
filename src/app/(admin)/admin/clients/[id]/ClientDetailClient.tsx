@@ -12,6 +12,7 @@ import { questionnaireSections } from "@/lib/questionnaire.config";
 import styles from "./ClientDetailClient.module.css";
 import DesignOptionsTab from "./DesignOptionsTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
+import SiteUrlsEditor from "./SiteUrlsEditor";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -415,6 +416,13 @@ export default function ClientDetailClient({
               setupFeePaid={client.setupFeePaid}
             />
           </div>
+          <div className={styles.card}>
+            <SiteUrlsEditor
+              clientProfileId={client.id}
+              previewUrl={client.previewUrl ?? null}
+              liveUrl={client.liveUrl ?? null}
+            />
+          </div>
         </div>
       )}
 
@@ -632,7 +640,7 @@ export default function ClientDetailClient({
           {selectedDesign ? (
             <div className={styles.card}>
               <div className={styles.selectionHeader}>
-                <div>
+                <div className={styles.selectionHeader}>
                   <h3 className={styles.cardHeading}>
                     Client&apos;s Selection
                   </h3>

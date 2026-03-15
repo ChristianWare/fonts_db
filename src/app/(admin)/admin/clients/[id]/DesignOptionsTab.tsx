@@ -109,7 +109,10 @@ export default function DesignOptionsTab({
             <span className={styles.selectedBadge}>Client&apos;s choice</span>
           </div>
           <div className={styles.selectionGrid}>
-            <div className={styles.selectionThumbWrap}>
+            <div
+              // style={{ marginTop: "102px" }}
+              className={styles.selectionThumbWrap}
+            >
               <img
                 src={selectedOption.fileUrl}
                 alt={selectedOption.templateName ?? "Selected design"}

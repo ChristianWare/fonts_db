@@ -227,6 +227,9 @@ model ClientProfile {
   monthlyAmountCents  Int     @default(49900) // $499 default
   setupFeePaid        Boolean @default(false)
 
+  previewUrl String?
+  liveUrl    String?
+
   @@index([onboardingStage])
 }
 

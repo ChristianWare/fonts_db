@@ -277,7 +277,6 @@
 
 .stageDesc {
   font-family: var(--Roboto);
-
   font-size: 1.4rem;
   letter-spacing: 0.03em;
   color: var(--text);
@@ -293,11 +292,25 @@
   color: blue;
   margin-top: 0.2rem;
   display: inline-block;
-  /* opacity: 0; */
-  /* transition: opacity 0.15s ease; */
 }
 
-/* .stageClickable:hover .moreInfo { opacity: 1; } */
+/* ── Site link (preview + live) ── */
+.siteLink {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 0.2rem;
+  display: inline-block;
+  transition: opacity 0.15s ease;
+}
+
+.siteLink:hover {
+  opacity: 0.6;
+}
 
 /* ── Quick links ── */
 .quickLinks {
@@ -320,8 +333,6 @@
   gap: 2rem;
 }
 
-/* .quickLink:last-child { border-right: none; } */
-
 .quickLink:hover {
   background-color: var(--black);
   color: var(--accent);
@@ -339,7 +350,6 @@
   .header {
     padding: 3rem 2rem;
   }
- 
 
   .actionCard {
     flex-direction: column;
@@ -351,6 +361,7 @@
     width: 100%;
     text-align: center;
   }
+
   .trackerHeader {
     padding: 2rem 2rem;
   }

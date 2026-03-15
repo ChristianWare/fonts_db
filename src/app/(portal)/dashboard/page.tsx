@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getClientProfile } from "@/actions/client/getClientProfile";
 import { auth } from "../../../../auth";
 import styles from "./DashboardPage.module.css";
@@ -12,6 +11,8 @@ export default async function DashboardPage() {
   const firstName = session?.user?.name?.split(" ")[0] ?? "there";
   const currentStage = profile?.onboardingStage ?? "REGISTERED";
   const isLive = currentStage === "SITE_LIVE";
+  const previewUrl = profile?.previewUrl ?? null;
+  const liveUrl = profile?.liveUrl ?? null;
 
   const serviceAgreementDoc = profile?.documents.find(
     (d) => d.type === "SERVICE_AGREEMENT" && d.status === "SIGNED",
@@ -31,6 +32,7 @@ export default async function DashboardPage() {
       : null;
 
   const designReviewed = ["DESIGN_REVIEW", "SITE_LIVE"].includes(currentStage);
+  const buildingStarted = designReviewed;
 
   const steps = [
     {
@@ -40,6 +42,8 @@ export default async function DashboardPage() {
       href: "/dashboard/profile",
       completed: true,
       completedAt: profile?.createdAt ? new Date(profile.createdAt) : null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
     },
     {
       key: "agreement",
@@ -50,6 +54,8 @@ export default async function DashboardPage() {
       completedAt: serviceAgreementDoc?.signedAt
         ? new Date(serviceAgreementDoc.signedAt)
         : null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
     },
     {
       key: "billing",
@@ -61,6 +67,8 @@ export default async function DashboardPage() {
         billingActive && profile?.subscription?.currentPeriodStart
           ? new Date(profile.subscription.currentPeriodStart)
           : null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
     },
     {
       key: "questionnaire",
@@ -71,6 +79,8 @@ export default async function DashboardPage() {
       completedAt: profile?.questionnaire?.submittedAt
         ? new Date(profile.questionnaire.submittedAt)
         : null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
     },
     {
       key: "assets",
@@ -79,6 +89,8 @@ export default async function DashboardPage() {
       href: "/dashboard/assets",
       completed: !!firstAsset,
       completedAt: firstAsset ? new Date(firstAsset.createdAt) : null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
     },
     {
       key: "design",
@@ -87,20 +99,37 @@ export default async function DashboardPage() {
       href: "/dashboard/design-selection",
       completed: designReviewed,
       completedAt: null,
+      previewUrl: null as string | null,
+      liveUrl: null as string | null,
+    },
+    {
+      key: "building",
+      label: "Building Your Site",
+      desc: buildingStarted
+        ? "We have everything we need. Your platform is currently being built."
+        : "Once your design is approved, we'll get to work building your platform.",
+      href: null as string | null,
+      completed: isLive,
+      completedAt: null,
+      previewUrl: previewUrl,
+      liveUrl: null as string | null,
     },
     {
       key: "live",
       label: "Site Live",
-      desc: "Your platform is live. Welcome aboard.",
-      href: null,
+      desc: isLive
+        ? "Your platform is live. Welcome aboard."
+        : "Your site will go live once the build is complete and reviewed.",
+      href: null as string | null,
       completed: isLive,
       completedAt: null,
+      previewUrl: null as string | null,
+      liveUrl: liveUrl,
     },
   ];
 
   const completedCount = steps.filter((s) => s.completed).length;
 
-  // Sequential completion — connector is only black if all prior steps are done
   const sequentiallyComplete = steps.map((_step, index) =>
     steps.slice(0, index + 1).every((s) => s.completed),
   );
@@ -127,8 +156,8 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {/* Action card */}
-      {actionStep && actionStep.href && (
+      {/* Action card — regular next step */}
+      {actionStep && actionStep.href && actionStep.key !== "building" && (
         <div className={styles.actionCard}>
           <div className={styles.actionCardLeft}>
             <span className={styles.actionLabel}>Next step</span>
@@ -137,6 +166,49 @@ export default async function DashboardPage() {
           <Link href={actionStep.href} className={styles.actionBtn}>
             {actionStep.label} →
           </Link>
+        </div>
+      )}
+
+      {/* Action card — building state */}
+      {actionStep?.key === "building" && (
+        <div className={styles.actionCard}>
+          <div className={styles.actionCardLeft}>
+            <span className={styles.actionLabel}>In progress</span>
+            <p className={styles.actionText}>
+              We have everything we need. Your platform is currently being
+              built.
+            </p>
+          </div>
+          {previewUrl && (
+            <a
+              href={previewUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.actionBtn}
+            >
+              See progress ↗
+            </a>
+          )}
+        </div>
+      )}
+
+      {/* Action card — site is live */}
+      {isLive && liveUrl && (
+        <div className={styles.actionCard}>
+          <div className={styles.actionCardLeft}>
+            <span className={styles.actionLabel}>Your site is live</span>
+            <p className={styles.actionText}>
+              Your platform is live and ready to take bookings.
+            </p>
+          </div>
+          <a
+            href={liveUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={styles.actionBtn}
+          >
+            Visit your site ↗
+          </a>
         </div>
       )}
 
@@ -153,7 +225,6 @@ export default async function DashboardPage() {
           {steps.map((step, index) => {
             const isCompleted = step.completed;
             const isCurrent = index === currentStepIndex;
-            const isUpcoming = !isCompleted && !isCurrent;
 
             const stageClass = `${styles.stage} ${
               isCompleted
@@ -165,7 +236,6 @@ export default async function DashboardPage() {
 
             const inner = (
               <>
-                {/* Connector line */}
                 {index < steps.length - 1 && (
                   <div
                     className={`${styles.connector} ${
@@ -176,7 +246,6 @@ export default async function DashboardPage() {
                   />
                 )}
 
-                {/* Dot */}
                 <div className={styles.stageDot}>
                   {isCompleted ? (
                     <svg
@@ -195,6 +264,7 @@ export default async function DashboardPage() {
                     <div className={styles.stageDotInner} />
                   ) : null}
                 </div>
+
                 <div className={styles.stageText}>
                   <div className={styles.stageLabelRow}>
                     <span className={styles.stageLabel}>{step.label}</span>
@@ -208,12 +278,41 @@ export default async function DashboardPage() {
                     )}
                   </div>
                   <span className={styles.stageDesc}>{step.desc}</span>
-                  {step.href && (
+
+                  {/* Building step — preview link */}
+                  {step.key === "building" &&
+                    step.previewUrl &&
+                    !isCompleted && (
+                      <a
+                        href={step.previewUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={styles.siteLink}
+                      >
+                        See progress ↗
+                      </a>
+                    )}
+
+                  {/* Live step — live site link */}
+                  {step.key === "live" && step.liveUrl && isCompleted && (
+                    <a
+                      href={step.liveUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className={styles.siteLink}
+                    >
+                      Visit your site ↗
+                    </a>
+                  )}
+
+                  {/* Regular internal steps */}
+                  {step.href && step.key !== "building" && (
                     <span className={styles.moreInfo}>More info →</span>
                   )}
                 </div>
               </>
             );
+
             if (step.href) {
               return (
                 <Link key={step.key} href={step.href} className={stageClass}>
@@ -221,6 +320,7 @@ export default async function DashboardPage() {
                 </Link>
               );
             }
+
             return (
               <div key={step.key} className={stageClass}>
                 {inner}
@@ -264,22 +364,47 @@ export default async function DashboardPage() {
               <polyline points='12 5 19 12 12 19' />
             </svg>
           </Link>
-          <Link href='/dashboard/support' className={styles.quickLink}>
-            <span className={styles.quickLinkLabel}>Contact support</span>
-            <svg
-              width='16'
-              height='16'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              strokeLinecap='round'
-              strokeLinejoin='round'
+          {liveUrl && (
+            <a
+              href={liveUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.quickLink}
             >
-              <line x1='5' y1='12' x2='19' y2='12' />
-              <polyline points='12 5 19 12 12 19' />
-            </svg>
-          </Link>
+              <span className={styles.quickLinkLabel}>Visit your site</span>
+              <svg
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <line x1='5' y1='12' x2='19' y2='12' />
+                <polyline points='12 5 19 12 12 19' />
+              </svg>
+            </a>
+          )}
+          {!liveUrl && (
+            <Link href='/dashboard/support' className={styles.quickLink}>
+              <span className={styles.quickLinkLabel}>Contact support</span>
+              <svg
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <line x1='5' y1='12' x2='19' y2='12' />
+                <polyline points='12 5 19 12 12 19' />
+              </svg>
+            </Link>
+          )}
         </div>
       )}
     </div>
