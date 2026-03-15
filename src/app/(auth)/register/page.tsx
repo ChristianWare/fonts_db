@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { RegisterSchema, RegisterSchemaType } from "@/schemas/RegisterSchema";
 import { register as registerUser } from "@/actions/auth/register";
 import styles from "./RegisterPage.module.css";
@@ -46,11 +48,19 @@ function EyeOffIcon() {
 }
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const { status } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    }
+  }, [status, router]);
 
   const {
     register,
@@ -76,6 +86,32 @@ export default function RegisterPage() {
     setSuccess(result?.success ?? "Account created!");
     setLoading(false);
   };
+
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "var(--white)",
+        }}
+      >
+        <div
+          style={{
+            width: "3.2rem",
+            height: "3.2rem",
+            border: "2px solid var(--lightGray)",
+            borderTopColor: "var(--black)",
+            borderRadius: "50%",
+            animation: "spin 0.8s linear infinite",
+          }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>

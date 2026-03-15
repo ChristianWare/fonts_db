@@ -1,18 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { LoginSchema, LoginSchemaType } from "@/schemas/LoginSchema";
 import { login } from "@/actions/auth/login";
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    }
+  }, [status, router]);
 
   const {
     register,
@@ -36,6 +45,33 @@ export default function LoginPage() {
 
     router.push("/dashboard");
   };
+
+  // Don't render the form while checking session or if already logged in
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "var(--white)",
+        }}
+      >
+        <div
+          style={{
+            width: "3.2rem",
+            height: "3.2rem",
+            border: "2px solid var(--lightGray)",
+            borderTopColor: "var(--black)",
+            borderRadius: "50%",
+            animation: "spin 0.8s linear infinite",
+          }}
+        />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -66,9 +102,7 @@ export default function LoginPage() {
               <input
                 id='email'
                 type='email'
-                className={`${styles.input} ${
-                  errors.email ? styles.inputError : ""
-                }`}
+                className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
                 placeholder='you@yourcompany.com'
                 autoComplete='email'
                 {...register("email")}
@@ -92,9 +126,7 @@ export default function LoginPage() {
               <input
                 id='password'
                 type='password'
-                className={`${styles.input} ${
-                  errors.password ? styles.inputError : ""
-                }`}
+                className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
                 placeholder='••••••••'
                 autoComplete='current-password'
                 {...register("password")}
