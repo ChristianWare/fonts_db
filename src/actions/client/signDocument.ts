@@ -13,6 +13,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
+const CHROMIUM_REMOTE_URL =
+  "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar";
+
 async function regenerateSignedPDF(
   clientName: string,
   businessName: string,
@@ -34,7 +37,8 @@ async function regenerateSignedPDF(
 
   if (process.env.NODE_ENV === "production") {
     const chromium = (await import("@sparticuz/chromium")).default;
-    executablePath = await chromium.executablePath();
+    executablePath = await chromium.executablePath(CHROMIUM_REMOTE_URL);
+
     args = chromium.args;
   } else {
     executablePath =

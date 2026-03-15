@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   // Required for puppeteer-core + @sparticuz/chromium to work on Vercel
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
+  },
+
   ...(isProd ? {} : { turbopack: {} }),
 };
 

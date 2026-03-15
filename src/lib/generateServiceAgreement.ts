@@ -10,15 +10,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
+const CHROMIUM_REMOTE_URL =
+  "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar";
+
 async function getExecutablePath(): Promise<string> {
-  // In production (Vercel), use the serverless Chromium binary
   if (process.env.NODE_ENV === "production") {
     const chromium = (await import("@sparticuz/chromium")).default;
-    return chromium.executablePath();
+    return chromium.executablePath(CHROMIUM_REMOTE_URL);
   }
-
-  // In local dev, use the installed Chrome on your machine
-  // Mac (Intel or Apple Silicon)
   return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 }
 
@@ -50,7 +49,7 @@ async function htmlToPDF(html: string): Promise<Buffer> {
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,
-    margin: { top: "0", bottom: "0", left: "0", right: "0" },
+    margin: { top: "48px", bottom: "48px", left: "0", right: "0" },
   });
 
   await browser.close();
@@ -96,7 +95,6 @@ export async function generateServiceAgreement(
 
     if (!client) return { error: "Client not found" };
 
-    // Idempotency — don't generate a second agreement if one already exists
     const existing = await db.document.findFirst({
       where: { clientProfileId, type: "SERVICE_AGREEMENT" },
     });
