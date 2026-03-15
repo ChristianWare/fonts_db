@@ -134,7 +134,7 @@ export function buildEmailHTML({
           <tr>
             <td style="padding:24px 40px 32px;">
               <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#666666;margin:0;">
-                Fonts &amp; Footers &nbsp;·&nbsp; Black Car Platform Agency &nbsp;·&nbsp;
+                Fonts &amp; Footers &nbsp;·&nbsp; Web Development Agency &nbsp;·&nbsp;
                 <a href="https://${BRAND_DOMAIN}" style="color:#666666;text-decoration:none;">${BRAND_DOMAIN}</a>
               </p>
             </td>
