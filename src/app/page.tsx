@@ -17,8 +17,10 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <Outgrow />
-      <Solution />
+      <div id='learn-more'>
+        <Outgrow />
+        <Solution />
+      </div>
 
       {/* features */}
       <div id='features'>

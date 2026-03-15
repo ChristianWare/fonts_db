@@ -31,6 +31,15 @@ export default function Nav({
   const toggleMenu = () => setIsOpen((s) => !s);
   const closeMenu = () => setIsOpen(false);
 
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    closeMenu();
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      const id = href.replace("/#", "");
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const handleHamburgerClick = (e: MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     toggleMenu();
@@ -57,18 +66,16 @@ export default function Nav({
               isOpen ? `${styles.navItems} ${styles.active}` : styles.navItems
             }
           >
-            {items.map((item) => {
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={styles.navItem}
-                  onClick={closeMenu}
-                >
-                  {item.text}
-                </Link>
-              );
-            })}
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={styles.navItem}
+                onClick={(e) => handleNavClick(e, item.href)}
+              >
+                {item.text}
+              </Link>
+            ))}
             {/* <div className={styles.menuImage}>
               <Image src={Img1} alt='Menu image' fill className={styles.img} />
             </div> */}

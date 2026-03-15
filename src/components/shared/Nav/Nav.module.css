@@ -25,6 +25,10 @@
   justify-content: flex-start;
 }
 
+.menuText {
+  display: none;
+}
+
 .navItems {
   display: flex;
   flex-direction: column;
@@ -55,7 +59,7 @@
 .navItem:not(.navItemActive):hover {
   color: var(--accent) !important;
   text-decoration: line-through;
-  background-color: var(--black);
+  /* background-color: var(--black); */
 }
 
 .black {
@@ -228,6 +232,7 @@
     font-size: 1.1rem;
     color: var(--black); /* default */
     transition: color 0.2s ease;
+    display: block;
   }
 
   /* menuText turns white when open */

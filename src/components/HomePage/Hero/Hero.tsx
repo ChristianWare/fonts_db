@@ -1,9 +1,9 @@
 import styles from "./Hero.module.css";
 import Image from "next/image";
-import Button from "../../shared/Button/Button";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
 import BgImage from "../../../../public/images/heroii.jpg";
+import HeroScrollButton from "./HeroScrollButton";
 
 export default function Hero() {
   return (
@@ -53,12 +53,7 @@ export default function Hero() {
                   </span>
                 </p>
                 <div className={styles.btnContainer}>
-                  <Button
-                    href='/'
-                    text='Book your discovery call'
-                    btnType='accent'
-                    arrow
-                  />
+                  <HeroScrollButton />
                 </div>
               </div>
               <div className={styles.imgContainerii}>
