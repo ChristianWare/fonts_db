@@ -34,12 +34,12 @@
 
 .brandTagline {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   background-color: rgba(255, 200, 9, 0.12);
-  padding: 0.2rem 0.7rem;
+  padding: 0.4rem 0.8rem;
   border: 1px solid rgba(255, 200, 9, 0.3);
 }
 
@@ -69,7 +69,7 @@
   justify-content: center;
   background-color: var(--white);
   padding: 4rem;
-  border-left: 1px solid var(--grayii);
+  border-left: 1px solid var(--lightGray);
 }
 
 .card {
@@ -77,15 +77,15 @@
   max-width: 420px;
   display: flex;
   flex-direction: column;
-  gap: 3.2rem;
+  gap: 3rem;
 }
 
 .cardTop {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid var(--grayii);
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .heading {
@@ -101,10 +101,10 @@
 
 .subheading {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 /* ── Form ── */
@@ -117,7 +117,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .labelRow {
@@ -128,7 +128,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -137,7 +137,7 @@
 .input {
   width: 100%;
   padding: 1.3rem 1.4rem;
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -148,7 +148,7 @@
 }
 
 .input::placeholder {
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .input:focus {
@@ -161,7 +161,7 @@
 
 .fieldError {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
   color: #e53e3e;
   text-transform: uppercase;
@@ -169,10 +169,10 @@
 
 .forgotLink {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--lightGray);
+  color: var(--text);
   transition: color 0.15s ease;
   text-decoration: none;
 }
@@ -182,11 +182,12 @@
 }
 
 .errorBanner {
-  padding: 1.2rem 1.4rem;
+  padding: 1.4rem;
   background-color: #fff5f5;
-  border: 1px solid #fed7d7;
+  border-top: 1px solid #fed7d7;
+  border-bottom: 1px solid #fed7d7;
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   letter-spacing: 0.04em;
   color: #c53030;
   text-transform: uppercase;
@@ -198,7 +199,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -217,15 +218,15 @@
 .registerPrompt {
   text-align: center;
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .registerLink {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
