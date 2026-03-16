@@ -200,281 +200,70 @@ export const questions: readonly QuestionItem[] = [
     id: 1,
     question: "What exactly does Fonts & Footers build?",
     answer:
-      "We specialize in high-conversion direct-booking websites for service businesses—salons, wellness studios, clinics, trainers, chauffeurs, pet groomers, equipment/vehicle rentals, and more. Our sites focus on one thing: turning visitors into paid, deposit-secured appointments.",
+      "We build fully custom direct booking websites and white-label booking platforms exclusively for black car and limousine companies. Every platform includes a branded booking engine, admin dashboard, driver portal, customer portal, corporate account management, flight tracking, and Stripe payment processing — all under your brand, on your domain. We build for one industry and one industry only.",
     sections: ["home", "about"],
   },
   {
     id: 2,
-    question: "How long does it take to launch?",
+    question: "How is pricing structured?",
     answer:
-      "Typical ranges: Solo (single calendar) 10–21 days, Team (multi-staff) 3–6 weeks, Multi-Location/Rental 6–10 weeks. Timelines include discovery, design, build, integrations, and QA. Rush options are available when content and decisions are ready on day one.",
-    sections: ["home", "work"],
+      "One-time setup fee of $500, then $499 per month flat. No per-booking fees, no per-driver fees, no seat-based pricing, and no upgrade fees as we add new features. Operators who come on board now lock in the $499 rate for life — this is our founding client rate and it will increase for future clients as the platform grows.",
+    sections: ["pricing", "home"],
   },
   {
     id: 3,
-    question: "How do your plans differ?",
+    question: "How long does it take to launch?",
     answer:
-      "Solo: one bookable calendar and simple upsells. Team: multiple staff calendars, role-based access, Google/365 sync. Multi-Location: location routing, hours/policies per site. Rental/Fleet: inventory, blackout dates, holds/returns. Custom: bespoke features and integrations.",
-    sections: ["work", "pricing", "home"],
+      "Most clients are live within 2 to 3 weeks. Week one is the discovery call and build. Week two is configuration and your review. Week three is final refinements and launch. We move fast because the platform is already built and battle-tested — we're configuring it to your operation, not starting from scratch.",
+    sections: ["home", "work"],
   },
   {
     id: 4,
-    question: "How do deposits, cancellations, and no-shows work?",
+    question: "Do I own my website and customer data?",
     answer:
-      "Your site enforces your policy. We can collect non-refundable deposits or full prepayment, set cancellation windows, require card-on-file, charge late/no-show fees, and auto-send SMS/email reminders with links to reschedule inside your policy rules.",
-    sections: ["home", "pricing", "contact"],
+      "Yes — completely. Your brand, your domain, your customer relationships, and your booking data belong to you. We never put our name on your platform and your clients will never see the Fonts & Footers name. If you ever decide to leave, we'll provide a full data export. You built your customer base — it stays yours.",
+    sections: ["about", "pricing"],
   },
   {
     id: 5,
-    question: "Which payment processor do you use?",
+    question: "Will this work for my specific operation?",
     answer:
-      "Stripe is our default for cards, Apple Pay, Google Pay, and subscription/membership billing. We can also integrate PayPal or regional options on request. You keep the merchant account and receive payouts directly.",
-    sections: ["home", "pricing"],
+      "If you run a black car or limo company, yes. The platform is built around how transportation operators actually work — multiple vehicle types, service areas, hourly and point-to-point pricing, driver dispatch, corporate accounts, and airport transfers with live flight tracking. We configure everything around your services, your vehicles, and your pricing structure.",
+    sections: ["home", "work"],
   },
   {
     id: 6,
-    question: "How is billing structured (setup fee and monthly)?",
+    question: "What happens to my existing bookings and customers?",
     answer:
-      "Most clients choose a one-time setup fee plus a monthly platform fee. You can either: (A) pay setup + first month at signup, renew on the 1st, or (B) pay setup + a prorated first month and then renew on the 1st. Annual prepay gets 20% off the monthly rate.",
-    sections: ["pricing"],
+      "We handle the transition. If your current platform allows data export, we migrate your customer list and any future bookings before you go live. We also help you communicate the switch to your existing clients so the experience stays seamless on their end.",
+    sections: ["work", "contact"],
   },
   {
     id: 7,
-    question: "What’s included in the monthly fee?",
+    question: "How do payments work?",
     answer:
-      "Hosting, security updates, core feature updates, uptime monitoring, minor content tweaks, and support. Optional add-ons include growth experiments (A/B tests), SEO/content retainers, advanced dashboards, and custom feature work.",
+      "All payments run through Stripe — the most trusted payment processor in the industry. You keep your own Stripe merchant account and receive payouts directly. We support deposits, full prepayment, balance collection, tips, refunds, and card-on-file for repeat customers. Corporate accounts get centralized billing with invoices generated automatically.",
     sections: ["pricing", "home"],
   },
   {
     id: 8,
-    question: "Do SMS reminders cost extra?",
+    question: "What does the driver portal include?",
     answer:
-      "Yes. SMS is billed at pass-through vendor rates (usage-based). We’ll estimate volumes during onboarding and set sensible limits so you control costs while keeping no-shows low.",
-    sections: ["pricing"],
-  },
-  {
-    id: 9,
-    question:
-      "Can you migrate me from Calendly, GlossGenius, Vagaro, Mindbody, or Square?",
-    answer:
-      "Yes. We migrate services, staff, locations, and—where exportable—clients and future bookings. We also set up redirects and ‘we’ve moved’ messaging to make the transition painless for your customers.",
-    sections: ["contact", "work"],
-  },
-  {
-    id: 10,
-    question: "Will this replace my existing CRM or POS?",
-    answer:
-      "Often we complement them. We can push new leads/clients to your CRM, sync calendars (Google/365), and keep Stripe as your payments source of truth. If you need a full replacement, we’ll scope what’s realistic.",
-    sections: ["contact", "about"],
-  },
-  {
-    id: 11,
-    question: "Do you support memberships, packages, and gift cards?",
-    answer:
-      "Yes—memberships with recurring billing, credit packs, punch cards, promo codes, and digital gift cards. Redemptions and balances are handled inside the booking flow.",
-    sections: ["pricing", "home"],
-  },
-  {
-    id: 12,
-    question: "How do you handle multi-location and staff availability?",
-    answer:
-      "Rules per location (hours, buffers, services) and per staff (skills, breaks, travel time). Users pick location → provider → time, or we auto-assign by rules. Everything respects your blackout dates and real-time conflicts.",
+      "Every driver on your roster gets their own dedicated portal with their full trip schedule, passenger details, pickup and drop-off information, and real-time status updates. It installs like a native app on their phone — no App Store download required. Push notifications fire automatically for new assignments, updates, and cancellations.",
     sections: ["work"],
   },
   {
-    id: 13,
-    question: "Can I upsell add-ons during booking?",
+    id: 9,
+    question: "What if I already have a website?",
     answer:
-      "Absolutely. We support one-click add-ons, bundles, and time-aware upsells that adjust service length and price. Cross-sells can appear on confirmation and reminder flows too.",
-    sections: ["pricing", "work", "home"],
+      "We replace it entirely with something built specifically for how black car operators work and how their clients book. Most existing transportation websites weren't designed with a booking engine at their core — they're brochure sites with a form or a third-party widget bolted on. We build the booking experience as the foundation, not an afterthought.",
+    sections: ["home", "contact"],
   },
   {
-    id: 14,
-    question: "What about rentals, fleets, or equipment scheduling?",
+    id: 10,
+    question: "What kind of support do I get after launch?",
     answer:
-      "We track inventory per asset, availability windows, prep/turnover time, holds/returns, deposits, and damages. Pricing can vary by day, duration, or season, with blackout logic for maintenance.",
-    sections: ["work", "pricing"],
-  },
-  {
-    id: 15,
-    question: "What tech stack do you use?",
-    answer:
-      "Next.js for the front end, a Postgres database via Prisma, NextAuth for secure access, Stripe for payments, and best-in-class services for email/SMS and analytics. It’s fast, secure, and highly customizable.",
-    sections: ["about", "work"],
-  },
-  {
-    id: 16,
-    question: "Where is my site hosted? Vercel or AWS?",
-    answer:
-      "By default we deploy on Vercel for speed and reliability. If you have specific requirements (VPC, regional data residency, enterprise SLAs), we can architect an AWS deployment as a custom engagement.",
-    sections: ["about", "pricing"],
-  },
-  {
-    id: 17,
-    question: "Is the site fast and SEO-ready?",
-    answer:
-      "Yes. We build for Core Web Vitals with image optimization, code splitting, caching/CDN, and schema markup for services, reviews, and FAQs. We set up GA4 (or privacy-friendly analytics) and basic on-page SEO at launch.",
-    sections: ["home", "blog"],
-  },
-  {
-    id: 18,
-    question: "Do you handle accessibility?",
-    answer:
-      "We design against WCAG 2.1 AA guidelines—color contrast, focus states, keyboard navigation, and semantic structure. Accessibility is an ongoing discipline; we include audits and fixes before launch.",
-    sections: ["about", "work"],
-  },
-  {
-    id: 19,
-    question: "Is this HIPAA compliant for clinics/med-spas?",
-    answer:
-      "We’re not an EHR. We minimize PHI in the booking layer and integrate HIPAA-eligible vendors for intake forms and messaging when needed. For regulated workflows, we’ll scope compliant patterns with your counsel and vendors.",
-    sections: ["about"],
-  },
-  {
-    id: 20,
-    question: "Who owns the content and data?",
-    answer:
-      "You own your brand, domain, copy, images, and customer/booking data. We license the platform code to you as part of your subscription. On request, we can export your data if you decide to move.",
-    sections: ["about", "pricing"],
-  },
-  {
-    id: 21,
-    question: "What happens if I cancel?",
-    answer:
-      "We’ll schedule a clean wind-down, turn off renewals, and provide a data export (clients, bookings, products/services). If you need migration support or a static export, we can add that as a one-time service.",
-    sections: ["contact", "pricing"],
-  },
-  {
-    id: 22,
-    question: "Can my team edit content without code?",
-    answer:
-      "Yes. You’ll get an admin with safe controls to manage services, pricing, staff schedules, blackout dates, policies, FAQs, promos, and blog posts. We also provide quick-reference docs and a training call.",
-    sections: ["work", "contact"],
-  },
-  {
-    id: 23,
-    question: "Do you provide copywriting and photography?",
-    answer:
-      "We can. Many clients start with our conversion-ready defaults, then add on brand copy and photography to elevate the experience. We also offer guided prompts to move fast if you’re DIY-inclined.",
-    sections: ["blog", "about"],
-  },
-  {
-    id: 24,
-    question: "Can you integrate reviews and UGC?",
-    answer:
-      "Yes—native testimonials, Google reviews pull-ins, and simple UGC uploads (with moderation) to showcase real results. We add schema so those reviews help search visibility.",
-    sections: ["blog", "work"],
-  },
-  {
-    id: 25,
-    question: "Do you guarantee traffic or rankings?",
-    answer:
-      "We focus on conversion and retention—turning your existing attention into paid appointments. We’ll set a foundation for SEO and ads, but traffic volume depends on your market and marketing. We can run experiments to grow it.",
-    sections: ["home", "blog"],
-  },
-  {
-    id: 26,
-    question: "Will you copy components from Webflow or Framer templates?",
-    answer:
-      "We reference patterns that work but build original, code-owned components tailored to your brand and flow. That keeps you fast, unique, and legally clean with full control over UX and performance.",
-    sections: ["work", "about"],
-  },
-  {
-    id: 27,
-    question: "What analytics and dashboards do I get?",
-    answer:
-      "A bookings dashboard with revenue, utilization, no-show rate, channel attribution, and cohort retention. We wire GA4 (or Plausible/Matomo) and set up event tracking for funnel steps and conversions.",
-    sections: ["work", "pricing"],
-  },
-  {
-    id: 28,
-    question: "Do you support multi-language or international customers?",
-    answer:
-      "Yes—language toggles, localized content, and time-zone-aware scheduling. If you serve multiple regions, we can vary services, pricing, and policies by locale.",
-    sections: ["blog", "work"],
-  },
-  {
-    id: 29,
-    question: "How do refunds and disputes work?",
-    answer:
-      "Refunds follow your policy and are issued through Stripe. For disputes, we help assemble evidence (policy acceptance, reminder logs, visit history) to improve win rates.",
-    sections: ["pricing", "contact"],
-  },
-  {
-    id: 30,
-    question: "What about emails and notifications?",
-    answer:
-      "We brand your transactional emails and SMS, including confirmations, reminders, reschedules, waitlist clears, membership renewals, and review requests. You control timing and tone.",
-    sections: ["work", "contact"],
-  },
-  {
-    id: 31,
-    question: "Can you import my existing client list and future appointments?",
-    answer:
-      "Yes—CSV imports for clients and services are straightforward. Future bookings can usually be migrated if your current system supports export; we’ll map fields and validate before going live.",
-    sections: ["work", "contact"],
-  },
-  {
-    id: 32,
-    question: "What security measures do you take?",
-    answer:
-      "End-to-end HTTPS, role-based access, regular dependency updates, WAF/CDN shielding, automated backups, and Stripe for PCI-scoped payments. We monitor uptime and errors continuously.",
-    sections: ["work", "about"],
-  },
-  {
-    id: 33,
-    question: "Do you offer support after launch?",
-    answer:
-      "Definitely. You’ll have a dedicated support channel for fixes and small changes, plus options for ongoing experiments and new features. Most questions are answered same or next business day.",
+      "Ongoing support is included in your monthly subscription. You'll have a direct line for questions, fixes, and small updates. Most issues are resolved same or next business day. As we ship new features to the platform, they're added to your site automatically at no extra charge — your $499 rate covers everything we build going forward.",
     sections: ["about", "contact", "home"],
-  },
-  {
-    id: 34,
-    question: "Can I run promotions, discounts, and limited-time offers?",
-    answer:
-      "Yes—promo codes, first-visit offers, membership-only pricing, and time-boxed discounts. We can show urgency variables (spots left, timers) without harming UX.",
-    sections: ["pricing"],
-  },
-  {
-    id: 35,
-    question: "What content do you need from me to start?",
-    answer:
-      "Brand assets (logo, colors, fonts), services and pricing, policies, hours, staff bios, location details, and any photos. If anything is missing, we’ll provide guided templates and fill gaps with best-practice defaults.",
-    sections: ["contact", "work"],
-  },
-  {
-    id: 36,
-    question: "Do you work on contracts or month-to-month?",
-    answer:
-      "Most clients are month-to-month after setup. Annual prepay is available at a discount. Custom/enterprise builds may include specific statements of work and milestones.",
-    sections: ["pricing", "about"],
-  },
-  {
-    id: 37,
-    question: "Can you add a blog or resources section?",
-    answer:
-      "Yes. We can ship a lightweight blog you can edit in the admin, or integrate a headless CMS if your team prefers. Posts include SEO schema and are optimized for speed.",
-    sections: ["blog"],
-  },
-  {
-    id: 38,
-    question: "Do you handle email marketing and CRM automations?",
-    answer:
-      "We’ll integrate your tool of choice (Klaviyo, Mailchimp, HubSpot, etc.) and tag key events (lead, booking, no-show, renewal). If you need flows built, we can add that as a growth engagement.",
-    sections: ["blog", "work"],
-  },
-  {
-    id: 39,
-    question: "Can I approve the design before development?",
-    answer:
-      "Yes. We work in short, visual sprints—wireframes to hi-fi mockups—so you can approve structure, copy, and style before we lock in and build.",
-    sections: ["work", "about"],
-  },
-  {
-    id: 40,
-    question: "What makes Fonts & Footers different?",
-    answer:
-      "We’re laser-focused on bookings—not generic websites. Our flows are tested to reduce no-shows, capture deposits, and surface upsells without friction. You get speed to launch, measurable outcomes, and a partner who cares about filled calendars—not vanity metrics.",
-    sections: ["about", "home"],
   },
 ] as const;

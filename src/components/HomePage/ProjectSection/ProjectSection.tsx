@@ -34,16 +34,21 @@ export default function ProjectSection() {
                 />
               </div>
               <p>
-                Nier Transportation is a transportation company that provides
-                transportation services to the public. They have a fleet of
-                buses that are used for transportation services.
+                Nier Transportation has been running black car and private
+                transportation services in Phoenix since 2004. When they came to
+                Fonts & Footers, they were managing bookings through third-party
+                platforms; paying per-booking fees, operating under someone
+                else&apos;s brand, and losing ownership of their customer
+                relationships.
                 <br />
                 <br />
                 <span className={styles.accent}>
-                  They also have a website that allows customers to book
-                  transportation services and view their schedule. The website
-                  is also integrated with a payment gateway that allows
-                  customers to pay for their transportation services online.
+                  We built them a fully custom direct booking platform from the
+                  ground up; branded entirely to Nier, on their own domain.
+                  Complete with a multi-step booking engine, admin dashboard,
+                  driver portal, customer portal, corporate account management,
+                  live flight tracking, and Stripe payment processing. One
+                  system. Every role covered. Zero platform fees.
                 </span>
               </p>
               <div className={styles.statBox}>
