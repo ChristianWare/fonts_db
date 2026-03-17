@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import styles from "./ComparisonChart.module.css";
 import Check from "../../shared/Check/Check";
+import ROICalculator from "../ROICalculator/ROICalculator";
 // import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
 type CompetitorName =
@@ -284,6 +285,8 @@ export default function ComparisonChart() {
           </div>
         </div>
       </LayoutWrapper>
+
+      <ROICalculator />
     </section>
   );
 }

@@ -82,7 +82,7 @@ export default function Faq() {
   // Route-specific list (limit to ~6 items for non-/faqs pages)
   const routeQuestions = useMemo(() => {
     if (isAllFaqPage) return [] as QuestionItem[];
-    return bySection(currentSection, questions).slice(0, 6);
+    return bySection(currentSection, questions);
   }, [currentSection, isAllFaqPage]);
 
   // Grouped lists for /faqs
