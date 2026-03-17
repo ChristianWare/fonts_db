@@ -75,7 +75,7 @@
 .label {
   display: block;
   padding: 1.4rem 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-family: var(--GeistMono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -124,7 +124,7 @@
 .unit {
   padding: 0 1.6rem;
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -168,7 +168,7 @@
 /* ── Footnote ── */
 .footnote {
   font-family: var(--GeistMono);
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   color: var(--black);
   opacity: 0.55;
@@ -241,7 +241,7 @@
 
 .outputLabel {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.38);
@@ -261,7 +261,7 @@
 
 .outputPer {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: rgba(255, 255, 255, 0.35);
   text-transform: uppercase;
   margin-left: 0.3rem;
@@ -288,7 +288,7 @@
 
 .savingsLabel {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.38);
@@ -312,7 +312,7 @@
 
 .savingsNote {
   font-family: var(--GeistMono);
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   letter-spacing: 0.04em;
@@ -328,7 +328,7 @@
   padding: 1.8rem 2rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--white);
@@ -344,6 +344,73 @@
   background-color: var(--accent);
   color: var(--black);
   border-color: var(--accent);
+}
+
+.includedBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  padding-top: 2.4rem;
+}
+
+.includedTitle {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  line-height: 1.7;
+}
+
+.includedList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem 1.6rem;
+}
+
+.includedItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.check {
+  color: var(--black);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+/* Label stack for sub-labels on output rows */
+.outputLabelStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.outputSub {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.22);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Color variants for output values */
+.outputRed {
+  color: #e87a7a;
+}
+
+.outputGreen {
+  color: var(--accent);
 }
 
 /* ── Responsive ── */
@@ -401,5 +468,9 @@
 
   .outputValue {
     font-size: 2.2rem;
+  }
+
+  .includedList {
+    grid-template-columns: 1fr;
   }
 }

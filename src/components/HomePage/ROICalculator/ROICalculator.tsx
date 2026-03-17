@@ -11,12 +11,25 @@ function fmt(n: number) {
   return Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
+const INCLUDED_FEATURES = [
+  "Custom branded website",
+  "Full booking engine",
+  "Admin dashboard",
+  "Driver portal",
+  "Customer portal",
+  "Corporate accounts",
+  "Flight tracking",
+  "Unlimited bookings",
+];
+
 export default function ROICalculator() {
   const [bookings, setBookings] = useState(80);
   const [feePerBooking, setFeePerBooking] = useState(3.5);
+  const [extraFees, setExtraFees] = useState(0);
 
-  const competitorMonthly = bookings * feePerBooking;
-  const monthlySavings = competitorMonthly - FF_MONTHLY;
+  const competitorBookingFees = bookings * feePerBooking;
+  const trueCompetitorMonthly = competitorBookingFees + extraFees;
+  const monthlySavings = trueCompetitorMonthly - FF_MONTHLY;
   const annualSavings = monthlySavings * 12;
   const breakEven =
     feePerBooking > 0 ? Math.ceil(FF_MONTHLY / feePerBooking) : 0;
@@ -25,10 +38,10 @@ export default function ROICalculator() {
     if (monthlySavings <= 0)
       return `Reach ${breakEven} bookings/month and you break even. Every ride after that is money back in your pocket.`;
     if (monthlySavings < 200)
-      return `You're saving $${fmt(monthlySavings)}/month. Every new booking adds to the gap.`;
+      return `You're saving $${fmt(monthlySavings)}/month — and that includes a custom website, driver portal, and everything else your current platform charges extra for.`;
     if (monthlySavings < 500)
-      return `You're overpaying by $${fmt(monthlySavings)}/month — that's $${fmt(annualSavings)} walking out the door every year.`;
-    return `You're leaving $${fmt(annualSavings)} on the table every year. That's a serious number.`;
+      return `You're overpaying by $${fmt(monthlySavings)}/month — that's $${fmt(annualSavings)} a year. And you still don't own your site.`;
+    return `You're leaving $${fmt(annualSavings)} on the table every year. At $499 flat, Fonts & Footers includes everything your platform charges extra for.`;
   };
 
   return (
@@ -116,12 +129,63 @@ export default function ROICalculator() {
                   aria-label='Fee per booking slider'
                 />
               </div>
+
+              {/* Additional monthly fees */}
+              <div className={styles.inputGroup}>
+                <label htmlFor='extra' className={styles.label}>
+                  Other monthly fees
+                </label>
+                <div className={styles.inputRow}>
+                  <span className={styles.prefix}>$</span>
+                  <input
+                    id='extra'
+                    type='number'
+                    min={0}
+                    max={2000}
+                    step={5}
+                    value={extraFees}
+                    onChange={(e) =>
+                      setExtraFees(Math.max(0, Number(e.target.value)))
+                    }
+                    className={styles.input}
+                  />
+                  <span className={styles.unit}>/ month</span>
+                </div>
+                <input
+                  type='range'
+                  min={0}
+                  max={500}
+                  step={5}
+                  value={extraFees}
+                  onChange={(e) => setExtraFees(Number(e.target.value))}
+                  className={styles.slider}
+                  aria-label='Additional monthly fees slider'
+                />
+              </div>
             </div>
 
             <p className={styles.footnote}>
-              At ${feePerBooking.toFixed(2)}/booking, you break even vs. Fonts
-              &amp; Footers at just {breakEven} rides/month.
+              Include website fees, app fees, overage charges, or any add-ons
+              your current platform bills separately. At Fonts &amp; Footers,
+              those are all $0.
             </p>
+
+            {/* What's included callout */}
+            <div className={styles.includedBlock}>
+              <p className={styles.includedTitle}>
+                Everything below is included at $499/mo.
+                <br />
+                Most platforms charge extra for all of it.
+              </p>
+              <ul className={styles.includedList}>
+                {INCLUDED_FEATURES.map((f) => (
+                  <li key={f} className={styles.includedItem}>
+                    <span className={styles.check}>✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* ── RIGHT: output card ── */}
@@ -132,19 +196,60 @@ export default function ROICalculator() {
               <div className={styles.dot7} />
               <div className={styles.dot8} />
 
+              {/* Booking fees */}
               <div className={styles.outputRow}>
-                <span className={styles.outputLabel}>What you pay now</span>
-                <span className={styles.outputValue}>
-                  ${fmt(competitorMonthly)}
+                <span className={styles.outputLabel}>Booking fees</span>
+                <span className={`${styles.outputValue} ${styles.outputRed}`}>
+                  ${fmt(competitorBookingFees)}
                   <span className={styles.outputPer}>/mo</span>
                 </span>
               </div>
 
               <div className={styles.divider} />
 
+              {/* Extra fees — only show if > 0 */}
+              {extraFees > 0 && (
+                <>
+                  <div className={styles.outputRow}>
+                    <div className={styles.outputLabelStack}>
+                      <span className={styles.outputLabel}>Add-on fees</span>
+                      <span className={styles.outputSub}>
+                        Website, apps, overages, etc.
+                      </span>
+                    </div>
+                    <span
+                      className={`${styles.outputValue} ${styles.outputRed}`}
+                    >
+                      +${fmt(extraFees)}
+                      <span className={styles.outputPer}>/mo</span>
+                    </span>
+                  </div>
+                  <div className={styles.divider} />
+                </>
+              )}
+
+              {/* True total */}
               <div className={styles.outputRow}>
-                <span className={styles.outputLabel}>Fonts &amp; Footers</span>
-                <span className={styles.outputValue}>
+                <span className={styles.outputLabel}>True monthly cost</span>
+                <span className={`${styles.outputValue} ${styles.outputRed}`}>
+                  ${fmt(trueCompetitorMonthly)}
+                  <span className={styles.outputPer}>/mo</span>
+                </span>
+              </div>
+
+              <div className={styles.divider} />
+
+              {/* F&F */}
+              <div className={styles.outputRow}>
+                <div className={styles.outputLabelStack}>
+                  <span className={styles.outputLabel}>
+                    Fonts &amp; Footers
+                  </span>
+                  <span className={styles.outputSub}>
+                    Everything included. No add-ons.
+                  </span>
+                </div>
+                <span className={`${styles.outputValue} ${styles.outputGreen}`}>
                   $499
                   <span className={styles.outputPer}>/mo</span>
                 </span>
@@ -152,6 +257,7 @@ export default function ROICalculator() {
 
               <div className={styles.divider} />
 
+              {/* Savings hero */}
               <div className={styles.savingsBlock}>
                 <span className={styles.savingsLabel}>Annual Savings</span>
                 <span
