@@ -27,19 +27,16 @@
   top: 0;
   left: 0;
 }
-
 .dot2 {
   top: 0;
   right: 0;
   left: unset;
 }
-
 .dot3 {
   bottom: 0;
   left: 0;
   top: unset;
 }
-
 .dot4 {
   bottom: 0;
   right: 0;
@@ -211,19 +208,16 @@
   top: 1rem;
   left: 1rem;
 }
-
 .dot6 {
   top: 1rem;
   right: 1rem;
   left: unset;
 }
-
 .dot7 {
   bottom: 1rem;
   left: 1rem;
   top: unset;
 }
-
 .dot8 {
   bottom: 1rem;
   right: 1rem;
@@ -248,6 +242,20 @@
   flex-shrink: 0;
 }
 
+.outputLabelStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.outputSub {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.22);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .outputValue {
   font-family: var(--RobotoFlexii);
   font-size: 2.6rem;
@@ -267,6 +275,13 @@
   margin-left: 0.3rem;
   letter-spacing: 0.05em;
   font-variation-settings: normal;
+}
+
+.outputRed {
+  color: #e87a7a;
+}
+.outputGreen {
+  color: var(--accent);
 }
 
 .divider {
@@ -346,6 +361,7 @@
   border-color: var(--accent);
 }
 
+/* ── Included block ── */
 .includedBlock {
   display: flex;
   flex-direction: column;
@@ -387,30 +403,6 @@
   color: var(--black);
   font-size: 1.4rem;
   flex-shrink: 0;
-}
-
-/* Label stack for sub-labels on output rows */
-.outputLabelStack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.outputSub {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  color: rgba(255, 255, 255, 0.22);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-/* Color variants for output values */
-.outputRed {
-  color: #e87a7a;
-}
-
-.outputGreen {
-  color: var(--accent);
 }
 
 /* ── Responsive ── */

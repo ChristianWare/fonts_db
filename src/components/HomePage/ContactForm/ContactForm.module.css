@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* padding: 3rem; */
   position: relative;
 }
 
@@ -27,23 +26,19 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* gap: 1rem; */
   width: 100%;
-  /* padding: 2rem; */
 }
 
 .labelInputBox {
   display: flex;
   flex-direction: column;
-  /* gap: 0.5rem; */
-  /* margin-bottom: 1.5rem; */
   width: 100%;
 }
 
 .labelInputBox label,
 .small {
   padding: 1.6rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   letter-spacing: -0.2px;
   font-family: var(--GeistMono);
   text-transform: uppercase;
@@ -91,7 +86,6 @@
   font-family: var(--Roboto);
   color: red !important;
   padding: 1rem;
-  /* margin-top: 0.5rem; */
   width: 100%;
 }
 
@@ -162,7 +156,6 @@
 .btnContainer {
   display: grid;
   width: 100%;
-  /* margin-top: 3rem; */
   grid-template-columns: repeat(1, 1fr);
   margin-left: auto;
   margin-right: auto;
@@ -240,6 +233,93 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* ── Success banner ── */
+.successBanner {
+  width: 100%;
+  padding: 1.6rem 2rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: slideDown 0.3s ease forwards;
+}
+
+.successInner {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.successIcon {
+  flex-shrink: 0;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #22c55e;
+  line-height: 1;
+}
+
+.successText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.successTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  /* color: #22c55e; */
+  color: var(--black);
+  margin: 0;
+}
+
+.successCopy {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  /* color: rgba(34, 197, 94, 0.7); */
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.successDismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: rgba(34, 197, 94, 0.5);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.successDismiss:hover {
+  color: #22c55e;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media screen and (max-width: 1100px) {

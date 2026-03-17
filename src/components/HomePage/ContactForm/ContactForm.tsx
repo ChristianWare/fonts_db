@@ -3,7 +3,7 @@
 
 import styles from "./ContactForm.module.css";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "@/components/shared/Button/Button";
 
@@ -28,6 +28,7 @@ const serviceOptions = [
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const {
@@ -47,6 +48,13 @@ export default function ContactForm() {
     },
     mode: "onBlur",
   });
+
+  // Auto-dismiss success banner after 10 seconds
+  useEffect(() => {
+    if (!success) return;
+    const timer = setTimeout(() => setSuccess(false), 10000);
+    return () => clearTimeout(timer);
+  }, [success]);
 
   const toggleService = (service: string) => {
     setSelectedServices((prev) =>
@@ -74,7 +82,7 @@ export default function ContactForm() {
       const json = await res.json();
 
       if (res.ok && json?.messageId) {
-        toast.success("Thanks! We'll be in touch soon.");
+        setSuccess(true);
         reset();
         setSelectedServices([]);
       } else {
@@ -93,6 +101,29 @@ export default function ContactForm() {
       onSubmit={handleSubmit(onSubmit)}
       aria-busy={loading}
     >
+      {/* ── Success banner ── */}
+      {success && (
+        <div className={styles.successBanner}>
+          <div className={styles.successInner}>
+            <span className={styles.successIcon}>✓</span>
+            <div className={styles.successText}>
+              <p className={styles.successTitle}>Message sent.</p>
+              <p className={styles.successCopy}>
+                You&apos;ll hear from us within one business day.
+              </p>
+            </div>
+            <button
+              type='button'
+              className={styles.successDismiss}
+              onClick={() => setSuccess(false)}
+              aria-label='Dismiss'
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className={styles.namesContainer}>
         <div className={styles.labelInputBox}>
           <label htmlFor='firstName'>
@@ -175,16 +206,9 @@ export default function ContactForm() {
           <label htmlFor='siteUrl'>Current website:</label>
           <input
             id='siteUrl'
-            type='url'
+            type='text'
             placeholder='www.example.com'
             maxLength={500}
-            // {...register("siteUrl", {
-            //   pattern: {
-            //     // basic URL pattern; keeps it lenient
-            //     value: /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i,
-            //     message: "Please enter a valid URL",
-            //   },
-            // })}
             aria-invalid={!!errors.siteUrl || undefined}
             disabled={loading}
           />
@@ -241,9 +265,6 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Real submit for keyboard/AT; FalseButton handles visuals */}
-      {/* <button type='submit' style={{ display: "none" }} aria-hidden /> */}
-
       <div className={styles.btnBtnContainer}>
         <Button
           type='submit'
@@ -255,7 +276,7 @@ export default function ContactForm() {
       </div>
       <div className={styles.smallParent}>
         <small className={styles.small}>
-          You’ll hear from us within one business day. By submitting, you agree
+          You&apos;ll hear from us within one business day. By submitting, you agree
           to our Terms and Privacy Policy.
         </small>
       </div>

@@ -23,16 +23,19 @@ const INCLUDED_FEATURES = [
 ];
 
 export default function ROICalculator() {
-  const [bookings, setBookings] = useState(80);
-  const [feePerBooking, setFeePerBooking] = useState(3.5);
-  const [extraFees, setExtraFees] = useState(0);
+  const [bookings, setBookings] = useState(150);
+  const [avgFare, setAvgFare] = useState(160);
+  const [feePercent, setFeePercent] = useState(5);
+  const [extraFees, setExtraFees] = useState(150);
 
-  const competitorBookingFees = bookings * feePerBooking;
+  const competitorBookingFees = bookings * avgFare * (feePercent / 100);
   const trueCompetitorMonthly = competitorBookingFees + extraFees;
   const monthlySavings = trueCompetitorMonthly - FF_MONTHLY;
   const annualSavings = monthlySavings * 12;
   const breakEven =
-    feePerBooking > 0 ? Math.ceil(FF_MONTHLY / feePerBooking) : 0;
+    avgFare > 0 && feePercent > 0
+      ? Math.ceil(FF_MONTHLY / (avgFare * (feePercent / 100)))
+      : 0;
 
   const getMessage = () => {
     if (monthlySavings <= 0)
@@ -61,7 +64,7 @@ export default function ROICalculator() {
               background='bgBlack'
             />
             <h2 className={styles.heading}>
-             what you&apos;re
+              what you&apos;re
               <br />
               actually paying
               <br />
@@ -69,7 +72,7 @@ export default function ROICalculator() {
             </h2>
 
             <div className={styles.inputs}>
-              {/* Bookings */}
+              {/* Bookings per month */}
               <div className={styles.inputGroup}>
                 <label htmlFor='bookings' className={styles.label}>
                   Bookings per month
@@ -99,36 +102,68 @@ export default function ROICalculator() {
                 />
               </div>
 
-              {/* Fee per booking */}
+              {/* Average fare */}
               <div className={styles.inputGroup}>
-                <label htmlFor='fee' className={styles.label}>
-                  Platform fee per booking
+                <label htmlFor='avgFare' className={styles.label}>
+                  Average fare per booking
                 </label>
                 <div className={styles.inputRow}>
                   <span className={styles.prefix}>$</span>
                   <input
-                    id='fee'
+                    id='avgFare'
                     type='number'
-                    min={0.01}
-                    max={50}
-                    step={0.25}
-                    value={feePerBooking}
+                    min={1}
+                    max={2000}
+                    step={5}
+                    value={avgFare}
                     onChange={(e) =>
-                      setFeePerBooking(Math.max(0.01, Number(e.target.value)))
+                      setAvgFare(Math.max(1, Number(e.target.value)))
                     }
                     className={styles.input}
                   />
-                  <span className={styles.unit}>/ booking</span>
+                  <span className={styles.unit}>/ ride</span>
+                </div>
+                <input
+                  type='range'
+                  min={25}
+                  max={500}
+                  step={5}
+                  value={avgFare}
+                  onChange={(e) => setAvgFare(Number(e.target.value))}
+                  className={styles.slider}
+                  aria-label='Average fare slider'
+                />
+              </div>
+
+              {/* Platform fee percentage */}
+              <div className={styles.inputGroup}>
+                <label htmlFor='feePercent' className={styles.label}>
+                  Platform fee (%)
+                </label>
+                <div className={styles.inputRow}>
+                  <input
+                    id='feePercent'
+                    type='number'
+                    min={0.1}
+                    max={25}
+                    step={0.5}
+                    value={feePercent}
+                    onChange={(e) =>
+                      setFeePercent(Math.max(0.1, Number(e.target.value)))
+                    }
+                    className={styles.input}
+                  />
+                  <span className={styles.unit}>% per booking</span>
                 </div>
                 <input
                   type='range'
                   min={0.5}
                   max={20}
-                  step={0.25}
-                  value={feePerBooking}
-                  onChange={(e) => setFeePerBooking(Number(e.target.value))}
+                  step={0.5}
+                  value={feePercent}
+                  onChange={(e) => setFeePercent(Number(e.target.value))}
                   className={styles.slider}
-                  aria-label='Fee per booking slider'
+                  aria-label='Platform fee percentage slider'
                 />
               </div>
 
@@ -167,9 +202,12 @@ export default function ROICalculator() {
             </div>
 
             <p className={styles.footnote}>
-              Include website fees, app fees, overage charges, or any add-ons
-              your current platform bills separately. At Fonts &amp; Footers,
-              those are all $0.
+              At {feePercent}% per booking on a ${avgFare} average fare,
+              you&apos;re paying ${(avgFare * (feePercent / 100)).toFixed(2)}{" "}
+              per ride. You break even vs. Fonts &amp; Footers at just{" "}
+              {breakEven} bookings/month. Include website fees, app fees, and
+              overages in &ldquo;Other monthly fees&rdquo; — at Fonts &amp;
+              Footers, those are all $0.
             </p>
 
             {/* What's included callout */}
@@ -200,7 +238,12 @@ export default function ROICalculator() {
 
               {/* Booking fees */}
               <div className={styles.outputRow}>
-                <span className={styles.outputLabel}>Booking fees</span>
+                <div className={styles.outputLabelStack}>
+                  <span className={styles.outputLabel}>Booking fees</span>
+                  <span className={styles.outputSub}>
+                    {bookings} rides × ${avgFare} × {feePercent}%
+                  </span>
+                </div>
                 <span className={`${styles.outputValue} ${styles.outputRed}`}>
                   ${fmt(competitorBookingFees)}
                   <span className={styles.outputPer}>/mo</span>
