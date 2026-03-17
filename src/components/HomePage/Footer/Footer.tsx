@@ -41,8 +41,9 @@ export default function Footer() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>
-              Bring clarity to <br />
-              <span className={styles.accent}>your next strategy.</span>
+              Premium Rides.
+              <br />
+              <span className={styles.accent}>Premium websites.</span>
             </h2>
           </div>
           <div className={styles.bottom}>
