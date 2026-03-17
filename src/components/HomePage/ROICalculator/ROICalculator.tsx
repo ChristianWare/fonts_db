@@ -61,9 +61,11 @@ export default function ROICalculator() {
               background='bgBlack'
             />
             <h2 className={styles.heading}>
-              See what you&apos;re
+             what you&apos;re
               <br />
-              actually paying.
+              actually paying
+              <br />
+              with the other guys.
             </h2>
 
             <div className={styles.inputs}>

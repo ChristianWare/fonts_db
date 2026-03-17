@@ -5,7 +5,7 @@
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   position: relative;
   border-top: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
@@ -414,6 +414,12 @@
 }
 
 /* ── Responsive ── */
+@media screen and (max-width: 1268px) {
+  .content {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media screen and (max-width: 1068px) {
   .content {
     grid-template-columns: 1fr;
