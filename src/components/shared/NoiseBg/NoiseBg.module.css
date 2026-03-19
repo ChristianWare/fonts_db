@@ -1,0 +1,17 @@
+.background {
+    position: relative;
+    /* overflow: hidden; */
+    width: 100%;
+}
+
+.background::before {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    opacity: .03;
+    pointer-events: none;
+    background: url('/images/noise.gif');
+}

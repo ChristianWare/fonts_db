@@ -119,6 +119,20 @@
   position: sticky;
   top: 90px;
   background-color: var(--black);
+  z-index: 2;
+}
+
+.card::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    opacity: .03;
+    pointer-events: none;
+    background: url('/images/noise.gif');
+    background-size: cover;
 }
 
 /* Active — text fully visible */
