@@ -68,9 +68,12 @@ export default withAuth((req: NextRequest & { auth?: any }) => {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
-  // ADMIN landing on /dashboard → redirect to /admin
+  // ADMIN landing on /dashboard → redirect to /admin (unless previewing a client)
   if (isClientDashboard && hasAnyRole(req, ["ADMIN"])) {
-    return NextResponse.redirect(new URL("/admin", nextUrl));
+    const isPreview = nextUrl.searchParams.has("as");
+    if (!isPreview) {
+      return NextResponse.redirect(new URL("/admin", nextUrl));
+    }
   }
 
   return NextResponse.next();
