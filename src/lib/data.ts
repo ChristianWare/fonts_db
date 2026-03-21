@@ -12,6 +12,8 @@ import Img10 from "../../public/dashboard/alerts.png";
 import Img11 from "../../public/dashboard/customers.png";
 import Img12 from "../../public/dashboard/reports.png";
 import Img13 from "../../public/dashboard/settings.png";
+import LiveGoogleMaps from "../../public/images/liveGoogleMaps.png";
+import PaymentProcessing from "../../public/images/paymentProcessesing.png";
 
 export const SolutionData = [
   {
@@ -140,12 +142,12 @@ export const featureData = [
   {
     title: "Live Google Maps",
     desc: "Every booking automatically calculates the route, distance, and estimated drive time using live Google Maps data. Customers see exactly where they're going before they pay — no surprises, no guesswork.",
-    src: Img6,
+    src: LiveGoogleMaps,
   },
   {
     title: "Payment Processing",
     desc: "All payments run through Stripe — secure, reliable, and familiar to your clients. Accept cards at booking, store payment methods for repeat customers, and collect deposits or full balances on your schedule.",
-    src: Img7,
+    src: PaymentProcessing,
   },
   {
     title: "Flight Tracking",
