@@ -1,5 +1,5 @@
 .container {
-  padding: 10rem 0rem;
+  /* padding: 10rem 0rem; */
   background-color: var(--lightGrayiii);
   position: relative;
 }
@@ -7,7 +7,7 @@
 .content {
   display: grid;
   grid-template-columns: 35% 30% 35%;
-  padding: 2rem 2rem;
+  padding: 10rem 2rem;
 }
 
 .left,
@@ -65,6 +65,15 @@
 
 .imgContainerMobile {
   display: none;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  width: 100%;
 }
 
 .leftList,
@@ -202,7 +211,7 @@
 
 @media screen and (max-width: 1468px) {
   .content {
-    padding: 2rem 2rem;
+    padding: 10rem 2rem;
     grid-template-columns: 37.5% 25% 37.5%;
   }
 
@@ -221,12 +230,16 @@
     width: 50px;
     height: 50px;
   }
+
+  .copy {
+    font-size: 1.8rem;
+  }
 }
 
 @media screen and (max-width: 1068px) {
   .content {
     grid-template-columns: repeat(1, 1fr);
-    padding: 2rem 2rem;
+    padding: 7rem 2rem;
   }
 
   .top {
@@ -288,7 +301,7 @@
     transform: translateX(-50%);
     width: 70%;
     height: 50%;
-    bottom: 16%;
+    bottom: 14%;
     z-index: -1;
     border: 2px dashed var(--lightGray);
   }
@@ -300,7 +313,7 @@
     transform: translateX(-50%);
     width: 70%;
     height: 50%;
-    top: 16%;
+    top: 14%;
     z-index: -1;
     border: 2px dashed var(--lightGray);
   }
@@ -334,6 +347,10 @@
 }
 
 @media screen and (max-width: 568px) {
+  .content {
+    padding: 5rem 2rem;
+  }
+
   .imgMiddleContainer {
     width: 100px;
     height: 100px;

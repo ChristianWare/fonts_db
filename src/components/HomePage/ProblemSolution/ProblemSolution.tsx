@@ -1,5 +1,5 @@
-import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./ProblemSolution.module.css";
+import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import Img1 from "../../../../public/images/stressed.jpg";
 import Img2 from "../../../../public/images/reliefii.jpg";
 import Image from "next/image";
@@ -97,6 +97,12 @@ export default function ProblemSolution() {
                 <h2 className={`${styles.subHeading} h2`}>
                   The issues businesses face
                 </h2>
+                <p className={styles.copy}>
+                  Most operators start with generic booking software, but
+                  quickly hit limits: transaction fees on every ride, generic
+                  branding, and zero control over your customer experience or
+                  data.
+                </p>
               </div>
               <div className={styles.listWrapper}>
                 {data.map((item) => (
@@ -142,6 +148,11 @@ export default function ProblemSolution() {
                 <h2 className={`${styles.subHeading} h2`}>
                   How we solve them for you
                 </h2>
+                <p className={styles.copy}>
+                  We build fully custom, white-label booking
+                  platforms for black car services from the ground up. Your
+                  platform is branded entirely to your company. Customers never see our name.
+                </p>
               </div>
               <div className={styles.listWrapper}>
                 {SolutionData.map((item) => (
