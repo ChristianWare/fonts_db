@@ -14,6 +14,7 @@ import Img12 from "../../public/dashboard/reports.png";
 import Img13 from "../../public/dashboard/settings.png";
 import LiveGoogleMaps from "../../public/images/liveGoogleMaps.png";
 import PaymentProcessing from "../../public/images/paymentProcessesing.png";
+import FlightTracking from "../../public/images/flightTracking.png";
 
 export const SolutionData = [
   {
@@ -152,7 +153,7 @@ export const featureData = [
   {
     title: "Flight Tracking",
     desc: "Customers enter their flight number at booking and the platform pulls live aviation data automatically. If a flight is delayed, the booking reflects it — your driver arrives when the passenger does, not an hour before.",
-    src: Img8,
+    src: FlightTracking,
   },
   {
     title: "Guest Checkout",

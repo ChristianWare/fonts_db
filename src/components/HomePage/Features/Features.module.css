@@ -270,7 +270,7 @@
 }
 
 /* ── 768px — full mobile reflow ── */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 968px) {
   .parent {
     margin-top: 10rem;
     padding-bottom: 6rem;
@@ -407,7 +407,7 @@
   }
 
   .modalImageWrapper {
-    width: 95vw;
+    width: 100%;
     height: 70vh;
   }
 }
