@@ -1,13 +1,16 @@
-import LayoutWrapper from "../../shared/LayoutWrapper";
 import styles from "./Outgrow.module.css";
+import LayoutWrapper from "../../shared/LayoutWrapper";
 import Image from "next/image";
 import Img1 from "../../../../public/images/stressed.jpg";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
-import Arrow from "@/components/shared/icons/Arrow/Arrow";
+// import Arrow from "@/components/shared/icons/Arrow/Arrow";
 // import Money from "@/components/shared/icons/Money/Money";
 import FeesIcon from "@/components/shared/icons/FeesIcon/FeesIcon";
 import NotBrand from "@/components/shared/icons/NotBrand/NotBrand";
 import NoData from "@/components/shared/icons/NoData/NoData";
+import ScatteredIcon from "@/components/shared/icons/ScatteredIcon/ScatteredIcon";
+import NoControl from "@/components/shared/icons/NoControl/NoControl";
+import NoControlii from "@/components/shared/icons/NoControlii/NoControlii";
 
 const data = [
   {
@@ -38,19 +41,19 @@ const data = [
     id: 4,
     title: "No real control",
     desc: "Pricing, policies, and algorithms can change overnight. You're building your business on a foundation someone else controls.",
-    icon: <Arrow className={styles.icon} />,
+    icon: <NoControlii className={styles.icon} />,
   },
   {
     id: 5,
     title: "Generic first impressions",
     desc: "Executives and corporate travelers judge you before they book. A cookie-cutter website signals a cookie-cutter service.",
-    icon: <Arrow className={styles.icon} />,
+    icon: <NoControl className={styles.icon} />,
   },
   {
     id: 6,
     title: "Scattered operations",
     desc: "Bookings in one app, drivers in another, payments somewhere else. Nothing talks to each other and things fall through the cracks.",
-    icon: <Arrow className={styles.icon} />,
+    icon: <ScatteredIcon className={styles.icon} />,
   },
 ];
 
@@ -100,12 +103,17 @@ export default function Outgrow() {
             <div className={styles.bottom}>
               {data.map((item) => (
                 <div className={styles.card} key={item.id}>
-                  <div className={styles.dot1} />
-                  <div className={styles.dot4} />
-                  {item.icon && (
+                  {/* <div className={styles.dot1} />
+                  <div className={styles.dot4} /> */}
+                  {/* {item.icon && (
                     <div className={styles.iconContainer}>{item.icon}</div>
-                  )}
-                  <h3 className={`${styles.title} h6`}>{item.title}</h3>
+                  )} */}
+                  <h3 className={`${styles.title} h6`}>
+                    {item.icon && (
+                      <span className={styles.iconContainer}>{item.icon}</span>
+                    )}
+                    {item.title}
+                  </h3>
                   <p className={styles.desc}>{item.desc}</p>
                 </div>
               ))}
