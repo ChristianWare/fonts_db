@@ -16,53 +16,72 @@ import Img13 from "../../public/dashboard/settings.png";
 export const SolutionData = [
   {
     id: 1,
-    oneWordDesc: "Branded",
-    title: "Branded entirely to your company",
+    oneWordDesc: "Flat",
+    title: "One flat rate. No cuts, ever.",
     src: Img1,
     description:
-      "Your platform runs under your name, on your domain, in your colors — customers never see our name.",
-    bullets: ["Your domain", "Your colors", "Your emails", "Your brand"],
-  },
-  {
-    id: 2,
-    oneWordDesc: "Custom",
-    title: "Built around how you actually work",
-    src: Img2,
-    description:
-      "We configure everything around your services, your vehicles, and your pricing — not a generic version of your business.",
+      "Flat $499/month. No per-booking fees, no percentage taken, no surprises — no matter how many rides you run.",
     bullets: [
-      "Your services",
-      "Your vehicles",
-      "Your pricing",
-      "Your workflow",
+      "Flat monthly rate",
+      "Zero per-booking fees",
+      "No surprises",
+      "Keep every dollar",
     ],
   },
   {
+    id: 2,
+    oneWordDesc: "Branded",
+    title: "Your name on everything",
+    src: Img2,
+    description:
+      "Your platform runs on your domain, in your colors, under your brand — clients never see a third-party name anywhere.",
+    bullets: ["Your domain", "Your colors", "Your emails", "Your brand"],
+  },
+  {
     id: 3,
-    oneWordDesc: "Proven",
-    title: "Tested in a real, active operation",
+    oneWordDesc: "Yours",
+    title: "Your customers. Your data.",
     src: Img3,
     description:
-      "Every feature was built and refined with a real black car operator — you're getting a platform that already works, not a prototype.",
-    bullets: ["Real bookings", "Real drivers", "Real clients", "Battle-tested"],
+      "Every booking, every client record, every relationship lives in your platform — owned by you, accessible to you, always.",
+    bullets: [
+      "Full data ownership",
+      "Direct client access",
+      "Built-in CRM",
+      "No middleman",
+    ],
   },
   {
     id: 4,
-    oneWordDesc: "Complete",
-    title: "Every role covered, one system",
+    oneWordDesc: "Controlled",
+    title: "You set the rules",
     src: Img4,
     description:
-      "Customers, drivers, admins, and corporate clients all have exactly what they need — and it all lives in one platform.",
-    bullets: ["One dashboard", "Every role", "Zero gaps", "Fully connected"],
+      "Your pricing, your policies, your platform. Nothing changes unless you change it — no algorithm updates, no policy surprises.",
+    bullets: ["Your pricing", "Your policies", "No surprises", "Full control"],
   },
   {
     id: 5,
-    oneWordDesc: "Yours",
-    title: "You keep everything you earn",
+    oneWordDesc: "Premium",
+    title: "A first impression that closes deals",
     src: Img5,
     description:
-      "Flat monthly pricing, no per-booking fees, and no platform claiming ownership of your customers or your data.",
-    bullets: ["Flat rate", "No fees", "Your data", "Cancel anytime"],
+      "A fully custom site signals a premium operation before a client ever books — built specifically for black car, not adapted from a template.",
+    bullets: [
+      "Custom design",
+      "Premium feel",
+      "Built for black car",
+      "Wins corporate clients",
+    ],
+  },
+  {
+    id: 6,
+    oneWordDesc: "Connected",
+    title: "One platform. Every role.",
+    src: Img1,
+    description:
+      "Bookings, drivers, payments, and corporate accounts all run from a single system — fully connected, nothing falling through the cracks.",
+    bullets: ["One dashboard", "Every role", "Zero gaps", "Fully connected"],
   },
 ] as const;
 

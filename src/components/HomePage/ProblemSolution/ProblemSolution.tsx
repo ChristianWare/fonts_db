@@ -2,9 +2,14 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./ProblemSolution.module.css";
 import Img1 from "../../../../public/images/stressed.jpg";
 import Img2 from "../../../../public/images/reliefii.jpg";
-import FNFLogo from "../../../../public/logos/fnf_logo_black.png";
-import { SolutionData } from "@/lib/data";
 import Image from "next/image";
+import XIcon from "@/components/shared/icons/XIcon/XIcon";
+import FeesIcon from "@/components/shared/icons/FeesIcon/FeesIcon";
+import Brand from "@/components/shared/icons/Brand/Brand";
+import Cloud from "@/components/shared/icons/Cloud/Cloud";
+import Rule from "@/components/shared/icons/Rule/Rule";
+import NoControlii from "@/components/shared/icons/NoControlii/NoControlii";
+import Platform from "@/components/shared/icons/Platform/Platform";
 
 const data = [
   {
@@ -22,7 +27,6 @@ const data = [
     title: "Zero data ownership",
     desc: "The platform owns your customer relationships. You can't market to them, build loyalty, or reach them if something changes.",
   },
-
   {
     id: 4,
     title: "No real control",
@@ -37,6 +41,39 @@ const data = [
     id: 6,
     title: "Scattered operations",
     desc: "Bookings in one app, drivers in another, payments somewhere else. Nothing talks to each other and things fall through the cracks.",
+  },
+];
+
+const SolutionData = [
+  {
+    id: 1,
+    title: "One flat rate. No cuts, ever.",
+    icon: <FeesIcon className={styles.iconGood} />,
+  },
+  {
+    id: 2,
+    title: "Your name on everything",
+    icon: <Brand className={styles.iconGood} />,
+  },
+  {
+    id: 3,
+    title: "Your customers. Your data.",
+    icon: <Cloud className={styles.iconGood} />,
+  },
+  {
+    id: 4,
+    title: "You set the rules",
+    icon: <Rule className={styles.iconGood} />,
+  },
+  {
+    id: 5,
+    title: "A first impression that closes deals",
+    icon: <NoControlii className={styles.iconGood} />,
+  },
+  {
+    id: 6,
+    title: "One platform. Every role.",
+    icon: <Platform className={styles.iconGood} />,
   },
 ];
 
@@ -57,20 +94,39 @@ export default function ProblemSolution() {
             </div>
             <div className={styles.leftList}>
               <div className={styles.top}>
-                <h2 className={`${styles.subHeading} h6`}>
-                  The problems businesses face
+                <h2 className={`${styles.subHeading} h2`}>
+                  The issues businesses face
                 </h2>
               </div>
-              <div className={styles.bottom}>
+              <div className={styles.listWrapper}>
                 {data.map((item) => (
-                  <div key={item.id} className={styles.listItem}>
-                    <p className={styles.desc}>{item.title}</p>
-                  </div>
+                  <ul key={item.id} className={styles.listItems}>
+                    <li className={`${styles.listItem} p`}>
+                      <XIcon className={styles.icon} />
+                      {item.title}
+                    </li>
+                  </ul>
                 ))}
               </div>
             </div>
+            <div className={styles.imgContainerMobile}>
+              <Image
+                src={Img1}
+                alt='Stressed person'
+                title='Stressed person'
+                fill
+                className={styles.imgMobile}
+              />
+            </div>
           </div>
-          <div className={styles.middle}></div>
+          <div className={styles.middle}>
+            <div className={styles.imgMiddleContainer}>
+              <div className={styles.imgContainerMiddle} />
+            </div>
+            <span className={styles.middleText}>
+              Fonts <br /> & Footers
+            </span>
+          </div>
           <div className={styles.right}>
             <div className={styles.imgContainer}>
               <Image
@@ -83,11 +139,20 @@ export default function ProblemSolution() {
             </div>
             <div className={styles.rightList}>
               <div className={styles.top}>
-                <h2 className={`${styles.subHeading} h6`}>
-                  How do we solve them
+                <h2 className={`${styles.subHeading} h2`}>
+                  How we solve them for you
                 </h2>
               </div>
-              <div className={styles.bottom}></div>
+              <div className={styles.listWrapper}>
+                {SolutionData.map((item) => (
+                  <ul key={item.id} className={styles.listItems}>
+                    <li className={`${styles.listItem} p`}>
+                      {item.icon}
+                      {item.title}
+                    </li>
+                  </ul>
+                ))}
+              </div>
             </div>
           </div>
         </div>

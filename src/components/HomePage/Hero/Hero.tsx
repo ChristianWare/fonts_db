@@ -39,7 +39,7 @@ export default function Hero() {
               </div>
               <h1 className={styles.heading}>
                 {/* Premium rides. <br /> Premium platform. */}
-                Premium Rides. <br /> Premium websites.{" "}
+                Custom Direct <br /> booking websites.{" "}
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>

@@ -12,16 +12,16 @@ import ProjectSection from "../components/HomePage/ProjectSection/ProjectSection
 import Solution from "../components/HomePage/Solution/Solution";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 import Chris from "@/components/HomePage/Chris/Chris";
-// import ProblemSolution from "@/components/HomePage/ProblemSolution/ProblemSolution";
+import ProblemSolution from "@/components/HomePage/ProblemSolution/ProblemSolution";
 
 export default function HomePage() {
   return (
     <main>
       <Hero />
       <div id='learn-more'>
-        <Outgrow />
-        <Solution />
-        {/* <ProblemSolution /> */}
+        {/* <Outgrow />
+        <Solution /> */}
+        <ProblemSolution />
       </div>
 
       {/* features */}

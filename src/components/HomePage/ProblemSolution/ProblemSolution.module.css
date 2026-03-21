@@ -1,25 +1,13 @@
 .container {
   padding: 10rem 0rem;
-  background-color: var(--lightGrayii);
+  background-color: var(--lightGrayiii);
   position: relative;
-}
-
-.container::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  content: "";
-  opacity: 0.03;
-  pointer-events: none;
-  background: url("/images/noise.gif");
-  /* background-size: cover; */
 }
 
 .content {
   display: grid;
-  grid-template-columns: 40% 20% 40%;
+  grid-template-columns: 35% 30% 35%;
+  padding: 2rem 2rem;
 }
 
 .left,
@@ -28,10 +16,38 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  z-index: 10;
+  position: relative;
 }
 
-.imgContainer {
+.left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-25%);
+  right: -6rem;
+  width: 99%;
+  height: 50%;
+  background-color: var(--lightGrayiii);
+  border: 2px dashed var(--lightGray);
+  z-index: -1;
+}
+
+.right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-25%);
+  left: -6rem;
+  width: 99%;
+  height: 50%;
+  background-color: var(--lightGrayiii);
+  border: 2px dashed var(--lightGray);
+  z-index: -1;
+}
+
+.imgContainer,
+.imgContainerMobile {
   position: relative;
   width: 110px;
   height: 110px;
@@ -39,19 +55,292 @@
   top: 55px;
 }
 
-.img {
+.img,
+.imgMobile {
   object-fit: cover;
   object-position: top;
   border-radius: 50%;
-  border: 7px solid var(--lightGrayii);
+  border: 10px solid var(--lightGrayiii);
+}
+
+.imgContainerMobile {
+  display: none;
 }
 
 .leftList,
 .rightList {
-  padding-top: 10rem;
   width: 100%;
+  padding: 3rem;
+  padding-top: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
 }
 
 .leftList {
-  background-color: var(--lightGray);
+  background-color: var(--lightGrayiv);
+}
+
+.rightList {
+  background-color: var(--white);
+}
+
+.leftList .subHeading {
+  color: var(--red);
+  width: 90%;
+  hyphens: auto !important;
+}
+
+.rightList .subHeading {
+  color: var(--green);
+  width: 90%;
+}
+
+.listWrapper {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.listItems {
+  list-style: none;
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+  font-size: 1.6rem;
+  width: 100%;
+  border-bottom: 1px solid var(--lightGray);
+  padding-bottom: 0.7rem;
+}
+
+.listWrapper .listItems:last-child .listItem {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.icon {
+  color: var(--red);
+}
+
+.iconGood {
+  color: var(--green);
+}
+
+.middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgMiddleContainer {
+  background-color: var(--black);
+  border: 7px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 132px;
+  height: 132px;
+  position: relative;
+  top: 70px;
+  z-index: 1;
+}
+
+.imgMiddleContainer::before,
+.imgMiddleContainer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30vw;
+  height: 0;
+  border-top: 2px dashed var(--lightGray);
+  z-index: -10;
+}
+
+.imgMiddleContainer::before {
+  right: 100%;
+}
+
+.imgMiddleContainer::after {
+  left: 100%;
+}
+
+.imgContainerMiddle {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background-color: var(--accent);
+  -webkit-mask-image: url("/logos/fnf_logo_black.png");
+  mask-image: url("/logos/fnf_logo_black.png");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.imgMiddle {
+  object-fit: contain;
+}
+
+.middleText {
+  position: relative;
+  top: 95px;
+  text-align: center;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 1468px) {
+  .content {
+    padding: 2rem 2rem;
+    grid-template-columns: 37.5% 25% 37.5%;
+  }
+
+  .subHeading {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1268px) {
+  .imgMiddleContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .imgContainerMiddle {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 1068px) {
+  .content {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 2rem 2rem;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .leftList {
+    padding: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 8rem;
+  }
+
+  .rightList {
+    padding-right: 3rem;
+  }
+
+  .left .imgContainer {
+    display: none;
+  }
+
+  .imgContainerMobile {
+    display: block;
+    top: -55px;
+  }
+
+  .left::after {
+    top: auto;
+    bottom: 0;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20rem;
+    border: none;
+    border-left: 2px dashed var(--lightGray);
+    background-color: transparent;
+  }
+
+  .right::after {
+    top: 0;
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20rem;
+    border: none;
+    border-left: 2px dashed var(--lightGray);
+    background-color: transparent;
+    z-index: -1;
+  }
+
+  .left::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 50%;
+    bottom: 16%;
+    z-index: -1;
+    border: 2px dashed var(--lightGray);
+  }
+
+  .right::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 50%;
+    top: 16%;
+    z-index: -1;
+    border: 2px dashed var(--lightGray);
+  }
+
+  .leftList .subHeading,
+  .rightList .subHeading {
+    width: 100%;
+    text-align: center;
+  }
+
+  .imgMiddleContainer {
+    width: 132px;
+    height: 132px;
+    top: 0px;
+    z-index: 999;
+  }
+
+  .imgContainerMiddle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .middleText {
+    display: none;
+  }
+
+  .imgMiddleContainer::before,
+  .imgMiddleContainer::after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .imgMiddleContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .imgContainerMiddle {
+    width: 50px;
+    height: 50px;
+  }
 }
