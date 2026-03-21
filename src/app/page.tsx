@@ -12,6 +12,7 @@ import ProjectSection from "../components/HomePage/ProjectSection/ProjectSection
 import Solution from "../components/HomePage/Solution/Solution";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 import Chris from "@/components/HomePage/Chris/Chris";
+// import ProblemSolution from "@/components/HomePage/ProblemSolution/ProblemSolution";
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
       <div id='learn-more'>
         <Outgrow />
         <Solution />
+        {/* <ProblemSolution /> */}
       </div>
 
       {/* features */}

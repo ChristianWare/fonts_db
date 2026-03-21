@@ -1,0 +1,57 @@
+.container {
+  padding: 10rem 0rem;
+  background-color: var(--lightGrayii);
+  position: relative;
+}
+
+.container::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: 0.03;
+  pointer-events: none;
+  background: url("/images/noise.gif");
+  /* background-size: cover; */
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 40% 20% 40%;
+}
+
+.left,
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.imgContainer {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  top: 55px;
+}
+
+.img {
+  object-fit: cover;
+  object-position: top;
+  border-radius: 50%;
+  border: 7px solid var(--lightGrayii);
+}
+
+.leftList,
+.rightList {
+  padding-top: 10rem;
+  width: 100%;
+}
+
+.leftList {
+  background-color: var(--lightGray);
+}
