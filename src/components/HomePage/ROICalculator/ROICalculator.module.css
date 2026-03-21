@@ -122,7 +122,8 @@
   padding: 0 1.6rem;
   font-family: var(--GeistMono);
   font-size: 1.4rem;
-  color: rgba(255, 255, 255,1);
+  /* color: rgba(255, 255, 255,1); */
+  color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   flex-shrink: 0;
