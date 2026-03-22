@@ -15,7 +15,17 @@ import Img13 from "../../public/dashboard/settings.png";
 import LiveGoogleMaps from "../../public/images/liveGoogleMaps.png";
 import PaymentProcessing from "../../public/images/paymentProcessesing.png";
 import FlightTracking from "../../public/images/flightTracking.png";
-  import Multiple from "@/components/shared/icons/Multiple/Multiple";
+import Location from "@/components/shared/icons/Location/Location";
+import Payment from "@/components/shared/icons/Payment/Payment";
+import Plane from "@/components/shared/icons/Plane/Plane";
+import Bell from "@/components/shared/icons/Bell/Bell";
+import Business from "@/components/shared/icons/Business/Business";
+import Analytics from "@/components/shared/icons/Analytics/Analytics";
+import Driver from "@/components/shared/icons/Driver/Driver";
+import Alert from "@/components/shared/Alert/Alert";
+import Invoice from "@/components/shared/icons/Invoice/Invoice";
+import Notifications from "@/components/shared/icons/Notifications/Notifications";
+import Customer from "@/components/shared/icons/Customer/Customer";
 
 export const SolutionData = [
   {
@@ -145,25 +155,25 @@ export const featureData = [
     title: "Live Google Maps",
     desc: "Every booking automatically calculates the route, distance, and estimated drive time using live Google Maps data. Customers see exactly where they're going before they pay — no surprises, no guesswork.",
     src: LiveGoogleMaps,
-    icon: Multiple,
+    icon: Location,
   },
   {
     title: "Payment Processing",
     desc: "All payments run through Stripe — secure, reliable, and familiar to your clients. Accept cards at booking, store payment methods for repeat customers, and collect deposits or full balances on your schedule.",
     src: PaymentProcessing,
-    icon: Multiple,
+    icon: Payment,
   },
   {
     title: "Flight Tracking",
     desc: "Customers enter their flight number at booking and the platform pulls live aviation data automatically. If a flight is delayed, the booking reflects it — your driver arrives when the passenger does, not an hour before.",
     src: FlightTracking,
-    icon: Multiple,
+    icon: Plane,
   },
   {
     title: "Guest Checkout",
     desc: "Customers can book a ride without creating an account — no friction, no barriers. If they want to save their details for next time, account creation is always available but never required.",
     src: Img9,
-    icon: Multiple,
+    icon: Bell,
   },
   // {
   //   title: "Gratuity",
@@ -181,37 +191,37 @@ export const featureData = [
     title: "Corporate Accounts",
     desc: "Business clients can apply for a corporate account directly through your platform. Once approved, they get centralized billing, employee management, and a dedicated booking experience built for business travel.",
     src: Img10,
-    icon: Multiple,
+    icon: Business,
   },
   {
     title: "Admin Dashboard",
     desc: "Your entire operation lives in one place — bookings, drivers, payments, customers, and reports all managed from a single screen. No spreadsheets, no separate apps, no information falling through the cracks.",
     src: Img11,
-    icon: Multiple,
+    icon: Analytics,
   },
   {
     title: "Driver Portal",
     desc: "Every driver on your roster gets their own dedicated portal with their full trip schedule, passenger details, and real-time status updates. It installs like a native app on their phone — no App Store download required.",
     src: Img12,
-    icon: Multiple,
+    icon: Driver,
   },
   {
     title: "Customer Portal",
     desc: "Every rider gets access to a personal portal where they can view upcoming and past trips, download receipts, and save frequently used addresses. It's branded entirely to your company — your clients never see our name.",
     src: Img13,
-    icon: Multiple,
+    icon: Customer,
   },
   {
     title: "Push Notifications",
     desc: "Drivers receive instant push notifications for new assignments, booking updates, and cancellations. No more phone calls to relay trip details — the platform handles it automatically.",
     src: Img13,
-    icon: Multiple,
+    icon: Notifications,
   },
   {
     title: "Smart Alerts",
     desc: "The dashboard home screen surfaces what needs your attention the moment you log in. Outstanding balances, unassigned drivers, stuck bookings, and recent tips are all flagged automatically so nothing gets missed.",
     src: Img13,
-    icon: Multiple,
+    icon: Alert,
   },
   // {
   //   title: "SEO",
@@ -221,7 +231,7 @@ export const featureData = [
     title: "Invoice Generation",
     desc: "Professional PDF invoices are generated automatically for every completed booking. Corporate clients can download invoices directly from their portal — no manual work required on your end.",
     src: Img13,
-    icon: Multiple,
+    icon: Invoice,
   },
 ] as const;
 
