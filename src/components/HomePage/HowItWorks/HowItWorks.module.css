@@ -4,214 +4,137 @@
 
 .content {
   padding: 10rem 3rem;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 5rem;
 }
 
-.leftContent {
+.top {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  align-self: flex-start;
+  align-items: flex-start;
   justify-content: flex-start;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 90px;
-  width: fit-content;
-  width: 100%;
-}
-
-.heading {
-  color: var(--tan);
+  gap: 2rem;
 }
 
 .copy {
+  width: 50%;
   color: var(--text);
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  margin-top: 7rem;
+}
+
+.card {
+  border: 1px solid var(--lightGray);
+  background-color: var(--lightGrayiii);
+  padding: 3rem;
+  padding-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6rem;
+  position: relative;
+}
+
+.card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: 0.03;
+  pointer-events: none;
+  background: url("/images/noise.gif");
+}
+
+.cardTop,
+.cardMiddle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.id {
+  display: block;
+}
+
+.week {
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.desc {
+  font-size: 1.6rem;
 }
 
 .imgContainer {
   position: relative;
-  width: 392px;
-  height: 200px;
-  margin-top: 5rem;
+  width: 100%;
+  height: 100%;
 }
 
 .img {
-  object-fit: contain;
+  object-fit: cover;
+  border-bottom: none;
 }
-
-.right {
-  position: relative;
-  padding: 3rem;
-  background-color: var(--lightGrayii);
-  margin-top: 20rem;
-}
-
-.mapDataBox {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--lightGray);
-  padding: 2rem;
-  padding-bottom: 0rem;
-}
-
-.card {
-  display: grid;
-  grid-template-columns: 2fr 4fr;
-  grid-gap: 5rem;
-  padding: 0rem 2rem;
-  padding-bottom: 0rem;
-  transition: all 0.3s ease-in;
-}
-
-.title {
-  font-size: 1.6rem;
-  font-family: var(--GeistMono);
-  text-transform: uppercase;
-  color: var(--black);
-}
-
-.desc {
-  font-size: 1.4rem;
-  color: var(--text);
-  border-left: 1px solid var(--lightGray);
-  padding-left: 4rem;
-  padding-bottom: 7rem;
-  position: relative;
-}
-
-.card:nth-last-child(1) .desc {
-  padding-bottom: 3rem;
-}
-
-.desc::before {
-  content: "";
-  position: absolute;
-  left: -5px;
-  top: 0;
-  width: 0.7rem;
-  height: 0.7rem;
-  background-color: var(--accent);
-  /* border-radius: 50%; */
-  border: 1px solid var(--black);
-}
-
-/* .content {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .leftContent {
-    align-items: center;
-    text-align: center;
-  }
-
-  .copy {
-    max-width: 550px;
-  } */
 
 @media screen and (max-width: 1268px) {
-  .content {
-    grid-template-columns: repeat(1, 1fr);
+  .bottom {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .leftContent {
-    align-items: center;
-    text-align: center;
+  .card {
+    gap: 3rem;
   }
 
-  .copy {
-    max-width: 550px;
-  }
-
-  .right {
-    margin-top: 0rem;
+  .imgContainer {
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 1068px) {
   .content {
-    grid-template-columns: 1fr;
-    gap: 3rem;
+    padding: 7rem 2rem;
   }
 
-  .leftContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .copy {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .content {
+    padding: 7rem 1rem;
   }
 
   .copy {
     width: 100%;
   }
-}
-
-@media screen and (max-width: 768px) {
-  .mapDataBox {
-    padding: 0rem;
-    border: none;
-  }
-  
-  .card {
+  .bottom {
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 2rem;
-  }
-  
-  .title {
-    position: relative;
-    background-color: var(--accent);
-    padding: 1rem;
-  }
-
-  .title::before {
-    content: "";
-    position: absolute;
-    left: -2.7rem;
-    top: 0;
-    width: 1rem;
-    height: 1rem;
-    background-color: var(--accent);
-    /* border-radius: 50%; */
-    border: 1px solid var(--lightGray);
-    display: none;
-  }
-
-  .desc {
-    padding-left: 0rem;
-    border-left: none;
-  }
-
-  .right {
-    padding: 0rem;
-    background-color: transparent;
-  }
-
-  .mapDataBox {
-    gap: 2rem;
   }
 
   .card {
-    border: 1px solid var(--lightGray);
-    padding: 2rem;
-  }
-
-  .desc::before {
-    display: none;
+    gap: 3rem;
   }
 
   .desc {
-    padding-bottom: 0rem;
+    font-size: 1.6rem;
   }
 
   .imgContainer {
-    width: 100%;
-    height: 200px;
-    margin-top: 1rem;
+    height: 250px;
   }
 
-  .card:nth-last-child(1) .desc {
-  padding-bottom: 0rem;
-}
+  .img {
+    padding: 0rem;
+  }
 }

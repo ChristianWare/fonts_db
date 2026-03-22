@@ -87,9 +87,10 @@ export default function OtherDashboards() {
                   <span className={styles.accent}>same clarity.</span>
                 </h2>
                 <p className={styles.copy}>
-                  Strativ adapts to any organization — whether you’re defining a
-                  go-to-market plan, aligning operations, or managing client
-                  strategy.
+                  Your platform serves everyone in the operation — drivers on
+                  the road, riders tracking their trip, and corporate clients
+                  managing company travel. Each gets their own dedicated space,
+                  all running under your brand.
                 </p>
               </div>
             </div>
