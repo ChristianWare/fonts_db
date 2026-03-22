@@ -35,14 +35,14 @@ export default function ContactSection() {
               <div className={styles.imgCaptionContainer}>
                 <Image
                   src={Img1}
-                  alt='Barry LaNier - Nier Transportation'
-                  title='Barry LaNier - Nier Transportation'
+                  alt='Barry La Nier - Nier Transportation'
+                  title='Barry La Nier - Nier Transportation'
                   className={styles.img}
                   width={56}
                   height={56}
                 />
                 <div className={styles.captionContainer}>
-                  <p className={styles.captionName}>Barry LaNier</p>
+                  <p className={styles.captionName}>Barry La Nier</p>
                   <p className={styles.captionTitle}>
                     Owner of Nier Transportation
                   </p>

@@ -35,6 +35,8 @@ const data3 = [
 ];
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className={styles.container}>
       <LayoutWrapper>
@@ -90,7 +92,9 @@ export default function Footer() {
           </div>
           <div className={styles.footerBottom}>
             <div className={styles.footerBottomLeft}>
-              <small className={styles.small}>© 2025 Fonts & Footers</small>
+              <small className={styles.small}>
+                © {currentYear} Fonts & Footers
+              </small>
             </div>
             <div className={styles.footerBottomRight}>
               <small className={styles.small}>
