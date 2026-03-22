@@ -15,7 +15,11 @@ export const register = async (values: RegisterSchemaType) => {
   const validated = RegisterSchema.safeParse(values);
   if (!validated.success) return { error: "Invalid fields" };
 
-  const { name, businessName, email, password } = validated.data;
+  const { name, businessName, email, password, website } = validated.data;
+
+  // Honeypot — bots fill hidden fields, humans don't
+  if (website)
+    return { success: "Account created! Please check your email to verify." };
 
   const existing = await getUserByEmail(email);
   if (existing) return { error: "Email already in use" };

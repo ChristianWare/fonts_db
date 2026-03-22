@@ -152,6 +152,15 @@ export default function RegisterPage() {
           ) : (
             <>
               <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                {/* Honeypot — hidden from real users, bots fill it */}
+                <input
+                  type='text'
+                  {...register("website")}
+                  autoComplete='off'
+                  tabIndex={-1}
+                  aria-hidden='true'
+                  style={{ display: "none" }}
+                />
                 <div className={styles.row}>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor='name'>
