@@ -929,6 +929,127 @@
   gap: 1rem;
 }
 
+/* ── Step skip override ── */
+.skipLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+  cursor: pointer;
+}
+
+.skipCheckbox {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: var(--black);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.skipText {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+/* ── Billing tab ── */
+.invoiceList {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoiceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.invoiceRow:last-child {
+  border-bottom: none;
+}
+
+.invoiceLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.invoiceNumber {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+}
+
+.invoiceMeta {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+}
+
+.invoiceRight {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.invoiceAmount {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: var(--black);
+}
+
+.invoiceStatus {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem;
+}
+
+.invoiceStatusPaid {
+  color: #16a34a;
+  border: 1px solid #16a34a;
+}
+
+.invoiceStatusOpen {
+  color: #ca8a04;
+  border: 1px solid #ca8a04;
+}
+
+.invoiceStatusOther {
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+}
+
+.invoiceDownload {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--lightGray);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.invoiceDownload:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
   .header {

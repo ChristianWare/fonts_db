@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import styles from "./ClientDetailClient.module.css";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -9,11 +10,11 @@ import { advanceClientStage } from "@/actions/admin/advanceClientStage";
 import { getCloudinarySignature } from "@/actions/client/getCloudinarySignature";
 import { uploadDocumentToClient } from "@/actions/admin/uploadDocumentToClient";
 import { questionnaireSections } from "@/lib/questionnaire.config";
-import styles from "./ClientDetailClient.module.css";
 import DesignOptionsTab from "./DesignOptionsTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
 import SiteUrlsEditor from "./SiteUrlsEditor";
 import { deleteClient } from "@/actions/admin/deleteClient";
+import { toggleStepOverride } from "@/actions/admin/toggleStepOverride";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -61,7 +62,7 @@ export default function ClientDetailClient({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [activeTab, setActiveTab] = useState<
-    "overview" | "documents" | "questionnaire" | "assets" | "design"
+    "overview" | "documents" | "questionnaire" | "assets" | "design" | "billing"
   >("overview");
 
   const [isLive, setIsLive] = useState(client.onboardingStage === "SITE_LIVE");
@@ -75,6 +76,11 @@ export default function ClientDetailClient({
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const [questionnaireSkipped, setQuestionnaireSkipped] = useState(
+    client.questionnaireSkipped,
+  );
+  const [assetsSkipped, setAssetsSkipped] = useState(client.assetsSkipped);
 
   const handleToggleLive = async () => {
     setTogglingLive(true);
@@ -181,7 +187,7 @@ export default function ClientDetailClient({
     {
       key: "questionnaire",
       label: "Intake Questionnaire",
-      completed: questionnaireSubmitted,
+      completed: questionnaireSubmitted || questionnaireSkipped,
       completedAt: client.questionnaire?.submittedAt
         ? new Date(client.questionnaire.submittedAt)
         : null,
@@ -189,7 +195,7 @@ export default function ClientDetailClient({
     {
       key: "assets",
       label: "Brand Assets",
-      completed: !!firstAsset,
+      completed: !!firstAsset || assetsSkipped,
       completedAt: firstAsset ? new Date(firstAsset.createdAt) : null,
     },
     {
@@ -212,7 +218,6 @@ export default function ClientDetailClient({
   );
 
   // ── Client's design selection ──────────────────────────────────────────────
-  // Design options are brand assets with selected/clientNotes fields
   const selectedDesign =
     (client.brandAssets as any[]).find((a) => a.selected === true) ?? null;
 
@@ -250,6 +255,7 @@ export default function ClientDetailClient({
             "questionnaire",
             "assets",
             "design",
+            "billing",
           ] as const
         ).map((tab) => (
           <button
@@ -258,7 +264,6 @@ export default function ClientDetailClient({
             onClick={() => setActiveTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            {/* Dot indicator on Design tab when client has made a selection */}
             {tab === "design" && selectedDesign && (
               <span className={styles.tabDot} />
             )}
@@ -324,6 +329,51 @@ export default function ClientDetailClient({
                           <span className={styles.stageDate}>Complete</span>
                         )}
                       </div>
+                      {step.key === "questionnaire" &&
+                        !questionnaireSubmitted && (
+                          <label className={styles.skipLabel}>
+                            <input
+                              type='checkbox'
+                              className={styles.skipCheckbox}
+                              checked={questionnaireSkipped}
+                              onChange={async (e) => {
+                                const val = e.target.checked;
+                                setQuestionnaireSkipped(val);
+                                await toggleStepOverride(
+                                  client.id,
+                                  "questionnaireSkipped",
+                                  val,
+                                );
+                                router.refresh();
+                              }}
+                            />
+                            <span className={styles.skipText}>
+                              Mark as complete (skip)
+                            </span>
+                          </label>
+                        )}
+                      {step.key === "assets" && !firstAsset && (
+                        <label className={styles.skipLabel}>
+                          <input
+                            type='checkbox'
+                            className={styles.skipCheckbox}
+                            checked={assetsSkipped}
+                            onChange={async (e) => {
+                              const val = e.target.checked;
+                              setAssetsSkipped(val);
+                              await toggleStepOverride(
+                                client.id,
+                                "assetsSkipped",
+                                val,
+                              );
+                              router.refresh();
+                            }}
+                          />
+                          <span className={styles.skipText}>
+                            Mark as complete (skip)
+                          </span>
+                        </label>
+                      )}
                     </div>
                   </div>
                 );
@@ -412,6 +462,7 @@ export default function ClientDetailClient({
               </div>
             </div>
           </div>
+
           <div className={styles.card}>
             <BillingRatesEditor
               clientProfileId={client.id}
@@ -420,6 +471,7 @@ export default function ClientDetailClient({
               setupFeePaid={client.setupFeePaid}
             />
           </div>
+
           <div className={styles.card}>
             <SiteUrlsEditor
               clientProfileId={client.id}
@@ -427,6 +479,7 @@ export default function ClientDetailClient({
               liveUrl={client.liveUrl ?? null}
             />
           </div>
+
           <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
             <h3
               className={styles.cardHeading}
@@ -724,7 +777,6 @@ export default function ClientDetailClient({
       {/* ── DESIGN TAB ───────────────────────────────────────────────────── */}
       {activeTab === "design" && (
         <div className={styles.tabContent}>
-          {/* Client's selection — shown when they've picked something */}
           {selectedDesign ? (
             <div className={styles.card}>
               <div className={styles.selectionHeader}>
@@ -741,7 +793,6 @@ export default function ClientDetailClient({
               </div>
 
               <div className={styles.selectionBody}>
-                {/* Thumbnail */}
                 <div className={styles.selectionThumb}>
                   <img
                     src={selectedDesign.fileUrl}
@@ -758,7 +809,6 @@ export default function ClientDetailClient({
                   </a>
                 </div>
 
-                {/* Meta */}
                 <div className={styles.selectionMeta}>
                   {selectedDesign.templateName && (
                     <div className={styles.infoRow}>
@@ -811,8 +861,119 @@ export default function ClientDetailClient({
             </div>
           )}
 
-          {/* Admin's design options uploader */}
           <DesignOptionsTab clientId={client.id} assets={client.brandAssets} />
+        </div>
+      )}
+
+      {/* ── BILLING TAB ──────────────────────────────────────────────────── */}
+      {activeTab === "billing" && (
+        <div className={styles.tabContent}>
+          {/* Subscription status */}
+          <div className={styles.card}>
+            <h3 className={styles.cardHeading}>Subscription</h3>
+            <div className={styles.infoGrid}>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Status</span>
+                <span className={styles.infoValue}>
+                  {client.subscription?.status ?? "No subscription"}
+                </span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Monthly rate</span>
+                <span className={styles.infoValue}>
+                  {client.monthlyAmountCents > 0
+                    ? `$${(client.monthlyAmountCents / 100).toLocaleString("en-US", { minimumFractionDigits: 0 })}/mo`
+                    : "—"}
+                </span>
+              </div>
+              {client.subscription?.currentPeriodEnd && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>Next billing date</span>
+                  <span className={styles.infoValue}>
+                    {format(
+                      new Date(client.subscription.currentPeriodEnd),
+                      "MMMM d, yyyy",
+                    )}
+                  </span>
+                </div>
+              )}
+              {client.subscription?.billingAnchorDate && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>Billing day</span>
+                  <span className={styles.infoValue}>
+                    Day {client.subscription.billingAnchorDate} of each month
+                  </span>
+                </div>
+              )}
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Setup fee</span>
+                <span className={styles.infoValue}>
+                  {client.setupFeePaid ? "Paid" : "Not yet paid"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Invoice history */}
+          <div className={styles.card}>
+            <h3 className={styles.cardHeading}>
+              Invoice History ({client.invoices.length})
+            </h3>
+            {client.invoices.length === 0 ? (
+              <p className={styles.emptyText}>No invoices yet.</p>
+            ) : (
+              <div className={styles.invoiceList}>
+                {client.invoices.map((invoice) => (
+                  <div key={invoice.id} className={styles.invoiceRow}>
+                    <div className={styles.invoiceLeft}>
+                      <span className={styles.invoiceNumber}>
+                        {invoice.invoiceNumber}
+                      </span>
+                      <span className={styles.invoiceMeta}>
+                        {invoice.description ??
+                          (invoice.periodStart && invoice.periodEnd
+                            ? `${format(new Date(invoice.periodStart), "MMM d")} – ${format(new Date(invoice.periodEnd), "MMM d, yyyy")}`
+                            : "Subscription")}
+                      </span>
+                    </div>
+                    <div className={styles.invoiceRight}>
+                      <span className={styles.invoiceAmount}>
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(invoice.amountCents / 100)}
+                      </span>
+                      <span
+                        className={`${styles.invoiceStatus} ${
+                          invoice.status === "PAID"
+                            ? styles.invoiceStatusPaid
+                            : invoice.status === "OPEN"
+                              ? styles.invoiceStatusOpen
+                              : styles.invoiceStatusOther
+                        }`}
+                      >
+                        {invoice.status === "PAID"
+                          ? "Paid"
+                          : invoice.status === "OPEN"
+                            ? "Due"
+                            : invoice.status}
+                      </span>
+                      {invoice.pdfUrl && (
+                        <a
+                          href={invoice.pdfUrl}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className={styles.invoiceDownload}
+                        >
+                          ↓ PDF
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

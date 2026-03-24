@@ -230,6 +230,9 @@ model ClientProfile {
   previewUrl String?
   liveUrl    String?
 
+  questionnaireSkipped Boolean @default(false)
+  assetsSkipped        Boolean @default(false)
+
   @@index([onboardingStage])
 }
 
