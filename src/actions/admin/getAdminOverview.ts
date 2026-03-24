@@ -7,31 +7,36 @@ export const getAdminOverview = async () => {
   const session = await auth();
   if (!session?.user?.roles?.includes("ADMIN")) return null;
 
-  const [clients, subscriptions, openTickets, pendingRequests] =
-    await Promise.all([
-      db.clientProfile.findMany({
-        include: {
-          user: { select: { name: true, email: true } },
-          subscription: true,
-        },
-        orderBy: { createdAt: "desc" },
-      }),
-      db.subscription.findMany({
-        where: { status: "ACTIVE" },
-      }),
-      db.supportTicket.count({ where: { status: "OPEN" } }),
-      db.changeRequest.count({ where: { status: "PENDING" } }),
-    ]);
+  const [clients, openTickets, pendingRequests] = await Promise.all([
+    db.clientProfile.findMany({
+      include: {
+        user: { select: { name: true, email: true } },
+        subscription: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    db.supportTicket.count({ where: { status: "OPEN" } }),
+    db.changeRequest.count({ where: { status: "PENDING" } }),
+  ]);
 
-  const mrr = subscriptions.reduce(
-    (sum, s) => sum + (s.planAmountCents ?? 0),
+  // Active clients are those with an ACTIVE subscription
+  const activeClients = clients.filter(
+    (c) => c.subscription?.status === "ACTIVE",
+  );
+
+  // MRR uses ClientProfile.monthlyAmountCents — the admin-editable per-client
+  // rate — rather than Subscription.planAmountCents (the Stripe plan default).
+  // Clients with monthlyAmountCents = 0 (e.g. internal/test accounts) are
+  // correctly excluded from revenue.
+  const mrr = activeClients.reduce(
+    (sum, c) => sum + (c.monthlyAmountCents ?? 0),
     0,
   );
 
   return {
     clients,
     mrr,
-    activeCount: subscriptions.length,
+    activeCount: activeClients.length,
     openTickets,
     pendingRequests,
   };
