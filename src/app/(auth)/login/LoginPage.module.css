@@ -28,7 +28,9 @@
   color: var(--white);
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -54,7 +56,9 @@
   letter-spacing: -3px;
   text-transform: uppercase;
   color: var(--white);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -95,7 +99,9 @@
   text-transform: uppercase;
   color: var(--black);
   line-height: 0.9em;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -207,7 +213,9 @@
   border: none;
 }
 
-.submitBtn:hover { opacity: 0.85; }
+.submitBtn:hover {
+  opacity: 0.85;
+}
 
 .submitBtn:disabled {
   opacity: 0.5;
@@ -232,6 +240,29 @@
   color: var(--black);
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.eyeBtn:hover {
+  color: var(--black);
 }
 
 /* ── Responsive ── */

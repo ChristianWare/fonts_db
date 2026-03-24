@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import styles from "./LoginPage.module.css";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,13 +10,15 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { LoginSchema, LoginSchemaType } from "@/schemas/LoginSchema";
 import { login } from "@/actions/auth/login";
-import styles from "./LoginPage.module.css";
+import EyeOn from "@/components/shared/icons/EyeOn/EyeOn";
+import EyeOff from "@/components/shared/icons/EyeOff/EyeOff";
 
 export default function LoginPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -123,14 +126,24 @@ export default function LoginPage() {
                   Forgot password?
                 </Link>
               </div>
-              <input
-                id='password'
-                type='password'
-                className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
-                placeholder='••••••••'
-                autoComplete='current-password'
-                {...register("password")}
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  id='password'
+                  type={showPassword ? "text" : "password"}
+                  className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+                  placeholder='••••••••'
+                  autoComplete='current-password'
+                  {...register("password")}
+                />
+                <button
+                  type='button'
+                  className={styles.eyeBtn}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff /> : <EyeOn />}
+                </button>
+              </div>
               {errors.password && (
                 <span className={styles.fieldError}>
                   {errors.password.message}
