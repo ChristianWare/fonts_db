@@ -111,9 +111,7 @@ export async function POST(req: NextRequest) {
         if (existing) break;
 
         // Generate invoice number
-        const count = await db.invoice.count({
-          where: { clientProfileId: profile.id },
-        });
+        const count = await db.invoice.count();
         const invoiceNumber = `INV-${new Date().getFullYear()}-${String(count + 1).padStart(4, "0")}`;
 
         await db.invoice.create({
