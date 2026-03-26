@@ -203,9 +203,7 @@
   letter-spacing: 0.06em;
   color: var(--text);
   cursor: pointer;
-  transition:
-    background-color 0.12s,
-    color 0.12s;
+  transition: background-color 0.12s, color 0.12s;
   white-space: nowrap;
 }
 
@@ -238,7 +236,7 @@
   opacity: 0.5;
 }
 
-/* ── Tree view container ── */
+/* ── Tree view container (inline) ── */
 .treeViewContainer {
   display: flex;
   flex-direction: column;
@@ -248,22 +246,77 @@
   overflow: hidden;
 }
 
-/* ── Scroll wrapper — holds the tree + left/right buttons ── */
+/* ── Toolbar: legend + fullscreen button ── */
+.treeToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* ── Fullscreen button ── */
+.fullscreenBtn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border: 1px solid var(--lightGray);
+  background: none;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fullscreenBtn:hover {
+  background-color: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+/* ── Fullscreen overlay ── */
+.fullscreenOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreenInner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 4rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Scroll wrapper — holds tree + left/right buttons ── */
 .treeScrollWrapper {
   display: flex;
   align-items: center;
   gap: 0;
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 /* ── Hidden scrollbar scroll area ── */
 .treeViewScroll {
   flex: 1;
   overflow-x: auto;
-  overflow-y: hidden;
-  /* Hide scrollbar across all browsers */
+  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  height: 100%;
 }
 
 .treeViewScroll::-webkit-scrollbar {
@@ -293,11 +346,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background-color 0.15s,
-    color 0.15s,
-    opacity 0.2s;
+  transition: background-color 0.15s, color 0.15s, opacity 0.2s;
   z-index: 2;
+  align-self: center;
 }
 
 .treeNavBtn:hover {
@@ -311,11 +362,44 @@
 
 .treeNavBtnRight {
   margin-left: 1rem;
+  position: relative;
 }
 
 .treeNavBtnHidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* ── Pulse animation on right nav button ── */
+.treeNavBtnRight::before,
+.treeNavBtnRight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+  animation: rectPulse 2s ease-in-out infinite;
+}
+
+.treeNavBtnRight::after {
+  border-width: 3px;
+  animation-delay: 0.6s;
+}
+
+@keyframes rectPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.treeNavBtnRightScrolled::before,
+.treeNavBtnRightScrolled::after {
+  display: none;
 }
 
 /* ── Tree structure ── */
@@ -335,9 +419,7 @@
   cursor: pointer;
   min-width: 140px;
   text-align: center;
-  transition:
-    border-color 0.15s,
-    background-color 0.15s;
+  transition: border-color 0.15s, background-color 0.15s;
 }
 
 .treeBox:hover {
@@ -498,6 +580,7 @@
   opacity: 0.5;
   padding: 1rem 0;
   border-top: 1px solid var(--lightGray);
+  flex-shrink: 0;
 }
 
 .treeEmpty {
@@ -833,9 +916,7 @@
   letter-spacing: 0.06em;
   color: var(--text);
   cursor: pointer;
-  transition:
-    border-color 0.15s,
-    color 0.15s;
+  transition: border-color 0.15s, color 0.15s;
   white-space: nowrap;
 }
 
@@ -886,43 +967,17 @@
     padding: 2rem;
   }
 
+  .fullscreenInner {
+    padding: 2rem;
+  }
+
   .treeNavBtn {
     width: 3rem;
     height: 3rem;
   }
-}
 
-.treeNavBtnRight {
-  position: relative;
-}
-
-.treeNavBtnRight::before,
-.treeNavBtnRight::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 2px solid var(--accent);
-  pointer-events: none;
-  animation: rectPulse 2s ease-in-out infinite;
-}
-
-.treeNavBtnRight::after {
-  border-width: 3px;
-  animation-delay: 0.6s;
-}
-
-@keyframes rectPulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
+  .treeToolbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  100% {
-    transform: scale(1.9);
-    opacity: 0;
-  }
-}
-
-.treeNavBtnRightScrolled::before,
-.treeNavBtnRightScrolled::after {
-  display: none;
 }

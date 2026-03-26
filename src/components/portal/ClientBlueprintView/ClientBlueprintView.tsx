@@ -163,10 +163,14 @@ function TreeView({
   pages,
   activePageId,
   onSelect,
+  fullscreen,
+  onToggleFullscreen,
 }: {
   pages: Page[];
   activePageId: string;
   onSelect: (id: string) => void;
+  fullscreen: boolean;
+  onToggleFullscreen: () => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -190,7 +194,29 @@ function TreeView({
       el.removeEventListener("scroll", updateScrollState);
       ro.disconnect();
     };
-  }, [updateScrollState, pages]);
+  }, [updateScrollState, pages, fullscreen]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!fullscreen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onToggleFullscreen();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [fullscreen, onToggleFullscreen]);
+
+  // Lock body scroll when fullscreen
+  useEffect(() => {
+    if (fullscreen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [fullscreen]);
 
   function scrollLeft() {
     scrollRef.current?.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
@@ -202,19 +228,58 @@ function TreeView({
 
   const topLevel = sortByPosition(pages.filter((p) => !p.parentId));
 
-  if (topLevel.length === 0) {
-    return (
-      <div className={styles.treeEmpty}>No pages in this blueprint yet.</div>
-    );
-  }
+  const content = (
+    <>
+      <div className={styles.treeToolbar}>
+        <TreeLegend />
+        <button
+          className={styles.fullscreenBtn}
+          onClick={onToggleFullscreen}
+          aria-label={fullscreen ? "Exit full screen" : "Full screen"}
+        >
+          {fullscreen ? (
+            <>
+              <svg
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <polyline points='4 14 10 14 10 20' />
+                <polyline points='20 10 14 10 14 4' />
+                <line x1='10' y1='14' x2='3' y2='21' />
+                <line x1='21' y1='3' x2='14' y2='10' />
+              </svg>
+              Exit Full Screen
+            </>
+          ) : (
+            <>
+              <svg
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              >
+                <polyline points='15 3 21 3 21 9' />
+                <polyline points='9 21 3 21 3 15' />
+                <line x1='21' y1='3' x2='14' y2='10' />
+                <line x1='3' y1='21' x2='10' y2='14' />
+              </svg>
+              Full Screen
+            </>
+          )}
+        </button>
+      </div>
 
-  return (
-    <div className={styles.treeViewContainer}>
-      <TreeLegend />
-
-      {/* Scroll area + nav buttons */}
       <div className={styles.treeScrollWrapper}>
-        {/* Left button */}
         <button
           className={`${styles.treeNavBtn} ${styles.treeNavBtnLeft} ${!canScrollLeft ? styles.treeNavBtnHidden : ""}`}
           onClick={scrollLeft}
@@ -224,24 +289,29 @@ function TreeView({
           ←
         </button>
 
-        {/* Tree content */}
         <div className={styles.treeViewScroll} ref={scrollRef}>
           <div className={styles.treeTopRow}>
-            {topLevel.map((page) => (
-              <TreePageNode
-                key={page.id}
-                page={page}
-                allPages={pages}
-                activePageId={activePageId}
-                onSelect={onSelect}
-              />
-            ))}
+            {topLevel.length === 0 ? (
+              <div className={styles.treeEmpty}>
+                No pages in this blueprint yet.
+              </div>
+            ) : (
+              topLevel.map((page) => (
+                <TreePageNode
+                  key={page.id}
+                  page={page}
+                  allPages={pages}
+                  activePageId={activePageId}
+                  onSelect={onSelect}
+                />
+              ))
+            )}
           </div>
         </div>
 
-        {/* Right button */}
         <button
-          className={`${styles.treeNavBtn} ${styles.treeNavBtnRight} ${!canScrollRight ? styles.treeNavBtnHidden : ""} ${canScrollLeft ? styles.treeNavBtnRightScrolled : ""}`}          onClick={scrollRight}
+          className={`${styles.treeNavBtn} ${styles.treeNavBtnRight} ${!canScrollRight ? styles.treeNavBtnHidden : ""} ${canScrollLeft ? styles.treeNavBtnRightScrolled : ""}`}
+          onClick={scrollRight}
           aria-label='Scroll right'
           tabIndex={canScrollRight ? 0 : -1}
         >
@@ -249,9 +319,23 @@ function TreeView({
         </button>
       </div>
 
-    
-    </div>
+      <div className={styles.treeNote}>
+        {fullscreen
+          ? "Click any page to select it, then close full screen to approve sections. Press Esc to exit."
+          : "Click any page to select it, then switch to Review to approve sections."}
+      </div>
+    </>
   );
+
+  if (fullscreen) {
+    return (
+      <div className={styles.fullscreenOverlay}>
+        <div className={styles.fullscreenInner}>{content}</div>
+      </div>
+    );
+  }
+
+  return <div className={styles.treeViewContainer}>{content}</div>;
 }
 
 // ── Main component ─────────────────────────────────────────────────────────
@@ -264,6 +348,7 @@ export default function ClientBlueprintView({ initialPages }: Props) {
     initialPages[0]?.id ?? "",
   );
   const [viewMode, setViewMode] = useState<ViewMode>("review");
+  const [treeFullscreen, setTreeFullscreen] = useState(false);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [approvingSection, setApprovingSection] = useState<string | null>(null);
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>(
@@ -333,6 +418,10 @@ export default function ClientBlueprintView({ initialPages }: Props) {
 
   function handleSelectPage(id: string) {
     setActivePageId(id);
+    // If in fullscreen, stay in tree but close fullscreen and switch to review
+    if (treeFullscreen) {
+      setTreeFullscreen(false);
+    }
     setViewMode("review");
   }
 
@@ -469,6 +558,8 @@ export default function ClientBlueprintView({ initialPages }: Props) {
               pages={pages}
               activePageId={activePageId}
               onSelect={handleSelectPage}
+              fullscreen={treeFullscreen}
+              onToggleFullscreen={() => setTreeFullscreen((v) => !v)}
             />
           )}
 

@@ -77,15 +77,6 @@
   cursor: default;
 }
 
-.pageItem:hover {
-  background-color: var(--lightlightGrayi);
-}
-
-.pageItemActive {
-  background-color: var(--lightlightGrayi);
-  border-color: var(--lightGray);
-}
-
 .pageItemActive,
 .pageItem:hover {
   background-color: var(--lightGrayiii);
@@ -380,12 +371,65 @@
   opacity: 0.5;
 }
 
-/* ── Tree view container ── */
+/* ── Tree view container (inline) ── */
 .treeViewContainer {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Toolbar: legend + fullscreen button ── */
+.treeToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* ── Fullscreen button ── */
+.fullscreenBtn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border: 1px solid var(--lightGray);
+  background: none;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fullscreenBtn:hover {
+  background-color: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+/* ── Fullscreen overlay ── */
+.fullscreenOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreenInner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 4rem;
   flex: 1;
   overflow: hidden;
 }
@@ -396,15 +440,18 @@
   align-items: center;
   gap: 0;
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 /* ── Hidden scrollbar scroll area ── */
 .treeViewScroll {
   flex: 1;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  height: 100%;
 }
 
 .treeViewScroll::-webkit-scrollbar {
@@ -436,6 +483,7 @@
   justify-content: center;
   transition: background-color 0.15s, color 0.15s, opacity 0.2s;
   z-index: 2;
+  align-self: center;
 }
 
 .treeNavBtn:hover {
@@ -484,7 +532,6 @@
   }
 }
 
-/* Stop pulsing once user has scrolled */
 .treeNavBtnRightScrolled::before,
 .treeNavBtnRightScrolled::after {
   display: none;
@@ -668,6 +715,7 @@
   opacity: 0.5;
   padding: 1rem 0;
   border-top: 1px solid var(--lightGray);
+  flex-shrink: 0;
 }
 
 .treeEmpty {
@@ -1194,9 +1242,18 @@
     padding: 2rem;
   }
 
+  .fullscreenInner {
+    padding: 2rem;
+  }
+
   .treeNavBtn {
     width: 3rem;
     height: 3rem;
+  }
+
+  .treeToolbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .modalFooter {
