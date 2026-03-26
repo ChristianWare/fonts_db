@@ -261,7 +261,7 @@ export default async function DashboardPage() {
         <div className={styles.trackerSection}>
           <div className={styles.trackerSectionHeader}>
             <div className={styles.trackerSectionHeadingBlock}>
-              <span className={styles.trackerSectionNumber}>01</span>
+              <span className={styles.trackerSectionNumber}>01. </span>
               <h2 className={styles.trackerSectionHeading}>
                 What we need from you
               </h2>
@@ -359,7 +359,7 @@ export default async function DashboardPage() {
         <div className={styles.trackerSection}>
           <div className={styles.trackerSectionHeader}>
             <div className={styles.trackerSectionHeadingBlock}>
-              <span className={styles.trackerSectionNumber}>02</span>
+              <span className={styles.trackerSectionNumber}>02. </span>
               <h2 className={styles.trackerSectionHeading}>
                 What you will get from us
               </h2>

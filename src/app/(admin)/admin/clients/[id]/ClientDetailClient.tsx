@@ -145,7 +145,7 @@ export default function ClientDetailClient({
     setUploadingDoc(false);
   };
 
-  // ── Progress tracker ───────────────────────────────────────────────────────
+  // ── Derived state ─────────────────────────────────────────────────────────
   const serviceAgreementDoc = client.documents.find(
     (d) => d.type === "SERVICE_AGREEMENT" && d.status === "SIGNED",
   );
@@ -162,17 +162,36 @@ export default function ClientDetailClient({
   const designReviewed = ["DESIGN_REVIEW", "SITE_LIVE"].includes(
     client.onboardingStage,
   );
+  const buildingStarted = designReviewed;
+  const hasPreviewUrl = !!client.previewUrl;
+  const hasLiveUrl = !!client.liveUrl;
 
-  const steps = [
+  // ── Section 01 — What we need from the client ─────────────────────────────
+  type ClientStep = {
+    key: string;
+    label: string;
+    desc: string;
+    completed: boolean;
+    completedAt: Date | null;
+    skippable?: boolean;
+    skipped?: boolean;
+    onSkip?: (val: boolean) => Promise<void>;
+  };
+
+  const clientSteps: ClientStep[] = [
     {
       key: "account",
       label: "Create Account",
+      desc: "Account created and verified.",
       completed: true,
       completedAt: new Date(client.createdAt),
     },
     {
       key: "agreement",
       label: "Service Agreement",
+      desc: serviceAgreementDoc
+        ? "Client has signed the service agreement."
+        : "Waiting on client signature.",
       completed: !!serviceAgreementDoc,
       completedAt: serviceAgreementDoc?.signedAt
         ? new Date(serviceAgreementDoc.signedAt)
@@ -180,41 +199,135 @@ export default function ClientDetailClient({
     },
     {
       key: "billing",
-      label: "Billing Subscription",
+      label: "Billing Enrolled",
+      desc: billingActive
+        ? "Subscription active. Setup fee paid."
+        : "Client has not yet enrolled in billing.",
       completed: billingActive,
-      completedAt: null,
+      completedAt:
+        billingActive && (client as any).subscription?.currentPeriodStart
+          ? new Date((client as any).subscription.currentPeriodStart)
+          : null,
     },
     {
       key: "questionnaire",
       label: "Intake Questionnaire",
+      desc: questionnaireSubmitted
+        ? "Questionnaire submitted."
+        : questionnaireSkipped
+          ? "Marked complete manually."
+          : "Waiting on client to submit.",
       completed: questionnaireSubmitted || questionnaireSkipped,
       completedAt: client.questionnaire?.submittedAt
         ? new Date(client.questionnaire.submittedAt)
         : null,
+      skippable: !questionnaireSubmitted,
+      skipped: questionnaireSkipped,
+      onSkip: async (val: boolean) => {
+        setQuestionnaireSkipped(val);
+        await toggleStepOverride(client.id, "questionnaireSkipped", val);
+        router.refresh();
+      },
     },
     {
       key: "assets",
       label: "Brand Assets",
+      desc: firstAsset
+        ? `${client.brandAssets.filter((a) => a.label !== "DESIGN_OPTION").length} file(s) uploaded.`
+        : assetsSkipped
+          ? "Marked complete manually."
+          : "Waiting on client to upload files.",
       completed: !!firstAsset || assetsSkipped,
       completedAt: firstAsset ? new Date(firstAsset.createdAt) : null,
+      skippable: !firstAsset,
+      skipped: assetsSkipped,
+      onSkip: async (val: boolean) => {
+        setAssetsSkipped(val);
+        await toggleStepOverride(client.id, "assetsSkipped", val);
+        router.refresh();
+      },
     },
     {
       key: "design",
-      label: "Design Review",
+      label: "Design Selection",
+      desc: designReviewed
+        ? "Client has approved their design direction."
+        : "Waiting on client design approval.",
       completed: designReviewed,
-      completedAt: null,
-    },
-    {
-      key: "live",
-      label: "Site Live",
-      completed: isLive,
       completedAt: null,
     },
   ];
 
-  const completedCount = steps.filter((s) => s.completed).length;
-  const sequentiallyComplete = steps.map((_s, i) =>
-    steps.slice(0, i + 1).every((s) => s.completed),
+  // ── Section 02 — What we deliver ──────────────────────────────────────────
+  type DeliveryStep = {
+    key: string;
+    label: string;
+    desc: string;
+    completed: boolean;
+    active: boolean;
+    action?: React.ReactNode;
+  };
+
+  const allClientDone = clientSteps.every((s) => s.completed);
+
+  const deliverySteps: DeliveryStep[] = [
+    {
+      key: "blueprint",
+      label: "Website Blueprint",
+      desc: questionnaireSubmitted
+        ? "Questionnaire received. Publish the sitemap and copy plan to the client portal."
+        : "Available once client submits their questionnaire.",
+      completed: questionnaireSubmitted && hasPreviewUrl,
+      // TODO: key off a real blueprintPublishedAt field once added to schema
+      active: questionnaireSubmitted,
+    },
+    {
+      key: "preview",
+      label: "Preview Site Link",
+      desc: hasPreviewUrl
+        ? `Preview URL is live: ${client.previewUrl}`
+        : buildingStarted
+          ? "Set the preview URL so the client can track progress."
+          : "Set once build has started.",
+      completed: hasPreviewUrl,
+      active: buildingStarted,
+    },
+    {
+      key: "building",
+      label: "Platform Build",
+      desc: isLive
+        ? "Build complete."
+        : buildingStarted
+          ? "Build is in progress — booking engine, admin dashboard, driver portal, integrations."
+          : "Begins after design is approved.",
+      completed: isLive,
+      active: buildingStarted,
+    },
+    {
+      key: "live",
+      label: "Go Live",
+      desc: isLive
+        ? hasLiveUrl
+          ? `Live at: ${client.liveUrl}`
+          : "Site is live. Add the live URL in the URLs section below."
+        : allClientDone
+          ? "All client steps complete. Toggle live once QA is done."
+          : "Waiting on client checklist to be complete.",
+      completed: isLive,
+      active: allClientDone,
+    },
+  ];
+
+  const completedClientCount = clientSteps.filter((s) => s.completed).length;
+  const completedDeliveryCount = deliverySteps.filter(
+    (s) => s.completed,
+  ).length;
+
+  const clientSequentiallyComplete = clientSteps.map((_, i) =>
+    clientSteps.slice(0, i + 1).every((s) => s.completed),
+  );
+  const deliverySequentiallyComplete = deliverySteps.map((_, i) =>
+    deliverySteps.slice(0, i + 1).every((s) => s.completed),
   );
 
   // ── Client's design selection ──────────────────────────────────────────────
@@ -225,7 +338,7 @@ export default function ClientDetailClient({
 
   return (
     <div className={styles.page}>
-      {/* Header */}
+      {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <button onClick={() => router.back()} className={styles.backBtn}>
@@ -246,7 +359,7 @@ export default function ClientDetailClient({
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* ── Tabs ── */}
       <div className={styles.tabs}>
         {(
           [
@@ -274,35 +387,146 @@ export default function ClientDetailClient({
       {/* ── OVERVIEW TAB ─────────────────────────────────────────────────── */}
       {activeTab === "overview" && (
         <div className={styles.tabContent}>
-          <div className={styles.card}>
-            <div className={styles.trackerHeader}>
-              <h3 className={styles.cardHeading}>Onboarding Progress</h3>
-              <span className={styles.trackerCount}>
-                {completedCount} of {steps.length} complete
-              </span>
+          {/* Split tracker */}
+          <div className={styles.trackerCard}>
+            {/* Section 01 — What we need from the client */}
+            <div className={styles.trackerSection}>
+              <div className={styles.trackerSectionHeader}>
+                <div className={styles.trackerSectionHeadingBlock}>
+                  <span className={styles.trackerSectionNumber}>01.</span>
+                  <h3 className={styles.trackerSectionHeading}>
+                    What we need from the client
+                  </h3>
+                </div>
+                <span className={styles.trackerCount}>
+                  {completedClientCount} of {clientSteps.length} complete
+                </span>
+              </div>
+
+              <div className={styles.stages}>
+                {clientSteps.map((step, index) => {
+                  const isCurrent =
+                    !step.completed &&
+                    clientSteps.slice(0, index).every((s) => s.completed);
+
+                  return (
+                    <div
+                      key={step.key}
+                      className={`${styles.stage} ${
+                        step.completed
+                          ? styles.stageCompleted
+                          : isCurrent
+                            ? styles.stageCurrent
+                            : styles.stageUpcoming
+                      }`}
+                    >
+                      {index < clientSteps.length - 1 && (
+                        <div
+                          className={`${styles.connector} ${
+                            clientSequentiallyComplete[index]
+                              ? styles.connectorCompleted
+                              : styles.connectorUpcoming
+                          }`}
+                        />
+                      )}
+                      <div className={styles.stageDot}>
+                        {step.completed ? (
+                          <svg
+                            width='12'
+                            height='12'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                            stroke='currentColor'
+                            strokeWidth='3'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          >
+                            <polyline points='20 6 9 17 4 12' />
+                          </svg>
+                        ) : isCurrent ? (
+                          <div className={styles.stageDotInner} />
+                        ) : null}
+                      </div>
+                      <div className={styles.stageText}>
+                        <div className={styles.stageLabelRow}>
+                          <span className={styles.stageLabel}>
+                            {step.label}
+                          </span>
+                          {step.completed && step.completedAt && (
+                            <span className={styles.stageDate}>
+                              {format(step.completedAt, "MMM d, yyyy")}
+                            </span>
+                          )}
+                          {step.completed && !step.completedAt && (
+                            <span className={styles.stageDate}>Complete</span>
+                          )}
+                          {!step.completed && isCurrent && (
+                            <span className={styles.stageDatePending}>
+                              Pending
+                            </span>
+                          )}
+                        </div>
+                        <span className={styles.stageDesc}>{step.desc}</span>
+                        {step.skippable && (
+                          <label className={styles.skipLabel}>
+                            <input
+                              type='checkbox'
+                              className={styles.skipCheckbox}
+                              checked={step.skipped ?? false}
+                              onChange={(e) => step.onSkip?.(e.target.checked)}
+                            />
+                            <span className={styles.skipText}>
+                              Mark as complete (override)
+                            </span>
+                          </label>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className={styles.stages}>
-              {steps.map((step, index) => {
-                const isCompleted = step.completed;
-                return (
+            {/* Divider */}
+            <div className={styles.trackerDivider} />
+
+            {/* Section 02 — What we deliver */}
+            <div className={styles.trackerSection}>
+              <div className={styles.trackerSectionHeader}>
+                <div className={styles.trackerSectionHeadingBlock}>
+                  <span className={styles.trackerSectionNumber}>02.</span>
+                  <h3 className={styles.trackerSectionHeading}>
+                    What we deliver
+                  </h3>
+                </div>
+                <span className={styles.trackerCount}>
+                  {completedDeliveryCount} of {deliverySteps.length} complete
+                </span>
+              </div>
+
+              <div className={styles.stages}>
+                {deliverySteps.map((step, index) => (
                   <div
                     key={step.key}
                     className={`${styles.stage} ${
-                      isCompleted ? styles.stageCompleted : styles.stageUpcoming
+                      step.completed
+                        ? styles.stageCompleted
+                        : step.active
+                          ? styles.stageCurrent
+                          : styles.stageUpcoming
                     }`}
                   >
-                    {index < steps.length - 1 && (
+                    {index < deliverySteps.length - 1 && (
                       <div
                         className={`${styles.connector} ${
-                          sequentiallyComplete[index]
+                          deliverySequentiallyComplete[index]
                             ? styles.connectorCompleted
                             : styles.connectorUpcoming
                         }`}
                       />
                     )}
                     <div className={styles.stageDot}>
-                      {isCompleted ? (
+                      {step.completed ? (
                         <svg
                           width='12'
                           height='12'
@@ -315,95 +539,54 @@ export default function ClientDetailClient({
                         >
                           <polyline points='20 6 9 17 4 12' />
                         </svg>
+                      ) : step.active ? (
+                        <div className={styles.stageDotInner} />
                       ) : null}
                     </div>
                     <div className={styles.stageText}>
                       <div className={styles.stageLabelRow}>
                         <span className={styles.stageLabel}>{step.label}</span>
-                        {isCompleted && step.completedAt && (
-                          <span className={styles.stageDate}>
-                            {format(step.completedAt, "MMM d, yyyy")}
-                          </span>
-                        )}
-                        {isCompleted && !step.completedAt && (
+                        {step.completed && (
                           <span className={styles.stageDate}>Complete</span>
                         )}
-                      </div>
-                      {step.key === "questionnaire" &&
-                        !questionnaireSubmitted && (
-                          <label className={styles.skipLabel}>
-                            <input
-                              type='checkbox'
-                              className={styles.skipCheckbox}
-                              checked={questionnaireSkipped}
-                              onChange={async (e) => {
-                                const val = e.target.checked;
-                                setQuestionnaireSkipped(val);
-                                await toggleStepOverride(
-                                  client.id,
-                                  "questionnaireSkipped",
-                                  val,
-                                );
-                                router.refresh();
-                              }}
-                            />
-                            <span className={styles.skipText}>
-                              Mark as complete (skip)
-                            </span>
-                          </label>
-                        )}
-                      {step.key === "assets" && !firstAsset && (
-                        <label className={styles.skipLabel}>
-                          <input
-                            type='checkbox'
-                            className={styles.skipCheckbox}
-                            checked={assetsSkipped}
-                            onChange={async (e) => {
-                              const val = e.target.checked;
-                              setAssetsSkipped(val);
-                              await toggleStepOverride(
-                                client.id,
-                                "assetsSkipped",
-                                val,
-                              );
-                              router.refresh();
-                            }}
-                          />
-                          <span className={styles.skipText}>
-                            Mark as complete (skip)
+                        {!step.completed && step.active && (
+                          <span className={styles.stageDateActive}>
+                            Action needed
                           </span>
-                        </label>
-                      )}
+                        )}
+                      </div>
+                      <span className={styles.stageDesc}>{step.desc}</span>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className={styles.toggleDivider} />
-
-            <div className={styles.liveToggleRow}>
-              <div className={styles.liveToggleLeft}>
-                <span className={styles.liveToggleLabel}>
-                  Mark site as live
-                </span>
-                <span className={styles.liveToggleDesc}>
-                  {isLive
-                    ? "Site is currently live. Toggle off to revert to Design Review."
-                    : "Toggle on once the client's site has been launched."}
-                </span>
+                ))}
               </div>
-              <button
-                className={`${styles.toggle} ${isLive ? styles.toggleOn : styles.toggleOff}`}
-                onClick={handleToggleLive}
-                disabled={togglingLive}
-                aria-label='Toggle site live'
-              >
-                <span className={styles.toggleThumb} />
-              </button>
+
+              {/* Live toggle lives inside delivery section — it's an admin action */}
+              <div className={styles.toggleDivider} />
+              <div className={styles.liveToggleRow}>
+                <div className={styles.liveToggleLeft}>
+                  <span className={styles.liveToggleLabel}>
+                    Mark site as live
+                  </span>
+                  <span className={styles.liveToggleDesc}>
+                    {isLive
+                      ? "Site is currently live. Toggle off to revert to Design Review."
+                      : "Toggle on once the client's site has been launched and QA'd."}
+                  </span>
+                </div>
+                <button
+                  className={`${styles.toggle} ${isLive ? styles.toggleOn : styles.toggleOff}`}
+                  onClick={handleToggleLive}
+                  disabled={togglingLive}
+                  aria-label='Toggle site live'
+                >
+                  <span className={styles.toggleThumb} />
+                </button>
+              </div>
             </div>
           </div>
 
+          {/* Stage history */}
           {client.stageLog.length > 0 && (
             <div className={styles.card}>
               <h3 className={styles.cardHeading}>Stage History</h3>
@@ -424,6 +607,7 @@ export default function ClientDetailClient({
             </div>
           )}
 
+          {/* Client info */}
           <div className={styles.card}>
             <h3 className={styles.cardHeading}>Client Information</h3>
             <div className={styles.infoGrid}>
@@ -463,6 +647,7 @@ export default function ClientDetailClient({
             </div>
           </div>
 
+          {/* Billing rates */}
           <div className={styles.card}>
             <BillingRatesEditor
               clientProfileId={client.id}
@@ -472,6 +657,7 @@ export default function ClientDetailClient({
             />
           </div>
 
+          {/* Site URLs */}
           <div className={styles.card}>
             <SiteUrlsEditor
               clientProfileId={client.id}
@@ -480,6 +666,7 @@ export default function ClientDetailClient({
             />
           </div>
 
+          {/* Danger zone */}
           <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
             <h3
               className={styles.cardHeading}
@@ -791,7 +978,6 @@ export default function ClientDetailClient({
                 </div>
                 <span className={styles.selectionBadge}>✓ Choice made</span>
               </div>
-
               <div className={styles.selectionBody}>
                 <div className={styles.selectionThumb}>
                   <img
@@ -808,7 +994,6 @@ export default function ClientDetailClient({
                     View full design ↗
                   </a>
                 </div>
-
                 <div className={styles.selectionMeta}>
                   {selectedDesign.templateName && (
                     <div className={styles.infoRow}>
@@ -860,7 +1045,6 @@ export default function ClientDetailClient({
               </p>
             </div>
           )}
-
           <DesignOptionsTab clientId={client.id} assets={client.brandAssets} />
         </div>
       )}
@@ -868,7 +1052,6 @@ export default function ClientDetailClient({
       {/* ── BILLING TAB ──────────────────────────────────────────────────── */}
       {activeTab === "billing" && (
         <div className={styles.tabContent}>
-          {/* Subscription status */}
           <div className={styles.card}>
             <h3 className={styles.cardHeading}>Subscription</h3>
             <div className={styles.infoGrid}>
@@ -882,7 +1065,12 @@ export default function ClientDetailClient({
                 <span className={styles.infoLabel}>Monthly rate</span>
                 <span className={styles.infoValue}>
                   {client.monthlyAmountCents > 0
-                    ? `$${(client.monthlyAmountCents / 100).toLocaleString("en-US", { minimumFractionDigits: 0 })}/mo`
+                    ? `$${(client.monthlyAmountCents / 100).toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 0,
+                        },
+                      )}/mo`
                     : "—"}
                 </span>
               </div>
@@ -914,7 +1102,6 @@ export default function ClientDetailClient({
             </div>
           </div>
 
-          {/* Invoice history */}
           <div className={styles.card}>
             <h3 className={styles.cardHeading}>
               Invoice History ({client.invoices.length})

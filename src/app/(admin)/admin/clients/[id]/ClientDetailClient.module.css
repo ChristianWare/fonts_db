@@ -174,54 +174,7 @@
   gap: 2.4rem;
 }
 
-.cardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.cardEyebrow {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--black);
-}
-
-.selectedBadge {
-  font-family: var(--GeistMono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--white);
-  background-color: #16a34a;
-  flex-shrink: 0;
-  padding: 0.4rem 1rem;
-  font-size: 1.4rem;
-}
-
-.cardCount {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text);
-}
-
-.selectionHeaderLeft {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 2rem;
-}
-
 .cardHeading {
-  /* font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--black); */
   background-color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -246,6 +199,310 @@
   font-size: 1.4rem;
   color: var(--text);
   text-transform: none;
+}
+
+/* ── Tracker card (outer wrapper) ── */
+.trackerCard {
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Tracker section (each half) ── */
+.trackerSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section header — black bg, accent text */
+.trackerSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3rem;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.trackerSectionHeadingBlock {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+
+
+.trackerSectionNumber, .trackerSectionHeading {
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.trackerCount {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  opacity: 0.4;
+}
+
+/* ── Divider between the two sections ── */
+.trackerDivider {
+  height: 1px;
+  background-color: var(--lightGray);
+}
+
+/* ── Stages list ── */
+.stages {
+  display: flex;
+  flex-direction: column;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0 2rem;
+  position: relative;
+  padding: 2.4rem 3rem;
+  align-items: start;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.stage:last-child {
+  border-bottom: none;
+}
+
+/* Vertical connector line */
+.connector {
+  position: absolute;
+  left: calc(3rem + 1rem);
+  top: calc(2.4rem + 2rem);
+  width: 2px;
+  height: 100%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.connectorCompleted {
+  background-color: var(--black);
+}
+
+.connectorUpcoming {
+  background-color: var(--lightGray);
+}
+
+/* ── Stage dot ── */
+.stageDot {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: 0.15rem;
+}
+
+.stageCompleted .stageDot {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.stageCurrent .stageDot {
+  background-color: var(--white);
+  border: 2px solid var(--black);
+}
+
+.stageUpcoming .stageDot {
+  background-color: var(--white);
+  border: 1px solid var(--lightGray);
+}
+
+.stageDotInner {
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: var(--black);
+}
+
+/* ── Stage text ── */
+.stageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.15rem;
+}
+
+.stageLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.stageLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+}
+
+.stageUpcoming .stageLabel {
+  color: var(--text);
+}
+
+/* Completed date — green outline */
+.stageDate {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  padding: 0.2rem 0.8rem;
+}
+
+/* Pending badge — neutral */
+.stageDatePending {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  padding: 0.2rem 0.8rem;
+}
+
+/* Action needed badge — accent */
+.stageDateActive {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 0.2rem 0.8rem;
+}
+
+.stageDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+/* ── Toggle divider (inside delivery section) ── */
+.toggleDivider {
+  height: 1px;
+  background-color: var(--lightGray);
+}
+
+/* ── Site live toggle ── */
+.liveToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.4rem 3rem;
+}
+
+.liveToggleLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.liveToggleLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+
+.liveToggleDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.toggle {
+  flex-shrink: 0;
+  width: 5.2rem;
+  height: 2.8rem;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.25s ease;
+  padding: 0;
+}
+
+.toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.toggleOff {
+  background-color: var(--lightGray);
+}
+
+.toggleOn {
+  background-color: var(--black);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  background-color: var(--white);
+  transition: transform 0.25s ease;
+  display: block;
+}
+
+.toggleOn .toggleThumb {
+  transform: translateX(2.4rem);
+  background-color: var(--accent);
+}
+
+.toggleOff .toggleThumb {
+  transform: translateX(0);
+}
+
+/* ── Step skip override ── */
+.skipLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  cursor: pointer;
+}
+
+.skipCheckbox {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: var(--black);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.skipText {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
 }
 
 /* ── Info grid ── */
@@ -297,55 +554,6 @@
 
 .infoLink:hover {
   opacity: 0.6;
-}
-
-/* ── Stage selector ── */
-.stageSelector {
-  display: flex;
-  gap: 1.2rem;
-  align-items: center;
-}
-
-.select {
-  flex: 1;
-  padding: 1.2rem 1.6rem;
-  border: 1px solid var(--lightGray);
-  background-color: var(--white);
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--black);
-  appearance: none;
-  cursor: pointer;
-  outline: none;
-}
-
-.select:focus {
-  border-color: var(--black);
-}
-
-.advanceBtn {
-  padding: 1.2rem 2.4rem;
-  background-color: var(--black);
-  color: var(--accent);
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.advanceBtn:hover {
-  opacity: 0.85;
-}
-.advanceBtn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
 }
 
 /* ── Stage log ── */
@@ -422,6 +630,24 @@
   display: none;
 }
 
+.select {
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.select:focus {
+  border-color: var(--black);
+}
+
 .uploadBtn {
   padding: 1.2rem 2.4rem;
   background-color: var(--black);
@@ -440,6 +666,7 @@
 .uploadBtn:hover {
   opacity: 0.85;
 }
+
 .uploadBtn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -455,6 +682,30 @@
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
+}
+
+/* ── Checkbox ── */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 1.6rem;
+  height: 1.6rem;
+  accent-color: var(--black);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxText {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--black);
 }
 
 /* ── Doc list ── */
@@ -521,23 +772,6 @@
 .viewBtn:hover {
   border-color: var(--black);
   color: var(--black);
-}
-
-.deleteBtn {
-  padding: 0.7rem 1.4rem;
-  border: 1px solid #fed7d7;
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c53030;
-  background: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.deleteBtn:hover {
-  background-color: #fff5f5;
 }
 
 /* ── Selection display ── */
@@ -710,250 +944,6 @@
   text-transform: none;
 }
 
-/* ── Tracker ── */
-.trackerHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.trackerCount {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text);
-}
-
-.stages {
-  display: flex;
-  flex-direction: column;
-}
-
-.stage {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 2rem 2rem;
-  position: relative;
-  padding-bottom: 2.4rem;
-  align-items: start;
-}
-
-.stage:last-child {
-  padding-bottom: 0;
-}
-
-.connector {
-  position: absolute;
-  left: 0.9rem;
-  top: 2rem;
-  width: 2px;
-  bottom: 0;
-  transform: translateX(-50%);
-}
-
-.connectorCompleted {
-  background-color: var(--black);
-}
-.connectorUpcoming {
-  background-color: var(--lightGray);
-}
-
-.stageDot {
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-  margin-top: 0.1rem;
-}
-
-.stageCompleted .stageDot {
-  background-color: var(--black);
-  color: var(--accent);
-}
-
-.stageUpcoming .stageDot {
-  background-color: var(--white);
-  border: 1px solid var(--lightGray);
-}
-
-.stageText {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding-top: 0.2rem;
-}
-
-.stageLabelRow {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.stageLabel {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--black);
-}
-
-.stageUpcoming .stageLabel {
-  color: var(--text);
-}
-
-.stageDate {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #16a34a;
-  padding: 0.2rem 0.8rem;
-  border: 1px solid #16a34a;
-}
-
-/* ── Toggle divider ── */
-.toggleDivider {
-  height: 1px;
-  background-color: var(--lightGray);
-}
-
-/* ── Site live toggle ── */
-.liveToggleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.liveToggleLeft {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.liveToggleLabel {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--black);
-}
-
-.liveToggleDesc {
-  font-family: var(--Roboto);
-  font-size: 1.4rem;
-  color: var(--text);
-  text-transform: none;
-  line-height: 1.5;
-}
-
-.toggle {
-  flex-shrink: 0;
-  width: 5.2rem;
-  height: 2.8rem;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition: background-color 0.25s ease;
-  padding: 0;
-}
-
-.toggle:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.toggleOff {
-  background-color: var(--lightGray);
-}
-
-.toggleOn {
-  background-color: var(--black);
-}
-
-.toggleThumb {
-  position: absolute;
-  top: 0.3rem;
-  left: 0.3rem;
-  width: 2.2rem;
-  height: 2.2rem;
-  background-color: var(--white);
-  transition: transform 0.25s ease;
-  display: block;
-}
-
-.toggleOn .toggleThumb {
-  transform: translateX(2.4rem);
-  background-color: var(--accent);
-}
-
-.toggleOff .toggleThumb {
-  transform: translateX(0);
-}
-
-/* ── Checkbox ── */
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-}
-
-.checkbox {
-  width: 1.6rem;
-  height: 1.6rem;
-  accent-color: var(--black);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.checkboxText {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--black);
-}
-
-.selectionThumbWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1rem;
-}
-
-/* ── Step skip override ── */
-.skipLabel {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.6rem;
-  cursor: pointer;
-}
-
-.skipCheckbox {
-  width: 1.4rem;
-  height: 1.4rem;
-  accent-color: var(--black);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.skipText {
-  font-family: var(--GeistMono);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text);
-}
-
 /* ── Billing tab ── */
 .invoiceList {
   display: flex;
@@ -1042,7 +1032,9 @@
   text-decoration: none;
   padding: 0.5rem 1rem;
   border: 1px solid var(--lightGray);
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .invoiceDownload:hover {
@@ -1055,19 +1047,45 @@
   .header {
     padding: 3rem 2rem;
   }
+
   .tabs {
     padding: 0 2rem;
     overflow-x: auto;
   }
+
   .tabContent {
     padding: 3rem 2rem;
   }
+
   .card {
     padding: 2rem;
   }
+
+  .trackerSectionHeader {
+    padding: 2rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .stage {
+    padding: 2rem 2rem;
+  }
+
+  .connector {
+    left: calc(2rem + 1rem);
+  }
+
+  .liveToggleRow {
+    padding: 2rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .selectionBody {
     grid-template-columns: 1fr;
   }
+
   .answerRow {
     grid-template-columns: 1fr;
     gap: 0.4rem;
