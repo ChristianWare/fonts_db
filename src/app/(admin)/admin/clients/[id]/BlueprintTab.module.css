@@ -1,16 +1,18 @@
+/* ── Layout ── */
 .layout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 400px 1fr;
   border: 1px solid var(--lightGray);
   min-height: 600px;
+  margin: 1rem;
 }
 
-/* ── Empty state (no pages yet) ── */
+/* ── Empty state ── */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.6rem;
+  gap: 2rem;
   padding: 4rem;
   border: 1px solid var(--lightGray);
 }
@@ -30,44 +32,43 @@
   text-transform: none;
   line-height: 1.6;
   max-width: 480px;
-  margin-top: -0.4rem;
 }
 
 .emptyStateActions {
   display: flex;
-  gap: 1.2rem;
+  gap: 1rem;
   align-items: center;
 }
 
 .addPageFormStandalone {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  margin-top: 0.4rem;
+  gap: 1rem;
   width: 320px;
 }
 
 /* ── Sidebar ── */
 .sidebar {
   border-right: 1px solid var(--lightGray);
-  padding: 1.6rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
   background-color: var(--white);
 }
 
 .sidebarLabel {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
   opacity: 0.5;
-  padding: 0.4rem 0.8rem;
-  margin-bottom: 0.4rem;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
 }
 
+/* ── Page item (top-level) ── */
 .pageItem {
   display: flex;
   align-items: center;
@@ -84,11 +85,27 @@
   border-color: var(--lightGray);
 }
 
+/* ── Slug child page (indented) ── */
+.pageItemSlug {
+  padding-left: 2rem;
+}
+
+.pageSlugMarker {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--text);
+  opacity: 0.35;
+  flex-shrink: 0;
+  margin-right: 0;
+  line-height: 1;
+}
+
+/* ── Page item button ── */
 .pageItemBtn {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem;
+  gap: 1rem;
+  padding: 1rem;
   background: none;
   border: none;
   cursor: pointer;
@@ -98,7 +115,7 @@
 }
 
 .pageDeleteBtn {
-  padding: 0.4rem 0.8rem;
+  padding: 0 1rem;
   background: none;
   border: none;
   cursor: pointer;
@@ -124,6 +141,7 @@
   cursor: not-allowed;
 }
 
+/* ── Status dots ── */
 .pageDot {
   width: 6px;
   height: 6px;
@@ -144,9 +162,10 @@
   background-color: #16a34a;
 }
 
+/* ── Page name + count ── */
 .pageName {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -158,26 +177,27 @@
 
 .pageCount {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--text);
   opacity: 0.5;
   flex-shrink: 0;
 }
 
+/* ── Add page button and form ── */
 .addPageBtn {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem;
+  gap: 1rem;
+  padding: 1rem;
   border: 1px dashed var(--lightGray);
   background: none;
   cursor: pointer;
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
-  margin-top: 0.8rem;
+  margin-top: 1rem;
   width: 100%;
   transition: border-color 0.12s, color 0.12s;
 }
@@ -190,13 +210,42 @@
 .addPageForm {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  margin-top: 0.8rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .addPageActions {
   display: flex;
-  gap: 0.6rem;
+  gap: 1rem;
+}
+
+/* ── Start over button ── */
+.startOverBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem 1rem;
+  border: none;
+  border-top: 1px solid #fed7d7;
+  background: none;
+  cursor: pointer;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c53030;
+  margin-top: auto;
+  width: 100%;
+  transition: background-color 0.12s;
+}
+
+.startOverBtn:hover {
+  background-color: #fff5f5;
+}
+
+.startOverBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ── Main panel ── */
@@ -213,19 +262,302 @@
   color: var(--text);
 }
 
-/* ── Page header ── */
+/* ── View toggle bar ── */
+.viewToggleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--lightGray);
+  gap: 2rem;
+}
+
+.viewToggleGroup {
+  display: flex;
+  gap: 0;
+}
+
+.viewToggleBtn {
+  padding: 1rem 2rem;
+  border: 1px solid var(--lightGray);
+  border-right: none;
+  background: none;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.viewToggleBtn:last-child {
+  border-right: 1px solid var(--lightGray);
+}
+
+.viewToggleBtn:hover {
+  background-color: var(--lightlightGrayi);
+  color: var(--black);
+}
+
+.viewToggleBtnActive {
+  background-color: var(--black);
+  color: var(--accent);
+  border-color: var(--black);
+}
+
+.viewToggleBtnActive:hover {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.viewToggleHint {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  opacity: 0.5;
+}
+
+/* ── Tree view ── */
+.treeViewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3rem;
+  flex: 1;
+}
+
+.treeViewScroll {
+  overflow-x: auto;
+  padding-bottom: 2rem;
+}
+
+.treeTopRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 3rem;
+  width: max-content;
+}
+
+/* ── Tree node ── */
+.treeNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.treeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 1rem 2rem;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  cursor: pointer;
+  min-width: 140px;
+  text-align: center;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.treeBox:hover {
+  border-color: var(--black);
+}
+
+.treeBoxDraft {
+  border-color: var(--lightGray);
+}
+
+.treeBoxReview {
+  border-color: #ca8a04;
+}
+
+.treeBoxApproved {
+  border-color: #16a34a;
+}
+
+.treeBoxActive {
+  background-color: var(--black);
+}
+
+.treeBoxActive .treeBoxName {
+  color: var(--accent);
+}
+
+.treeBoxActive .treeBoxCount {
+  color: var(--white);
+  opacity: 0.5;
+}
+
+.treeBoxName {
+  display: block;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  white-space: nowrap;
+}
+
+.treeBoxCount {
+  display: block;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--text);
+  opacity: 0.5;
+}
+
+.treeBoxToggle {
+  display: block;
+  font-size: 1.4rem;
+  color: var(--text);
+  opacity: 0.4;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 0;
+  line-height: 1;
+  transition: opacity 0.12s;
+}
+
+.treeBoxToggle:hover {
+  opacity: 1;
+}
+
+/* ── Tree connectors ── */
+.treeVLine {
+  width: 2px;
+  height: 2rem;
+  background-color: var(--lightGray);
+  flex-shrink: 0;
+}
+
+.treeChildRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+/* Each child cell draws the horizontal connecting line via ::before */
+.treeChildCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+  position: relative;
+}
+
+/* Horizontal line connecting siblings */
+.treeChildCell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--lightGray);
+}
+
+/* First child: line starts from center (right half only) */
+.treeChildCell:first-child::before {
+  left: 50%;
+}
+
+/* Last child: line ends at center (left half only) */
+.treeChildCell:last-child::before {
+  right: 50%;
+}
+
+/* Only child: no horizontal line */
+.treeChildCell:only-child::before {
+  display: none;
+}
+
+/* ── Tree legend ── */
+.treeLegend {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.treeLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.treeLegendDot {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--lightGray);
+  flex-shrink: 0;
+}
+
+.treeLegendDotReview {
+  border-color: #ca8a04;
+}
+
+.treeLegendDotApproved {
+  border-color: #16a34a;
+}
+
+.treeLegendDotActive {
+  background-color: var(--black);
+  border-color: var(--black);
+}
+
+.treeLegendLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.treeNote {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  opacity: 0.5;
+  padding: 1rem 0;
+  border-top: 1px solid var(--lightGray);
+}
+
+.treeEmpty {
+  padding: 4rem;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+/* ── Page header (edit view) ── */
 .mainHeader {
-  padding: 2.4rem 3rem;
+  padding: 2rem 3rem;
   border-bottom: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .mainHeaderTop {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mainTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .mainTitle {
@@ -237,15 +569,26 @@
   font-weight: 400;
 }
 
+/* Slug page badge shown in header */
+.slugBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  padding: 0 1rem;
+}
+
 .progressRow {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 
 .progressLabel {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -261,6 +604,7 @@
 
 .progressFill {
   height: 100%;
+  width: var(--progress-width, 0%);
   background-color: var(--black);
   transition: width 0.3s ease;
 }
@@ -268,10 +612,10 @@
 /* ── Status pills ── */
 .statusPill {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 0.2rem 0.8rem;
+  padding: 0 1rem;
   border: 1px solid;
   flex-shrink: 0;
 }
@@ -317,8 +661,8 @@
 .sectionHeader {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  padding: 1.6rem 3rem;
+  gap: 1rem;
+  padding: 2rem 3rem;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.12s;
@@ -329,7 +673,7 @@
 }
 
 .chevron {
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: var(--text);
   opacity: 0.4;
   transition: transform 0.18s;
@@ -353,27 +697,27 @@
 
 /* ── Section body ── */
 .sectionBody {
-  padding: 0 3rem 2.4rem;
+  padding: 0 3rem 2rem;
   border-top: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 
 /* ── Copy block ── */
 .copyBlock {
-  margin-top: 1.6rem;
-  padding: 1.4rem;
+  margin-top: 2rem;
+  padding: 1rem;
   background-color: var(--lightlightGrayi);
   border: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .copyLabel {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -388,6 +732,10 @@
   text-transform: none;
 }
 
+.copyPreserved {
+  white-space: pre-wrap;
+}
+
 .copyEmpty {
   font-family: var(--Roboto);
   font-size: 1.4rem;
@@ -398,7 +746,7 @@
 
 .copyTextarea {
   width: 100%;
-  padding: 1rem 1.2rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
@@ -419,11 +767,11 @@
 .comments {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .comment {
-  padding: 1rem 1.2rem;
+  padding: 1rem;
   background-color: var(--lightlightGrayi);
   border: 1px solid var(--lightGray);
   border-left: 2px solid var(--black);
@@ -431,12 +779,11 @@
 
 .commentMeta {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
   opacity: 0.6;
-  margin-bottom: 0.4rem;
 }
 
 .commentText {
@@ -447,7 +794,7 @@
   text-transform: none;
 }
 
-/* ── Comment input row ── */
+/* ── Comment input ── */
 .commentRow {
   display: flex;
   gap: 1rem;
@@ -455,7 +802,7 @@
 
 .commentInput {
   flex: 1;
-  padding: 0.8rem 1.2rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
@@ -489,7 +836,7 @@
 
 /* ── Shared buttons ── */
 .btn {
-  padding: 0.8rem 1.6rem;
+  padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   background: none;
   font-family: var(--GeistMono);
@@ -513,7 +860,7 @@
 }
 
 .btnAccent {
-  padding: 0.8rem 1.6rem;
+  padding: 1rem 2rem;
   border: none;
   background-color: var(--black);
   font-family: var(--GeistMono);
@@ -536,7 +883,7 @@
 }
 
 .btnGhost {
-  padding: 0.8rem 1.2rem;
+  padding: 1rem;
   border: none;
   background: none;
   font-family: var(--GeistMono);
@@ -552,13 +899,31 @@
   color: var(--black);
 }
 
+.btnDanger {
+  padding: 1rem 2rem;
+  border: none;
+  background-color: #c53030;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btnDanger:hover {
+  opacity: 0.85;
+}
+
 /* ── Status select ── */
 .statusSelect {
-  padding: 0.8rem 1.2rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -573,7 +938,7 @@
 
 /* ── Shared input ── */
 .inputSm {
-  padding: 0.8rem 1.2rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
@@ -582,11 +947,65 @@
   text-transform: none;
   outline: none;
   flex: 1;
+  width: 100%;
   transition: border-color 0.15s;
 }
 
 .inputSm:focus {
   border-color: var(--black);
+}
+
+/* ── Modal content ── */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  padding: 2rem 3rem;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.modalHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.modalBody {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.modalText {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+.modalTextSmall {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 2rem 3rem;
 }
 
 /* ── Responsive ── */
@@ -605,7 +1024,7 @@
   }
 
   .sectionHeader {
-    padding: 1.4rem 2rem;
+    padding: 1rem 2rem;
   }
 
   .sectionBody {
@@ -613,7 +1032,25 @@
   }
 
   .addSectionRow {
-    padding: 1.6rem 2rem;
+    padding: 2rem;
     flex-direction: column;
+  }
+
+  .treeViewContainer {
+    padding: 2rem;
+  }
+
+  .treeTopRow {
+    gap: 2rem;
+  }
+
+  .modalFooter {
+    flex-direction: column;
+  }
+
+  .modalFooter .btn,
+  .modalFooter .btnDanger {
+    width: 100%;
+    text-align: center;
   }
 }

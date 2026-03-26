@@ -2,10 +2,19 @@
 
 import { db } from "@/lib/db";
 
-export async function createSitemapPage(clientProfileId: string, name: string) {
+export async function createSitemapPage(
+  clientProfileId: string,
+  name: string,
+  parentId?: string | null,
+) {
   const count = await db.sitemapPage.count({ where: { clientProfileId } });
   return db.sitemapPage.create({
-    data: { clientProfileId, name, position: count },
+    data: {
+      clientProfileId,
+      name,
+      position: count,
+      ...(parentId ? { parentId } : {}),
+    },
     include: {
       sections: {
         orderBy: { position: "asc" },
@@ -17,6 +26,10 @@ export async function createSitemapPage(clientProfileId: string, name: string) {
 
 export async function deleteSitemapPage(pageId: string) {
   return db.sitemapPage.delete({ where: { id: pageId } });
+}
+
+export async function deleteAllClientSitemapPages(clientProfileId: string) {
+  return db.sitemapPage.deleteMany({ where: { clientProfileId } });
 }
 
 export async function createSitemapSection(pageId: string, title: string) {

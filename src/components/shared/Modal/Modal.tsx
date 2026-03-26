@@ -2,7 +2,6 @@
 "use client";
 
 import { useLayoutEffect, useRef, MouseEvent } from "react";
-// import Close from "../icons/Close/Close";
 import styles from "./Modal.module.css";
 
 interface Props {
@@ -22,18 +21,13 @@ export default function Modal({ isOpen, onClose, children }: Props) {
     const html = document.documentElement;
     const root = document.scrollingElement || document.documentElement;
 
-    // Save current scroll and previous inline styles (so we can restore exactly)
     scrollRef.current = root.scrollTop;
     htmlPrev.current = html.getAttribute("style") ?? "";
 
-    // Lock page scroll WITHOUT using position:fixed (prevents jump-to-top)
-    // Also keep layout stable when scrollbar disappears
     html.style.overflow = "hidden";
     (html.style as any).scrollbarGutter = "stable";
 
-    // Extra safety on mobile: block touchmove on background
     const blockTouch = (e: TouchEvent) => {
-      // allow scrolling inside the modal dialog itself
       const target = e.target as HTMLElement | null;
       const dialog = document.getElementById("app-modal-dialog");
       if (dialog && target && dialog.contains(target)) return;
@@ -50,10 +44,7 @@ export default function Modal({ isOpen, onClose, children }: Props) {
     return () => {
       window.removeEventListener("keydown", onEsc);
       removeTouchBlockRef.current?.();
-
-      // Restore styles
       html.setAttribute("style", htmlPrev.current);
-      // Restore scroll exactly where it was (paranoia guard)
       root.scrollTo({ top: scrollRef.current });
     };
   }, [isOpen, onClose]);
@@ -78,7 +69,7 @@ export default function Modal({ isOpen, onClose, children }: Props) {
           className={styles.closeBtn}
           aria-label='Close modal'
         >
-          {/* <Close className={styles.icon} /> */}
+          ×
         </button>
         <div className={styles.body}>{children}</div>
       </div>

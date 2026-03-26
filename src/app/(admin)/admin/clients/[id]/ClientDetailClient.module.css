@@ -45,8 +45,8 @@
 }
 
 .clientAvatar {
-  width: 4.8rem;
-  height: 4.8rem;
+  width: 5rem;
+  height: 5rem;
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
@@ -106,7 +106,7 @@
   letter-spacing: 0.1em;
   color: var(--accent);
   background-color: var(--black);
-  padding: 0.5rem 1.2rem;
+  padding: 1rem 1rem;
   align-self: flex-start;
 }
 
@@ -128,7 +128,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 1.6rem 1.6rem;
+  padding: 2rem 2rem;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition:
@@ -137,7 +137,7 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1rem;
 }
 
 .tab:hover {
@@ -149,22 +149,19 @@
   border-bottom-color: var(--black);
 }
 
-/* Default tab dot (green — design tab) */
 .tabDot {
   display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 1rem;
+  height: 1rem;
   background-color: #16a34a;
   vertical-align: middle;
   flex-shrink: 0;
 }
 
-/* Green variant (signed) */
 .tabDotGreen {
   background-color: #16a34a;
 }
 
-/* Amber variant (pending) */
 .tabDotAmber {
   background-color: #ca8a04;
 }
@@ -184,7 +181,7 @@
   padding: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 2rem;
 }
 
 .cardHeading {
@@ -204,7 +201,7 @@
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
-  margin-top: -0.8rem;
+  margin-top: -1rem;
 }
 
 .emptyText {
@@ -239,7 +236,7 @@
 .trackerSectionHeadingBlock {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 2rem;
 }
 
 .trackerSectionNumber {
@@ -284,7 +281,7 @@
   grid-template-columns: 2rem 1fr;
   gap: 0 2rem;
   position: relative;
-  padding: 2.4rem 3rem;
+  padding: 2rem 3rem;
   align-items: start;
   border-bottom: 1px solid var(--lightGray);
 }
@@ -296,7 +293,7 @@
 .connector {
   position: absolute;
   left: calc(3rem + 1rem);
-  top: calc(2.4rem + 2rem);
+  top: calc(2rem + 2rem);
   width: 2px;
   bottom: 0;
   transform: translateX(-50%);
@@ -319,7 +316,7 @@
   flex-shrink: 0;
   position: relative;
   z-index: 1;
-  margin-top: 0.15rem;
+  margin-top: 0;
 }
 
 .stageCompleted .stageDot {
@@ -338,22 +335,22 @@
 }
 
 .stageDotInner {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 1rem;
+  height: 1rem;
   background-color: var(--black);
 }
 
 .stageText {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding-top: 0.15rem;
+  gap: 1rem;
+  padding-top: 0;
 }
 
 .stageLabelRow {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
@@ -376,7 +373,7 @@
   letter-spacing: 0.07em;
   color: #16a34a;
   border: 1px solid #16a34a;
-  padding: 0.2rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .stageDatePending {
@@ -386,7 +383,7 @@
   letter-spacing: 0.07em;
   color: var(--text);
   border: 1px solid var(--lightGray);
-  padding: 0.2rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .stageDateActive {
@@ -396,7 +393,7 @@
   letter-spacing: 0.07em;
   color: var(--black);
   background-color: var(--accent);
-  padding: 0.2rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .stageDesc {
@@ -419,13 +416,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 2.4rem 3rem;
+  padding: 2rem 3rem;
 }
 
 .liveToggleLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0;
 }
 
 .liveToggleLabel {
@@ -446,8 +443,8 @@
 
 .toggle {
   flex-shrink: 0;
-  width: 5.2rem;
-  height: 2.8rem;
+  width: 5rem;
+  height: 3rem;
   border: none;
   cursor: pointer;
   position: relative;
@@ -470,17 +467,17 @@
 
 .toggleThumb {
   position: absolute;
-  top: 0.3rem;
-  left: 0.3rem;
-  width: 2.2rem;
-  height: 2.2rem;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
   background-color: var(--white);
   transition: transform 0.25s ease;
   display: block;
 }
 
 .toggleOn .toggleThumb {
-  transform: translateX(2.4rem);
+  transform: translateX(2rem);
   background-color: var(--accent);
 }
 
@@ -492,14 +489,14 @@
 .skipLabel {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.4rem;
+  gap: 1rem;
+  margin-top: 0;
   cursor: pointer;
 }
 
 .skipCheckbox {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1rem;
+  height: 1rem;
   accent-color: var(--black);
   cursor: pointer;
   flex-shrink: 0;
@@ -507,7 +504,7 @@
 
 .skipText {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -523,7 +520,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
   gap: 2rem;
 }
@@ -575,7 +572,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.2rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -603,32 +600,32 @@
 .docActions {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-shrink: 0;
 }
 
 .signedBadge {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
   border: 1px solid #16a34a;
-  padding: 0.3rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .pendingBadge {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #ca8a04;
   border: 1px solid #ca8a04;
-  padding: 0.3rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .downloadBtn {
-  padding: 0.7rem 1.4rem;
+  padding: 1rem 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -650,18 +647,18 @@
 .uploadForm {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .uploadRow {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .input {
   width: 100%;
-  padding: 1.2rem 1.4rem;
+  padding: 1rem 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
@@ -686,7 +683,7 @@
 }
 
 .select {
-  padding: 1.2rem 1.6rem;
+  padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
@@ -704,7 +701,7 @@
 }
 
 .uploadBtn {
-  padding: 1.2rem 2.4rem;
+  padding: 1rem 2rem;
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
@@ -728,7 +725,7 @@
 }
 
 .errorBanner {
-  padding: 1.4rem;
+  padding: 1rem;
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
@@ -748,8 +745,8 @@
 }
 
 .checkbox {
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 2rem;
+  height: 2rem;
   accent-color: var(--black);
   cursor: pointer;
   flex-shrink: 0;
@@ -774,7 +771,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.4rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -785,7 +782,7 @@
 .docInfo {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0;
   overflow: hidden;
   flex: 1;
 }
@@ -810,7 +807,7 @@
 }
 
 .viewBtn {
-  padding: 0.7rem 1.4rem;
+  padding: 1rem 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -844,7 +841,7 @@
   letter-spacing: 0.08em;
   color: var(--white);
   background-color: #16a34a;
-  padding: 0.4rem 1rem;
+  padding: 0 1rem;
   flex-shrink: 0;
 }
 
@@ -878,7 +875,7 @@
   color: var(--text);
   text-decoration: none;
   text-align: center;
-  padding: 0.8rem;
+  padding: 1rem;
   border-top: 1px solid var(--lightGray);
   transition: color 0.15s ease;
 }
@@ -896,8 +893,8 @@
 .selectionNotesBlock {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding-top: 1.2rem;
+  gap: 1rem;
+  padding-top: 1rem;
 }
 
 .selectionNotesText {
@@ -909,7 +906,7 @@
   line-height: 1.6;
   background-color: var(--lightlightGrayi);
   border: 1px solid var(--lightGray);
-  padding: 1.4rem;
+  padding: 1rem;
   margin: 0;
 }
 
@@ -925,7 +922,7 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
-  padding-bottom: 1.6rem;
+  padding-bottom: 2rem;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -933,7 +930,7 @@
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 2rem;
-  padding: 1.4rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -969,7 +966,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.4rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -980,7 +977,7 @@
 .assetInfo {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0;
 }
 
 .assetName {
@@ -1010,7 +1007,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.4rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -1021,7 +1018,7 @@
 .invoiceLeft {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0;
   flex: 1;
   overflow: hidden;
 }
@@ -1044,7 +1041,7 @@
 .invoiceRight {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-shrink: 0;
 }
 
@@ -1057,10 +1054,10 @@
 
 .invoiceStatus {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 0.3rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .invoiceStatusPaid {
@@ -1085,7 +1082,7 @@
   letter-spacing: 0.06em;
   color: var(--text);
   text-decoration: none;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem;
   border: 1px solid var(--lightGray);
   transition:
     border-color 0.15s ease,
@@ -1119,7 +1116,7 @@
     padding: 2rem 2rem;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.8rem;
+    gap: 1rem;
   }
 
   .stage {
@@ -1142,6 +1139,6 @@
 
   .answerRow {
     grid-template-columns: 1fr;
-    gap: 0.4rem;
+    gap: 0;
   }
 }
