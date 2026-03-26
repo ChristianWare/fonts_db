@@ -106,7 +106,7 @@
     "wght" 700,
     "wdth" 81;
   -webkit-font-smoothing: antialiased;
-  max-width: 560px;
+  max-width: 450px;
 }
 
 .actionBtn {
@@ -127,27 +127,50 @@
   opacity: 0.85;
 }
 
-/* ── Tracker ── */
+/* ── Tracker card (outer wrapper) ── */
 .trackerCard {
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--grayii);
 }
 
-.trackerHeader {
+/* ── Tracker section (each half) ── */
+.trackerSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section header — black bg, accent text, design system rule */
+.trackerSectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.4rem 5rem;
+  padding: 2rem 5rem;
+  background-color: var(--black);
   border-bottom: 1px solid var(--grayii);
 }
 
-.trackerHeading {
+.trackerSectionHeadingBlock {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.trackerSectionNumber {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.trackerSectionHeading {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
+  color: var(--accent);
+  font-weight: 400;
 }
 
 .trackerCount {
@@ -155,10 +178,17 @@
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text);
+  color: var(--white);
+  opacity: 0.4;
 }
 
-/* ── Stages ── */
+/* ── Divider between the two sections ── */
+.trackerDivider {
+  height: 1px;
+  background-color: var(--grayii);
+}
+
+/* ── Stages list ── */
 .stages {
   display: flex;
   flex-direction: column;
@@ -183,11 +213,12 @@
 .stageClickable {
   cursor: pointer;
 }
+
 .stageClickable:hover {
   background-color: var(--lightGrayiii);
 }
 
-/* Vertical connector */
+/* Vertical connector line */
 .connector {
   position: absolute;
   left: calc(5rem + 1rem);
@@ -200,11 +231,12 @@
 .connectorCompleted {
   background-color: var(--black);
 }
+
 .connectorUpcoming {
   background-color: var(--grayii);
 }
 
-/* Dot */
+/* ── Stage dot ── */
 .stageDot {
   width: 2rem;
   height: 2rem;
@@ -238,7 +270,7 @@
   background-color: var(--black);
 }
 
-/* Text */
+/* ── Stage text ── */
 .stageText {
   display: flex;
   flex-direction: column;
@@ -265,6 +297,7 @@
   color: var(--text);
 }
 
+/* Completed date badge — green */
 .stageDate {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -272,6 +305,17 @@
   letter-spacing: 0.07em;
   color: #16a34a;
   border: 1px solid #16a34a;
+  padding: 0.2rem 0.8rem;
+}
+
+/* In progress badge — accent */
+.stageDateActive {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+  background-color: var(--accent);
   padding: 0.2rem 0.8rem;
 }
 
@@ -284,17 +328,25 @@
   line-height: 1.6;
 }
 
+/* Action link inside a stage row */
 .moreInfo {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: blue;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
   margin-top: 0.2rem;
   display: inline-block;
+  transition: opacity 0.15s ease;
 }
 
-/* ── Site link (preview + live) ── */
+.moreInfo:hover {
+  opacity: 0.6;
+}
+
+/* ── Site / blueprint / preview links ── */
 .siteLink {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -333,6 +385,10 @@
   gap: 2rem;
 }
 
+.quickLink:last-child {
+  border-right: none;
+}
+
 .quickLink:hover {
   background-color: var(--black);
   color: var(--accent);
@@ -362,11 +418,20 @@
     text-align: center;
   }
 
-  .trackerHeader {
+  .trackerSectionHeader {
     padding: 2rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
   }
+
   .stage {
     padding: 2.4rem 2rem;
+  }
+
+  .connector {
+    left: calc(2rem + 1rem);
+    top: calc(2.8rem + 1rem);
   }
 
   .quickLinks {
@@ -381,10 +446,5 @@
 
   .quickLink:last-child {
     border-bottom: none;
-  }
-
-  .connector {
-    left: calc(2rem + 1rem);
-    top: calc(2.8rem + 1rem);
   }
 }

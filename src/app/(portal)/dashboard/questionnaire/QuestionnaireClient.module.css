@@ -409,6 +409,7 @@
 
 .readOnlySection {
   border-bottom: 1px solid var(--lightGray);
+  padding: 1rem;
 }
 
 .readOnlySection:last-child {
@@ -416,13 +417,22 @@
 }
 
 .readOnlySectionTitle {
-  font-family: var(--GeistMono);
+  /* font-family: var(--GeistMono);
   font-size: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
   padding: 2.4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray); */
+  font-size: 3rem;
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
+  /* margin: 1rem; */
+  width: 100%;
 }
 
 .readOnlyAnswers {

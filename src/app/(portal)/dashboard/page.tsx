@@ -34,7 +34,17 @@ export default async function DashboardPage() {
   const designReviewed = ["DESIGN_REVIEW", "SITE_LIVE"].includes(currentStage);
   const buildingStarted = designReviewed;
 
-  const steps = [
+  // ── What we need from you ──────────────────────────────────────────────────
+  type ClientStep = {
+    key: string;
+    label: string;
+    desc: string;
+    href: string | null;
+    completed: boolean;
+    completedAt: Date | null;
+  };
+
+  const clientSteps: ClientStep[] = [
     {
       key: "account",
       label: "Create Account",
@@ -42,8 +52,6 @@ export default async function DashboardPage() {
       href: "/dashboard/profile",
       completed: true,
       completedAt: profile?.createdAt ? new Date(profile.createdAt) : null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
     },
     {
       key: "agreement",
@@ -54,21 +62,17 @@ export default async function DashboardPage() {
       completedAt: serviceAgreementDoc?.signedAt
         ? new Date(serviceAgreementDoc.signedAt)
         : null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
     },
     {
       key: "billing",
-      label: "Billing Subscription",
-      desc: "Set up your monthly subscription to activate your account.",
+      label: "Enroll in Billing",
+      desc: "Set up your subscription and pay your one-time $500 setup fee.",
       href: "/dashboard/billing",
       completed: billingActive,
       completedAt:
         billingActive && profile?.subscription?.currentPeriodStart
           ? new Date(profile.subscription.currentPeriodStart)
           : null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
     },
     {
       key: "questionnaire",
@@ -79,67 +83,107 @@ export default async function DashboardPage() {
       completedAt: profile?.questionnaire?.submittedAt
         ? new Date(profile.questionnaire.submittedAt)
         : null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
     },
     {
       key: "assets",
-      label: "Brand Assets",
-      desc: "Upload your logo, photos, and brand files.",
+      label: "Upload Brand Assets",
+      desc: "Upload your logo, fleet photos, and any existing brand files.",
       href: "/dashboard/assets",
       completed: !!firstAsset,
       completedAt: firstAsset ? new Date(firstAsset.createdAt) : null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
     },
     {
       key: "design",
       label: "Design Review",
-      desc: "Review your design options and select the one that fits your brand.",
+      desc: "Review your design direction and give us your approval to build.",
       href: "/dashboard/design-selection",
       completed: designReviewed,
       completedAt: null,
-      previewUrl: null as string | null,
-      liveUrl: null as string | null,
+    },
+  ];
+
+  // ── What you will get from us ──────────────────────────────────────────────
+  type DeliveryStep = {
+    key: string;
+    label: string;
+    desc: string;
+    href: string | null;
+    completed: boolean;
+    active: boolean;
+    previewUrl?: string | null;
+    liveUrl?: string | null;
+  };
+
+  const allClientDone = clientSteps.every((s) => s.completed);
+
+  const deliverySteps: DeliveryStep[] = [
+    {
+      key: "blueprint",
+      label: "Website Blueprint",
+      desc: questionnaireSubmitted
+        ? "Your sitemap and page-by-page copy plan is ready for review."
+        : "Once you complete your questionnaire, we'll publish your website blueprint.",
+      href: questionnaireSubmitted ? "/dashboard/blueprint" : null,
+      completed: questionnaireSubmitted,
+      active: questionnaireSubmitted,
+    },
+    {
+      key: "preview",
+      label: "Preview Site Access",
+      desc: previewUrl
+        ? "Your build is in progress. Check back anytime to see the latest."
+        : buildingStarted
+          ? "We're setting up your preview environment now."
+          : "Once your design is approved, you'll get a live preview link as we build.",
+      href: null,
+      completed: isLive,
+      active: buildingStarted,
+      previewUrl: previewUrl,
     },
     {
       key: "building",
-      label: "Building Your Site",
+      label: "Platform Build",
       desc: buildingStarted
-        ? "We have everything we need. Your platform is currently being built."
-        : "Once your design is approved, we'll get to work building your platform.",
-      href: null as string | null,
+        ? "Your platform is actively being built — booking engine, admin dashboard, driver portal, and all integrations."
+        : "We'll begin your full platform build after design approval.",
+      href: null,
       completed: isLive,
-      completedAt: null,
-      previewUrl: previewUrl,
-      liveUrl: null as string | null,
+      active: buildingStarted,
     },
     {
       key: "live",
-      label: "Site Live",
+      label: "Go Live",
       desc: isLive
-        ? "Your platform is live. Welcome aboard."
-        : "Your site will go live once the build is complete and reviewed.",
-      href: null as string | null,
+        ? "Your platform is live and taking bookings."
+        : allClientDone
+          ? "You're almost there. We'll get you live once the build is complete."
+          : "Your site will go live once your build passes our QA checklist.",
+      href: null,
       completed: isLive,
-      completedAt: null,
-      previewUrl: null as string | null,
+      active: allClientDone,
       liveUrl: liveUrl,
     },
   ];
 
-  const completedCount = steps.filter((s) => s.completed).length;
+  // ── Action card logic ──────────────────────────────────────────────────────
+  const firstIncompleteClient = clientSteps.find((s) => !s.completed) ?? null;
+  const allClientComplete = clientSteps.every((s) => s.completed);
 
-  const sequentiallyComplete = steps.map((_step, index) =>
-    steps.slice(0, index + 1).every((s) => s.completed),
+  const completedClientCount = clientSteps.filter((s) => s.completed).length;
+  const completedDeliveryCount = deliverySteps.filter(
+    (s) => s.completed,
+  ).length;
+
+  const clientSequentiallyComplete = clientSteps.map((_, index) =>
+    clientSteps.slice(0, index + 1).every((s) => s.completed),
   );
-
-  const currentStepIndex = steps.findIndex((s) => !s.completed);
-  const actionStep = currentStepIndex !== -1 ? steps[currentStepIndex] : null;
+  const deliverySequentiallyComplete = deliverySteps.map((_, index) =>
+    deliverySteps.slice(0, index + 1).every((s) => s.completed),
+  );
 
   return (
     <div className={styles.page}>
-      {/* Header */}
+      {/* ── Header ── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <p className={styles.greeting}>Welcome back,</p>
@@ -156,27 +200,26 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {/* Action card — regular next step */}
-      {actionStep && actionStep.href && actionStep.key !== "building" && (
+      {/* ── Action card — next client step ── */}
+      {firstIncompleteClient && firstIncompleteClient.href && (
         <div className={styles.actionCard}>
           <div className={styles.actionCardLeft}>
-            <span className={styles.actionLabel}>Next step</span>
-            <p className={styles.actionText}>{actionStep.desc}</p>
+            <span className={styles.actionLabel}>Action required</span>
+            <p className={styles.actionText}>{firstIncompleteClient.desc}</p>
           </div>
-          <Link href={actionStep.href} className={styles.actionBtn}>
-            {actionStep.label} →
+          <Link href={firstIncompleteClient.href} className={styles.actionBtn}>
+            {firstIncompleteClient.label} →
           </Link>
         </div>
       )}
 
-      {/* Action card — building state */}
-      {actionStep?.key === "building" && (
+      {/* ── Action card — all client steps done, building ── */}
+      {allClientComplete && !isLive && buildingStarted && (
         <div className={styles.actionCard}>
           <div className={styles.actionCardLeft}>
             <span className={styles.actionLabel}>In progress</span>
             <p className={styles.actionText}>
-              We have everything we need. Your platform is currently being
-              built.
+              We have everything we need. Your platform is being built.
             </p>
           </div>
           {previewUrl && (
@@ -192,11 +235,11 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Action card — site is live */}
+      {/* ── Action card — site live ── */}
       {isLive && liveUrl && (
         <div className={styles.actionCard}>
           <div className={styles.actionCardLeft}>
-            <span className={styles.actionLabel}>Your site is live</span>
+            <span className={styles.actionLabel}>You are live</span>
             <p className={styles.actionText}>
               Your platform is live and ready to take bookings.
             </p>
@@ -212,124 +255,227 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Progress tracker */}
+      {/* ── Tracker: split into two sections ── */}
       <div className={styles.trackerCard}>
-        <div className={styles.trackerHeader}>
-          <h2 className={styles.trackerHeading}>Onboarding Progress</h2>
-          <span className={styles.trackerCount}>
-            {completedCount} of {steps.length} complete
-          </span>
-        </div>
+        {/* Section A — What we need from you */}
+        <div className={styles.trackerSection}>
+          <div className={styles.trackerSectionHeader}>
+            <div className={styles.trackerSectionHeadingBlock}>
+              <span className={styles.trackerSectionNumber}>01</span>
+              <h2 className={styles.trackerSectionHeading}>
+                What we need from you
+              </h2>
+            </div>
+            <span className={styles.trackerCount}>
+              {completedClientCount} of {clientSteps.length} complete
+            </span>
+          </div>
 
-        <div className={styles.stages}>
-          {steps.map((step, index) => {
-            const isCompleted = step.completed;
-            const isCurrent = index === currentStepIndex;
+          <div className={styles.stages}>
+            {clientSteps.map((step, index) => {
+              const currentStepIndex = clientSteps.findIndex(
+                (s) => !s.completed,
+              );
+              const isCurrent = index === currentStepIndex;
+              const stageClass = `${styles.stage} ${
+                step.completed
+                  ? styles.stageCompleted
+                  : isCurrent
+                    ? styles.stageCurrent
+                    : styles.stageUpcoming
+              } ${step.href ? styles.stageClickable : ""}`;
 
-            const stageClass = `${styles.stage} ${
-              isCompleted
-                ? styles.stageCompleted
-                : isCurrent
-                  ? styles.stageCurrent
-                  : styles.stageUpcoming
-            } ${step.href ? styles.stageClickable : ""}`;
-
-            const inner = (
-              <>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`${styles.connector} ${
-                      sequentiallyComplete[index]
-                        ? styles.connectorCompleted
-                        : styles.connectorUpcoming
-                    }`}
-                  />
-                )}
-
-                <div className={styles.stageDot}>
-                  {isCompleted ? (
-                    <svg
-                      width='12'
-                      height='12'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      stroke='currentColor'
-                      strokeWidth='3'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                    >
-                      <polyline points='20 6 9 17 4 12' />
-                    </svg>
-                  ) : isCurrent ? (
-                    <div className={styles.stageDotInner} />
-                  ) : null}
-                </div>
-
-                <div className={styles.stageText}>
-                  <div className={styles.stageLabelRow}>
-                    <span className={styles.stageLabel}>{step.label}</span>
-                    {isCompleted && step.completedAt && (
-                      <span className={styles.stageDate}>
-                        {format(step.completedAt, "MMM d, yyyy")}
+              const inner = (
+                <>
+                  {index < clientSteps.length - 1 && (
+                    <div
+                      className={`${styles.connector} ${
+                        clientSequentiallyComplete[index]
+                          ? styles.connectorCompleted
+                          : styles.connectorUpcoming
+                      }`}
+                    />
+                  )}
+                  <div className={styles.stageDot}>
+                    {step.completed ? (
+                      <svg
+                        width='12'
+                        height='12'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        stroke='currentColor'
+                        strokeWidth='3'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      >
+                        <polyline points='20 6 9 17 4 12' />
+                      </svg>
+                    ) : isCurrent ? (
+                      <div className={styles.stageDotInner} />
+                    ) : null}
+                  </div>
+                  <div className={styles.stageText}>
+                    <div className={styles.stageLabelRow}>
+                      <span className={styles.stageLabel}>{step.label}</span>
+                      {step.completed && step.completedAt && (
+                        <span className={styles.stageDate}>
+                          {format(step.completedAt, "MMM d, yyyy")}
+                        </span>
+                      )}
+                      {step.completed && !step.completedAt && (
+                        <span className={styles.stageDate}>Complete</span>
+                      )}
+                    </div>
+                    <span className={styles.stageDesc}>{step.desc}</span>
+                    {step.href && !step.completed && (
+                      <span className={styles.moreInfo}>
+                        Go to {step.label} →
                       </span>
                     )}
-                    {isCompleted && !step.completedAt && (
-                      <span className={styles.stageDate}>Complete</span>
-                    )}
                   </div>
-                  <span className={styles.stageDesc}>{step.desc}</span>
+                </>
+              );
 
-                  {/* Building step — preview link */}
-                  {step.key === "building" &&
-                    step.previewUrl &&
-                    !isCompleted && (
+              if (step.href) {
+                return (
+                  <Link key={step.key} href={step.href} className={stageClass}>
+                    {inner}
+                  </Link>
+                );
+              }
+              return (
+                <div key={step.key} className={stageClass}>
+                  {inner}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className={styles.trackerDivider} />
+
+        {/* Section B — What you will get from us */}
+        <div className={styles.trackerSection}>
+          <div className={styles.trackerSectionHeader}>
+            <div className={styles.trackerSectionHeadingBlock}>
+              <span className={styles.trackerSectionNumber}>02</span>
+              <h2 className={styles.trackerSectionHeading}>
+                What you will get from us
+              </h2>
+            </div>
+            <span className={styles.trackerCount}>
+              {completedDeliveryCount} of {deliverySteps.length} complete
+            </span>
+          </div>
+
+          <div className={styles.stages}>
+            {deliverySteps.map((step, index) => {
+              const stageClass = `${styles.stage} ${
+                step.completed
+                  ? styles.stageCompleted
+                  : step.active
+                    ? styles.stageCurrent
+                    : styles.stageUpcoming
+              } ${step.href ? styles.stageClickable : ""}`;
+
+              const inner = (
+                <>
+                  {index < deliverySteps.length - 1 && (
+                    <div
+                      className={`${styles.connector} ${
+                        deliverySequentiallyComplete[index]
+                          ? styles.connectorCompleted
+                          : styles.connectorUpcoming
+                      }`}
+                    />
+                  )}
+                  <div className={styles.stageDot}>
+                    {step.completed ? (
+                      <svg
+                        width='12'
+                        height='12'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        stroke='currentColor'
+                        strokeWidth='3'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      >
+                        <polyline points='20 6 9 17 4 12' />
+                      </svg>
+                    ) : step.active ? (
+                      <div className={styles.stageDotInner} />
+                    ) : null}
+                  </div>
+                  <div className={styles.stageText}>
+                    <div className={styles.stageLabelRow}>
+                      <span className={styles.stageLabel}>{step.label}</span>
+                      {step.completed && (
+                        <span className={styles.stageDate}>Complete</span>
+                      )}
+                      {!step.completed && step.active && (
+                        <span className={styles.stageDateActive}>
+                          In progress
+                        </span>
+                      )}
+                    </div>
+                    <span className={styles.stageDesc}>{step.desc}</span>
+
+                    {/* Blueprint link */}
+                    {step.key === "blueprint" && step.href && (
+                      <Link href={step.href} className={styles.siteLink}>
+                        View your blueprint →
+                      </Link>
+                    )}
+
+                    {/* Preview link */}
+                    {step.key === "preview" &&
+                      step.previewUrl &&
+                      !step.completed && (
+                        <a
+                          href={step.previewUrl}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className={styles.siteLink}
+                        >
+                          See progress ↗
+                        </a>
+                      )}
+
+                    {/* Live link */}
+                    {step.key === "live" && step.liveUrl && step.completed && (
                       <a
-                        href={step.previewUrl}
+                        href={step.liveUrl}
                         target='_blank'
                         rel='noopener noreferrer'
                         className={styles.siteLink}
                       >
-                        See progress ↗
+                        Visit your site ↗
                       </a>
                     )}
-
-                  {/* Live step — live site link */}
-                  {step.key === "live" && step.liveUrl && isCompleted && (
-                    <a
-                      href={step.liveUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className={styles.siteLink}
-                    >
-                      Visit your site ↗
-                    </a>
-                  )}
-
-                  {/* Regular internal steps */}
-                  {step.href && step.key !== "building" && (
-                    <span className={styles.moreInfo}>More info →</span>
-                  )}
-                </div>
-              </>
-            );
-
-            if (step.href) {
-              return (
-                <Link key={step.key} href={step.href} className={stageClass}>
-                  {inner}
-                </Link>
+                  </div>
+                </>
               );
-            }
 
-            return (
-              <div key={step.key} className={stageClass}>
-                {inner}
-              </div>
-            );
-          })}
+              if (step.href) {
+                return (
+                  <Link key={step.key} href={step.href} className={stageClass}>
+                    {inner}
+                  </Link>
+                );
+              }
+              return (
+                <div key={step.key} className={stageClass}>
+                  {inner}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
+      {/* ── Quick links (post-live) ── */}
       {isLive && (
         <div className={styles.quickLinks}>
           <Link href='/dashboard/change-requests' className={styles.quickLink}>
@@ -364,7 +510,7 @@ export default async function DashboardPage() {
               <polyline points='12 5 19 12 12 19' />
             </svg>
           </Link>
-          {liveUrl && (
+          {liveUrl ? (
             <a
               href={liveUrl}
               target='_blank'
@@ -386,8 +532,7 @@ export default async function DashboardPage() {
                 <polyline points='12 5 19 12 12 19' />
               </svg>
             </a>
-          )}
-          {!liveUrl && (
+          ) : (
             <Link href='/dashboard/support' className={styles.quickLink}>
               <span className={styles.quickLinkLabel}>Contact support</span>
               <svg
