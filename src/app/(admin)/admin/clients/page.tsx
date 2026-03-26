@@ -37,7 +37,7 @@ export default async function ClientsPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <span className={styles.eyebrow}>Admin</span>
-        <h1 className={styles.heading}>Clients</h1>
+        <h1 className={`${styles.heading} h2`}>Clients</h1>
         <span className={styles.count}>
           {String(clients.length).padStart(2, "0")} total
         </span>

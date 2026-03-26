@@ -1,4 +1,5 @@
 import { getClientProfile } from "@/actions/client/getClientProfile";
+import { getClientBlueprintStatus } from "@/actions/client/getClientBlueprintPages";
 import { auth } from "../../../../auth";
 import styles from "./DashboardPage.module.css";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { format } from "date-fns";
 export default async function DashboardPage() {
   const session = await auth();
   const profile = await getClientProfile();
+  const blueprintStatus = await getClientBlueprintStatus();
 
   const firstName = session?.user?.name?.split(" ")[0] ?? "there";
   const currentStage = profile?.onboardingStage ?? "REGISTERED";
@@ -93,6 +95,18 @@ export default async function DashboardPage() {
       completedAt: firstAsset ? new Date(firstAsset.createdAt) : null,
     },
     {
+      key: "blueprint",
+      label: "Blueprint Approval",
+      desc: blueprintStatus.hasBlueprint
+        ? blueprintStatus.isFullyApproved
+          ? "Blueprint fully approved. We have everything we need to build."
+          : `Review and approve your website blueprint — ${blueprintStatus.approvedSections} of ${blueprintStatus.totalSections} sections approved.`
+        : "Once you complete your questionnaire, we'll prepare your website blueprint for your review.",
+      href: blueprintStatus.hasBlueprint ? "/dashboard/blueprint" : null,
+      completed: blueprintStatus.isFullyApproved,
+      completedAt: null,
+    },
+    {
       key: "design",
       label: "Design Review",
       desc: "Review your design direction and give us your approval to build.",
@@ -116,9 +130,6 @@ export default async function DashboardPage() {
 
   const allClientDone = clientSteps.every((s) => s.completed);
 
-  // Any document we uploaded that isn't the service agreement (which the client
-  // signs themselves). These are resources we push to the client: brand brief,
-  // SEO checklist, monthly reports, content guide, etc.
   const adminUploadedDocs =
     profile?.documents.filter((d) => d.type !== "SERVICE_AGREEMENT") ?? [];
   const hasAdditionalDocs = adminUploadedDocs.length > 0;
@@ -127,12 +138,12 @@ export default async function DashboardPage() {
     {
       key: "blueprint",
       label: "Website Blueprint",
-      desc: questionnaireSubmitted
+      desc: blueprintStatus.hasBlueprint
         ? "Your sitemap and page-by-page copy plan is ready for review."
         : "Once you complete your questionnaire, we'll publish your website blueprint.",
-      href: questionnaireSubmitted ? "/dashboard/blueprint" : null,
-      completed: questionnaireSubmitted,
-      active: questionnaireSubmitted,
+      href: blueprintStatus.hasBlueprint ? "/dashboard/blueprint" : null,
+      completed: blueprintStatus.isFullyApproved,
+      active: blueprintStatus.hasBlueprint,
     },
     {
       key: "preview",
@@ -171,11 +182,6 @@ export default async function DashboardPage() {
       liveUrl: liveUrl,
     },
     {
-      // This step is intentionally never "completed" — it's an ongoing
-      // deliverable. New reports, guides, and resources get added here
-      // throughout the relationship. The dot stays active (pulsing current
-      // state) rather than checked off, signalling that this is a living
-      // resource hub, not a one-time task.
       key: "additional-documents",
       label: "Resources & Documents",
       desc: hasAdditionalDocs
@@ -279,7 +285,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ── Tracker: split into two sections ── */}
+      {/* ── Tracker ── */}
       <div className={styles.trackerCard}>
         {/* Section A — What we need from you */}
         <div className={styles.trackerSection}>
@@ -349,6 +355,16 @@ export default async function DashboardPage() {
                       {step.completed && !step.completedAt && (
                         <span className={styles.stageDate}>Complete</span>
                       )}
+                      {/* Blueprint partial progress badge */}
+                      {step.key === "blueprint" &&
+                        !step.completed &&
+                        blueprintStatus.hasBlueprint &&
+                        blueprintStatus.totalSections > 0 && (
+                          <span className={styles.stageDateActive}>
+                            {blueprintStatus.approvedSections}/
+                            {blueprintStatus.totalSections} approved
+                          </span>
+                        )}
                     </div>
                     <span className={styles.stageDesc}>{step.desc}</span>
                     {step.href && !step.completed && (
@@ -444,20 +460,22 @@ export default async function DashboardPage() {
                             ? hasAdditionalDocs
                               ? `${adminUploadedDocs.length} available`
                               : "Ongoing"
-                            : "In progress"}
+                            : step.key === "blueprint" &&
+                                blueprintStatus.hasBlueprint &&
+                                !blueprintStatus.isFullyApproved
+                              ? `${blueprintStatus.approvedSections}/${blueprintStatus.totalSections} approved`
+                              : "In progress"}
                         </span>
                       )}
                     </div>
                     <span className={styles.stageDesc}>{step.desc}</span>
 
-                    {/* Blueprint link */}
                     {step.key === "blueprint" && step.href && (
                       <Link href={step.href} className={styles.siteLink}>
                         View your blueprint →
                       </Link>
                     )}
 
-                    {/* Preview link */}
                     {step.key === "preview" &&
                       step.previewUrl &&
                       !step.completed && (
@@ -471,7 +489,6 @@ export default async function DashboardPage() {
                         </a>
                       )}
 
-                    {/* Live link */}
                     {step.key === "live" && step.liveUrl && step.completed && (
                       <a
                         href={step.liveUrl}
@@ -483,7 +500,6 @@ export default async function DashboardPage() {
                       </a>
                     )}
 
-                    {/* Resources & documents link */}
                     {step.key === "additional-documents" && step.href && (
                       <Link href={step.href} className={styles.siteLink}>
                         View your documents →

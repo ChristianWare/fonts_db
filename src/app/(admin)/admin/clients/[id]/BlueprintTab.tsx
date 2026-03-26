@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import styles from "./BlueprintTab.module.css";
@@ -185,6 +185,10 @@ function TreeLegend() {
   );
 }
 
+// ── Tree view ──────────────────────────────────────────────────────────────
+
+const SCROLL_AMOUNT = 320;
+
 function TreeView({
   pages,
   activePageId,
@@ -194,7 +198,40 @@ function TreeView({
   activePageId: string;
   onSelect: (id: string) => void;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState);
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      ro.disconnect();
+    };
+  }, [updateScrollState, pages]);
+
+  function scrollLeft() {
+    scrollRef.current?.scrollBy({ left: -SCROLL_AMOUNT, behavior: "smooth" });
+  }
+
+  function scrollRight() {
+    scrollRef.current?.scrollBy({ left: SCROLL_AMOUNT, behavior: "smooth" });
+  }
+
   const topLevel = sortByPosition(pages.filter((p) => !p.parentId));
+
   if (topLevel.length === 0) {
     return (
       <div className={styles.treeEmpty}>
@@ -202,22 +239,48 @@ function TreeView({
       </div>
     );
   }
+
   return (
     <div className={styles.treeViewContainer}>
       <TreeLegend />
-      <div className={styles.treeViewScroll}>
-        <div className={styles.treeTopRow}>
-          {topLevel.map((page) => (
-            <TreePageNode
-              key={page.id}
-              page={page}
-              allPages={pages}
-              activePageId={activePageId}
-              onSelect={onSelect}
-            />
-          ))}
+
+      <div className={styles.treeScrollWrapper}>
+        {/* Left button */}
+        <button
+          className={`${styles.treeNavBtn} ${styles.treeNavBtnLeft} ${!canScrollLeft ? styles.treeNavBtnHidden : ""}`}
+          onClick={scrollLeft}
+          aria-label='Scroll left'
+          tabIndex={canScrollLeft ? 0 : -1}
+        >
+          ←
+        </button>
+
+        {/* Tree content */}
+        <div className={styles.treeViewScroll} ref={scrollRef}>
+          <div className={styles.treeTopRow}>
+            {topLevel.map((page) => (
+              <TreePageNode
+                key={page.id}
+                page={page}
+                allPages={pages}
+                activePageId={activePageId}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
         </div>
+
+        {/* Right button */}
+        <button
+          className={`${styles.treeNavBtn} ${styles.treeNavBtnRight} ${!canScrollRight ? styles.treeNavBtnHidden : ""} ${canScrollLeft ? styles.treeNavBtnRightScrolled : ""}`}
+          onClick={scrollRight}
+          aria-label='Scroll right'
+          tabIndex={canScrollRight ? 0 : -1}
+        >
+          →
+        </button>
       </div>
+
       <div className={styles.treeNote}>
         Click any page to select it. Switch to Edit view to update sections and
         copy.
@@ -255,7 +318,7 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
 
   // Drag state
   const dragId = useRef<string | null>(null);
-  const dragGroupKey = useRef<string | null>(null); // "top" or parentId
+  const dragGroupKey = useRef<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
 
@@ -300,10 +363,7 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
     router.refresh();
   }
 
-  // ── Drag and drop reordering ───────────────────────────────────────────
-  // Reordering is scoped: top-level pages reorder among themselves,
-  // slug pages reorder among their siblings (same parentId).
-  // To change a page's parent, use the Reparent modal.
+  // ── Drag and drop ──────────────────────────────────────────────────────
 
   function handleDragStart(id: string, parentId: string | null) {
     dragId.current = id;
@@ -318,7 +378,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
   ) {
     e.preventDefault();
     const overGroup = overParentId ?? "top";
-    // Only allow drop within the same group
     if (overGroup !== dragGroupKey.current) return;
     if (overId !== dragId.current) setDragOverId(overId);
   }
@@ -348,7 +407,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
       return;
     }
 
-    // Get ordered list for this group
     const groupPages = sortByPosition(
       pages.filter((p) => (p.parentId ?? "top") === group),
     );
@@ -359,15 +417,12 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
       return;
     }
 
-    // Reorder
     const reordered = [...groupPages];
     const [moved] = reordered.splice(sourceIdx, 1);
     reordered.splice(dropIdx, 0, moved);
 
-    // Assign new positions
     const updates = reordered.map((p, i) => ({ id: p.id, position: i }));
 
-    // Optimistic update
     setPages((prev) =>
       prev.map((p) => {
         const u = updates.find((u) => u.id === p.id);
@@ -380,14 +435,13 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
     router.refresh();
   }
 
-  // ── Reparent (promote / demote / move) ────────────────────────────────
+  // ── Reparent ───────────────────────────────────────────────────────────
 
   async function handleReparent() {
     if (!modal || modal.type !== "reparent") return;
     const { pageId } = modal;
     const newParentId = reparentTargetId === "" ? null : reparentTargetId;
     setModal(null);
-
     await reparentSitemapPage(pageId, newParentId);
     setPages((prev) =>
       prev.map((p) => (p.id === pageId ? { ...p, parentId: newParentId } : p)),
@@ -553,7 +607,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
         onDrop={(e) => handleDrop(e, page.id, page.parentId)}
         onDragEnd={handleDragEnd}
       >
-        {/* Drag handle */}
         <span className={styles.dragHandle} title='Drag to reorder'>
           ⠿
         </span>
@@ -580,7 +633,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
           </span>
         </button>
 
-        {/* Actions: reparent + delete */}
         <button
           className={styles.reparentBtn}
           onClick={() => {
@@ -790,6 +842,7 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
             )}
           </div>
 
+          {/* Tree view */}
           {viewMode === "tree" && (
             <TreeView
               pages={pages}
@@ -798,6 +851,7 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
             />
           )}
 
+          {/* Edit view */}
           {viewMode === "edit" && (
             <>
               {!activePage ? (

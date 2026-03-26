@@ -201,7 +201,7 @@ export default function ChangeRequestsClient({
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Change Requests</h1>
+        <h1 className={`${styles.heading} h2`}>Change Requests</h1>
         <p className={styles.subheading}>
           {pending.length} pending · {inProgress.length} in progress ·{" "}
           {completed.length} completed

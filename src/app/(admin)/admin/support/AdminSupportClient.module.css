@@ -13,22 +13,6 @@
   flex-wrap: wrap;
 }
 
-.heading {
-  font-family: var(--RobotoFlexii);
-  font-size: 5rem;
-  letter-spacing: -2px;
-  font-weight: 400;
-  line-height: 0.9em;
-  color: var(--black);
-  text-transform: uppercase;
-  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
-  font-variation-settings:
-    "opsz" 56, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
-    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
-    "YTAS" 750, "YTDE" -203, "YTFI" 738;
-  -webkit-font-smoothing: antialiased;
-}
-
 .subheading {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -116,7 +100,9 @@
   letter-spacing: -0.03em;
   color: var(--black);
   text-transform: uppercase;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -249,7 +235,9 @@
   color: var(--text);
   cursor: pointer;
   background: none;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .cancelBtn:hover {
@@ -270,8 +258,13 @@
   transition: opacity 0.2s ease;
 }
 
-.sendBtn:hover { opacity: 0.85; }
-.sendBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.sendBtn:hover {
+  opacity: 0.85;
+}
+.sendBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
 .replyBtn {
   align-self: flex-start;
@@ -284,7 +277,9 @@
   color: var(--text);
   cursor: pointer;
   background: none;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .replyBtn:hover {
@@ -307,7 +302,13 @@
 
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .header { padding: 3rem 2rem; }
-  .sectionHeading { padding: 1.6rem 2rem; }
-  .ticketCard { padding: 2.4rem 2rem; }
+  .header {
+    padding: 3rem 2rem;
+  }
+  .sectionHeading {
+    padding: 1.6rem 2rem;
+  }
+  .ticketCard {
+    padding: 2.4rem 2rem;
+  }
 }

@@ -29,6 +29,26 @@ const navItems = [
     ),
   },
   {
+    href: "/dashboard/blueprint",
+    label: "Blueprint",
+    icon: (
+      <svg
+        width='20'
+        height='20'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      >
+        <rect x='3' y='3' width='18' height='18' rx='2' />
+        <line x1='3' y1='9' x2='21' y2='9' />
+        <line x1='9' y1='21' x2='9' y2='9' />
+      </svg>
+    ),
+  },
+  {
     href: "/dashboard/documents",
     label: "Documents",
     icon: (
@@ -202,7 +222,6 @@ export default function PortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Collapsed by default on mobile (<=768px), expanded on desktop
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
     return window.innerWidth <= 568;
@@ -314,7 +333,6 @@ export default function PortalLayout({
 
       {/* MAIN */}
       <main className={styles.main}>
-        {/* Top bar */}
         <div className={styles.topbar}>
           <div className={styles.topbarLeft}>
             <div className={styles.pageIndicator}>
@@ -326,8 +344,6 @@ export default function PortalLayout({
             <div className={styles.avatar}>{initials}</div>
           </div>
         </div>
-
-        {/* Content */}
         <div className={styles.content}>{children}</div>
       </main>
     </div>

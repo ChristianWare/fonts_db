@@ -383,7 +383,7 @@ export default function ClientDetailClient({
               {(client.user.name ?? "?")[0].toUpperCase()}
             </div>
             <div>
-              <h1 className={styles.heading}>{client.businessName}</h1>
+              <h1 className={`${styles.heading} h2`}>{client.businessName}</h1>
               <p className={styles.clientEmail}>{client.user.email}</p>
             </div>
           </div>

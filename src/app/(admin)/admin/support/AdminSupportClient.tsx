@@ -133,7 +133,7 @@ export default function AdminSupportClient({ tickets }: { tickets: Ticket[] }) {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.heading}>Support</h1>
+        <h1 className={`${styles.heading} h2`}>Support</h1>
         <p className={styles.subheading}>
           {openTickets.length} open · {closedTickets.length} closed
         </p>

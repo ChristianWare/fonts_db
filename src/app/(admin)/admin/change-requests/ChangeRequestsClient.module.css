@@ -13,37 +13,6 @@
   flex-wrap: wrap;
 }
 
-.heading {
-  font-family: var(--RobotoFlexii);
-  font-size: 5rem;
-  letter-spacing: -2px;
-  font-weight: 400;
-  line-height: 0.9em;
-  color: var(--black);
-  text-transform: uppercase;
-  font-feature-settings:
-    "blwf" on,
-    "cv09" on,
-    "cv03" on,
-    "cv04" on,
-    "cv11" on,
-    "pnum" on;
-  font-variation-settings:
-    "opsz" 56,
-    "wght" 700,
-    "GRAD" 0,
-    "wdth" 81,
-    "slnt" 0,
-    "XOPQ" 96,
-    "YOPQ" 72,
-    "XTRA" 468,
-    "YTUC" 760,
-    "YTLC" 514,
-    "YTAS" 750,
-    "YTDE" -203,
-    "YTFI" 738;
-  -webkit-font-smoothing: antialiased;
-}
 
 .subheading {
   font-family: var(--GeistMono);

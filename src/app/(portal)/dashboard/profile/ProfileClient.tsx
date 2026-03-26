@@ -86,7 +86,7 @@ export default function ProfileClient({
 
       {/* Personal Info */}
       <div className={styles.card}>
-        <h2 className={styles.cardHeading}>Personal Information</h2>
+        <h1 className={`${styles.cardHeading} h2`}>Personal Information</h1>
         <div className={styles.fieldGrid}>
           <div className={styles.field}>
             <label className={styles.label}>Full Name</label>

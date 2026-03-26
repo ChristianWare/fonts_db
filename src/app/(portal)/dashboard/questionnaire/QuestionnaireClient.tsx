@@ -201,7 +201,7 @@ export default function QuestionnaireClient({
         <div className={styles.header}>
           <div className={styles.headerTop}>
             <div>
-              <h1 className={styles.heading}>Questionnaire</h1>
+              <h1 className={`${styles.heading} h2`}>Questionnaire</h1>
               <p className={styles.subheading}>
                 {isLocked
                   ? "Your responses are locked while your site is in progress."
