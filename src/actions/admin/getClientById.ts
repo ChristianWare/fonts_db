@@ -24,6 +24,17 @@ export const getClientById = async (clientProfileId: string) => {
           changedBy: { select: { name: true } },
         },
       },
+      sitemapPages: {
+        orderBy: { position: "asc" },
+        include: {
+          sections: {
+            orderBy: { position: "asc" },
+            include: {
+              comments: { orderBy: { createdAt: "asc" } },
+            },
+          },
+        },
+      },
     },
   });
 };

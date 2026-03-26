@@ -11,6 +11,7 @@ import { getCloudinarySignature } from "@/actions/client/getCloudinarySignature"
 import { uploadDocumentToClient } from "@/actions/admin/uploadDocumentToClient";
 import { questionnaireSections } from "@/lib/questionnaire.config";
 import DesignOptionsTab from "./DesignOptionsTab";
+import BlueprintTab from "./BlueprintTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
 import SiteUrlsEditor from "./SiteUrlsEditor";
 import { deleteClient } from "@/actions/admin/deleteClient";
@@ -41,8 +42,8 @@ const stageLabels: Record<OnboardingStage, string> = {
   SITE_LIVE: "Site Live",
 };
 
-const documentTypes = [
-  { value: "SERVICE_AGREEMENT", label: "Service Agreement" },
+// Resources tab does NOT include SERVICE_AGREEMENT — that lives in its own tab
+const resourceDocumentTypes = [
   { value: "DESIGN_APPROVAL", label: "Design Approval" },
   { value: "CONTENT_REVIEW", label: "Content Review" },
   { value: "GO_LIVE_CONFIRMATION", label: "Go-Live Confirmation" },
@@ -62,15 +63,22 @@ export default function ClientDetailClient({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [activeTab, setActiveTab] = useState<
-    "overview" | "documents" | "questionnaire" | "assets" | "design" | "billing"
+    | "overview"
+    | "agreement"
+    | "resources"
+    | "questionnaire"
+    | "assets"
+    | "design"
+    | "billing"
+    | "blueprint"
   >("overview");
 
   const [isLive, setIsLive] = useState(client.onboardingStage === "SITE_LIVE");
   const [togglingLive, setTogglingLive] = useState(false);
 
   const [docTitle, setDocTitle] = useState("");
-  const [docType, setDocType] = useState("SERVICE_AGREEMENT");
-  const [requiresSignature, setRequiresSignature] = useState(true);
+  const [docType, setDocType] = useState("DESIGN_APPROVAL");
+  const [requiresSignature, setRequiresSignature] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [docError, setDocError] = useState<string | null>(null);
 
@@ -149,6 +157,9 @@ export default function ClientDetailClient({
   const serviceAgreementDoc = client.documents.find(
     (d) => d.type === "SERVICE_AGREEMENT" && d.status === "SIGNED",
   );
+  const serviceAgreementAny = client.documents.find(
+    (d) => d.type === "SERVICE_AGREEMENT",
+  );
   const billingActive =
     (client as any).subscription?.status === "ACTIVE" ||
     (client as any).subscription?.status === "PAST_DUE";
@@ -165,6 +176,10 @@ export default function ClientDetailClient({
   const buildingStarted = designReviewed;
   const hasPreviewUrl = !!client.previewUrl;
   const hasLiveUrl = !!client.liveUrl;
+  const adminUploadedDocs = client.documents.filter(
+    (d) => d.type !== "SERVICE_AGREEMENT",
+  );
+  const hasAdditionalDocs = adminUploadedDocs.length > 0;
 
   // ── Section 01 — What we need from the client ─────────────────────────────
   type ClientStep = {
@@ -265,7 +280,6 @@ export default function ClientDetailClient({
     desc: string;
     completed: boolean;
     active: boolean;
-    action?: React.ReactNode;
   };
 
   const allClientDone = clientSteps.every((s) => s.completed);
@@ -278,7 +292,6 @@ export default function ClientDetailClient({
         ? "Questionnaire received. Publish the sitemap and copy plan to the client portal."
         : "Available once client submits their questionnaire.",
       completed: questionnaireSubmitted && hasPreviewUrl,
-      // TODO: key off a real blueprintPublishedAt field once added to schema
       active: questionnaireSubmitted,
     },
     {
@@ -316,6 +329,17 @@ export default function ClientDetailClient({
       completed: isLive,
       active: allClientDone,
     },
+    {
+      key: "additional-documents",
+      label: "Resources & Documents",
+      desc: hasAdditionalDocs
+        ? `${adminUploadedDocs.length} resource${adminUploadedDocs.length === 1 ? "" : "s"} uploaded — brand identity brief, SEO checklist, content guide, monthly reports, and any other files shared with this client.`
+        : isLive
+          ? "No resources uploaded yet. Upload docs from the Resources tab — they'll appear in the client's portal immediately."
+          : "After launch, upload monthly reports, the SEO checklist, brand brief, and content guide here.",
+      completed: false,
+      active: isLive || hasAdditionalDocs,
+    },
   ];
 
   const completedClientCount = clientSteps.filter((s) => s.completed).length;
@@ -330,11 +354,21 @@ export default function ClientDetailClient({
     deliverySteps.slice(0, i + 1).every((s) => s.completed),
   );
 
-  // ── Client's design selection ──────────────────────────────────────────────
   const selectedDesign =
     (client.brandAssets as any[]).find((a) => a.selected === true) ?? null;
 
   const answers = client.questionnaire?.answers as Record<string, any> | null;
+
+  const tabs = [
+    { key: "overview", label: "Overview" },
+    { key: "agreement", label: "Agreement" },
+    { key: "resources", label: "Resources" },
+    { key: "blueprint", label: "Blueprint" },
+    { key: "questionnaire", label: "Questionnaire" },
+    { key: "assets", label: "Assets" },
+    { key: "design", label: "Design" },
+    { key: "billing", label: "Billing" },
+  ] as const;
 
   return (
     <div className={styles.page}>
@@ -361,24 +395,20 @@ export default function ClientDetailClient({
 
       {/* ── Tabs ── */}
       <div className={styles.tabs}>
-        {(
-          [
-            "overview",
-            "documents",
-            "questionnaire",
-            "assets",
-            "design",
-            "billing",
-          ] as const
-        ).map((tab) => (
+        {tabs.map((tab) => (
           <button
-            key={tab}
-            className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ""}`}
-            onClick={() => setActiveTab(tab)}
+            key={tab.key}
+            className={`${styles.tab} ${activeTab === tab.key ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab(tab.key)}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            {tab === "design" && selectedDesign && (
+            {tab.label}
+            {tab.key === "design" && selectedDesign && (
               <span className={styles.tabDot} />
+            )}
+            {tab.key === "agreement" && serviceAgreementAny && (
+              <span
+                className={`${styles.tabDot} ${serviceAgreementDoc ? styles.tabDotGreen : styles.tabDotAmber}`}
+              />
             )}
           </button>
         ))}
@@ -387,9 +417,8 @@ export default function ClientDetailClient({
       {/* ── OVERVIEW TAB ─────────────────────────────────────────────────── */}
       {activeTab === "overview" && (
         <div className={styles.tabContent}>
-          {/* Split tracker */}
           <div className={styles.trackerCard}>
-            {/* Section 01 — What we need from the client */}
+            {/* Section 01 */}
             <div className={styles.trackerSection}>
               <div className={styles.trackerSectionHeader}>
                 <div className={styles.trackerSectionHeadingBlock}>
@@ -487,10 +516,9 @@ export default function ClientDetailClient({
               </div>
             </div>
 
-            {/* Divider */}
             <div className={styles.trackerDivider} />
 
-            {/* Section 02 — What we deliver */}
+            {/* Section 02 */}
             <div className={styles.trackerSection}>
               <div className={styles.trackerSectionHeader}>
                 <div className={styles.trackerSectionHeadingBlock}>
@@ -551,7 +579,11 @@ export default function ClientDetailClient({
                         )}
                         {!step.completed && step.active && (
                           <span className={styles.stageDateActive}>
-                            Action needed
+                            {step.key === "additional-documents"
+                              ? hasAdditionalDocs
+                                ? `${adminUploadedDocs.length} uploaded`
+                                : "Action needed"
+                              : "Action needed"}
                           </span>
                         )}
                       </div>
@@ -561,7 +593,6 @@ export default function ClientDetailClient({
                 ))}
               </div>
 
-              {/* Live toggle lives inside delivery section — it's an admin action */}
               <div className={styles.toggleDivider} />
               <div className={styles.liveToggleRow}>
                 <div className={styles.liveToggleLeft}>
@@ -647,7 +678,6 @@ export default function ClientDetailClient({
             </div>
           </div>
 
-          {/* Billing rates */}
           <div className={styles.card}>
             <BillingRatesEditor
               clientProfileId={client.id}
@@ -657,7 +687,6 @@ export default function ClientDetailClient({
             />
           </div>
 
-          {/* Site URLs */}
           <div className={styles.card}>
             <SiteUrlsEditor
               clientProfileId={client.id}
@@ -666,7 +695,6 @@ export default function ClientDetailClient({
             />
           </div>
 
-          {/* Danger zone */}
           <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
             <h3
               className={styles.cardHeading}
@@ -754,13 +782,64 @@ export default function ClientDetailClient({
         </div>
       )}
 
-      {/* ── DOCUMENTS TAB ────────────────────────────────────────────────── */}
-      {activeTab === "documents" && (
+      {/* ── AGREEMENT TAB ────────────────────────────────────────────────── */}
+      {activeTab === "agreement" && (
         <div className={styles.tabContent}>
           <div className={styles.card}>
-            <h3 className={styles.cardHeading}>Upload Document</h3>
+            <h3 className={styles.cardHeading}>Service Agreement</h3>
+            {!serviceAgreementAny ? (
+              <p className={styles.emptyText}>
+                No service agreement has been sent to this client yet. Upload
+                one from the legacy documents flow or send it via your signing
+                tool.
+              </p>
+            ) : (
+              <div className={styles.docList}>
+                <div className={styles.docRow}>
+                  <div className={styles.docInfo}>
+                    <span className={styles.docTitle}>
+                      {serviceAgreementAny.title}
+                    </span>
+                    <span className={styles.docMeta}>
+                      {serviceAgreementAny.status === "SIGNED"
+                        ? `Signed ${format(new Date(serviceAgreementAny.signedAt!), "MMMM d, yyyy")}`
+                        : serviceAgreementAny.status === "PENDING_SIGNATURE"
+                          ? "Sent — awaiting client signature"
+                          : "Uploaded — no signature required"}
+                    </span>
+                  </div>
+                  <div className={styles.docActions}>
+                    {serviceAgreementAny.status === "SIGNED" && (
+                      <span className={styles.signedBadge}>✓ Signed</span>
+                    )}
+                    {serviceAgreementAny.status === "PENDING_SIGNATURE" && (
+                      <span className={styles.pendingBadge}>Pending</span>
+                    )}
+                    <a
+                      href={serviceAgreementAny.fileUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className={styles.downloadBtn}
+                    >
+                      ↓ Download
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── RESOURCES TAB ────────────────────────────────────────────────── */}
+      {activeTab === "resources" && (
+        <div className={styles.tabContent}>
+          <div className={styles.card}>
+            <h3 className={styles.cardHeading}>Upload Resource</h3>
             <p className={styles.cardDesc}>
-              Upload a document to this client&apos;s portal.
+              Upload brand guides, SEO checklists, monthly reports, content
+              guides, and any other files for this client. These appear in their
+              portal under Resources & Documents.
             </p>
             <div className={styles.uploadForm}>
               <div className={styles.uploadRow}>
@@ -776,7 +855,7 @@ export default function ClientDetailClient({
                   value={docType}
                   onChange={(e) => setDocType(e.target.value)}
                 >
-                  {documentTypes.map((dt) => (
+                  {resourceDocumentTypes.map((dt) => (
                     <option key={dt.value} value={dt.value}>
                       {dt.label}
                     </option>
@@ -818,13 +897,13 @@ export default function ClientDetailClient({
 
           <div className={styles.card}>
             <h3 className={styles.cardHeading}>
-              Documents ({client.documents.length})
+              Uploaded Resources ({adminUploadedDocs.length})
             </h3>
-            {client.documents.length === 0 ? (
-              <p className={styles.emptyText}>No documents uploaded yet.</p>
+            {adminUploadedDocs.length === 0 ? (
+              <p className={styles.emptyText}>No resources uploaded yet.</p>
             ) : (
               <div className={styles.docList}>
-                {client.documents.map((doc) => (
+                {adminUploadedDocs.map((doc) => (
                   <div key={doc.id} className={styles.docRow}>
                     <div className={styles.docInfo}>
                       <span className={styles.docTitle}>{doc.title}</span>
@@ -835,6 +914,8 @@ export default function ClientDetailClient({
                           : doc.status === "PENDING_SIGNATURE"
                             ? "Awaiting signature"
                             : "Uploaded"}
+                        {" · "}
+                        {format(new Date(doc.createdAt), "MMM d, yyyy")}
                       </span>
                     </div>
                     <a
@@ -849,6 +930,29 @@ export default function ClientDetailClient({
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── BLUEPRINT TAB ────────────────────────────────────────────────── */}
+      {activeTab === "blueprint" && (
+        <div className={styles.tabContent}>
+          <div
+            className={styles.card}
+            style={{ padding: 0, overflow: "hidden" }}
+          >
+            <div style={{ padding: "3rem 3rem 2rem" }}>
+              <h3 className={styles.cardHeading}>Website Blueprint</h3>
+              <p className={styles.cardDesc} style={{ marginTop: "1.2rem" }}>
+                Build the sitemap and copy plan for this client. Each page and
+                section can be drafted, sent for review, and approved. The
+                client sees this in their portal under Website Blueprint.
+              </p>
+            </div>
+            <BlueprintTab
+              clientId={client.id}
+              initialPages={(client as any).sitemapPages ?? []}
+            />
           </div>
         </div>
       )}
@@ -1067,9 +1171,7 @@ export default function ClientDetailClient({
                   {client.monthlyAmountCents > 0
                     ? `$${(client.monthlyAmountCents / 100).toLocaleString(
                         "en-US",
-                        {
-                          minimumFractionDigits: 0,
-                        },
+                        { minimumFractionDigits: 0 },
                       )}/mo`
                     : "—"}
                 </span>

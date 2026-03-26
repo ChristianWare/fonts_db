@@ -230,8 +230,9 @@ model ClientProfile {
   previewUrl String?
   liveUrl    String?
 
-  questionnaireSkipped Boolean @default(false)
-  assetsSkipped        Boolean @default(false)
+  questionnaireSkipped Boolean       @default(false)
+  assetsSkipped        Boolean       @default(false)
+  sitemapPages         SitemapPage[]
 
   @@index([onboardingStage])
 }
@@ -479,4 +480,49 @@ model SupportTicket {
 
   @@index([clientProfileId])
   @@index([status])
+}
+
+enum SitemapStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+}
+
+model SitemapPage {
+  id              String           @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile    @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  name            String
+  position        Int              @default(0)
+  sections        SitemapSection[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([clientProfileId])
+}
+
+model SitemapSection {
+  id        String           @id @default(cuid())
+  pageId    String
+  page      SitemapPage      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  title     String
+  copy      String?          @db.Text
+  status    SitemapStatus    @default(DRAFT)
+  position  Int              @default(0)
+  comments  SitemapComment[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([pageId])
+}
+
+model SitemapComment {
+  id         String         @id @default(cuid())
+  sectionId  String
+  section    SitemapSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  authorType String
+  text       String         @db.Text
+  createdAt  DateTime       @default(now())
+
+  @@index([sectionId])
 }

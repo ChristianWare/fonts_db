@@ -116,6 +116,7 @@
   gap: 0;
   border-bottom: 1px solid var(--lightGray);
   padding: 0 5rem;
+  overflow-x: auto;
 }
 
 .tab {
@@ -134,6 +135,9 @@
     color 0.15s ease,
     border-color 0.15s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .tab:hover {
@@ -145,15 +149,24 @@
   border-bottom-color: var(--black);
 }
 
+/* Default tab dot (green — design tab) */
 .tabDot {
   display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
   background-color: #16a34a;
-  margin-left: 0.6rem;
   vertical-align: middle;
-  position: relative;
-  top: -0.1rem;
+  flex-shrink: 0;
+}
+
+/* Green variant (signed) */
+.tabDotGreen {
+  background-color: #16a34a;
+}
+
+/* Amber variant (pending) */
+.tabDotAmber {
+  background-color: #ca8a04;
 }
 
 /* ── Tab content ── */
@@ -201,7 +214,7 @@
   text-transform: none;
 }
 
-/* ── Tracker card (outer wrapper) ── */
+/* ── Tracker card ── */
 .trackerCard {
   border: 1px solid var(--lightGray);
   background-color: var(--white);
@@ -209,13 +222,11 @@
   flex-direction: column;
 }
 
-/* ── Tracker section (each half) ── */
 .trackerSection {
   display: flex;
   flex-direction: column;
 }
 
-/* Section header — black bg, accent text */
 .trackerSectionHeader {
   display: flex;
   align-items: center;
@@ -231,15 +242,21 @@
   gap: 1.6rem;
 }
 
-
-
-.trackerSectionNumber, .trackerSectionHeading {
+.trackerSectionNumber {
   font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  opacity: 0.45;
+}
+
+.trackerSectionHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .trackerCount {
@@ -251,13 +268,12 @@
   opacity: 0.4;
 }
 
-/* ── Divider between the two sections ── */
 .trackerDivider {
   height: 1px;
   background-color: var(--lightGray);
 }
 
-/* ── Stages list ── */
+/* ── Stages ── */
 .stages {
   display: flex;
   flex-direction: column;
@@ -277,13 +293,11 @@
   border-bottom: none;
 }
 
-/* Vertical connector line */
 .connector {
   position: absolute;
   left: calc(3rem + 1rem);
   top: calc(2.4rem + 2rem);
   width: 2px;
-  height: 100%;
   bottom: 0;
   transform: translateX(-50%);
 }
@@ -296,7 +310,6 @@
   background-color: var(--lightGray);
 }
 
-/* ── Stage dot ── */
 .stageDot {
   width: 2rem;
   height: 2rem;
@@ -330,7 +343,6 @@
   background-color: var(--black);
 }
 
-/* ── Stage text ── */
 .stageText {
   display: flex;
   flex-direction: column;
@@ -357,7 +369,6 @@
   color: var(--text);
 }
 
-/* Completed date — green outline */
 .stageDate {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -368,7 +379,6 @@
   padding: 0.2rem 0.8rem;
 }
 
-/* Pending badge — neutral */
 .stageDatePending {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -379,7 +389,6 @@
   padding: 0.2rem 0.8rem;
 }
 
-/* Action needed badge — accent */
 .stageDateActive {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -399,13 +408,12 @@
   line-height: 1.6;
 }
 
-/* ── Toggle divider (inside delivery section) ── */
+/* ── Toggle ── */
 .toggleDivider {
   height: 1px;
   background-color: var(--lightGray);
 }
 
-/* ── Site live toggle ── */
 .liveToggleRow {
   display: flex;
   align-items: center;
@@ -480,7 +488,7 @@
   transform: translateX(0);
 }
 
-/* ── Step skip override ── */
+/* ── Skip override ── */
 .skipLabel {
   display: flex;
   align-items: center;
@@ -589,6 +597,53 @@
   letter-spacing: 0.04em;
   color: var(--text);
   flex-shrink: 0;
+}
+
+/* ── Agreement tab ── */
+.docActions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.signedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  padding: 0.3rem 0.8rem;
+}
+
+.pendingBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ca8a04;
+  border: 1px solid #ca8a04;
+  padding: 0.3rem 0.8rem;
+}
+
+.downloadBtn {
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--lightGray);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.downloadBtn:hover {
+  border-color: var(--black);
+  color: var(--black);
 }
 
 /* ── Upload form ── */
@@ -1050,7 +1105,6 @@
 
   .tabs {
     padding: 0 2rem;
-    overflow-x: auto;
   }
 
   .tabContent {

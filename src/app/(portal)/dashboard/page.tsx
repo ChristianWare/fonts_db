@@ -116,6 +116,13 @@ export default async function DashboardPage() {
 
   const allClientDone = clientSteps.every((s) => s.completed);
 
+  // Any document we uploaded that isn't the service agreement (which the client
+  // signs themselves). These are resources we push to the client: brand brief,
+  // SEO checklist, monthly reports, content guide, etc.
+  const adminUploadedDocs =
+    profile?.documents.filter((d) => d.type !== "SERVICE_AGREEMENT") ?? [];
+  const hasAdditionalDocs = adminUploadedDocs.length > 0;
+
   const deliverySteps: DeliveryStep[] = [
     {
       key: "blueprint",
@@ -162,6 +169,23 @@ export default async function DashboardPage() {
       completed: isLive,
       active: allClientDone,
       liveUrl: liveUrl,
+    },
+    {
+      // This step is intentionally never "completed" — it's an ongoing
+      // deliverable. New reports, guides, and resources get added here
+      // throughout the relationship. The dot stays active (pulsing current
+      // state) rather than checked off, signalling that this is a living
+      // resource hub, not a one-time task.
+      key: "additional-documents",
+      label: "Resources & Documents",
+      desc: hasAdditionalDocs
+        ? `${adminUploadedDocs.length} resource${adminUploadedDocs.length === 1 ? "" : "s"} available — including your brand identity brief, SEO checklist, content guide, and monthly performance reports.`
+        : isLive
+          ? "Your monthly performance report will appear here each month, alongside your SEO checklist and any other resources we share."
+          : "After launch we'll share your brand identity brief, SEO checklist, content guide, and monthly performance reports here.",
+      href: hasAdditionalDocs ? "/dashboard/documents" : null,
+      completed: false,
+      active: isLive || hasAdditionalDocs,
     },
   ];
 
@@ -416,7 +440,11 @@ export default async function DashboardPage() {
                       )}
                       {!step.completed && step.active && (
                         <span className={styles.stageDateActive}>
-                          In progress
+                          {step.key === "additional-documents"
+                            ? hasAdditionalDocs
+                              ? `${adminUploadedDocs.length} available`
+                              : "Ongoing"
+                            : "In progress"}
                         </span>
                       )}
                     </div>
@@ -453,6 +481,13 @@ export default async function DashboardPage() {
                       >
                         Visit your site ↗
                       </a>
+                    )}
+
+                    {/* Resources & documents link */}
+                    {step.key === "additional-documents" && step.href && (
+                      <Link href={step.href} className={styles.siteLink}>
+                        View your documents →
+                      </Link>
                     )}
                   </div>
                 </>
