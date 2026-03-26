@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import styles from "./BlueprintTab.module.css";
@@ -9,6 +9,8 @@ import {
   createSitemapPage,
   deleteSitemapPage,
   deleteAllClientSitemapPages,
+  reorderSitemapPages,
+  reparentSitemapPage,
   createSitemapSection,
   updateSitemapSection,
   createSitemapComment,
@@ -52,6 +54,7 @@ type ViewMode = "edit" | "tree";
 type ModalState =
   | { type: "deletePage"; pageId: string; pageName: string }
   | { type: "startOver" }
+  | { type: "reparent"; pageId: string; pageName: string }
   | null;
 
 // ── Default page names ─────────────────────────────────────────────────────
@@ -84,7 +87,11 @@ function statusLabel(s: SitemapStatus) {
   return s === "APPROVED" ? "Approved" : s === "REVIEW" ? "In Review" : "Draft";
 }
 
-// ── Tree page node (recursive) ─────────────────────────────────────────────
+function sortByPosition(pages: Page[]) {
+  return [...pages].sort((a, b) => a.position - b.position);
+}
+
+// ── Tree node (recursive) ──────────────────────────────────────────────────
 
 function TreePageNode({
   page,
@@ -98,7 +105,9 @@ function TreePageNode({
   onSelect: (id: string) => void;
 }) {
   const [open, setOpen] = useState(true);
-  const children = allPages.filter((p) => p.parentId === page.id);
+  const children = sortByPosition(
+    allPages.filter((p) => p.parentId === page.id),
+  );
   const derived = derivePageStatus(page);
   const approved = page.sections.filter((s) => s.status === "APPROVED").length;
   const total = page.sections.length;
@@ -130,7 +139,6 @@ function TreePageNode({
               e.stopPropagation();
               setOpen(!open);
             }}
-            aria-label={open ? "Collapse" : "Expand"}
           >
             {open ? "▲" : "▼"}
           </button>
@@ -159,38 +167,23 @@ function TreePageNode({
   );
 }
 
-// ── Tree legend ────────────────────────────────────────────────────────────
-
 function TreeLegend() {
   return (
     <div className={styles.treeLegend}>
-      <div className={styles.treeLegendItem}>
-        <div className={styles.treeLegendDot} />
-        <span className={styles.treeLegendLabel}>Draft</span>
-      </div>
-      <div className={styles.treeLegendItem}>
-        <div
-          className={`${styles.treeLegendDot} ${styles.treeLegendDotReview}`}
-        />
-        <span className={styles.treeLegendLabel}>In Review</span>
-      </div>
-      <div className={styles.treeLegendItem}>
-        <div
-          className={`${styles.treeLegendDot} ${styles.treeLegendDotApproved}`}
-        />
-        <span className={styles.treeLegendLabel}>Approved</span>
-      </div>
-      <div className={styles.treeLegendItem}>
-        <div
-          className={`${styles.treeLegendDot} ${styles.treeLegendDotActive}`}
-        />
-        <span className={styles.treeLegendLabel}>Active page</span>
-      </div>
+      {[
+        { cls: "", label: "Draft" },
+        { cls: styles.treeLegendDotReview, label: "In Review" },
+        { cls: styles.treeLegendDotApproved, label: "Approved" },
+        { cls: styles.treeLegendDotActive, label: "Active page" },
+      ].map(({ cls, label }) => (
+        <div key={label} className={styles.treeLegendItem}>
+          <div className={`${styles.treeLegendDot} ${cls}`} />
+          <span className={styles.treeLegendLabel}>{label}</span>
+        </div>
+      ))}
     </div>
   );
 }
-
-// ── Tree view ──────────────────────────────────────────────────────────────
 
 function TreeView({
   pages,
@@ -201,8 +194,7 @@ function TreeView({
   activePageId: string;
   onSelect: (id: string) => void;
 }) {
-  const topLevel = pages.filter((p) => !p.parentId);
-
+  const topLevel = sortByPosition(pages.filter((p) => !p.parentId));
   if (topLevel.length === 0) {
     return (
       <div className={styles.treeEmpty}>
@@ -210,7 +202,6 @@ function TreeView({
       </div>
     );
   }
-
   return (
     <div className={styles.treeViewContainer}>
       <TreeLegend />
@@ -262,14 +253,23 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
   const [startingOver, setStartingOver] = useState(false);
   const [modal, setModal] = useState<ModalState>(null);
 
+  // Drag state
+  const dragId = useRef<string | null>(null);
+  const dragGroupKey = useRef<string | null>(null); // "top" or parentId
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const [dragging, setDragging] = useState<string | null>(null);
+
+  // Reparent modal state
+  const [reparentTargetId, setReparentTargetId] = useState<string>("");
+
   useEffect(() => {
     setPages(initialPages);
   }, [initialPages]);
 
   const activePage = pages.find((p) => p.id === activePageId) ?? pages[0];
-  const topLevelPages = pages.filter((p) => !p.parentId);
+  const topLevelPages = sortByPosition(pages.filter((p) => !p.parentId));
 
-  // ── Seed default pages ─────────────────────────────────────────────────
+  // ── Seed / Start Over ──────────────────────────────────────────────────
 
   async function seedDefaultPages() {
     const created: Page[] = [];
@@ -281,8 +281,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
     setActivePageId(created[0]?.id ?? "");
     router.refresh();
   }
-
-  // ── Start over ─────────────────────────────────────────────────────────
 
   async function handleStartOver() {
     setModal(null);
@@ -299,6 +297,101 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
     setEditingSection(null);
     setViewMode("edit");
     setStartingOver(false);
+    router.refresh();
+  }
+
+  // ── Drag and drop reordering ───────────────────────────────────────────
+  // Reordering is scoped: top-level pages reorder among themselves,
+  // slug pages reorder among their siblings (same parentId).
+  // To change a page's parent, use the Reparent modal.
+
+  function handleDragStart(id: string, parentId: string | null) {
+    dragId.current = id;
+    dragGroupKey.current = parentId ?? "top";
+    setDragging(id);
+  }
+
+  function handleDragOver(
+    e: React.DragEvent,
+    overId: string,
+    overParentId: string | null,
+  ) {
+    e.preventDefault();
+    const overGroup = overParentId ?? "top";
+    // Only allow drop within the same group
+    if (overGroup !== dragGroupKey.current) return;
+    if (overId !== dragId.current) setDragOverId(overId);
+  }
+
+  function handleDragEnd() {
+    setDragging(null);
+    setDragOverId(null);
+    dragId.current = null;
+    dragGroupKey.current = null;
+  }
+
+  async function handleDrop(
+    e: React.DragEvent,
+    dropId: string,
+    dropParentId: string | null,
+  ) {
+    e.preventDefault();
+    const sourceId = dragId.current;
+    const group = dragGroupKey.current;
+    if (!sourceId || sourceId === dropId) {
+      handleDragEnd();
+      return;
+    }
+    const dropGroup = dropParentId ?? "top";
+    if (dropGroup !== group) {
+      handleDragEnd();
+      return;
+    }
+
+    // Get ordered list for this group
+    const groupPages = sortByPosition(
+      pages.filter((p) => (p.parentId ?? "top") === group),
+    );
+    const sourceIdx = groupPages.findIndex((p) => p.id === sourceId);
+    const dropIdx = groupPages.findIndex((p) => p.id === dropId);
+    if (sourceIdx === -1 || dropIdx === -1) {
+      handleDragEnd();
+      return;
+    }
+
+    // Reorder
+    const reordered = [...groupPages];
+    const [moved] = reordered.splice(sourceIdx, 1);
+    reordered.splice(dropIdx, 0, moved);
+
+    // Assign new positions
+    const updates = reordered.map((p, i) => ({ id: p.id, position: i }));
+
+    // Optimistic update
+    setPages((prev) =>
+      prev.map((p) => {
+        const u = updates.find((u) => u.id === p.id);
+        return u ? { ...p, position: u.position } : p;
+      }),
+    );
+
+    handleDragEnd();
+    await reorderSitemapPages(updates);
+    router.refresh();
+  }
+
+  // ── Reparent (promote / demote / move) ────────────────────────────────
+
+  async function handleReparent() {
+    if (!modal || modal.type !== "reparent") return;
+    const { pageId } = modal;
+    const newParentId = reparentTargetId === "" ? null : reparentTargetId;
+    setModal(null);
+
+    await reparentSitemapPage(pageId, newParentId);
+    setPages((prev) =>
+      prev.map((p) => (p.id === pageId ? { ...p, parentId: newParentId } : p)),
+    );
     router.refresh();
   }
 
@@ -324,7 +417,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
   async function handleDeletePage(pageId: string) {
     setModal(null);
     setDeletingPageId(pageId);
-    // Also find and delete any children of this page
     const children = pages.filter((p) => p.parentId === pageId);
     for (const child of children) {
       await deleteSitemapPage(child.id);
@@ -428,108 +520,108 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
     router.refresh();
   }
 
-  // ── Select page (switches to edit view) ───────────────────────────────
-
   function handleSelectPage(id: string) {
     setActivePageId(id);
     setViewMode("edit");
   }
 
-  // ── Sidebar page list renderer ─────────────────────────────────────────
+  // ── Sidebar renderer ───────────────────────────────────────────────────
+
+  function renderSidebarPage(page: Page, isSlug: boolean) {
+    const derived = derivePageStatus(page);
+    const isDraggingThis = dragging === page.id;
+    const isDropTarget = dragOverId === page.id;
+    const isActive = activePageId === page.id;
+
+    const itemClass = [
+      styles.pageItem,
+      isSlug ? styles.pageItemSlug : "",
+      isActive ? styles.pageItemActive : "",
+      isDraggingThis ? styles.pageItemDragging : "",
+      isDropTarget ? styles.pageItemDropTarget : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    return (
+      <div
+        key={page.id}
+        className={itemClass}
+        draggable
+        onDragStart={() => handleDragStart(page.id, page.parentId)}
+        onDragOver={(e) => handleDragOver(e, page.id, page.parentId)}
+        onDrop={(e) => handleDrop(e, page.id, page.parentId)}
+        onDragEnd={handleDragEnd}
+      >
+        {/* Drag handle */}
+        <span className={styles.dragHandle} title='Drag to reorder'>
+          ⠿
+        </span>
+
+        {isSlug && <span className={styles.pageSlugMarker}>└─</span>}
+
+        <button
+          className={styles.pageItemBtn}
+          onClick={() => handleSelectPage(page.id)}
+        >
+          <span
+            className={`${styles.pageDot} ${
+              derived === "APPROVED"
+                ? styles.pageDotApproved
+                : derived === "REVIEW"
+                  ? styles.pageDotReview
+                  : styles.pageDotDraft
+            }`}
+          />
+          <span className={styles.pageName}>{page.name}</span>
+          <span className={styles.pageCount}>
+            {page.sections.filter((s) => s.status === "APPROVED").length}/
+            {page.sections.length}
+          </span>
+        </button>
+
+        {/* Actions: reparent + delete */}
+        <button
+          className={styles.reparentBtn}
+          onClick={() => {
+            setReparentTargetId(page.parentId ?? "");
+            setModal({
+              type: "reparent",
+              pageId: page.id,
+              pageName: page.name,
+            });
+          }}
+          title='Move page'
+        >
+          ↕
+        </button>
+        <button
+          className={styles.pageDeleteBtn}
+          onClick={() =>
+            setModal({
+              type: "deletePage",
+              pageId: page.id,
+              pageName: page.name,
+            })
+          }
+          disabled={deletingPageId === page.id}
+          title='Delete page'
+        >
+          ×
+        </button>
+      </div>
+    );
+  }
 
   function renderSidebarPages() {
     return topLevelPages.map((page) => {
-      const children = pages.filter((p) => p.parentId === page.id);
-      const derived = derivePageStatus(page);
+      const children = sortByPosition(
+        pages.filter((p) => p.parentId === page.id),
+      );
       return (
         <div key={page.id}>
-          {/* Parent page row */}
-          <div
-            className={`${styles.pageItem} ${activePageId === page.id ? styles.pageItemActive : ""}`}
-          >
-            <button
-              className={styles.pageItemBtn}
-              onClick={() => handleSelectPage(page.id)}
-            >
-              <span
-                className={`${styles.pageDot} ${
-                  derived === "APPROVED"
-                    ? styles.pageDotApproved
-                    : derived === "REVIEW"
-                      ? styles.pageDotReview
-                      : styles.pageDotDraft
-                }`}
-              />
-              <span className={styles.pageName}>{page.name}</span>
-              <span className={styles.pageCount}>
-                {page.sections.filter((s) => s.status === "APPROVED").length}/
-                {page.sections.length}
-              </span>
-            </button>
-            <button
-              className={styles.pageDeleteBtn}
-              onClick={() =>
-                setModal({
-                  type: "deletePage",
-                  pageId: page.id,
-                  pageName: page.name,
-                })
-              }
-              disabled={deletingPageId === page.id}
-              title='Delete page'
-            >
-              ×
-            </button>
-          </div>
-
-          {/* Slug child pages */}
-          {children.map((child) => {
-            const childDerived = derivePageStatus(child);
-            return (
-              <div
-                key={child.id}
-                className={`${styles.pageItem} ${styles.pageItemSlug} ${activePageId === child.id ? styles.pageItemActive : ""}`}
-              >
-                <button
-                  className={styles.pageItemBtn}
-                  onClick={() => handleSelectPage(child.id)}
-                >
-                  <span className={styles.pageSlugMarker}>└─</span>
-                  <span
-                    className={`${styles.pageDot} ${
-                      childDerived === "APPROVED"
-                        ? styles.pageDotApproved
-                        : childDerived === "REVIEW"
-                          ? styles.pageDotReview
-                          : styles.pageDotDraft
-                    }`}
-                  />
-                  <span className={styles.pageName}>{child.name}</span>
-                  <span className={styles.pageCount}>
-                    {
-                      child.sections.filter((s) => s.status === "APPROVED")
-                        .length
-                    }
-                    /{child.sections.length}
-                  </span>
-                </button>
-                <button
-                  className={styles.pageDeleteBtn}
-                  onClick={() =>
-                    setModal({
-                      type: "deletePage",
-                      pageId: child.id,
-                      pageName: child.name,
-                    })
-                  }
-                  disabled={deletingPageId === child.id}
-                  title='Delete page'
-                >
-                  ×
-                </button>
-              </div>
-            );
-          })}
+          {renderSidebarPage(page, false)}
+          {children.map((child) => renderSidebarPage(child, true))}
         </div>
       );
     });
@@ -583,11 +675,15 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
             </div>
           )}
         </div>
-        <ConfirmModal
+        <Modals
           modal={modal}
+          pages={pages}
+          reparentTargetId={reparentTargetId}
+          setReparentTargetId={setReparentTargetId}
           onClose={() => setModal(null)}
           onConfirmDelete={handleDeletePage}
           onConfirmStartOver={handleStartOver}
+          onConfirmReparent={handleReparent}
         />
       </>
     );
@@ -611,7 +707,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
           <div className={styles.sidebarLabel}>Pages</div>
           {renderSidebarPages()}
 
-          {/* Add page form */}
           {addingPage ? (
             <div className={styles.addPageForm}>
               <input
@@ -695,7 +790,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
             )}
           </div>
 
-          {/* Tree view */}
           {viewMode === "tree" && (
             <TreeView
               pages={pages}
@@ -704,7 +798,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
             />
           )}
 
-          {/* Edit view */}
           {viewMode === "edit" && (
             <>
               {!activePage ? (
@@ -713,7 +806,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
                 </div>
               ) : (
                 <>
-                  {/* Page header */}
                   <div className={styles.mainHeader}>
                     <div className={styles.mainHeaderTop}>
                       <div className={styles.mainTitleGroup}>
@@ -751,7 +843,6 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
                     </div>
                   </div>
 
-                  {/* Sections */}
                   <div className={styles.sectionsList}>
                     {activePage.sections.length === 0 && (
                       <p className={styles.emptySections}>
@@ -954,29 +1045,43 @@ export default function BlueprintTab({ clientId, initialPages }: Props) {
         </div>
       </div>
 
-      <ConfirmModal
+      <Modals
         modal={modal}
+        pages={pages}
+        reparentTargetId={reparentTargetId}
+        setReparentTargetId={setReparentTargetId}
         onClose={() => setModal(null)}
         onConfirmDelete={handleDeletePage}
         onConfirmStartOver={handleStartOver}
+        onConfirmReparent={handleReparent}
       />
     </>
   );
 }
 
-// ── Confirm modal ──────────────────────────────────────────────────────────
+// ── Modals ─────────────────────────────────────────────────────────────────
 
-function ConfirmModal({
+function Modals({
   modal,
+  pages,
+  reparentTargetId,
+  setReparentTargetId,
   onClose,
   onConfirmDelete,
   onConfirmStartOver,
+  onConfirmReparent,
 }: {
   modal: ModalState;
+  pages: Page[];
+  reparentTargetId: string;
+  setReparentTargetId: (v: string) => void;
   onClose: () => void;
-  onConfirmDelete: (pageId: string) => Promise<void>;
+  onConfirmDelete: (id: string) => Promise<void>;
   onConfirmStartOver: () => Promise<void>;
+  onConfirmReparent: () => Promise<void>;
 }) {
+  const topLevelPages = sortByPosition(pages.filter((p) => !p.parentId));
+
   return (
     <Modal isOpen={modal !== null} onClose={onClose}>
       {modal?.type === "deletePage" && (
@@ -1013,9 +1118,8 @@ function ConfirmModal({
           </div>
           <div className={styles.modalBody}>
             <p className={styles.modalText}>
-              This will permanently delete all existing pages and sections for
-              this client and replace them with the standard black car site
-              architecture.
+              This will permanently delete all existing pages and sections and
+              replace them with the standard black car site architecture.
             </p>
             <p className={styles.modalTextSmall}>
               All copy, comments, and approvals will be lost. This cannot be
@@ -1028,6 +1132,45 @@ function ConfirmModal({
             </button>
             <button className={styles.btnDanger} onClick={onConfirmStartOver}>
               Yes, Start Over
+            </button>
+          </div>
+        </div>
+      )}
+
+      {modal?.type === "reparent" && (
+        <div className={styles.modalContent}>
+          <div className={styles.modalHeader}>
+            <span className={styles.modalHeading}>Move Page</span>
+          </div>
+          <div className={styles.modalBody}>
+            <p className={styles.modalText}>
+              Change where <strong>{modal.pageName}</strong> lives in the site
+              structure.
+            </p>
+            <div className={styles.reparentField}>
+              <label className={styles.reparentLabel}>Move to</label>
+              <select
+                className={styles.inputSm}
+                value={reparentTargetId}
+                onChange={(e) => setReparentTargetId(e.target.value)}
+              >
+                <option value=''>Top-level page (no parent)</option>
+                {topLevelPages
+                  .filter((p) => p.id !== modal.pageId)
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      Slug under: {p.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+          <div className={styles.modalFooter}>
+            <button className={styles.btn} onClick={onClose}>
+              Cancel
+            </button>
+            <button className={styles.btnAccent} onClick={onConfirmReparent}>
+              Move Page
             </button>
           </div>
         </div>

@@ -68,12 +68,13 @@
   margin-bottom: 1rem;
 }
 
-/* ── Page item (top-level) ── */
+/* ── Page item ── */
 .pageItem {
   display: flex;
   align-items: center;
   border: 1px solid transparent;
   transition: background-color 0.12s ease;
+  cursor: default;
 }
 
 .pageItem:hover {
@@ -85,22 +86,53 @@
   border-color: var(--lightGray);
 }
 
-/* ── Slug child page (indented) ── */
+/* Slug indentation */
 .pageItemSlug {
   padding-left: 2rem;
 }
 
+/* Drag states */
+.pageItemDragging {
+  opacity: 0.4;
+}
+
+.pageItemDropTarget {
+  border-color: var(--black);
+  border-top: 2px solid var(--black);
+}
+
+/* ── Drag handle ── */
+.dragHandle {
+  padding: 0 0 0 1rem;
+  font-size: 1.4rem;
+  color: var(--text);
+  opacity: 0.2;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+  transition: opacity 0.12s;
+}
+
+.pageItem:hover .dragHandle {
+  opacity: 0.5;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* Slug marker */
 .pageSlugMarker {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
   color: var(--text);
   opacity: 0.35;
   flex-shrink: 0;
-  margin-right: 0;
   line-height: 1;
 }
 
-/* ── Page item button ── */
+/* Page item button (name + count) */
 .pageItemBtn {
   display: flex;
   align-items: center;
@@ -114,6 +146,30 @@
   min-width: 0;
 }
 
+/* ── Reparent button ── */
+.reparentBtn {
+  padding: 0 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: var(--text);
+  opacity: 0;
+  transition: opacity 0.12s, color 0.12s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.pageItem:hover .reparentBtn {
+  opacity: 0.4;
+}
+
+.reparentBtn:hover {
+  opacity: 1 !important;
+  color: var(--black);
+}
+
+/* ── Delete button ── */
 .pageDeleteBtn {
   padding: 0 1rem;
   background: none;
@@ -183,7 +239,7 @@
   flex-shrink: 0;
 }
 
-/* ── Add page button and form ── */
+/* ── Add page ── */
 .addPageBtn {
   display: flex;
   align-items: center;
@@ -219,7 +275,7 @@
   gap: 1rem;
 }
 
-/* ── Start over button ── */
+/* ── Start over ── */
 .startOverBtn {
   display: flex;
   align-items: center;
@@ -343,7 +399,6 @@
   width: max-content;
 }
 
-/* ── Tree node ── */
 .treeNode {
   display: flex;
   flex-direction: column;
@@ -354,7 +409,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
   padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
@@ -420,7 +474,6 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-top: 0;
   line-height: 1;
   transition: opacity 0.12s;
 }
@@ -429,7 +482,6 @@
   opacity: 1;
 }
 
-/* ── Tree connectors ── */
 .treeVLine {
   width: 2px;
   height: 2rem;
@@ -443,7 +495,6 @@
   align-items: flex-start;
 }
 
-/* Each child cell draws the horizontal connecting line via ::before */
 .treeChildCell {
   display: flex;
   flex-direction: column;
@@ -452,7 +503,6 @@
   position: relative;
 }
 
-/* Horizontal line connecting siblings */
 .treeChildCell::before {
   content: '';
   position: absolute;
@@ -463,17 +513,14 @@
   background-color: var(--lightGray);
 }
 
-/* First child: line starts from center (right half only) */
 .treeChildCell:first-child::before {
   left: 50%;
 }
 
-/* Last child: line ends at center (left half only) */
 .treeChildCell:last-child::before {
   right: 50%;
 }
 
-/* Only child: no horizontal line */
 .treeChildCell:only-child::before {
   display: none;
 }
@@ -569,7 +616,6 @@
   font-weight: 400;
 }
 
-/* Slug page badge shown in header */
 .slugBadge {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -834,7 +880,7 @@
   background-color: var(--white);
 }
 
-/* ── Shared buttons ── */
+/* ── Buttons ── */
 .btn {
   padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
@@ -1008,10 +1054,27 @@
   padding: 2rem 3rem;
 }
 
+/* Reparent modal field */
+.reparentField {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.reparentLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
   .layout {
     grid-template-columns: 1fr;
+    margin: 0;
   }
 
   .sidebar {
@@ -1049,7 +1112,8 @@
   }
 
   .modalFooter .btn,
-  .modalFooter .btnDanger {
+  .modalFooter .btnDanger,
+  .modalFooter .btnAccent {
     width: 100%;
     text-align: center;
   }

@@ -32,6 +32,27 @@ export async function deleteAllClientSitemapPages(clientProfileId: string) {
   return db.sitemapPage.deleteMany({ where: { clientProfileId } });
 }
 
+export async function reorderSitemapPages(
+  updates: { id: string; position: number }[],
+) {
+  await db.$transaction(
+    updates.map(({ id, position }) =>
+      db.sitemapPage.update({ where: { id }, data: { position } }),
+    ),
+  );
+}
+
+// Promote a slug page to top-level OR move it under a new parent
+export async function reparentSitemapPage(
+  pageId: string,
+  parentId: string | null,
+) {
+  return db.sitemapPage.update({
+    where: { id: pageId },
+    data: { parentId },
+  });
+}
+
 export async function createSitemapSection(pageId: string, title: string) {
   const count = await db.sitemapSection.count({ where: { pageId } });
   return db.sitemapSection.create({
