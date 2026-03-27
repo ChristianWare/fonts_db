@@ -21,8 +21,8 @@ export default function HomePage() {
       <Hero />
       <div id='learn-more'>
         <Outgrow />
-        <Solution />
         <ProblemSolution />
+        <Solution />
       </div>
 
       {/* features */}
