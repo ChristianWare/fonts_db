@@ -4,6 +4,7 @@ import Img3 from "../../public/images/proven.jpg";
 import Img4 from "../../public/images/system.jpg";
 import Img5 from "../../public/images/earningsii.jpg";
 
+import Img62 from "../../public/images/connected.jpg";
 import Img6 from "../../public/dashboard/bookings.png";
 import Img7 from "../../public/dashboard/approve.png";
 import Img8 from "../../public/dashboard/pricing.png";
@@ -92,7 +93,7 @@ export const SolutionData = [
     id: 6,
     oneWordDesc: "Connected",
     title: "One platform. Every role.",
-    src: Img1,
+    src: Img62,
     description:
       "Bookings, drivers, payments, and corporate accounts all run from a single system — fully connected, nothing falling through the cracks.",
     bullets: ["One dashboard", "Every role", "Zero gaps", "Fully connected"],
