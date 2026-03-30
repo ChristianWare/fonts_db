@@ -4,6 +4,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import SessionProviderWrap from "@/components/shared/Providers/SessionProvider/SessionProvider";
 import Footer from "@/components/HomePage/Footer/Footer";
+import PlausibleProvider from "next-plausible";
 
 const RobotoFlex = localFont({
   src: "../../public/fonts/RobotoFlex.woff2",
@@ -56,7 +57,6 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -68,10 +68,16 @@ export default function RootLayout({
         className={`${RobotoFlex.variable} ${RobotoFlexii.variable} ${RobotoCondensed.variable} ${Roboto.variable} ${GeistMono.variable}`}
       >
         {" "}
-        <SessionProviderWrap>
-          {children}
-          <Footer />
-        </SessionProviderWrap>
+        <PlausibleProvider
+          domain='fontsandfooters.com'
+          trackLocalhost={false}
+          enabled={true}
+        >
+          <SessionProviderWrap>
+            {children}
+            <Footer />
+          </SessionProviderWrap>
+        </PlausibleProvider>
       </body>
     </html>
   );
