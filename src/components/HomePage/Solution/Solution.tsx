@@ -34,7 +34,7 @@ export default function Solution() {
                 </p>
                 <div className={styles.btnContainer}>
                   <Button
-                    href='/'
+                    href='/#features'
                     text='Take the tour'
                     btnType='accent'
                     arrow

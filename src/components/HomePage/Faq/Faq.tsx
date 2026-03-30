@@ -186,7 +186,8 @@ export default function Faq() {
                   </p>
                   <div className={styles.btnContainer}>
                     <Button
-                      href='/'
+                      href='https://calendly.com/chris-fontsandfooters/30min'
+                      target='_blank'
                       text='Book your discovery call'
                       btnType='accent'
                       arrow

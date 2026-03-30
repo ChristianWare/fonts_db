@@ -19,7 +19,7 @@ const items = [
 const data3 = [
   {
     id: 8,
-    href: "https://www.linkedin.com/feed/",
+    href: "https://www.linkedin.com/in/christian-ware/",
     icon: <LinkedIn className={styles.socialIcon} />,
   },
   {
@@ -67,7 +67,7 @@ export default function Footer() {
             <div className={styles.bottomRight}>
               <div className={styles.btnContainer}>
                 <Button
-                  href='https://calendly.com/chris-ware-dev/discovery-call'
+                  href='https://calendly.com/chris-fontsandfooters/30min'
                   target='_blank'
                   text='Book your discovery call'
                   btnType='white'

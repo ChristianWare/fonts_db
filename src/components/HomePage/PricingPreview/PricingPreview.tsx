@@ -72,7 +72,8 @@ export default function PricingPreview() {
 
                 <div className={styles.btnContainer}>
                   <Button
-                    href='/contact'
+                    href='https://calendly.com/chris-fontsandfooters/30min'
+                    target="_blank"
                     btnType='accent'
                     text='Book your discovery call'
                     arrow
