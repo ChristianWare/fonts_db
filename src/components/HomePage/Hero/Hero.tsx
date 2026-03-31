@@ -2,7 +2,7 @@ import styles from "./Hero.module.css";
 import Image from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
-import BgImage from "../../../../public/images/heroii.jpg";
+import BgImage from "../../../../public/images/heroiii.png";
 import HeroScrollButton from "./HeroScrollButton";
 
 export default function Hero() {
