@@ -8,8 +8,8 @@ import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
 import { questions, type SectionKey, type QuestionItem } from "@/lib/data";
 import Button from "@/components/shared/Button/Button";
-// import Image from "next/image";
-// import ServiceIllustration from "../../../public/illustrations/cadiFleet.png";
+import Image from "next/image";
+import ServiceIllustration from "../../../../public/images/cadiv.png";
 
 function sectionFromPath(pathname: string): SectionKey {
   if (pathname.startsWith("/pricing")) return "pricing";
@@ -124,7 +124,14 @@ export default function Faq() {
             </div>
 
             <div className={styles.bottom}>
-              <div className={styles.bottomLeft} />
+              <div className={styles.bottomLeft}>
+                <Image
+                  src={ServiceIllustration}
+                  alt='Illustration of a person sitting at a desk with a laptop, surrounded by question marks, symbolizing FAQs and support.'
+                  fill
+                  className={styles.img}
+                />
+              </div>
               <div className={styles.bottomRight}>
                 {routeQuestions.map((q, i) => {
                   const k = `${currentSection}-${q.id}-${i}`;

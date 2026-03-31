@@ -84,6 +84,13 @@
 
 .bottomLeft {
   border-right: 1px solid var(--lightGray);
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.img {
+  object-fit: cover;
 }
 
 .qaContainer {
@@ -242,7 +249,8 @@
   }
 
   .bottomLeft {
-    display: none;
+    /* display: none; */
+    height: 300px;
   }
 
   .headingii {
@@ -258,9 +266,10 @@
     gap: 2rem;
   }
 
-  .headingii, .copyii {
+  .headingii,
+  .copyii {
     text-align: center;
-  } 
+  }
 
   .copyii {
     margin-bottom: 2rem;
@@ -269,4 +278,10 @@
   /* .content {
     gap: 2rem;
   } */
+}
+
+@media screen and (max-width: 568px) {
+  .bottomLeft {
+    height: 275px;
+  }
 }
