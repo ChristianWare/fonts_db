@@ -2,7 +2,7 @@
 
 import styles from "./ParallaxArea.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
-import Img1 from "../../../../public/images/range.jpg";
+import Img1 from "../../../../public/images/subiii.png";
 import ParallaxImageLarge from "../ParallaxImageLarge/ParallaxImageLarge";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
@@ -43,7 +43,7 @@ export default function ParallaxArea() {
         <div className={styles.content}>
           <div className={styles.contentChildren}>
             <h2 className={styles.heading}>
-              Who this <br /> is for
+              Who is <br /> this for?
             </h2>
             <div className={styles.bottom}>
               <div className={styles.left}>
