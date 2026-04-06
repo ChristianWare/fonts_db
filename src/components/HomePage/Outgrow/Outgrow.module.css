@@ -49,7 +49,7 @@
 
 .top {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1.5fr 1fr;
   gap: 5rem;
 }
 
@@ -108,7 +108,6 @@
   width: 80%;
 }
 
-
 .bottom {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -122,7 +121,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 4rem;
+  gap: 2rem;
   padding: 3rem;
   border: 1px solid var(--lightGray);
   background-color: var(--lightGrayiii);
@@ -167,12 +166,11 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  /* border: 1px solid var(--accent); */
   background-color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* padding: 1rem; */
+  margin-bottom: 2rem;
 }
 
 .icon {
@@ -188,11 +186,12 @@
 }
 
 .title {
-  /* font-weight: 500; */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 0.2rem;
 }
 
 .company {
@@ -206,22 +205,31 @@
   color: var(--text);
 }
 
-
-
 @media screen and (max-width: 1268px) {
   .content {
     padding: 10rem 3rem;
   }
 
   .top {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .copy {
     width: 100%;
+  }
+
+  .topRight,
+  .imgContainer {
+    /* height: 800px; */
+    width: 100%;
+  }
+
+  .imgContainer {
+    height: 800px;
+  }
+
+  .img {
+    object-position: center;
   }
 
   .bottom {
@@ -231,10 +239,13 @@
 }
 
 @media screen and (max-width: 1068px) {
-  /* .bottom {
-    grid-template-columns: repeat(1, 1fr);
-  } */
-
+  .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+  }
   .imgContainer {
     width: 100%;
     height: 700px;
@@ -254,8 +265,17 @@
 }
 
 @media screen and (max-width: 568px) {
+   .content {
+    padding: 5rem 1rem;
+  }
+  
   .bottom {
     grid-template-columns: repeat(1, 1fr);
+  }
+
+  .topRight {
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .imgContainer {

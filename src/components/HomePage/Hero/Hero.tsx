@@ -43,13 +43,13 @@ export default function Hero() {
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
-                  We build custom direct-booking websites and websites
-                  exclusively for black car and limousine companies —{" "}
+                  Stop paying a platform to rent your own customers. We build
+                  black car operators a direct booking platform they actually
+                  own —{" "}
                   <span className={styles.span}>
                     {" "}
-                    complete with a branded booking engine, admin dashboard,
-                    driver portal, corporate accounts, payment processing, and
-                    more.
+                    so every ride earns more, every client stays yours, and your
+                    brand looks like the premium service you already are.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>

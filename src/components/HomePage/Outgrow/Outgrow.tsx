@@ -15,20 +15,20 @@ import NoControlii from "@/components/shared/icons/NoControlii/NoControlii";
 const data = [
   {
     id: 1,
-    title: "Fees on every ride",
-    desc: "Third-party platforms take a cut of every booking. When they raise their fees, you absorb the hit — with no way out.",
+    title: "Every booking costs you twice",
+    desc: "Once to run the ride, once to pay the platform. At $4–6 a booking, you're writing a check to someone else every single day — and there's no ceiling on it.",
     icon: <FeesIcon className={styles.icon} />,
   },
   {
     id: 2,
-    title: "Not your brand",
-    desc: "Your booking experience looks like everyone else's. Clients see a generic platform, not the premium service you've built.",
+    title: "Your clients can't tell you apart",
+    desc: "The booking experience is identical to every other operator on the same software. You've built something better. It doesn't show.",
     icon: <NotBrand className={styles.icon} />,
   },
   {
     id: 3,
-    title: "Zero data ownership",
-    desc: "The platform owns your customer relationships. You can't market to them, build loyalty, or reach them if something changes.",
+    title: "You don't own the relationship",
+    desc: "The platform owns your customer data. If they change their terms, raise fees, or shut down — you're starting over with nothing.",
     icon: <NoData className={styles.icon} />,
   },
   {
@@ -39,20 +39,20 @@ const data = [
   },
   {
     id: 4,
-    title: "No real control",
-    desc: "Pricing, policies, and algorithms can change overnight. You're building your business on a foundation someone else controls.",
+    title: "Nothing changes unless they say so",
+    desc: "Pricing rules, policies, algorithms — all on their schedule. You're building a business on a foundation someone else controls.",
     icon: <NoControlii className={styles.icon} />,
   },
   {
     id: 5,
-    title: "Generic first impressions",
-    desc: "Executives and corporate travelers judge you before they book. A cookie-cutter website signals a cookie-cutter service.",
+    title: "You're losing deals before hello",
+    desc: "Executives and corporate clients judge you the moment they land on your site. A generic booking page signals a generic service.",
     icon: <NoControl className={styles.icon} />,
   },
   {
     id: 6,
-    title: "Scattered operations",
-    desc: "Bookings in one app, drivers in another, payments somewhere else. Nothing talks to each other and things fall through the cracks.",
+    title: "Your operation runs on workarounds",
+    desc: "Bookings in one app, drivers in another, payments somewhere else. Things fall through because the tools were never meant to work together.",
     icon: <ScatteredIcon className={styles.icon} />,
   },
 ];
@@ -70,17 +70,16 @@ export default function Outgrow() {
             <div className={styles.top}>
               <div className={styles.topLeft}>
                 <SectionIntro text='Problem' />
-                <h2 className={styles.heading}>
-                  Have you outgrown <br /> the{" "}
-                  <span className={styles.accent}>
-                    platform you <br /> started with?
-                  </span>
+                <h2 className={`${styles.heading} h2ii`}>
+                  You built a premium service. Your booking experience
+                  shouldn&apos;t look like everyone else&apos;s.
                 </h2>
                 <p className={styles.copy}>
-                  Most operators start with generic booking software, but
-                  quickly hit limits: transaction fees on every ride, generic
-                  branding, and zero control over your customer experience or
-                  data.
+                  You&apos;re running a premium operation — but your clients are
+                  booking through the same generic interface as every budget
+                  sedan in town. That disconnect costs you corporate contracts,
+                  repeat business, and a cut of every ride. And the platform
+                  you&apos;re on isn&apos;t built to fix it.
                 </p>
               </div>
               <div className={styles.topRight}>
@@ -93,25 +92,15 @@ export default function Outgrow() {
                     className={styles.img}
                   />
                 </div>
-                <div className={styles.imgCaptionTitle}>Is this you?</div>
-                <div className={styles.imgCaptionDesc}>
-                  A black car operator at a desk — slightly overwhelmed,
-                  frustrated with his existing platform.
-                </div>
               </div>
             </div>
             <div className={styles.bottom}>
               {data.map((item) => (
                 <div className={styles.card} key={item.id}>
-                  {/* <div className={styles.dot1} />
-                  <div className={styles.dot4} /> */}
-                  {/* {item.icon && (
-                    <div className={styles.iconContainer}>{item.icon}</div>
-                  )} */}
-                  <h3 className={`${styles.title} h6`}>
                     {item.icon && (
                       <span className={styles.iconContainer}>{item.icon}</span>
                     )}
+                  <h3 className={styles.title}>
                     {item.title}
                   </h3>
                   <p className={styles.desc}>{item.desc}</p>
