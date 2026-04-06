@@ -18,6 +18,10 @@
   text-align: center;
 }
 
+.copy {
+  width: 50%;
+}
+
 .content {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

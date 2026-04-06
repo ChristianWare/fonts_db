@@ -163,10 +163,13 @@ export default function ComparisonChart() {
       <LayoutWrapper>
         <div className={styles.content}>
           <div className={styles.top}>
-            <h2 className={styles.heading}>How we stack up</h2>
+            <h2 className={styles.heading}>
+              The only flat-rate platform <br /> built for black car.
+            </h2>
             <p className={styles.copy}>
-              See what you get with a purpose-built platform versus generic
-              alternatives.
+              Every alternative either takes a cut of your rides, owns your
+              customers, or gives you a template. Here&apos;s how it actually
+              compares.
             </p>
           </div>
 
