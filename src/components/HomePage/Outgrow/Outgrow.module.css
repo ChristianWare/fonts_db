@@ -265,10 +265,10 @@
 }
 
 @media screen and (max-width: 568px) {
-   .content {
+  .content {
     padding: 5rem 1rem;
   }
-  
+
   .bottom {
     grid-template-columns: repeat(1, 1fr);
   }

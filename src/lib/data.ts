@@ -1,8 +1,8 @@
-import Img1 from "../../public/images/reliefii.jpg";
+import Img1 from "../../public/images/cadi_cash.png";
 import Img2 from "../../public/images/work.jpg";
-import Img3 from "../../public/images/proven.jpg";
+import Img3 from "../../public/images/cadi_drive.png";
 import Img4 from "../../public/images/system.jpg";
-import Img5 from "../../public/images/earningsii.jpg";
+import Img5 from "../../public/images/chevy_corp.png";
 
 import Img62 from "../../public/images/connected.jpg";
 import Img6 from "../../public/dashboard/bookings.png";
@@ -32,33 +32,38 @@ export const SolutionData = [
   {
     id: 1,
     oneWordDesc: "Flat",
-    title: "One flat rate. No cuts, ever.",
+    title: "Keep every dollar you earn",
     src: Img1,
     description:
-      "Flat $499/month. No per-booking fees, no percentage taken, no surprises — no matter how many rides you run.",
+      "At 100 rides a month, per-booking fees cost you $400+. At 300 rides, over $1,200. Flat $499/month — no cuts, no percentages, no surprises, ever.",
     bullets: [
-      "Flat monthly rate",
+      "Flat $499/month",
       "Zero per-booking fees",
-      "No surprises",
-      "Keep every dollar",
+      "No fee increases",
+      "Every dollar stays yours",
     ],
   },
   {
     id: 2,
     oneWordDesc: "Branded",
-    title: "Your name on everything",
+    title: "Clients remember your name, not your software's",
     src: Img2,
     description:
-      "Your platform runs on your domain, in your colors, under your brand — clients never see a third-party name anywhere.",
-    bullets: ["Your domain", "Your colors", "Your emails", "Your brand"],
+      "Your domain, your colors, your brand throughout — from the first page they land on to the receipt in their inbox. No third-party name anywhere.",
+    bullets: [
+      "Your domain",
+      "Your colors",
+      "Your emails",
+      "Zero third-party branding",
+    ],
   },
   {
     id: 3,
     oneWordDesc: "Yours",
-    title: "Your customers. Your data.",
+    title: "Your customer list is yours to keep",
     src: Img3,
     description:
-      "Every booking, every client record, every relationship lives in your platform — owned by you, accessible to you, always.",
+      "Every booking, every contact, every relationship lives on your platform. Market to them, build loyalty, re-engage them — without asking anyone's permission.",
     bullets: [
       "Full data ownership",
       "Direct client access",
@@ -69,168 +74,162 @@ export const SolutionData = [
   {
     id: 4,
     oneWordDesc: "Controlled",
-    title: "You set the rules",
+    title: "Nothing changes unless you change it",
     src: Img4,
     description:
-      "Your pricing, your policies, your platform. Nothing changes unless you change it — no algorithm updates, no policy surprises.",
-    bullets: ["Your pricing", "Your policies", "No surprises", "Full control"],
+      "Your pricing, your policies, your rules. No algorithm updates, no surprise fee increases, no platform decisions that affect your business overnight.",
+    bullets: [
+      "Your pricing",
+      "Your policies",
+      "No surprise changes",
+      "Full control",
+    ],
   },
   {
     id: 5,
     oneWordDesc: "Premium",
-    title: "A first impression that closes deals",
+    title: "Win corporate clients before they book",
     src: Img5,
     description:
-      "A fully custom site signals a premium operation before a client ever books — built specifically for black car, not adapted from a template.",
+      "Executives judge you the moment they land on your site. A custom-built platform signals a serious operation — and that's often what closes the contract.",
     bullets: [
       "Custom design",
-      "Premium feel",
+      "Premium first impression",
       "Built for black car",
-      "Wins corporate clients",
+      "Closes corporate deals",
     ],
   },
   {
     id: 6,
     oneWordDesc: "Connected",
-    title: "One platform. Every role.",
+    title: "One place to run everything",
     src: Img62,
     description:
-      "Bookings, drivers, payments, and corporate accounts all run from a single system — fully connected, nothing falling through the cracks.",
-    bullets: ["One dashboard", "Every role", "Zero gaps", "Fully connected"],
+      "Bookings, drivers, payments, and corporate accounts all in a single dashboard. Nothing slipping through because two systems don't talk to each other.",
+    bullets: [
+      "One dashboard",
+      "Every role covered",
+      "Zero gaps",
+      "Nothing falls through",
+    ],
   },
 ] as const;
 
 export const DashboardFeatures = [
   {
     id: 1,
-    title: "Bookings Management",
-    desc: "Every booking lands in your dashboard with full details — route, vehicle, passenger info, flight data, pricing, and payment status. Approve, edit, assign, and update directly. Bookings move through a clear status workflow: Pending, Confirmed, Assigned, In Progress, Completed.",
+    title: "Every booking, fully visible",
+    desc: "Route, vehicle, passenger info, flight data, pricing, and payment status — all in one place the moment a booking comes in. Approve, edit, assign, and update without touching another app.",
     src: Img6,
   },
   {
     id: 2,
-    title: "Approve & Price Workflow",
-    desc: "New bookings come in as pending. Review the details, set the final price with automatic calculation based on distance, vehicle, and your rate settings, then send confirmation to the rider — all from one screen.",
+    title: "Price and confirm in one move",
+    desc: "New bookings land as pending. Review the details, set the final price — calculated automatically from distance, vehicle, and your rates — then confirm to the rider. All from one screen, no back and forth.",
     src: Img7,
   },
   {
     id: 3,
-    title: "Payment Management",
-    desc: "See the full payment picture for every booking. Collect deposits, send balance payment links, mark trips as paid, issue refunds, and track outstanding balances — all in one place. Powered by Stripe.",
+    title: "No more chasing payments",
+    desc: "Collect deposits at booking, send balance links when the ride is done, track outstanding balances, issue refunds — everything in one place. You always know exactly where every dollar stands.",
     src: Img8,
   },
   {
     id: 4,
-    title: "Driver Assignment",
-    desc: "Assign drivers from a dropdown of your available roster. The driver receives an automatic notification with their trip details. The dashboard flags conflicts so you never accidentally double-book a driver.",
+    title: "Assign a driver in seconds",
+    desc: "Pick from your available roster, and the driver gets an automatic notification with full trip details. The dashboard flags conflicts — you'll never accidentally double-book a driver.",
     src: Img9,
   },
   {
     id: 5,
-    title: "Smart Alerts",
-    desc: "The dashboard home screen surfaces what needs your attention: bookings with outstanding balances, upcoming trips without an assigned driver, bookings stuck in review, and tip payments received in the last 24 hours.",
+    title: "The important stuff surfaces itself",
+    desc: "Outstanding balances, upcoming trips without a driver, bookings stuck in review, recent tips — all flagged automatically on your home screen. You see what needs attention first, every time you log in.",
     src: Img10,
   },
   {
     id: 6,
-    title: "Customer Management",
-    desc: "A full directory of every customer who has ever booked with you — contact info, booking history, total spend, and account type. Easily distinguish between individual customers, corporate accounts, and guest bookers.",
+    title: "Every client relationship in one place",
+    desc: "A full directory of everyone who has ever booked with you — contact info, booking history, total spend, account type. Individual clients, corporate accounts, and guest bookers all organized and searchable.",
     src: Img11,
   },
   {
     id: 7,
-    title: "Reports & Analytics",
-    desc: "Revenue by date range, bookings by service type, driver performance, top customers by spend, and conversion tracking. Export reports for accounting or use the built-in charts to spot trends.",
+    title: "Know exactly how your business is performing",
+    desc: "Revenue by date range, bookings by service type, driver performance, top clients by spend. Export for accounting or use the built-in charts to spot what's working and what isn't.",
     src: Img12,
   },
   {
     id: 8,
-    title: "Company Settings",
-    desc: "Configure your company name, logo, contact info, service area, email sender details, and notification preferences — all from a single settings panel. No developer required for day-to-day changes.",
+    title: "Change anything. No developer needed.",
+    desc: "Update your logo, service area, pricing, email details, or notification preferences from a single settings panel — whenever you need to. Your platform stays current without a support ticket.",
     src: Img13,
   },
 ] as const;
 
 export const featureData = [
   {
-    title: "Live Google Maps",
-    desc: "Every booking automatically calculates the route, distance, and estimated drive time using live Google Maps data. Customers see exactly where they're going before they pay — no surprises, no guesswork.",
+    title: "Your driver is never in the wrong place",
+    desc: "Live routing pulls the exact route, distance, and drive time at booking. Flight tracking adjusts automatically if a flight is delayed — your driver arrives when the passenger does, not an hour before.",
     src: LiveGoogleMaps,
     icon: Location,
   },
   {
-    title: "Payment Processing",
-    desc: "All payments run through Stripe — secure, reliable, and familiar to your clients. Accept cards at booking, store payment methods for repeat customers, and collect deposits or full balances on your schedule.",
+    title: "Payments that just work",
+    desc: "All payments run through Stripe. Collect deposits at booking, send balance links after the ride, store cards for repeat clients — everything on your schedule, nothing chased manually.",
     src: PaymentProcessing,
     icon: Payment,
   },
   {
-    title: "Flight Tracking",
-    desc: "Customers enter their flight number at booking and the platform pulls live aviation data automatically. If a flight is delayed, the booking reflects it — your driver arrives when the passenger does, not an hour before.",
+    title: "Flights tracked. Drivers adjusted.",
+    desc: "Customers enter their flight number once. The platform watches it from there — if it's delayed, the booking reflects it automatically. No calls, no recalculating, no driver waiting an hour early.",
     src: FlightTracking,
     icon: Plane,
   },
   {
-    title: "Guest Checkout",
-    desc: "Customers can book a ride without creating an account — no friction, no barriers. If they want to save their details for next time, account creation is always available but never required.",
+    title: "Clients book in under two minutes",
+    desc: "No account required to book. Customers get through the flow fast, on any device — and if they want to save their details for next time, they can. Never forced.",
     src: Img9,
     icon: Bell,
   },
-  // {
-  //   title: "Gratuity",
-  //   desc: "Tip selection is built directly into the checkout flow, so customers can add a gratuity before they even get in the car. Tips are tracked per driver and visible in your admin dashboard.",
-  // },
-  // {
-  //   title: "Deposits",
-  //   desc: "Collect a deposit at booking and send a balance payment link when the trip is complete. You control the deposit amount per service type — giving you flexibility without chasing payments after the fact.",
-  // },
-  // {
-  //   title: "Confirmation Emails",
-  //   desc: "Every booking triggers a branded confirmation email with full trip details, receipt, and a link to the customer portal. Your clients get exactly what they need, automatically, the moment they book.",
-  // },
   {
-    title: "Corporate Accounts",
-    desc: "Business clients can apply for a corporate account directly through your platform. Once approved, they get centralized billing, employee management, and a dedicated booking experience built for business travel.",
+    title: "Corporate clients sign themselves up",
+    desc: "Business clients apply for a corporate account directly through your platform. Once approved, they get centralized billing and employee management — the kind of setup that makes companies stick around.",
     src: Img10,
     icon: Business,
   },
   {
-    title: "Admin Dashboard",
-    desc: "Your entire operation lives in one place — bookings, drivers, payments, customers, and reports all managed from a single screen. No spreadsheets, no separate apps, no information falling through the cracks.",
+    title: "Your entire operation in one screen",
+    desc: "Bookings, drivers, payments, customers, and reports all live in one dashboard. No spreadsheets, no jumping between apps, nothing falling through because two systems don't talk.",
     src: Img11,
     icon: Analytics,
   },
   {
-    title: "Driver Portal",
-    desc: "Every driver on your roster gets their own dedicated portal with their full trip schedule, passenger details, and real-time status updates. It installs like a native app on their phone — no App Store download required.",
+    title: "Drivers always know what's next",
+    desc: "Every driver gets their own portal with their full schedule, passenger details, and real-time updates — straight to their phone. No calls to relay trip info. No confusion about which job is theirs.",
     src: Img12,
     icon: Driver,
   },
   {
-    title: "Customer Portal",
-    desc: "Every rider gets access to a personal portal where they can view upcoming and past trips, download receipts, and save frequently used addresses. It's branded entirely to your company — your clients never see our name.",
+    title: "An experience worth coming back to",
+    desc: "Every rider gets a branded customer portal — upcoming trips, past receipts, saved addresses. It runs under your name, not ours. The kind of experience that turns a one-time booking into a regular client.",
     src: Img13,
     icon: Customer,
   },
   {
-    title: "Push Notifications",
-    desc: "Drivers receive instant push notifications for new assignments, booking updates, and cancellations. No more phone calls to relay trip details — the platform handles it automatically.",
+    title: "No calls to dispatch a driver",
+    desc: "New assignments, updates, and cancellations go straight to the driver's phone as push notifications. The platform handles the communication — you handle the business.",
     src: Img13,
     icon: Notifications,
   },
   {
-    title: "Smart Alerts",
-    desc: "The dashboard home screen surfaces what needs your attention the moment you log in. Outstanding balances, unassigned drivers, stuck bookings, and recent tips are all flagged automatically so nothing gets missed.",
+    title: "Nothing important gets buried",
+    desc: "The moment you log in, the dashboard flags what needs attention — outstanding balances, unassigned drivers, stuck bookings, recent tips. You see what matters first, every time.",
     src: Img13,
     icon: Alert,
   },
-  // {
-  //   title: "SEO",
-  //   desc: "The platform auto-generates 640+ location and service pages targeting every city and service type in your market. Someone searching for black car service in your area finds you — not a directory or a competitor.",
-  // },
   {
-    title: "Invoice Generation",
-    desc: "Professional PDF invoices are generated automatically for every completed booking. Corporate clients can download invoices directly from their portal — no manual work required on your end.",
+    title: "Invoices sent without lifting a finger",
+    desc: "Professional PDF invoices generate automatically for every completed booking. Corporate clients download them directly from their portal — nothing manual required on your end.",
     src: Img13,
     icon: Invoice,
   },

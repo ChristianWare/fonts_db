@@ -9,28 +9,27 @@ import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 const data = [
   {
     id: 1,
-    title:
-      "You run a black car or limo company and take your service seriously",
+    title: "You run a black car or limo operation and you take it seriously",
   },
   {
     id: 2,
     title:
-      "Your current booking process doesn't match the quality of your rides",
+      "Your booking experience doesn't reflect the quality of your service",
   },
   {
     id: 3,
     title:
-      "You're done paying per-booking fees or sharing customers with a platform you don't own",
+      "You're tired of paying a platform every time a client books with you",
   },
   {
     id: 4,
     title:
-      "You want corporate accounts, flight tracking, and a real admin dashboard — not workarounds",
+      "You want flight tracking, corporate accounts, and a real dashboard — not workarounds",
   },
   {
     id: 5,
     title:
-      "You're ready to own your brand, your data, and your customer relationships",
+      "You're ready to own your customers, your data, and your brand outright",
   },
 ];
 
@@ -43,14 +42,15 @@ export default function ParallaxArea() {
         <div className={styles.content}>
           <div className={styles.contentChildren}>
             <h2 className={styles.heading}>
-              Who is <br /> this for?
+              Built for <br /> one operator.
             </h2>
             <div className={styles.bottom}>
               <div className={styles.left}>
                 <p className={styles.copy}>
-                  We build for one industry. If you run a black car or limo
-                  company and your business deserves better than what generic
-                  software gives you — this is built for you.
+                  We don&apos;t build websites for everyone. We build direct
+                  booking platforms for black car and limo operators who&apos;ve
+                  outgrown generic software and are ready to own their brand,
+                  their clients, and every dollar they earn.
                 </p>
               </div>
               <div className={styles.right}>

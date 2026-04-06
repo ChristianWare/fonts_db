@@ -18,18 +18,24 @@ export default function Solution() {
             <div className={styles.top}>
               <div className={styles.topLeft}>
                 <SectionIntro text='Solution' />
-                <h2 className={styles.heading}>
-                  We Build You the Platform, You Run Your Business.
+                <h2 className={`${styles.heading} h2ii`}>
+                  Your brand.
+                  <br />
+                  Your platform.
+                  <br />
+                  Your customers.
+                  <br />
+                  We just build it.
                 </h2>
               </div>
               <div className={styles.topRight}>
                 <p className={styles.copy}>
-                  Fonts & Footers builds fully custom, white-label booking
-                  platforms for black car services from the ground up. Your
-                  platform is branded entirely to your company{" "}
+                  Most black car operators are running premium services on
+                  platforms that undercut them on every ride. We build you a
+                  direct booking platform you actually own —{" "}
                   <span className={styles.accent}>
-                    — your colors, your name, your domain. Customers never see
-                    our name.
+                    so every client stays yours, every dollar stays yours, and
+                    your brand shows up the way your service deserves.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>

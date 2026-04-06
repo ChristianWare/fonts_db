@@ -209,6 +209,8 @@
   font-family: var(--GeistMono);
   text-transform: uppercase;
   font-size: 1.4rem;
+  background-color: var(--lightGrayiii);
+  z-index: 9999;
 }
 
 @media screen and (max-width: 1468px) {

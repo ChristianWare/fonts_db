@@ -47,8 +47,8 @@ export default function Features() {
             <div className={styles.top}>
               <SectionIntro text='Features' />
               <h2 className={styles.heading}>
-                Features <br /> Of our direct
-                <br /> booking websites
+                Everything <br /> your operation
+                <br /> needs to run
               </h2>
             </div>
             <div className={styles.bottom}>
@@ -84,7 +84,7 @@ export default function Features() {
                         >
                           <div className={styles.dot1} />
                           <div className={styles.dot2} />
-                          <h3 className={`${styles.cardTitle} h2`}>
+                          <h3 className={`${styles.cardTitle} h2ii`}>
                             {x.title}
                           </h3>
                           <div className={styles.mobileImageWrapper}>

@@ -106,7 +106,9 @@ export default function ProblemSolution() {
               <div className={styles.imgContainerMiddle} />
             </div>
             <span className={styles.middleText}>
-              Fonts <br /> & Footers
+              How Fonts & Footers
+              <br />
+              Transform Your Business
             </span>
           </div>
           <div className={styles.right}>

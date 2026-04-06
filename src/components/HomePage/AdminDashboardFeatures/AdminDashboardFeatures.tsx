@@ -49,14 +49,13 @@ export default function AdminDashboardFeatures() {
                 background='bgBlack'
               />
               <h2 className={styles.heading}>
-                Run your entire operation <br /> from one dashboard
+                Stop running your business <br /> from five different tabs
               </h2>
               <p className={styles.copy}>
-                The admin dashboard gives you — and any team members you
-                authorize — full visibility and control over every booking,
-                every driver, every payment, and every customer on your
-                platform. No more juggling spreadsheets, email threads, and
-                separate apps.
+                Every booking, driver, payment, and customer lives in one place,
+                visible the moment you log in. No spreadsheets, no separate
+                apps, no information falling through because two systems
+                don&apos;t talk to each other.
               </p>
               <div className={styles.arrowsContainer}>
                 <button
@@ -153,8 +152,8 @@ export default function AdminDashboardFeatures() {
               <span>
                 every booking, every driver, every payment, and every
                 customer{" "}
-              </span>
-              {" "}on your platform.
+              </span>{" "}
+              on your platform.
             </h2>
           </div>
         </div>

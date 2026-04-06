@@ -159,6 +159,15 @@
 
 .heading {
   color: var(--white);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+  padding: 1rem 2rem;
 }
 
 .copyBtnContainer {
@@ -225,6 +234,10 @@
 }
 
 @media screen and (max-width: 568px) {
+  .heading {
+    background-size: 5px 5px;
+  }
+
   .copy,
   .span {
     font-size: 1.6rem;

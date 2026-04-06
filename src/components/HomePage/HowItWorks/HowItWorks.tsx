@@ -9,25 +9,25 @@ const process = [
     id: 1,
     title: "Discovery Call",
     week: "Week 1",
-    desc: "We learn your operation — services, fleet, pricing, and dispatch. Everything we need to build your platform the way your business actually runs.",
+    desc: "We learn your operation — services, fleet, pricing, and how you dispatch. Everything we need to build the platform around how your business actually runs.",
   },
   {
     id: 2,
     title: "Build & Configure",
     week: "Weeks 1–2",
-    desc: "We build your site and configure the full platform — services, vehicles, pricing, service areas, email templates, and branding. All tailored to your company.",
+    desc: "We build your site and configure the full platform — vehicles, pricing, service areas, email templates, and branding. You don't touch a settings panel until it's ready to review.",
   },
   {
     id: 3,
     title: "Review & Refine",
     week: "Weeks 2–3",
-    desc: "We walk you through the live platform before launch. You test every flow, share feedback, and we refine until it's exactly right.",
+    desc: "We walk you through the live platform before anything goes public. You test every flow, tell us what to change, and we refine until it's exactly right.",
   },
   {
     id: 4,
     title: "Launch",
     week: "Week 4",
-    desc: "We connect your domain, complete final integrations, and go live. From here, we're available for support, updates, and ongoing improvements.",
+    desc: "We connect your domain, complete final integrations, and go live together. After launch we're available for support, updates, and anything that comes up.",
   },
 ];
 
@@ -39,11 +39,11 @@ export default function HowItWorks() {
           <div className={styles.top}>
             <SectionIntro text='Process for working with us' />
             <h2 className={`${styles.heading} h3`}>
-              From first call to <br /> first booking in 2–4 weeks.
+              Live and taking bookings <br /> in 2–4 weeks.
             </h2>
             <p className={styles.copy}>
-              A straightforward, guided process — from discovery call to live
-              platform. No lengthy timelines, no back-and-forth guesswork.
+              No lengthy back-and-forth, no guesswork on your end. We handle the
+              build — you show up for the walkthrough and launch.
             </p>
           </div>
           <div className={styles.bottom}>

@@ -11,6 +11,15 @@
 
 .heading {
   color: var(--white);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+  padding: 1rem 2rem;
 }
 
 .accent {
@@ -54,7 +63,6 @@
   color: var(--accent) !important;
   text-decoration: line-through;
 }
-
 
 .btnContainer {
   width: 60%;
@@ -153,7 +161,7 @@
     align-items: flex-start;
     justify-content: flex-start;
   }
-  
+
   .navItems {
     gap: 2rem;
   }
@@ -173,5 +181,11 @@
   .footerSocials {
     align-items: center;
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .heading {
+    background-size: 5px 5px;
   }
 }

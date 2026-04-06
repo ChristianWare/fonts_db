@@ -15,7 +15,7 @@
 }
 
 .imgOverlay {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   top: 0;
   right: 0;
@@ -72,7 +72,11 @@
 
 .copy {
   color: var(--white);
-  max-width: 500px;
+  max-width: 550px;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: normal;
   /* font-size: 1.6rem; */
 }
 

@@ -43,9 +43,8 @@ export default function Footer() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>
-              Premium Rides.
-              <br />
-              <span className={styles.accent}>Premium websites.</span>
+              Custom Direct <br />
+              <span className={styles.accent}>booking websites.</span>
             </h2>
           </div>
           <div className={styles.bottom}>

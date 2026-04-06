@@ -15,8 +15,12 @@
 }
 
 .copy {
-  width: 50%;
+  width: 40%;
   color: var(--text);
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: normal;
 }
 
 .bottom {

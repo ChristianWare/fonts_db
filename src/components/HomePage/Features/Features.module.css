@@ -236,7 +236,7 @@
 
 .desc {
   color: var(--textii);
-  max-width: 70%;
+  /* max-width: 70%; */
 }
 
 /* Modal image */

@@ -133,8 +133,11 @@
   right: 2.5rem;
   z-index: 2;
   color: var(--white);
-
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  letter-spacing: normal;
   margin: 0;
+  font-size: 1.6rem;
   width: 80%;
 }
 
