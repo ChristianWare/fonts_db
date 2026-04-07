@@ -65,6 +65,17 @@
   color: var(--accent);
 }
 
+.revealText {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--black);
+  text-shadow:
+    -1px -1px 0 var(--white),
+     1px -1px 0 var(--white),
+    -1px  1px 0 var(--white),
+     1px  1px 0 var(--white);
+  line-height: 1;
+}
+
 .copy {
   color: var(--text);
   width: 90%;

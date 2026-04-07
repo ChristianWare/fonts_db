@@ -182,16 +182,8 @@
 }
 
 .projectTitle {
-  /* font-size: 3rem;
-  font-family: var(--RobotoFlexii);
-  text-transform: uppercase;
   color: var(--black);
-  letter-spacing: -0.02em; */
-  font-size: 100px;
-  font-family: var(--RobotoCondensed);
-  font-weight: 900;
-  color: var(--black);
-  letter-spacing: -0.07em;
+  width: 80%;
 }
 
 .projectH1 {
@@ -311,7 +303,7 @@
 
   .bottomRight {
     padding-right: 0rem;
-    width:80%;
+    width: 80%;
     height: 450px;
   }
 

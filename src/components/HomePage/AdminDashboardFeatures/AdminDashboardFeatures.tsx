@@ -127,7 +127,7 @@ export default function AdminDashboardFeatures() {
                       </div>
                       <div className={styles.projectInfo}>
                         <div className={styles.projectText}>
-                          <h3 className={styles.projectTitle}>
+                          <h3 className={`${styles.projectTitle} h2ii`}>
                             {feature.title}
                           </h3>
                           <p className={styles.projectH1}>{feature.desc}</p>
@@ -147,13 +147,7 @@ export default function AdminDashboardFeatures() {
           </div>
           <div className={styles.bottomMsg}>
             <h2 className={styles.bottomMsgHeading}>
-              <span>The admin dashboard </span>
-              gives you full visibility and control over{" "}
-              <span>
-                every booking, every driver, every payment, and every
-                customer{" "}
-              </span>{" "}
-              on your platform.
+              Your entire operation, <br /> one powerful dashboard
             </h2>
           </div>
         </div>
