@@ -66,13 +66,8 @@
 }
 
 .revealText {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--black);
-  text-shadow:
-    -1px -1px 0 var(--white),
-     1px -1px 0 var(--white),
-    -1px  1px 0 var(--white),
-     1px  1px 0 var(--white);
+  color: var(--lightGray);
+  -webkit-text-stroke: 1px var(--lightGray);
   line-height: 1;
 }
 
