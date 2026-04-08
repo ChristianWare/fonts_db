@@ -1,5 +1,6 @@
 :root {
   --black: #0f0f0f;
+  --blackii: #b49114;
   --white: #ffffff;
   --gray: #ffffff80;
   --grayii: #ebebeb;
@@ -11,6 +12,7 @@
   --textii: #d9d9d9;
   /* --accent: #ffc809; */
   --accent: #ffbe00;
+  --accentii: #ebba0d;
   --accent300: #ffe16c;
   --red: #ff0026;
   --green: #0e8e0e;

@@ -15,8 +15,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   position: relative;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
 }
 
 /* ── Corner dots (black on yellow, matching ContactSection) ──────────────── */
@@ -60,7 +60,7 @@
   align-items: flex-start;
   justify-content: space-between;
   height: 100%;
-  border-right: 1px solid var(--lightGray);
+  border-right: 1px solid var(--blackii);
 }
 
 .leftTop {
@@ -69,7 +69,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 3rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
   padding: 10rem 5rem;
   width: 100%;
 }
@@ -157,6 +157,7 @@
 /* ── What we check list ────────────────────────────────────────────────────── */
 .whatWeCheck {
   padding-top: 2rem;
+  width: 100%;
 }
 
 .checkItem {
@@ -164,7 +165,8 @@
   align-items: flex-start;
   gap: 1.2rem;
   padding: 1.1rem 0;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
+  width: 100%;
 }
 
 .checkItem:last-child {
@@ -243,14 +245,14 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  border-top: 1px solid var(--lightGray);
-  border-left: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-left: 1px solid var(--blackii);
   width: 100%;
 }
 
 .statItem {
-  border-right: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-right: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -316,7 +318,7 @@
 
 .rightTop {
   padding: 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .copy {
@@ -351,7 +353,7 @@
 
 .input {
   background-color: var(--white);
-  border: 1px solid var(--lightGrayiii);
+  border: 1px solid var(--blackiiiii);
   padding: 1.4rem 1.6rem;
   font-family: var(--Roboto);
   font-size: 1.7rem;
@@ -362,7 +364,7 @@
 }
 
 .input::placeholder {
-  color: var(--lightGray);
+  color: var(--text);
 }
 
 .input:focus {
@@ -443,7 +445,7 @@
 .scanBarOuter {
   width: 100%;
   height: 2px;
-  background-color: var(--lightGray);
+  background-color: var(--blackii);
 }
 
 .scanBarInner {
@@ -463,7 +465,7 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1.2rem 0;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
   transition: opacity 0.3s ease;
 }
 
@@ -553,11 +555,11 @@
 .categories {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
 }
 
 .catBlock {
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .catHeader {
@@ -629,7 +631,7 @@
 
 /* ── Individual checks ─────────────────────────────────────────────────────── */
 .catChecks {
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
   display: flex;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.04);
@@ -640,7 +642,7 @@
   align-items: flex-start;
   gap: 1.8rem;
   padding: 1.8rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .checkRow:last-child {
@@ -711,7 +713,7 @@
 /* ── Results CTA (bottom of right column) ─────────────────────────────────── */
 .resultCta {
   padding: 5rem;
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -763,7 +765,7 @@
 
   .left {
     border-right: none;
-    border-bottom: 1px solid var(--lightGray);
+    border-bottom: 1px solid var(--blackii);
   }
 
   .leftTop {

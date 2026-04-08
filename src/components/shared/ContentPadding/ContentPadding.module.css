@@ -17,6 +17,11 @@
   flex: 1;
 }
 
+.borderDark {
+  border-left: 1px solid var(--blackii);
+  border-right: 1px solid var(--blackii);
+}
+
 /* @media screen and (max-width: 870px) {
   .container {
     padding: 3rem 0rem;

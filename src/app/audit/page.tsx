@@ -92,7 +92,8 @@ function EntryView({
 
   return (
     <section className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper borderDark>
+        {" "}
         <div className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -216,7 +217,8 @@ function ScanningView({ step }: { step: number }) {
 
   return (
     <section className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper borderDark>
+        {" "}
         <div className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
