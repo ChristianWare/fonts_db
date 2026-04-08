@@ -39,7 +39,7 @@ export default function AdminDashboardFeatures() {
 
   return (
     <section className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper borderDark>
         <div className={styles.parent}>
           <div className={styles.content}>
             <div className={styles.top}>

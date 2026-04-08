@@ -13,6 +13,7 @@ const items = [
   { text: "Pricing", href: "/#pricing" },
   { text: "About", href: "/#about" },
   { text: "Contact", href: "/#contact" },
+  { text: "Audit", href: "/audit" },
   { text: "My Account", href: "/dashboard" },
 ];
 

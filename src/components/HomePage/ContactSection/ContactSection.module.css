@@ -6,8 +6,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   position: relative;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .dot1,
@@ -51,7 +51,7 @@
   align-items: flex-start;
   justify-content: space-between;
   height: 100%;
-  border-right: 1px solid var(--lightGray);
+  border-right: 1px solid var(--blackii);
 }
 
 .leftTop {
@@ -60,7 +60,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 3rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
   padding: 10rem 5rem;
   width: 100%;
 }
@@ -109,7 +109,7 @@
 
 .rightTop {
   padding: 5rem;
-  /* border-bottom: 1px solid var(--lightGray); */
+  /* border-bottom: 1px solid var(--blackii); */
 }
 
 .copy {
@@ -124,7 +124,7 @@
 
   .left {
     border-right: none;
-    border-bottom: 1px solid var(--lightGray);
+    border-bottom: 1px solid var(--blackii);
   }
 
   .leftTop {

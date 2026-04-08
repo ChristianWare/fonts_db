@@ -19,7 +19,7 @@
 
 .namesContainer label,
 .namesContainer .labelInputBox input {
-  border-right: 1px solid var(--lightGray);
+  border-right: 1px solid var(--blackii);
 }
 
 .everythingElse {
@@ -44,8 +44,8 @@
   text-transform: uppercase;
   color: var(--black);
   width: 100%;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .labelInputBox input,
@@ -140,7 +140,7 @@
 }
 
 .serviceButton:hover {
-  background-color: var(--lightGray);
+  background-color: var(--blackii);
 }
 
 .serviceButton.selected {
@@ -220,7 +220,7 @@
 
 .smallParent {
   width: 100%;
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
   border-bottom: none !important;
   padding: 1.6rem 2rem;
 }
