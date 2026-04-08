@@ -79,7 +79,7 @@ export default function Outgrow() {
   gsap.registerPlugin(ScrollTrigger);
 
   const text =
-    "You built a premium service. Your booking experience shouldn't look like everyone else's.";
+    "You built a premium car service. Your booking experience should not look like everyone else's.";
 
   useEffect(() => {
     const tl = gsap.timeline({
