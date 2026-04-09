@@ -302,7 +302,7 @@ function ResultsView({
 
   return (
     <section className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper borderDark>
         <div className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -331,7 +331,7 @@ function ResultsView({
               <div className={styles.statsGrid}>
                 <div className={styles.statItem}>
                   <span className={styles.statVal}>
-                    ~{result.monthlyVisitors}
+                    ~ {result.monthlyVisitors}
                   </span>
                   <span className={styles.statLabel}>
                     monthly organic visitors
@@ -345,7 +345,7 @@ function ResultsView({
                 </div>
                 <div className={styles.statItem}>
                   <span className={`${styles.statVal} ${styles.statRed}`}>
-                    ~{result.estimatedLostBookings}
+                    ~ {result.estimatedLostBookings}
                   </span>
                   <span className={styles.statLabel}>
                     est. bookings lost/month
@@ -397,34 +397,26 @@ function ResultsView({
                     </div>
                   </button>
 
-                  {openCat === cat.id && (
-                    <div className={styles.catChecks}>
-                      {cat.checks.map((chk) => (
-                        <div className={styles.checkRow} key={chk.id}>
-                          <span
-                            className={`${styles.checkDot2} ${
-                              chk.passed ? styles.checkPass : styles.checkFail
-                            }`}
-                          />
-                          <div className={styles.checkInfo}>
-                            <span className={styles.checkName}>
-                              {chk.label}
-                            </span>
-                            <span className={styles.checkMsg}>
-                              {chk.message}
-                            </span>
-                          </div>
-                          <span
-                            className={`${styles.impactBadge} ${
-                              styles[`impact_${chk.impact}`]
-                            }`}
-                          >
-                            {chk.impact}
-                          </span>
+                  <div
+                    className={`${styles.catChecks} ${openCat === cat.id ? styles.catChecksOpen : ""}`}
+                  >
+                    {cat.checks.map((chk) => (
+                      <div className={styles.checkRow} key={chk.id}>
+                        <span
+                          className={`${styles.checkDot2} ${chk.passed ? styles.checkPass : styles.checkFail}`}
+                        />
+                        <div className={styles.checkInfo}>
+                          <span className={styles.checkName}>{chk.label}</span>
+                          <span className={styles.checkMsg}>{chk.message}</span>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                        <span
+                          className={`${styles.impactBadge} ${styles[`impact_${chk.impact}`]}`}
+                        >
+                          {chk.impact}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

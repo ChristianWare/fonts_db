@@ -275,7 +275,7 @@
 
 .statLabel {
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);
@@ -284,7 +284,7 @@
 
 .resultUrl {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--text);
   letter-spacing: 0.3px;
   text-transform: lowercase;
@@ -292,7 +292,7 @@
 
 .resetBtn {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -340,7 +340,7 @@
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .fieldLabel {
@@ -406,7 +406,7 @@
 .errorMsg {
   color: var(--red);
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   letter-spacing: 0.3px;
 }
 
@@ -500,7 +500,7 @@
 
 .scanStepText {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -614,7 +614,7 @@
 
 .catScore {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--text);
   letter-spacing: 0.3px;
   min-width: 5rem;
@@ -629,14 +629,20 @@
   text-align: center;
 }
 
-/* ── Individual checks ─────────────────────────────────────────────────────── */
 .catChecks {
-  border-top: 1px solid var(--blackii);
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0,0,0,0.04);
+  border-top: 0px solid var(--lightGray);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, border-top 0.35s ease;
 }
 
+.catChecksOpen {
+  max-height: 1000px;
+  border-top: 1px solid var(--lightGray);
+}
 .checkRow {
   display: flex;
   align-items: flex-start;
@@ -673,7 +679,7 @@
 
 .checkName {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -689,7 +695,7 @@
 
 .impactBadge {
   font-family: var(--GeistMono);
-  font-size: 0.95rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 0.3rem 0.9rem;
