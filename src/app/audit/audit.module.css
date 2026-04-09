@@ -1,11 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    audit.module.css — mirrors ContactSection layout exactly
-   Background: var(--accent) [#ffbe00], two-column, corner dots, border pattern
 ───────────────────────────────────────────────────────────────────────────── */
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   OUTER SHELL  (matches .container / .content in ContactSection)
-══════════════════════════════════════════════════════════════════════════════ */
 .container {
   background-color: var(--accent);
   min-height: 100vh;
@@ -19,7 +15,7 @@
   border-bottom: 1px solid var(--blackii);
 }
 
-/* ── Corner dots (black on yellow, matching ContactSection) ──────────────── */
+/* ── Corner dots ─────────────────────────────────────────────────────────── */
 .dot1,
 .dot2,
 .dot3,
@@ -99,7 +95,6 @@
   gap: 3rem;
 }
 
-/* ── Pull quote (matches .text in ContactSection) ─────────────────────────── */
 .pullQuote {
   font-family: var(--RobotoCondensed);
   font-size: 2.4rem;
@@ -117,7 +112,6 @@
   gap: 2rem;
 }
 
-/* Avatar initials circle (when no image available) */
 .quoteAvatar {
   width: 56px;
   height: 56px;
@@ -154,7 +148,6 @@
   color: var(--text);
 }
 
-/* ── What we check list ────────────────────────────────────────────────────── */
 .whatWeCheck {
   padding-top: 2rem;
   width: 100%;
@@ -188,7 +181,6 @@
   line-height: 1.4;
 }
 
-/* ── Scan note ────────────────────────────────────────────────────────────── */
 .scanNote {
   font-family: var(--Roboto);
   font-size: 1.9rem;
@@ -199,7 +191,7 @@
   padding-left: 3rem;
 }
 
-/* ── Score block (results left) ─────────────────────────────────────────────── */
+/* ── Score block ─────────────────────────────────────────────────────────── */
 .scoreBlock {
   display: flex;
   align-items: flex-end;
@@ -240,11 +232,10 @@
   padding-left: 3rem;
 }
 
-/* ── Stats grid (results left bottom) ──────────────────────────────────────── */
+/* ── Stats grid ──────────────────────────────────────────────────────────── */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0;
   border-top: 1px solid var(--blackii);
   border-left: 1px solid var(--blackii);
   width: 100%;
@@ -329,6 +320,45 @@
   letter-spacing: -0.5px;
 }
 
+/* ── Email banner ────────────────────────────────────────────────────────── */
+.emailBanner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 5rem;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--blackii);
+}
+
+.emailBannerIcon {
+  font-size: 5rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.emailBannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.emailBannerTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 1.8rem;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
+  font-variation-settings: "wght" 700;
+}
+
+.emailBannerSub {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+}
+
 /* ── Form ────────────────────────────────────────────────────────────────── */
 .form {
   padding: 5rem;
@@ -353,7 +383,7 @@
 
 .input {
   background-color: var(--white);
-  border: 1px solid var(--blackiiiii);
+  border: 1px solid var(--blackii);
   padding: 1.4rem 1.6rem;
   font-family: var(--Roboto);
   font-size: 1.7rem;
@@ -366,7 +396,6 @@
 .input::placeholder {
   color: var(--text);
 }
-
 .input:focus {
   border-color: var(--black);
 }
@@ -411,7 +440,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCANNING PANEL (right column)
+   SCANNING PANEL
 ══════════════════════════════════════════════════════════════════════════════ */
 .scanPanel {
   padding: 5rem;
@@ -457,7 +486,6 @@
 .scanSteps {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .scanStepRow {
@@ -472,15 +500,12 @@
 .scanStepRow:last-child {
   border-bottom: none;
 }
-
 .scanStepDone {
   opacity: 0.4;
 }
-
 .scanStepActive {
   opacity: 1;
 }
-
 .scanStepPending {
   opacity: 0.2;
 }
@@ -494,7 +519,6 @@
 }
 
 .scanStepActive .scanStepDot {
-  background-color: var(--black);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
 }
 
@@ -550,7 +574,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   CATEGORY ACCORDION (results right)
+   CATEGORY PREVIEW (results right — no accordion, grades only)
 ══════════════════════════════════════════════════════════════════════════════ */
 .categories {
   display: flex;
@@ -562,21 +586,14 @@
   border-bottom: 1px solid var(--blackii);
 }
 
-.catHeader {
+/* Non-interactive row — no button, just display */
+.catRow {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 2.2rem 5rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
   gap: 2rem;
-  transition: background-color 0.15s ease;
-}
-
-.catHeader:hover {
-  background-color: rgba(0, 0, 0, 0.04);
 }
 
 .catHeaderLeft {
@@ -621,102 +638,20 @@
   text-align: right;
 }
 
-.catChevron {
-  font-family: var(--GeistMono);
-  font-size: 2rem;
-  color: var(--black);
-  width: 2rem;
-  text-align: center;
+/* Teaser line below each category */
+.catTeaser {
+  padding: 0 5rem 1.8rem;
 }
 
-.catChecks {
-  display: flex;
-  flex-direction: column;
-  background-color: rgba(0,0,0,0.04);
-  border-top: 0px solid var(--lightGray);
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease, border-top 0.35s ease;
-}
-
-.catChecksOpen {
-  max-height: 1000px;
-  border-top: 1px solid var(--lightGray);
-}
-.checkRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.8rem;
-  padding: 1.8rem 5rem;
-  border-bottom: 1px solid var(--blackii);
-}
-
-.checkRow:last-child {
-  border-bottom: none;
-}
-
-.checkDot2 {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 0.6rem;
-}
-
-.checkPass {
-  background-color: #0e8e0e;
-}
-.checkFail {
-  background-color: var(--red);
-}
-
-.checkInfo {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.checkName {
+.catTeaserText {
   font-family: var(--GeistMono);
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  color: var(--black);
-  font-weight: bold;
-}
-
-.checkMsg {
-  font-family: var(--Roboto);
-  font-size: 1.5rem;
   color: var(--text);
-  line-height: 1.4;
 }
 
-.impactBadge {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 0.3rem 0.9rem;
-  flex-shrink: 0;
-  margin-top: 0.2rem;
-}
-
-.impact_high {
-  background-color: rgba(255, 0, 38, 0.12);
-  color: var(--red);
-}
-.impact_medium {
-  background-color: rgba(186, 117, 23, 0.12);
-  color: #ba7517;
-}
-.impact_low {
-  background-color: rgba(14, 142, 14, 0.12);
-  color: #0e8e0e;
-}
-
-/* ── Results CTA (bottom of right column) ─────────────────────────────────── */
+/* ── Results CTA ─────────────────────────────────────────────────────────── */
 .resultCta {
   padding: 5rem;
   border-top: 1px solid var(--blackii);
@@ -750,11 +685,11 @@
   .copy {
     font-size: 1.9rem;
   }
-  .catHeader {
+  .catRow {
     padding: 2rem 4rem;
   }
-  .checkRow {
-    padding: 1.6rem 4rem;
+  .catTeaser {
+    padding: 0 4rem 1.6rem;
   }
   .resultCta,
   .form,
@@ -762,23 +697,23 @@
   .rightTop {
     padding: 4rem;
   }
+  .emailBanner {
+    padding: 2.5rem 4rem;
+  }
 }
 
 @media screen and (max-width: 1068px) {
   .content {
     grid-template-columns: 1fr;
   }
-
   .left {
     border-right: none;
     border-bottom: 1px solid var(--blackii);
   }
-
   .leftTop {
     padding: 5rem 3rem;
     border-bottom: none;
   }
-
   .leftBottom {
     padding: 3rem;
   }
@@ -790,17 +725,20 @@
   .resultCta {
     padding: 3rem;
   }
-  .catHeader {
+  .catRow {
     padding: 1.8rem 3rem;
   }
-  .checkRow {
-    padding: 1.5rem 3rem;
+  .catTeaser {
+    padding: 0 3rem 1.5rem;
   }
   .pullQuote {
     padding-left: 2rem;
   }
   .statsGrid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .emailBanner {
+    padding: 2.5rem 3rem;
   }
 }
 
@@ -816,7 +754,7 @@
   .scanPct {
     font-size: 6.5rem;
   }
-  .catHeader {
+  .catRow {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
@@ -854,13 +792,17 @@
   .resultCta {
     padding: 2rem;
   }
-  .catHeader {
+  .catRow {
     padding: 1.5rem 2rem;
   }
-  .checkRow {
-    padding: 1.4rem 2rem;
+  .catTeaser {
+    padding: 0 2rem 1.4rem;
   }
   .statsGrid {
     grid-template-columns: 1fr;
+  }
+  .emailBanner {
+    padding: 2rem;
+    gap: 1.5rem;
   }
 }

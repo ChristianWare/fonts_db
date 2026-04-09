@@ -18,6 +18,7 @@ interface AuditResult {
   keywordsRanking: number;
   topKeywords: string[];
   estimatedLostBookings: number;
+  email?: string;
 }
 
 interface Category {
@@ -69,7 +70,7 @@ function GradeBadge({ grade, large }: { grade: string; large?: boolean }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENTRY FORM — styled like ContactSection
+// ENTRY FORM
 // ═══════════════════════════════════════════════════════════════════════════════
 function EntryView({
   onSubmit,
@@ -93,7 +94,6 @@ function EntryView({
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
-        {" "}
         <div className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -137,7 +137,6 @@ function EntryView({
                   color='colorWhite'
                   background='bgBlack'
                 />
-
                 {[
                   "Page speed & Core Web Vitals",
                   "Booking capability & direct reservations",
@@ -166,8 +165,8 @@ function EntryView({
                 <br />
                 <br />
                 Enter your URL below. We&apos;ll scan it in 60 seconds and show
-                you exactly what&apos;s costing you rides — no pitch, no
-                pressure.
+                you a preview — the full report with every fix lands in your
+                inbox.
               </p>
             </div>
             <form onSubmit={handleSubmit} className={styles.form}>
@@ -198,7 +197,7 @@ function EntryView({
                 Run Free Audit &nbsp;→
               </button>
               <p className={styles.disclaimer}>
-                No spam. We&apos;ll email you your full report and occasionally
+                No spam. We&apos;ll email your full report and occasionally
                 share tips for black car operators.
               </p>
             </form>
@@ -210,7 +209,7 @@ function EntryView({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SCANNING STATE — same layout shell, progress in right column
+// SCANNING STATE
 // ═══════════════════════════════════════════════════════════════════════════════
 function ScanningView({ step }: { step: number }) {
   const pct = Math.round(((step + 1) / SCAN_STEPS.length) * 100);
@@ -218,7 +217,6 @@ function ScanningView({ step }: { step: number }) {
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
-        {" "}
         <div className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -287,7 +285,7 @@ function ScanningView({ step }: { step: number }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// RESULTS VIEW — left = score overview, right = category breakdown + CTA
+// RESULTS VIEW — preview only, full report sent to email
 // ═══════════════════════════════════════════════════════════════════════════════
 function ResultsView({
   result,
@@ -296,10 +294,6 @@ function ResultsView({
   result: AuditResult;
   onReset: () => void;
 }) {
-  const [openCat, setOpenCat] = useState<string | null>(
-    result.categories[0]?.id ?? null,
-  );
-
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
@@ -361,24 +355,35 @@ function ResultsView({
 
           {/* ── RIGHT ── */}
           <div className={styles.right}>
+            {/* ── Email banner ── */}
+            <div className={styles.emailBanner}>
+              <span className={styles.emailBannerIcon}>✉</span>
+              <div className={styles.emailBannerText}>
+                <p className={styles.emailBannerTitle}>
+                  Your full report is on its way
+                </p>
+                <p className={styles.emailBannerSub}>
+                  {result.email
+                    ? `Check ${result.email} for your complete breakdown with specific fixes for every issue we found.`
+                    : "Check your inbox for your complete breakdown with specific fixes for every issue we found."}
+                </p>
+              </div>
+            </div>
+
+            {/* ── Preview label ── */}
             <div className={styles.rightTop}>
               <p className={styles.copy}>
-                Here&apos;s a full breakdown of what we found across your site.
-                Each category is scored independently — click any category to
-                see the specific issues.
+                This is a preview of your audit. Each category is scored
+                independently — the full breakdown with specific fixes for every
+                failing item is waiting in your inbox.
               </p>
             </div>
 
-            {/* Category accordion */}
+            {/* ── Category preview — grades + scores only, no checks ── */}
             <div className={styles.categories}>
               {result.categories.map((cat) => (
                 <div className={styles.catBlock} key={cat.id}>
-                  <button
-                    className={styles.catHeader}
-                    onClick={() =>
-                      setOpenCat(openCat === cat.id ? null : cat.id)
-                    }
-                  >
+                  <div className={styles.catRow}>
                     <div className={styles.catHeaderLeft}>
                       <GradeBadge grade={cat.grade} />
                       <span className={styles.catLabel}>{cat.label}</span>
@@ -391,42 +396,33 @@ function ResultsView({
                         />
                       </div>
                       <span className={styles.catScore}>{cat.score}/100</span>
-                      <span className={styles.catChevron}>
-                        {openCat === cat.id ? "−" : "+"}
-                      </span>
                     </div>
-                  </button>
-
-                  <div
-                    className={`${styles.catChecks} ${openCat === cat.id ? styles.catChecksOpen : ""}`}
-                  >
-                    {cat.checks.map((chk) => (
-                      <div className={styles.checkRow} key={chk.id}>
-                        <span
-                          className={`${styles.checkDot2} ${chk.passed ? styles.checkPass : styles.checkFail}`}
-                        />
-                        <div className={styles.checkInfo}>
-                          <span className={styles.checkName}>{chk.label}</span>
-                          <span className={styles.checkMsg}>{chk.message}</span>
-                        </div>
-                        <span
-                          className={`${styles.impactBadge} ${styles[`impact_${chk.impact}`]}`}
-                        >
-                          {chk.impact}
-                        </span>
-                      </div>
-                    ))}
+                  </div>
+                  <div className={styles.catTeaser}>
+                    <span className={styles.catTeaserText}>
+                      {cat.checks.filter((c) => !c.passed).length} issue
+                      {cat.checks.filter((c) => !c.passed).length !== 1
+                        ? "s"
+                        : ""}{" "}
+                      found
+                      {cat.checks.filter(
+                        (c) => !c.passed && c.impact === "high",
+                      ).length > 0
+                        ? ` — ${cat.checks.filter((c) => !c.passed && c.impact === "high").length} high impact`
+                        : ""}
+                      . Full fixes in your email.
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* CTA */}
+            {/* ── CTA ── */}
             <div className={styles.resultCta}>
               <p className={styles.ctaCopy}>
                 Want us to walk you through your results? Book a free 15-minute
                 call — we&apos;ll show you the 2–3 things costing you the most
-                bookings right now.
+                rides right now.
               </p>
               <Link href='/#contact' className={styles.submitBtn}>
                 Book Free 15-Min Call &nbsp;→
@@ -466,7 +462,7 @@ export default function AuditPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Audit failed");
-      setResult(data);
+      setResult({ ...data, email });
       setState("results");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
