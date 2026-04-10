@@ -152,6 +152,10 @@ function EntryView({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const honeypot = (e.currentTarget as HTMLFormElement).elements.namedItem(
+      "website_url_confirm",
+    ) as HTMLInputElement;
+    if (honeypot?.value) return; // bot filled it — silently do nothing
     if (!url || !email || !firstName) {
       setLocalError("All fields are required.");
       return;
@@ -274,6 +278,19 @@ function EntryView({
               {(localError || error) && (
                 <p className={styles.errorMsg}>{localError || error}</p>
               )}
+
+              {/* Honeypot — hidden from real users, bots fill it out */}
+              <input
+                type='text'
+                name='website_url_confirm'
+                value=''
+                onChange={() => {}}
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete='off'
+                aria-hidden='true'
+              />
+
               <button type='submit' className={styles.submitBtn}>
                 Run Free Audit &nbsp;→
               </button>
@@ -467,10 +484,11 @@ function ResultsView({
               </div>
 
               <p className={styles.resultSummary}>
-                *** Estimated using your monthly organic visitor count, a 2%
-                industry-average booking conversion rate, and the number of
-                high-impact issues found. Each unresolved high-impact issue is
-                estimated to reduce conversions by 15%.
+                *** Estimated bookings lost per month is calculated using your
+                monthly organic visitor count, a 2% industry-average booking
+                conversion rate, and the number of high-impact issues found.
+                Each unresolved high-impact issue is estimated to reduce
+                conversions by 15%.
               </p>
 
               {/* ── Tech stack pills ── */}

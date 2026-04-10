@@ -920,6 +920,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const BLOCKED_EMAIL_DOMAINS = [
+      "mailinator.com",
+      "guerrillamail.com",
+      "tempmail.com",
+      "throwam.com",
+      "yopmail.com",
+      "sharklasers.com",
+      "trashmail.com",
+      "fakeinbox.com",
+      "maildrop.cc",
+      "dispostable.com",
+      "spamgourmet.com",
+      "trashmail.me",
+    ];
+    const emailDomain = email.split("@")[1]?.toLowerCase();
+    if (!emailDomain || BLOCKED_EMAIL_DOMAINS.includes(emailDomain)) {
+      return NextResponse.json(
+        { error: "Please use a real business email address." },
+        { status: 400 },
+      );
+    }
+
     const normalized = normalizeUrl(url);
     const domain = new URL(normalized).hostname.replace("www.", "");
     const name = firstName?.trim() || "there";
@@ -931,6 +953,35 @@ export async function POST(req: NextRequest) {
       checkSitemap(normalized),
       checkRobotsTxt(normalized),
     ]);
+
+    const LIMO_KEYWORDS = [
+      "limo",
+      "limousine",
+      "black car",
+      "car service",
+      "chauffeured",
+      "chauffeur",
+      "town car",
+      "sedan service",
+      "ground transportation",
+      "airport transfer",
+      "airport transportation",
+      "executive car",
+      "private driver",
+      "car hire",
+      "luxury transportation",
+    ];
+    const htmlLower = html.toLowerCase();
+    const isLimoSite = LIMO_KEYWORDS.some((k) => htmlLower.includes(k));
+    if (!isLimoSite) {
+      return NextResponse.json(
+        {
+          error:
+            "This tool is designed for black car and limousine operators. Your site doesn't appear to be in that industry.",
+        },
+        { status: 400 },
+      );
+    }
 
     const { categories, mobileScore, techStack } = buildCategories(
       html,
