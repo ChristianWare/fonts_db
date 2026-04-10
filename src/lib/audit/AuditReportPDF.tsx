@@ -650,13 +650,13 @@ export default function AuditReportPDF({
 
         {/* CTA — pinned to bottom of every page via absolute positioning */}
         <View style={s.ctaAbsoluteWrapper}>
-          <View style={s.logoWrap}>
-            <Image
-              src='https://fontsandfooters.com/logos/fnf_logo_black.png'
-              style={s.logoImage}
-            />
-          </View>
           <View style={s.ctaSection}>
+            <View style={s.logoWrap}>
+              <Image
+                src='https://fontsandfooters.com/logos/fnf_logo_black.png'
+                style={s.logoImage}
+              />
+            </View>
             <Text style={s.ctaText}>
               Want us to walk you through these results? Book a free 15-minute
               call and we&apos;ll show you the 2–3 things costing you the most
