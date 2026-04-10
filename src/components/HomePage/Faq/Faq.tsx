@@ -79,7 +79,7 @@ export default function Faq() {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const toggle = (k: string) => setOpenKey((prev) => (prev === k ? null : k));
 
-  // Route-specific list (limit to ~6 items for non-/faqs pages)
+  // Route-specific list (limit to ~ 6 items for non-/faqs pages)
   const routeQuestions = useMemo(() => {
     if (isAllFaqPage) return [] as QuestionItem[];
     return bySection(currentSection, questions);

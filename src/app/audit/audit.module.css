@@ -334,6 +334,7 @@
   font-size: 5rem;
   color: var(--accent);
   flex-shrink: 0;
+  margin-top: 0.2rem;
 }
 
 .emailBannerText {
@@ -804,5 +805,74 @@
   .emailBanner {
     padding: 2rem;
     gap: 1.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TECH STACK DISPLAY
+══════════════════════════════════════════════════════════════════════════════ */
+.techStackBlock {
+  width: 100%;
+  border-top: 1px solid var(--blackii);
+  padding-top: 2rem;
+}
+
+.techStackLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+
+.techPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.techPill {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--blackii);
+  overflow: hidden;
+}
+
+.techPillKey {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 0.5rem 0.8rem;
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.techPillVal {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.techPillOk .techPillVal {
+  background-color: rgba(14, 142, 14, 0.12);
+  color: #0e5e0e;
+}
+
+.techPillWarn .techPillVal {
+  background-color: rgba(255, 0, 38, 0.1);
+  color: var(--red);
+}
+
+@media screen and (max-width: 568px) {
+  .techPills {
+    gap: 0.6rem;
+  }
+  .techPillKey,
+  .techPillVal {
+    font-size: 1rem;
+    padding: 0.4rem 0.7rem;
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -8,6 +7,16 @@ import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Link from "next/link";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
+interface TechStack {
+  platform: string | null;
+  bookingPlatform: string | null;
+  analytics: string[];
+  hasFavicon: boolean;
+  hasSchemaMarkup: boolean;
+  hasSocialLinks: boolean;
+  copyrightYearCurrent: boolean;
+}
+
 interface AuditResult {
   url: string;
   score: number;
@@ -20,6 +29,7 @@ interface AuditResult {
   estimatedLostBookings: number;
   email?: string;
   firstName?: string;
+  techStack?: TechStack;
 }
 
 interface Category {
@@ -71,26 +81,81 @@ function GradeBadge({ grade, large }: { grade: string; large?: boolean }) {
   );
 }
 
+// ── Tech stack pills ──────────────────────────────────────────────────────────
+function TechStackDisplay({ techStack }: { techStack: TechStack }) {
+  const pills: { label: string; value: string; warn?: boolean }[] = [];
+
+  if (techStack.platform) {
+    const warnPlatforms = ["Wix", "Squarespace", "Weebly"];
+    pills.push({
+      label: "Built on",
+      value: techStack.platform,
+      warn: warnPlatforms.includes(techStack.platform),
+    });
+  } else {
+    pills.push({ label: "Built on", value: "Unknown", warn: false });
+  }
+
+  if (techStack.bookingPlatform) {
+    pills.push({
+      label: "Booking",
+      value: techStack.bookingPlatform,
+      warn: true,
+    });
+  }
+
+  if (techStack.analytics.length > 0) {
+    techStack.analytics.forEach((a) => {
+      pills.push({ label: "Analytics", value: a });
+    });
+  } else {
+    pills.push({ label: "Analytics", value: "None detected", warn: true });
+  }
+
+  if (techStack.hasSchemaMarkup) {
+    pills.push({ label: "Schema", value: "Present" });
+  }
+
+  return (
+    <div className={styles.techStackBlock}>
+      <p className={styles.techStackLabel}>DETECTED TECHNOLOGIES</p>
+      <div className={styles.techPills}>
+        {pills.map((pill, i) => (
+          <div
+            key={i}
+            className={`${styles.techPill} ${pill.warn ? styles.techPillWarn : styles.techPillOk}`}
+          >
+            <span className={styles.techPillKey}>{pill.label}</span>
+            <span className={styles.techPillVal}>{pill.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ENTRY FORM
 // ═══════════════════════════════════════════════════════════════════════════════
 function EntryView({
   onSubmit,
+  error,
 }: {
   onSubmit: (url: string, email: string, firstName: string) => void;
+  error?: string;
 }) {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [error, setError] = useState("");
+  const [localError, setLocalError] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!url || !email || !firstName) {
-      setError("All fields are required.");
+      setLocalError("All fields are required.");
       return;
     }
-    setError("");
+    setLocalError("");
     onSubmit(url, email, firstName);
   }
 
@@ -146,7 +211,7 @@ function EntryView({
                   "Organic keyword traffic estimate",
                   "Mobile experience on phones",
                   "Trust signals & social proof",
-                  "Brand impression vs competitors",
+                  "Tech stack & platform detection",
                 ].map((item) => (
                   <div key={item} className={styles.checkItem}>
                     <span className={styles.checkDash}>—</span>
@@ -205,7 +270,9 @@ function EntryView({
                   required
                 />
               </div>
-              {error && <p className={styles.errorMsg}>{error}</p>}
+              {(localError || error) && (
+                <p className={styles.errorMsg}>{localError || error}</p>
+              )}
               <button type='submit' className={styles.submitBtn}>
                 Run Free Audit &nbsp;→
               </button>
@@ -224,8 +291,16 @@ function EntryView({
 // ═══════════════════════════════════════════════════════════════════════════════
 // SCANNING STATE
 // ═══════════════════════════════════════════════════════════════════════════════
-function ScanningView({ step }: { step: number }) {
-  const pct = Math.round(((step + 1) / SCAN_STEPS.length) * 100);
+function ScanningView({
+  step,
+  complete,
+}: {
+  step: number;
+  complete?: boolean;
+}) {
+  const pct = complete
+    ? 100
+    : Math.min(99, Math.round(((step + 1) / SCAN_STEPS.length) * 100));
 
   return (
     <section className={styles.container}>
@@ -298,7 +373,7 @@ function ScanningView({ step }: { step: number }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// RESULTS VIEW — preview only, full report sent to email
+// RESULTS VIEW
 // ═══════════════════════════════════════════════════════════════════════════════
 function ResultsView({
   result,
@@ -338,7 +413,7 @@ function ResultsView({
               <div className={styles.statsGrid}>
                 <div className={styles.statItem}>
                   <span className={styles.statVal}>
-                    ~{result.monthlyVisitors}
+                    ~ {result.monthlyVisitors}
                   </span>
                   <span className={styles.statLabel}>
                     monthly organic visitors
@@ -352,13 +427,19 @@ function ResultsView({
                 </div>
                 <div className={styles.statItem}>
                   <span className={`${styles.statVal} ${styles.statRed}`}>
-                    ~{result.estimatedLostBookings}
+                    ~ {result.estimatedLostBookings}
                   </span>
                   <span className={styles.statLabel}>
                     est. bookings lost/month
                   </span>
                 </div>
               </div>
+
+              {/* ── Tech stack pills ── */}
+              {result.techStack && (
+                <TechStackDisplay techStack={result.techStack} />
+              )}
+
               <p className={styles.resultUrl}>{result.url}</p>
               <button onClick={onReset} className={styles.resetBtn}>
                 ← Run another audit
@@ -392,7 +473,7 @@ function ResultsView({
               </p>
             </div>
 
-            {/* ── Category preview — grades + scores only ── */}
+            {/* ── Category preview ── */}
             <div className={styles.categories}>
               {result.categories.map((cat) => (
                 <div className={styles.catBlock} key={cat.id}>
@@ -449,16 +530,18 @@ function ResultsView({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ROOT PAGE
+// ROOT PAGE — all state lives here
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function AuditPage() {
   const [state, setState] = useState<"entry" | "scanning" | "results">("entry");
   const [scanStep, setScanStep] = useState(0);
+  const [scanComplete, setScanComplete] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
 
   async function handleSubmit(url: string, email: string, firstName: string) {
     setError("");
+    setScanComplete(false);
     setState("scanning");
     setScanStep(0);
 
@@ -475,11 +558,17 @@ export default function AuditPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Audit failed");
+
+      // Flash 100% for 600ms before showing results
+      setScanComplete(true);
+      await new Promise((r) => setTimeout(r, 600));
+
       setResult({ ...data, email, firstName });
       setState("results");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setState("entry");
+      setScanComplete(false);
     }
   }
 
@@ -487,10 +576,12 @@ export default function AuditPage() {
     setResult(null);
     setState("entry");
     setError("");
+    setScanComplete(false);
   }
 
-  if (state === "scanning") return <ScanningView step={scanStep} />;
+  if (state === "scanning")
+    return <ScanningView step={scanStep} complete={scanComplete} />;
   if (state === "results" && result)
     return <ResultsView result={result} onReset={handleReset} />;
-  return <EntryView onSubmit={handleSubmit} />;
+  return <EntryView onSubmit={handleSubmit} error={error} />;
 }

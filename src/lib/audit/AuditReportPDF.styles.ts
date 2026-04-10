@@ -14,11 +14,12 @@ const RED = "#ff0026";
 const ORANGE = "#d97706";
 
 export const auditPdfStyles = StyleSheet.create({
-  // ── Page ──
+  // ── Page — paddingTop: 0 so header is flush on page 1
+  // Continuation page spacing is handled via marginTop on categoryBlocks
   page: {
     fontFamily: FONT,
     fontSize: 10,
-    padding: 0,
+    paddingTop: 0,
     backgroundColor: WHITE,
   },
 
@@ -139,7 +140,7 @@ export const auditPdfStyles = StyleSheet.create({
 
   // ── Body ──
   body: {
-    padding: "24px 40px 40px 40px",
+    padding: "24px 40px 0 40px",
   },
   sectionTitle: {
     fontSize: 8,
@@ -147,15 +148,72 @@ export const auditPdfStyles = StyleSheet.create({
     color: GRAY,
     textTransform: "uppercase",
     letterSpacing: 1.2,
-    marginBottom: 12,
+    marginBottom: 14,
     marginTop: 4,
+  },
+
+  // ── Checklist overview ──
+  checklistSection: {
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  checklistSectionHeader: {
+    backgroundColor: BLACK,
+    padding: "10px 14px",
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+  },
+  checklistSectionTitle: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: WHITE,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+  },
+  checklistGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: "8px 0",
+  },
+  checklistItem: {
+    width: "50%",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+  },
+  checklistIconBox: {
+    width: 16,
+    height: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+    borderRadius: 2,
+  },
+  checklistIconBoxPass: {
+    backgroundColor: GREEN,
+  },
+  checklistIconBoxFail: {
+    backgroundColor: RED,
+  },
+  checklistIconText: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: WHITE,
+  },
+  checklistItemName: {
+    fontSize: 8,
+    color: "#333333",
+    flex: 1,
   },
 
   // ── Category block ──
   categoryBlock: {
-    marginBottom: 20,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: BORDER,
+    marginTop: 0,
   },
   categoryHeader: {
     flexDirection: "row",
@@ -169,7 +227,18 @@ export const auditPdfStyles = StyleSheet.create({
   categoryHeaderLeft: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
+  },
+  categoryStatusIcon: {
+    fontSize: 12,
+    fontFamily: FONT_BOLD,
+    width: 16,
+  },
+  categoryStatusPass: {
+    color: GREEN,
+  },
+  categoryStatusFail: {
+    color: RED,
   },
   gradeBadgeSmall: {
     paddingHorizontal: 7,
@@ -196,7 +265,8 @@ export const auditPdfStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingTop: 12,
+    paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
   },
@@ -204,7 +274,8 @@ export const auditPdfStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingTop: 12,
+    paddingBottom: 14,
   },
   checkIcon: {
     fontSize: 10,
@@ -223,26 +294,40 @@ export const auditPdfStyles = StyleSheet.create({
     flex: 1,
   },
   checkLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontFamily: FONT_BOLD,
     color: BLACK,
-    textTransform: "uppercase",
-    letterSpacing: 0.3,
-    marginBottom: 2,
+    letterSpacing: 0.1,
+    marginBottom: 4,
   },
-  checkMessage: {
+  checkWhat: {
     fontSize: 9,
     color: GRAY,
-    lineHeight: 1.5,
+    lineHeight: 1.6,
+    marginBottom: 5,
+  },
+  checkWhy: {
+    fontSize: 9,
+    color: "#444444",
+    lineHeight: 1.6,
+    marginBottom: 5,
+    fontFamily: FONT_BOLD,
+  },
+  checkPositive: {
+    fontSize: 9,
+    color: GREEN,
+    lineHeight: 1.6,
+    marginTop: 5,
+    fontFamily: FONT_BOLD,
   },
   checkFix: {
     fontSize: 9,
     color: "#7a5c00",
     backgroundColor: "#fff8e1",
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginTop: 5,
-    lineHeight: 1.5,
+    paddingVertical: 6,
+    marginTop: 8,
+    lineHeight: 1.6,
     borderLeftWidth: 2,
     borderLeftColor: ACCENT,
   },
@@ -269,22 +354,81 @@ export const auditPdfStyles = StyleSheet.create({
     color: GREEN,
   },
 
-  // ── CTA footer ──
+  // ── Written audit summary ──
+  auditSummarySection: {
+    marginTop: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  auditSummaryHeader: {
+    backgroundColor: BLACK,
+    padding: "10px 14px",
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+  },
+  auditSummaryHeaderTitle: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: WHITE,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+  },
+  auditSummaryBody: {
+    padding: "16px 20px",
+  },
+  auditSummarySubhead: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: BLACK,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 5,
+    marginTop: 12,
+  },
+  auditSummarySubheadFirst: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: BLACK,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 5,
+    marginTop: 0,
+  },
+  auditSummaryText: {
+    fontSize: 9,
+    color: "#333333",
+    lineHeight: 1.7,
+  },
+
+  // ── CTA wrapper — wrap={false} in JSX so it stays together or moves to new page ──
+  ctaWrapper: {
+    marginTop: 16,
+    marginBottom: 0,
+  },
+  logoWrap: {
+    paddingHorizontal: 40,
+    paddingBottom: 20,
+    paddingTop: 20,
+  },
+  logoImage: {
+    width: 80,
+    height: 26,
+    objectFit: "contain",
+  },
   ctaSection: {
     backgroundColor: ACCENT,
-    padding: "20px 40px",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    padding: "24px 40px",
+    flexDirection: "column",
   },
   ctaText: {
     fontSize: 11,
     color: BLACK,
-    maxWidth: "70%",
-    lineHeight: 1.5,
+    lineHeight: 1.6,
+    marginBottom: 10,
   },
   ctaLink: {
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: FONT_BOLD,
     color: BLACK,
     textDecoration: "underline",
@@ -312,4 +456,15 @@ export const auditPdfStyles = StyleSheet.create({
   gradeC: { backgroundColor: BLACK, color: ACCENT },
   gradeD: { backgroundColor: ORANGE },
   gradeF: { backgroundColor: RED },
+
+  finalPage: {
+    fontFamily: "Helvetica",
+    fontSize: 10,
+    paddingTop: 40,
+    backgroundColor: "#ffffff",
+    flexDirection: "column",
+  },
+  finalPageSpacer: {
+    flex: 1,
+  },
 });

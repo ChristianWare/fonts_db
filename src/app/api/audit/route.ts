@@ -103,6 +103,247 @@ async function fetchPageHtml(url: string): Promise<string> {
   }
 }
 
+// ── Sitemap check ─────────────────────────────────────────────────────────────
+async function checkSitemap(baseUrl: string): Promise<boolean> {
+  const candidates = [
+    `${baseUrl}/sitemap.xml`,
+    `${baseUrl}/sitemap_index.xml`,
+    `${baseUrl}/sitemap/`,
+  ];
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(5000),
+      });
+      if (res.ok) return true;
+    } catch {
+      // continue to next candidate
+    }
+  }
+  return false;
+}
+
+// ── Robots.txt check ──────────────────────────────────────────────────────────
+async function checkRobotsTxt(
+  baseUrl: string,
+): Promise<{ exists: boolean; hasSitemapRef: boolean }> {
+  try {
+    const res = await fetch(`${baseUrl}/robots.txt`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return { exists: false, hasSitemapRef: false };
+    const text = await res.text();
+    return {
+      exists: true,
+      hasSitemapRef: text.toLowerCase().includes("sitemap:"),
+    };
+  } catch {
+    return { exists: false, hasSitemapRef: false };
+  }
+}
+
+// ── Tech stack detection ──────────────────────────────────────────────────────
+function detectTechStack(html: string): {
+  platform: string | null;
+  bookingPlatform: string | null;
+  analytics: string[];
+  hasFavicon: boolean;
+  hasSchemaMarkup: boolean;
+  hasSocialLinks: boolean;
+  copyrightYearCurrent: boolean;
+} {
+  const lower = html.toLowerCase();
+  const currentYear = new Date().getFullYear().toString();
+
+  let platform: string | null = null;
+  if (lower.includes("__next_data__") || lower.includes("/_next/")) {
+    platform = "Next.js";
+  } else if (
+    lower.includes("/wp-content/") ||
+    lower.includes("/wp-includes/")
+  ) {
+    platform = "WordPress";
+  } else if (
+    lower.includes("static1.squarespace.com") ||
+    lower.includes("squarespace-cdn")
+  ) {
+    platform = "Squarespace";
+  } else if (
+    lower.includes("wix.com") ||
+    lower.includes("parastorage.com") ||
+    lower.includes("wixstatic.com")
+  ) {
+    platform = "Wix";
+  } else if (
+    lower.includes("js.webflow.com") ||
+    lower.includes("webflow.com/css")
+  ) {
+    platform = "Webflow";
+  } else if (lower.includes("cdn.shopify.com")) {
+    platform = "Shopify";
+  } else if (
+    lower.includes("weebly.com") ||
+    lower.includes("weeblycloud.com")
+  ) {
+    platform = "Weebly";
+  } else if (lower.includes("ghost-front") || lower.includes("ghost.io")) {
+    platform = "Ghost";
+  } else if (lower.includes("drupal") || lower.includes("drupal.org")) {
+    platform = "Drupal";
+  } else if (lower.includes("joomla")) {
+    platform = "Joomla";
+  }
+
+  let bookingPlatform: string | null = null;
+  if (
+    lower.includes("limoanywhere") ||
+    lower.includes("mylimobiz.com") ||
+    lower.includes("book.mylimobiz")
+  ) {
+    bookingPlatform = "Limo Anywhere";
+  } else if (lower.includes("groundalliance")) {
+    bookingPlatform = "Ground Alliance";
+  } else if (lower.includes("tripmaster")) {
+    bookingPlatform = "TripMaster";
+  } else if (lower.includes("checkfront.com")) {
+    bookingPlatform = "Checkfront";
+  } else if (lower.includes("fareharbor.com")) {
+    bookingPlatform = "FareHarbor";
+  } else if (lower.includes("rezdy.com")) {
+    bookingPlatform = "Rezdy";
+  } else if (lower.includes("bookingkoala")) {
+    bookingPlatform = "BookingKoala";
+  }
+
+  const analytics: string[] = [];
+  if (
+    lower.includes("google-analytics.com") ||
+    lower.includes("gtag(") ||
+    lower.includes("ga(")
+  ) {
+    analytics.push("Google Analytics");
+  }
+  if (lower.includes("googletagmanager.com")) {
+    analytics.push("Google Tag Manager");
+  }
+  if (lower.includes("connect.facebook.net") || lower.includes("fbq(")) {
+    analytics.push("Facebook Pixel");
+  }
+  if (lower.includes("hotjar.com")) {
+    analytics.push("Hotjar");
+  }
+  if (lower.includes("clarity.ms")) {
+    analytics.push("Microsoft Clarity");
+  }
+  if (lower.includes("plausible.io")) {
+    analytics.push("Plausible");
+  }
+
+  const hasFavicon =
+    lower.includes('rel="icon"') ||
+    lower.includes("rel='icon'") ||
+    lower.includes('rel="shortcut icon"') ||
+    lower.includes("favicon");
+
+  const hasSchemaMarkup =
+    lower.includes("application/ld+json") ||
+    lower.includes('itemtype="http://schema.org') ||
+    lower.includes("itemtype='http://schema.org");
+
+  const hasSocialLinks =
+    lower.includes("instagram.com") ||
+    lower.includes("facebook.com") ||
+    lower.includes("linkedin.com") ||
+    lower.includes("twitter.com") ||
+    lower.includes("x.com/");
+
+  const copyrightYearCurrent =
+    html.includes(currentYear) &&
+    (lower.includes("©") ||
+      lower.includes("&copy;") ||
+      lower.includes("copyright"));
+
+  return {
+    platform,
+    bookingPlatform,
+    analytics,
+    hasFavicon,
+    hasSchemaMarkup,
+    hasSocialLinks,
+    copyrightYearCurrent,
+  };
+}
+
+// ── Brand & Design detection ──────────────────────────────────────────────────
+function detectDesign(html: string): {
+  hasViewport: boolean;
+  hasHeroImages: boolean;
+  imgCount: number;
+  hasStockPhotos: boolean;
+  hasDefaultTheme: boolean;
+  fontOverload: boolean;
+  fontCount: number;
+  excessiveInlineStyles: boolean;
+  inlineStyleCount: number;
+} {
+  const lower = html.toLowerCase();
+
+  // Mobile viewport tag
+  const hasViewport =
+    lower.includes('name="viewport"') || lower.includes("name='viewport'");
+
+  // Real homepage imagery — 3+ img tags suggests actual photography
+  const imgCount = (lower.match(/<img/g) || []).length;
+  const hasHeroImages = imgCount >= 3;
+
+  // Stock photography — known stock CDN domains in img src attributes
+  const stockDomains = [
+    "shutterstock.com",
+    "gettyimages.com",
+    "istockphoto.com",
+    "dreamstime.com",
+    "123rf.com",
+    "depositphotos.com",
+    "bigstockphoto.com",
+    "stock.adobe.com",
+  ];
+  const hasStockPhotos = stockDomains.some((d) => lower.includes(d));
+
+  // Default WordPress themes — a dead giveaway of an uncustomized site
+  const defaultThemeIndicators = [
+    "twentytwenty",
+    "twentytwentyone",
+    "twentytwentytwo",
+    "twentytwentythree",
+    "twentytwentyfour",
+    "wp-content/themes/default",
+    "wp-content/themes/storefront",
+    "theme-default",
+  ];
+  const hasDefaultTheme = defaultThemeIndicators.some((t) => lower.includes(t));
+
+  // Font overload — more than 2 Google Font imports is a DIY signal
+  const fontCount = (lower.match(/fonts\.googleapis\.com/g) || []).length;
+  const fontOverload = fontCount > 2;
+
+  // Excessive inline styles — template-built sites typically have 80+
+  const inlineStyleCount = (lower.match(/style="/g) || []).length;
+  const excessiveInlineStyles = inlineStyleCount > 80;
+
+  return {
+    hasViewport,
+    hasHeroImages,
+    imgCount,
+    hasStockPhotos,
+    hasDefaultTheme,
+    fontOverload,
+    fontCount,
+    excessiveInlineStyles,
+    inlineStyleCount,
+  };
+}
+
 // ── Claude API — generate personalized fix recommendations ────────────────────
 async function generateFixes(
   domain: string,
@@ -111,6 +352,8 @@ async function generateFixes(
     mobileScore: number | null;
     monthlyVisitors: number;
     keywordsRanking: number;
+    platform: string | null;
+    bookingPlatform: string | null;
   },
 ): Promise<Record<string, string>> {
   if (failingChecks.length === 0) return {};
@@ -121,7 +364,15 @@ async function generateFixes(
     )
     .join("\n");
 
-  const prompt = `You are an expert web consultant specializing in black car and limousine company websites. 
+  const platformContext = context.platform
+    ? `The site is built on ${context.platform}.`
+    : "The platform/CMS could not be detected.";
+
+  const bookingContext = context.bookingPlatform
+    ? `They are using ${context.bookingPlatform} for bookings, which charges per-booking fees.`
+    : "";
+
+  const prompt = `You are an expert web consultant specializing in black car and limousine company websites.
 
 A website audit was run on ${domain} and found the following failing issues:
 
@@ -131,11 +382,13 @@ Additional context:
 - Mobile page speed score: ${context.mobileScore !== null ? `${Math.round((context.mobileScore ?? 0) * 100)}/100` : "unavailable"}
 - Monthly organic visitors: ~${context.monthlyVisitors}
 - Keywords ranking on Google: ${context.keywordsRanking}
+- ${platformContext}
+- ${bookingContext}
 
-For each failing check, write a single concrete action the operator can take to fix it. Be specific to their situation — reference the domain or metrics where relevant. Each fix should be one sentence, direct, and actionable. No fluff, no generic advice.
+For each failing check, write a single concrete action the operator can take to fix it. Be specific to their situation — reference the domain, platform, or metrics where relevant. Each fix should be one sentence, direct, and actionable. No fluff, no generic advice.
 
 Respond ONLY with a valid JSON object where each key is the check id and each value is the fix string. No markdown, no backticks, no preamble. Example format:
-{"speed":"Compress your hero image using TinyPNG and defer unused JavaScript — this alone typically adds 20-30 points to your mobile score.","quote":"Add a multi-step quote form to your homepage hero so visitors can get a price without calling."}`;
+{"speed":"Compress your hero image using TinyPNG and defer unused JavaScript — this alone typically adds 20-30 points to your mobile score.","viewport":"Add <meta name='viewport' content='width=device-width, initial-scale=1'> inside the <head> of your HTML — without this, phones display a shrunken desktop version of your site."}`;
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -147,7 +400,7 @@ Respond ONLY with a valid JSON object where each key is the check id and each va
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
+        max_tokens: 1200,
         messages: [{ role: "user", content: prompt }],
       }),
     });
@@ -171,9 +424,18 @@ function buildCategories(
     keywordsRanking: number;
     topKeywords: string[];
   },
-): { categories: Category[]; mobileScore: number | null } {
+  extras: {
+    hasSitemap: boolean;
+    robotsTxt: { exists: boolean; hasSitemapRef: boolean };
+  },
+): {
+  categories: Category[];
+  mobileScore: number | null;
+  techStack: ReturnType<typeof detectTechStack>;
+} {
   const lower = html.toLowerCase();
 
+  // ── Performance ──
   const audits = (psData?.lighthouseResult as Record<string, unknown>)
     ?.audits as Record<string, Record<string, unknown>> | undefined;
   const fcpScore = audits?.["first-contentful-paint"]?.score as
@@ -221,6 +483,7 @@ function buildCategories(
     },
   ];
 
+  // ── Booking ──
   const hasBookingForm =
     lower.includes("book") ||
     lower.includes("reserve") ||
@@ -275,6 +538,7 @@ function buildCategories(
     },
   ];
 
+  // ── SEO ──
   const hasMetaDesc =
     lower.includes('meta name="description"') ||
     lower.includes("meta name='description'");
@@ -342,8 +606,29 @@ function buildCategories(
         : "No city keywords found on the homepage. Local SEO is critical for ground transportation.",
       impact: "high",
     },
+    {
+      id: "sitemap",
+      label: "XML sitemap present",
+      passed: extras.hasSitemap,
+      message: extras.hasSitemap
+        ? "XML sitemap found — Google can crawl your pages efficiently."
+        : "No sitemap.xml found. Without one, Google may miss pages on your site entirely.",
+      impact: "medium",
+    },
+    {
+      id: "robots",
+      label: "Robots.txt present",
+      passed: extras.robotsTxt.exists,
+      message: extras.robotsTxt.exists
+        ? extras.robotsTxt.hasSitemapRef
+          ? "Robots.txt found and references your sitemap — great setup."
+          : "Robots.txt found but doesn't reference your sitemap. Add a Sitemap: line to help Google."
+        : "No robots.txt found. This file guides search engines on how to crawl your site.",
+      impact: "low",
+    },
   ];
 
+  // ── Trust ──
   const hasPhone =
     lower.includes("tel:") ||
     /\(\d{3}\)\s?\d{3}[-.\s]?\d{4}/.test(html) ||
@@ -409,6 +694,152 @@ function buildCategories(
     },
   ];
 
+  // ── Tech Stack ──
+  const techStack = detectTechStack(html);
+
+  const platformPassed = !["Wix", "Squarespace", "Weebly"].includes(
+    techStack.platform ?? "",
+  );
+  const platformMessage = (() => {
+    if (!techStack.platform)
+      return "Could not detect the platform this site is built on.";
+    if (["Wix", "Squarespace", "Weebly"].includes(techStack.platform)) {
+      return `Built on ${techStack.platform} — this platform limits your booking customisation, SEO control, and page speed.`;
+    }
+    return `Built on ${techStack.platform}.`;
+  })();
+
+  const bookingPlatformPassed = !techStack.bookingPlatform;
+  const bookingPlatformMessage = techStack.bookingPlatform
+    ? `${techStack.bookingPlatform} detected — you're paying per-booking fees on every ride processed through this platform.`
+    : "No third-party booking platform detected — you may be keeping 100% of each booking.";
+
+  const analyticsMessage = (() => {
+    if (techStack.analytics.length === 0)
+      return "No web analytics detected. You have no visibility into where your visitors come from or what they do on your site.";
+    return `Analytics detected: ${techStack.analytics.join(", ")}.`;
+  })();
+
+  const techChecks: Check[] = [
+    {
+      id: "platform",
+      label: "Site platform",
+      passed: platformPassed,
+      message: platformMessage,
+      impact: platformPassed ? "low" : "high",
+    },
+    {
+      id: "bookingplatform",
+      label: "Third-party booking platform",
+      passed: bookingPlatformPassed,
+      message: bookingPlatformMessage,
+      impact: "high",
+    },
+    {
+      id: "analytics",
+      label: "Web analytics installed",
+      passed: techStack.analytics.length > 0,
+      message: analyticsMessage,
+      impact: "medium",
+    },
+    {
+      id: "schema",
+      label: "Schema markup (structured data)",
+      passed: techStack.hasSchemaMarkup,
+      message: techStack.hasSchemaMarkup
+        ? "Schema markup found — helps Google understand your business type and location."
+        : "No schema markup detected. Adding LocalBusiness schema directly improves local search visibility.",
+      impact: "medium",
+    },
+    {
+      id: "sociallinks",
+      label: "Social media links present",
+      passed: techStack.hasSocialLinks,
+      message: techStack.hasSocialLinks
+        ? "Social media links detected."
+        : "No social media links found. Linking to active profiles builds trust and supports local SEO.",
+      impact: "low",
+    },
+    {
+      id: "favicon",
+      label: "Favicon present",
+      passed: techStack.hasFavicon,
+      message: techStack.hasFavicon
+        ? "Favicon found — small detail, professional finish."
+        : "No favicon detected. A missing favicon signals a rushed or unfinished site.",
+      impact: "low",
+    },
+    {
+      id: "copyright",
+      label: "Copyright year current",
+      passed: techStack.copyrightYearCurrent,
+      message: techStack.copyrightYearCurrent
+        ? "Copyright year is current — site appears actively maintained."
+        : "Copyright year appears outdated. This signals a neglected site to both visitors and Google.",
+      impact: "low",
+    },
+  ];
+
+  // ── Brand & Design ──────────────────────────────────────────────────────────
+  const design = detectDesign(html);
+
+  const designChecks: Check[] = [
+    {
+      id: "viewport",
+      label: "Mobile viewport configured",
+      passed: design.hasViewport,
+      message: design.hasViewport
+        ? "Mobile viewport meta tag found — site is configured for proper mobile display."
+        : "No mobile viewport tag found. Your site likely renders as a shrunken desktop page on phones.",
+      impact: "high",
+    },
+    {
+      id: "heroimages",
+      label: "Real imagery on homepage",
+      passed: design.hasHeroImages,
+      message: design.hasHeroImages
+        ? `${design.imgCount} images detected on the homepage — good visual presence.`
+        : "Very few or no images detected. A text-only homepage feels incomplete for a premium transportation service.",
+      impact: "high",
+    },
+    {
+      id: "stockphotos",
+      label: "No stock photography",
+      passed: !design.hasStockPhotos,
+      message: design.hasStockPhotos
+        ? "Stock photo CDN detected. Generic stock images undermine credibility — clients want to see your actual fleet."
+        : "No stock photo services detected — imagery appears to be original.",
+      impact: "high",
+    },
+    {
+      id: "defaulttheme",
+      label: "Custom design (not a default theme)",
+      passed: !design.hasDefaultTheme,
+      message: design.hasDefaultTheme
+        ? "A default WordPress theme was detected. Default themes make your site look identical to thousands of others."
+        : "No default theme indicators detected — site appears to have a custom or customized design.",
+      impact: "high",
+    },
+    {
+      id: "fontoverload",
+      label: "Clean typography",
+      passed: !design.fontOverload,
+      message: design.fontOverload
+        ? `${design.fontCount} Google Font imports detected. Loading more than 2 font families slows your site and looks inconsistent.`
+        : "Typography looks disciplined — font imports are clean and performant.",
+      impact: "medium",
+    },
+    {
+      id: "inlinestyles",
+      label: "Consistent design system",
+      passed: !design.excessiveInlineStyles,
+      message: design.excessiveInlineStyles
+        ? `${design.inlineStyleCount} inline style attributes detected — a pattern typical of template-built sites with no consistent design system.`
+        : "Code structure looks clean — no excessive inline styling detected.",
+      impact: "low",
+    },
+  ];
+
   const perfScore = Math.round(
     (perfChecks.filter((c) => c.passed).length / perfChecks.length) * 100,
   );
@@ -421,9 +852,16 @@ function buildCategories(
   const trustScore = Math.round(
     (trustChecks.filter((c) => c.passed).length / trustChecks.length) * 100,
   );
+  const techScore = Math.round(
+    (techChecks.filter((c) => c.passed).length / techChecks.length) * 100,
+  );
+  const designScore = Math.round(
+    (designChecks.filter((c) => c.passed).length / designChecks.length) * 100,
+  );
 
   return {
     mobileScore,
+    techStack,
     categories: [
       {
         id: "performance",
@@ -453,6 +891,20 @@ function buildCategories(
         score: trustScore,
         checks: trustChecks,
       },
+      {
+        id: "techstack",
+        label: "Tech Stack",
+        grade: scoreToGrade(techScore),
+        score: techScore,
+        checks: techChecks,
+      },
+      {
+        id: "design",
+        label: "Brand & Design",
+        grade: scoreToGrade(designScore),
+        score: designScore,
+        checks: designChecks,
+      },
     ],
   };
 }
@@ -472,16 +924,19 @@ export async function POST(req: NextRequest) {
     const domain = new URL(normalized).hostname.replace("www.", "");
     const name = firstName?.trim() || "there";
 
-    const [html, psData, seoData] = await Promise.all([
+    const [html, psData, seoData, hasSitemap, robotsTxt] = await Promise.all([
       fetchPageHtml(normalized),
       fetchPageSpeed(normalized),
       fetchSeoTraffic(domain),
+      checkSitemap(normalized),
+      checkRobotsTxt(normalized),
     ]);
 
-    const { categories, mobileScore } = buildCategories(
+    const { categories, mobileScore, techStack } = buildCategories(
       html,
       psData as Record<string, unknown> | null,
       seoData,
+      { hasSitemap, robotsTxt },
     );
 
     const failingChecks = categories
@@ -492,6 +947,8 @@ export async function POST(req: NextRequest) {
       mobileScore,
       monthlyVisitors: seoData.monthlyVisitors,
       keywordsRanking: seoData.keywordsRanking,
+      platform: techStack.platform,
+      bookingPlatform: techStack.bookingPlatform,
     });
 
     const categoriesWithFixes = categories.map((cat) => ({
@@ -564,6 +1021,7 @@ export async function POST(req: NextRequest) {
       keywordsRanking: seoData.keywordsRanking,
       topKeywords: seoData.topKeywords,
       estimatedLostBookings,
+      techStack,
     });
   } catch (err) {
     console.error(err);

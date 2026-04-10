@@ -450,9 +450,9 @@ export async function sendAuditReportEmail({
         </p>
 
         <ul style="margin:0 0 20px;padding-left:20px;">
-          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">~${monthlyVisitors} estimated monthly organic visitors</li>
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">~ ${monthlyVisitors} estimated monthly organic visitors</li>
           <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">${keywordsRanking} keywords currently ranking on Google</li>
-          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;color:#cc0000;">~${estimatedLostBookings} estimated bookings lost per month</li>
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;color:#cc0000;">~ ${estimatedLostBookings} estimated bookings lost per month</li>
           <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">${failingCount} issues found across all categories${highImpactCount > 0 ? ` — ${highImpactCount} are high impact` : ""}</li>
         </ul>
 
