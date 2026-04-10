@@ -19,6 +19,7 @@ interface AuditResult {
   topKeywords: string[];
   estimatedLostBookings: number;
   email?: string;
+  firstName?: string;
 }
 
 interface Category {
@@ -34,6 +35,7 @@ interface Check {
   label: string;
   passed: boolean;
   message: string;
+  fix?: string;
   impact: "high" | "medium" | "low";
 }
 
@@ -75,20 +77,21 @@ function GradeBadge({ grade, large }: { grade: string; large?: boolean }) {
 function EntryView({
   onSubmit,
 }: {
-  onSubmit: (url: string, email: string) => void;
+  onSubmit: (url: string, email: string, firstName: string) => void;
 }) {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [error, setError] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!url || !email) {
-      setError("Both fields are required.");
+    if (!url || !email || !firstName) {
+      setError("All fields are required.");
       return;
     }
     setError("");
-    onSubmit(url, email);
+    onSubmit(url, email, firstName);
   }
 
   return (
@@ -164,12 +167,22 @@ function EntryView({
                 deliver.
                 <br />
                 <br />
-                Enter your URL below. We&apos;ll scan it in 60 seconds and show
-                you a preview — the full report with every fix lands in your
-                inbox.
+                Enter your details below. We&apos;ll scan your site in 60
+                seconds and email you the full report with personalized fixes.
               </p>
             </div>
             <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>YOUR FIRST NAME</label>
+                <input
+                  type='text'
+                  placeholder='Mike'
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
               <div className={styles.fieldGroup}>
                 <label className={styles.fieldLabel}>YOUR WEBSITE URL</label>
                 <input
@@ -325,7 +338,7 @@ function ResultsView({
               <div className={styles.statsGrid}>
                 <div className={styles.statItem}>
                   <span className={styles.statVal}>
-                    ~ {result.monthlyVisitors}
+                    ~{result.monthlyVisitors}
                   </span>
                   <span className={styles.statLabel}>
                     monthly organic visitors
@@ -339,7 +352,7 @@ function ResultsView({
                 </div>
                 <div className={styles.statItem}>
                   <span className={`${styles.statVal} ${styles.statRed}`}>
-                    ~ {result.estimatedLostBookings}
+                    ~{result.estimatedLostBookings}
                   </span>
                   <span className={styles.statLabel}>
                     est. bookings lost/month
@@ -364,8 +377,8 @@ function ResultsView({
                 </p>
                 <p className={styles.emailBannerSub}>
                   {result.email
-                    ? `Check ${result.email} for your complete breakdown with specific fixes for every issue we found.`
-                    : "Check your inbox for your complete breakdown with specific fixes for every issue we found."}
+                    ? `Check ${result.email} — your complete report with personalized fixes and a PDF is on its way.`
+                    : "Check your inbox — your complete report with personalized fixes and a PDF is on its way."}
                 </p>
               </div>
             </div>
@@ -373,13 +386,13 @@ function ResultsView({
             {/* ── Preview label ── */}
             <div className={styles.rightTop}>
               <p className={styles.copy}>
-                This is a preview of your audit. Each category is scored
-                independently — the full breakdown with specific fixes for every
-                failing item is waiting in your inbox.
+                This is a preview of your audit. The full breakdown with
+                specific fixes for every failing item — plus a downloadable PDF
+                report — is waiting in your inbox.
               </p>
             </div>
 
-            {/* ── Category preview — grades + scores only, no checks ── */}
+            {/* ── Category preview — grades + scores only ── */}
             <div className={styles.categories}>
               {result.categories.map((cat) => (
                 <div className={styles.catBlock} key={cat.id}>
@@ -444,7 +457,7 @@ export default function AuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
 
-  async function handleSubmit(url: string, email: string) {
+  async function handleSubmit(url: string, email: string, firstName: string) {
     setError("");
     setState("scanning");
     setScanStep(0);
@@ -458,11 +471,11 @@ export default function AuditPage() {
       const res = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, email }),
+        body: JSON.stringify({ url, email, firstName }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Audit failed");
-      setResult({ ...data, email });
+      setResult({ ...data, email, firstName });
       setState("results");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong.");

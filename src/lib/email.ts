@@ -19,10 +19,12 @@ export async function sendEmail({
   to,
   subject,
   html,
+  attachments,
 }: {
   to: string | string[];
   subject: string;
   html: string;
+  attachments?: Array<{ filename: string; content: Buffer }>;
 }) {
   try {
     await resend.emails.send({
@@ -30,6 +32,7 @@ export async function sendEmail({
       to,
       subject,
       html,
+      ...(attachments ? { attachments } : {}),
     });
   } catch (err) {
     console.error("[sendEmail] Failed to send email:", err);

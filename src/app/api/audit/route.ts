@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
+import { sendAuditReportEmail } from "@/lib/emails";
+import { generateAuditPDF } from "@/lib/audit/generateAuditPDF";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Check {
@@ -7,6 +8,7 @@ interface Check {
   label: string;
   passed: boolean;
   message: string;
+  fix?: string;
   impact: "high" | "medium" | "low";
 }
 
@@ -36,7 +38,7 @@ function normalizeUrl(raw: string): string {
   }
 }
 
-// ── PageSpeed API call ────────────────────────────────────────────────────────
+// ── PageSpeed API ─────────────────────────────────────────────────────────────
 async function fetchPageSpeed(url: string) {
   const key = process.env.GOOGLE_PAGESPEED_API_KEY;
   const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile${key ? `&key=${key}` : ""}`;
@@ -49,22 +51,19 @@ async function fetchPageSpeed(url: string) {
   }
 }
 
-// ── DataForSEO traffic call ───────────────────────────────────────────────────
+// ── DataForSEO ────────────────────────────────────────────────────────────────
 async function fetchSeoTraffic(domain: string) {
   const login = process.env.DATAFORSEO_LOGIN;
   const password = process.env.DATAFORSEO_PASSWORD;
   if (!login || !password) {
-    // Return plausible mock data when API not configured
     return {
       monthlyVisitors: Math.floor(Math.random() * 200) + 20,
       keywordsRanking: Math.floor(Math.random() * 40) + 5,
       topKeywords: ["limo service", "black car service", "airport transfer"],
     };
   }
-
   try {
     const creds = Buffer.from(`${login}:${password}`).toString("base64");
-    const body = [{ target: domain, location_code: 2840, language_code: "en" }];
     const res = await fetch(
       "https://api.dataforseo.com/v3/dataforseo_labs/google/domain_rank_overview/live",
       {
@@ -73,7 +72,9 @@ async function fetchSeoTraffic(domain: string) {
           Authorization: `Basic ${creds}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify([
+          { target: domain, location_code: 2840, language_code: "en" },
+        ]),
       },
     );
     const data = await res.json();
@@ -88,7 +89,7 @@ async function fetchSeoTraffic(domain: string) {
   }
 }
 
-// ── HTML scan ─────────────────────────────────────────────────────────────────
+// ── HTML fetch ────────────────────────────────────────────────────────────────
 async function fetchPageHtml(url: string): Promise<string> {
   try {
     const res = await fetch(url, {
@@ -102,7 +103,66 @@ async function fetchPageHtml(url: string): Promise<string> {
   }
 }
 
-// ── Build categories from raw data ────────────────────────────────────────────
+// ── Claude API — generate personalized fix recommendations ────────────────────
+async function generateFixes(
+  domain: string,
+  failingChecks: Check[],
+  context: {
+    mobileScore: number | null;
+    monthlyVisitors: number;
+    keywordsRanking: number;
+  },
+): Promise<Record<string, string>> {
+  if (failingChecks.length === 0) return {};
+
+  const checkList = failingChecks
+    .map(
+      (c) => `- id: "${c.id}" | issue: "${c.label}" | detail: "${c.message}"`,
+    )
+    .join("\n");
+
+  const prompt = `You are an expert web consultant specializing in black car and limousine company websites. 
+
+A website audit was run on ${domain} and found the following failing issues:
+
+${checkList}
+
+Additional context:
+- Mobile page speed score: ${context.mobileScore !== null ? `${Math.round((context.mobileScore ?? 0) * 100)}/100` : "unavailable"}
+- Monthly organic visitors: ~${context.monthlyVisitors}
+- Keywords ranking on Google: ${context.keywordsRanking}
+
+For each failing check, write a single concrete action the operator can take to fix it. Be specific to their situation — reference the domain or metrics where relevant. Each fix should be one sentence, direct, and actionable. No fluff, no generic advice.
+
+Respond ONLY with a valid JSON object where each key is the check id and each value is the fix string. No markdown, no backticks, no preamble. Example format:
+{"speed":"Compress your hero image using TinyPNG and defer unused JavaScript — this alone typically adds 20-30 points to your mobile score.","quote":"Add a multi-step quote form to your homepage hero so visitors can get a price without calling."}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY ?? "",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+
+    const data = await res.json();
+    const text = data?.content?.[0]?.text ?? "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    return JSON.parse(clean);
+  } catch (err) {
+    console.error("[Claude fix generation error]", err);
+    return {};
+  }
+}
+
+// ── Build categories ──────────────────────────────────────────────────────────
 function buildCategories(
   html: string,
   psData: Record<string, unknown> | null,
@@ -111,15 +171,15 @@ function buildCategories(
     keywordsRanking: number;
     topKeywords: string[];
   },
-): Category[] {
+): { categories: Category[]; mobileScore: number | null } {
   const lower = html.toLowerCase();
 
-  // ── Performance ──
-  const lcp = (psData?.lighthouseResult as Record<string, unknown>)?.audits as
-    | Record<string, Record<string, unknown>>
+  const audits = (psData?.lighthouseResult as Record<string, unknown>)
+    ?.audits as Record<string, Record<string, unknown>> | undefined;
+  const fcpScore = audits?.["first-contentful-paint"]?.score as
+    | number
     | undefined;
-  const fcp = lcp?.["first-contentful-paint"]?.score as number | undefined;
-  const lcpScore = lcp?.["largest-contentful-paint"]?.score as
+  const lcpScore = audits?.["largest-contentful-paint"]?.score as
     | number
     | undefined;
   const mobileScore =
@@ -142,9 +202,9 @@ function buildCategories(
     {
       id: "fcp",
       label: "First contentful paint",
-      passed: fcp !== undefined ? fcp >= 0.5 : false,
+      passed: fcpScore !== undefined ? fcpScore >= 0.5 : false,
       message:
-        fcp !== undefined && fcp >= 0.5
+        fcpScore !== undefined && fcpScore >= 0.5
           ? "Content loads quickly — good first impression."
           : "Content takes too long to appear, which increases bounce rate.",
       impact: "medium",
@@ -160,11 +220,7 @@ function buildCategories(
       impact: "high",
     },
   ];
-  const perfScore = Math.round(
-    (perfChecks.filter((c) => c.passed).length / perfChecks.length) * 100,
-  );
 
-  // ── Booking ──
   const hasBookingForm =
     lower.includes("book") ||
     lower.includes("reserve") ||
@@ -175,7 +231,6 @@ function buildCategories(
     lower.includes("get a quote") ||
     lower.includes("price") ||
     lower.includes("rate");
-  const hasMobileBooking = lower.includes("book") && lower.includes("mobile");
   const hasPlatformLink =
     lower.includes("limo anywhere") ||
     lower.includes("groundlink") ||
@@ -219,24 +274,26 @@ function buildCategories(
       impact: "medium",
     },
   ];
-  const bookingScore = Math.round(
-    (bookingChecks.filter((c) => c.passed).length / bookingChecks.length) * 100,
-  );
 
-  // ── SEO ──
   const hasMetaDesc =
     lower.includes('meta name="description"') ||
     lower.includes("meta name='description'");
   const hasH1 = lower.includes("<h1");
   const hasTitle = lower.includes("<title");
-  const hasCity =
-    lower.includes("phoenix") ||
-    lower.includes("los angeles") ||
-    lower.includes("new york") ||
-    lower.includes("chicago") ||
-    lower.includes("miami") ||
-    lower.includes("dallas") ||
-    lower.includes("houston");
+  const hasCity = [
+    "phoenix",
+    "los angeles",
+    "new york",
+    "chicago",
+    "miami",
+    "dallas",
+    "houston",
+    "atlanta",
+    "seattle",
+    "boston",
+    "denver",
+    "las vegas",
+  ].some((c) => lower.includes(c));
 
   const seoChecks: Check[] = [
     {
@@ -286,11 +343,7 @@ function buildCategories(
       impact: "high",
     },
   ];
-  const seoScore = Math.round(
-    (seoChecks.filter((c) => c.passed).length / seoChecks.length) * 100,
-  );
 
-  // ── Trust ──
   const hasPhone =
     lower.includes("tel:") ||
     /\(\d{3}\)\s?\d{3}[-.\s]?\d{4}/.test(html) ||
@@ -305,7 +358,6 @@ function buildCategories(
     lower.includes("testimonial") ||
     lower.includes("star") ||
     lower.includes("google");
-  const hasSSL = true; // checked at DNS level — assume https if they got this far
   const hasFleet =
     lower.includes("fleet") ||
     lower.includes("vehicle") ||
@@ -315,7 +367,7 @@ function buildCategories(
     {
       id: "ssl",
       label: "SSL certificate (https)",
-      passed: hasSSL,
+      passed: true,
       message: "Site is served over HTTPS — secure.",
       impact: "high",
     },
@@ -334,7 +386,7 @@ function buildCategories(
       passed: hasCta,
       message: hasCta
         ? "Booking call-to-action found."
-        : "No clear CTA detected. Every second without a 'Book Now' button is a lost conversion.",
+        : "No clear CTA detected. Every second without a Book Now button is a lost conversion.",
       impact: "high",
     },
     {
@@ -356,46 +408,59 @@ function buildCategories(
       impact: "low",
     },
   ];
+
+  const perfScore = Math.round(
+    (perfChecks.filter((c) => c.passed).length / perfChecks.length) * 100,
+  );
+  const bookingScore = Math.round(
+    (bookingChecks.filter((c) => c.passed).length / bookingChecks.length) * 100,
+  );
+  const seoScore = Math.round(
+    (seoChecks.filter((c) => c.passed).length / seoChecks.length) * 100,
+  );
   const trustScore = Math.round(
     (trustChecks.filter((c) => c.passed).length / trustChecks.length) * 100,
   );
 
-  return [
-    {
-      id: "performance",
-      label: "Page Performance",
-      grade: scoreToGrade(perfScore),
-      score: perfScore,
-      checks: perfChecks,
-    },
-    {
-      id: "booking",
-      label: "Booking Capability",
-      grade: scoreToGrade(bookingScore),
-      score: bookingScore,
-      checks: bookingChecks,
-    },
-    {
-      id: "seo",
-      label: "SEO & Keyword Traffic",
-      grade: scoreToGrade(seoScore),
-      score: seoScore,
-      checks: seoChecks,
-    },
-    {
-      id: "trust",
-      label: "Trust & Conversion",
-      grade: scoreToGrade(trustScore),
-      score: trustScore,
-      checks: trustChecks,
-    },
-  ];
+  return {
+    mobileScore,
+    categories: [
+      {
+        id: "performance",
+        label: "Page Performance",
+        grade: scoreToGrade(perfScore),
+        score: perfScore,
+        checks: perfChecks,
+      },
+      {
+        id: "booking",
+        label: "Booking Capability",
+        grade: scoreToGrade(bookingScore),
+        score: bookingScore,
+        checks: bookingChecks,
+      },
+      {
+        id: "seo",
+        label: "SEO & Keyword Traffic",
+        grade: scoreToGrade(seoScore),
+        score: seoScore,
+        checks: seoChecks,
+      },
+      {
+        id: "trust",
+        label: "Trust & Conversion",
+        grade: scoreToGrade(trustScore),
+        score: trustScore,
+        checks: trustChecks,
+      },
+    ],
+  };
 }
 
 // ── POST /api/audit ───────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
-    const { url, email } = await req.json();
+    const { url, email, firstName } = await req.json();
     if (!url || !email) {
       return NextResponse.json(
         { error: "URL and email are required." },
@@ -405,6 +470,7 @@ export async function POST(req: NextRequest) {
 
     const normalized = normalizeUrl(url);
     const domain = new URL(normalized).hostname.replace("www.", "");
+    const name = firstName?.trim() || "there";
 
     const [html, psData, seoData] = await Promise.all([
       fetchPageHtml(normalized),
@@ -412,39 +478,87 @@ export async function POST(req: NextRequest) {
       fetchSeoTraffic(domain),
     ]);
 
-    const categories = buildCategories(
+    const { categories, mobileScore } = buildCategories(
       html,
       psData as Record<string, unknown> | null,
       seoData,
     );
 
+    const failingChecks = categories
+      .flatMap((c) => c.checks)
+      .filter((c) => !c.passed);
+
+    const fixes = await generateFixes(domain, failingChecks, {
+      mobileScore,
+      monthlyVisitors: seoData.monthlyVisitors,
+      keywordsRanking: seoData.keywordsRanking,
+    });
+
+    const categoriesWithFixes = categories.map((cat) => ({
+      ...cat,
+      checks: cat.checks.map((chk) => ({
+        ...chk,
+        ...(fixes[chk.id] ? { fix: fixes[chk.id] } : {}),
+      })),
+    }));
+
     const totalScore = Math.round(
-      categories.reduce((sum, c) => sum + c.score, 0) / categories.length,
+      categoriesWithFixes.reduce((sum, c) => sum + c.score, 0) /
+        categoriesWithFixes.length,
     );
     const grade = scoreToGrade(totalScore);
-
-    // Estimate lost bookings (rough heuristic)
-    const failedHighImpact = categories
-      .flatMap((c) => c.checks)
-      .filter((c) => !c.passed && c.impact === "high").length;
+    const failedHighImpact = failingChecks.filter(
+      (c) => c.impact === "high",
+    ).length;
     const estimatedLostBookings = failedHighImpact * 3;
 
     const summaryMap: Record<string, string> = {
-      A: `Your site is in strong shape. A few refinements could push you to best-in-class.`,
-      B: `Your site is performing reasonably well but there are clear gaps costing you bookings each month.`,
-      C: `Your site has foundational issues that are actively losing you business. These are fixable.`,
-      D: `Your site has serious problems across multiple areas. Operators with better sites are taking your bookings.`,
-      F: `Your site is working against you. Every week you wait, you're leaving significant revenue on the table.`,
+      A: "Your site is in strong shape. A few refinements could push you to best-in-class.",
+      B: "Your site is performing reasonably well but there are clear gaps costing you bookings each month.",
+      C: "Your site has foundational issues that are actively losing you business. These are fixable.",
+      D: "Your site has serious problems across multiple areas. Operators with better sites are taking your bookings.",
+      F: "Your site is working against you. Every week you wait, you're leaving significant revenue on the table.",
     };
 
-    // Trigger email sequence (fire-and-forget — implement with your email provider)
-    // await triggerEmailSequence({ email, url: normalized, score: totalScore, grade });
+    const pdfData = {
+      url: normalized,
+      score: totalScore,
+      grade,
+      summary: summaryMap[grade],
+      monthlyVisitors: seoData.monthlyVisitors,
+      keywordsRanking: seoData.keywordsRanking,
+      estimatedLostBookings,
+      categories: categoriesWithFixes,
+      firstName: name,
+    };
+
+    // Generate PDF and send email — non-blocking
+    (async () => {
+      try {
+        const pdfBuffer = await generateAuditPDF(pdfData);
+        await sendAuditReportEmail({
+          to: email,
+          firstName: name,
+          url: normalized,
+          score: totalScore,
+          grade,
+          summary: summaryMap[grade],
+          monthlyVisitors: seoData.monthlyVisitors,
+          keywordsRanking: seoData.keywordsRanking,
+          estimatedLostBookings,
+          categories: categoriesWithFixes,
+          pdfBuffer,
+        });
+      } catch (err) {
+        console.error("[audit email/pdf error]", err);
+      }
+    })();
 
     return NextResponse.json({
       url: normalized,
       score: totalScore,
       grade,
-      categories,
+      categories: categoriesWithFixes,
       summary: summaryMap[grade],
       monthlyVisitors: seoData.monthlyVisitors,
       keywordsRanking: seoData.keywordsRanking,

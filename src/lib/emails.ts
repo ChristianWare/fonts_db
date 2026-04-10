@@ -376,3 +376,159 @@ export async function sendAdminChangeRequestEmail({
     }),
   });
 }
+
+// ── REPLACE your existing sendAuditReportEmail in lib/emails.ts with this ──
+
+export async function sendAuditReportEmail({
+  to,
+  firstName,
+  url,
+  score,
+  grade,
+  summary,
+  monthlyVisitors,
+  keywordsRanking,
+  estimatedLostBookings,
+  categories,
+  pdfBuffer,
+}: {
+  to: string;
+  firstName: string;
+  url: string;
+  score: number;
+  grade: string;
+  summary: string;
+  monthlyVisitors: number;
+  keywordsRanking: number;
+  estimatedLostBookings: number;
+  categories: Array<{
+    label: string;
+    grade: string;
+    score: number;
+    checks: Array<{
+      label: string;
+      passed: boolean;
+      message: string;
+      fix?: string;
+      impact: "high" | "medium" | "low";
+    }>;
+  }>;
+  pdfBuffer: Buffer;
+}) {
+  const domain = (() => {
+    try { return new URL(url).hostname; } catch { return url; }
+  })();
+
+  const failingCount = categories.flatMap(c => c.checks).filter(c => !c.passed).length;
+  const highImpactCount = categories.flatMap(c => c.checks).filter(c => !c.passed && c.impact === "high").length;
+
+  // Plain Gmail-style HTML — no marketing wrappers, just clean readable text
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff;">
+    <tr>
+      <td style="padding:32px 40px;max-width:600px;">
+
+        <!-- Body text — plain, readable, personal -->
+        <p style="margin:0 0 20px;font-size:15px;color:#1a1a1a;line-height:1.6;">Hey ${firstName},</p>
+
+        <p style="margin:0 0 20px;font-size:15px;color:#1a1a1a;line-height:1.6;">
+          I just ran a full audit on <strong>${domain}</strong> — your complete report is attached as a PDF.
+        </p>
+
+        <p style="margin:0 0 20px;font-size:15px;color:#1a1a1a;line-height:1.6;">
+          Your site scored a <strong>${grade} (${score}/100)</strong>. ${summary}
+        </p>
+
+        <p style="margin:0 0 8px;font-size:15px;color:#1a1a1a;line-height:1.6;">
+          Here's the quick summary:
+        </p>
+
+        <ul style="margin:0 0 20px;padding-left:20px;">
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">~${monthlyVisitors} estimated monthly organic visitors</li>
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">${keywordsRanking} keywords currently ranking on Google</li>
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;color:#cc0000;">~${estimatedLostBookings} estimated bookings lost per month</li>
+          <li style="font-size:15px;color:#1a1a1a;line-height:1.8;">${failingCount} issues found across all categories${highImpactCount > 0 ? ` — ${highImpactCount} are high impact` : ""}</li>
+        </ul>
+
+        <p style="margin:0 0 20px;font-size:15px;color:#1a1a1a;line-height:1.6;">
+          The PDF has the full breakdown with a specific fix for every issue. If you want to talk through it, grab a free 15-minute call below — I'll show you the 2–3 things that would make the biggest difference for your operation.
+        </p>
+
+        <!-- CTA button -->
+        <table cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+          <tr>
+            <td style="background-color:#ffbe00;padding:0;">
+              <a href="https://calendly.com/chris-fontsandfooters/30min"
+                style="display:inline-block;padding:14px 28px;background-color:#ffbe00;color:#0f0f0f;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;font-family:monospace;">
+                Book Free 15-Min Call →
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Sign off -->
+        <p style="margin:0 0 32px;font-size:15px;color:#1a1a1a;line-height:1.6;">
+          Talk soon,<br />
+          Chris
+        </p>
+
+        <!-- Signature divider -->
+        <hr style="border:none;border-top:1px solid #e8e8e8;margin:0 0 20px;" />
+
+        <!-- Signature block -->
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="vertical-align:middle;padding-right:16px;">
+              <img
+                src="https://fontsandfooters.com/logos/fnf_logo_black.png"
+                alt="Fonts &amp; Footers"
+                width="32"
+                height="32"
+                style="display:block;width:32px;height:32px;object-fit:contain;"
+              />
+            </td>
+            <td style="vertical-align:middle;">
+              <p style="margin:0;font-size:14px;font-weight:700;color:#0f0f0f;line-height:1.4;">Chris Ware</p>
+              <p style="margin:0;font-size:13px;color:#666666;line-height:1.4;">Founder, Fonts &amp; Footers</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top:8px;">
+              <p style="margin:0;font-size:13px;color:#666666;line-height:1.8;">
+                <a href="mailto:chris@fontsandfooters.com" style="color:#666666;text-decoration:none;">chris@fontsandfooters.com</a><br />
+                <a href="https://fontsandfooters.com" style="color:#666666;text-decoration:none;">fontsandfooters.com</a><br />
+                <a href="https://www.linkedin.com/in/christian-ware/" style="color:#666666;text-decoration:none;">LinkedIn</a>
+                &nbsp;·&nbsp;
+                <a href="https://www.instagram.com/fontsandfooters/" style="color:#666666;text-decoration:none;">Instagram</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const filename = `audit-${domain.replace(/\./g, "-")}.pdf`;
+
+  await sendEmail({
+    to,
+    subject: `Your website audit — ${domain}`,
+    html,
+    // Pass PDF as attachment — matches the Resend pattern in sendEstimateEmail
+    attachments: [
+      {
+        filename,
+        content: pdfBuffer,
+      },
+    ],
+  });
+}

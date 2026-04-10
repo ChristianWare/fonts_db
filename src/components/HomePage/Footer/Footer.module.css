@@ -18,7 +18,7 @@
     transparent 0,
     transparent 50%
   );
-  background-size: 10px 10px;
+  background-size: 7px 7px;
   padding: 1rem 2rem;
 }
 
@@ -187,5 +187,6 @@
 @media screen and (max-width: 568px) {
   .heading {
     background-size: 5px 5px;
+    padding-top: 1.5rem;
   }
 }
