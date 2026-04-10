@@ -516,7 +516,7 @@ export const auditPdfStyles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingBottom: 16,
     paddingTop: 16,
-    backgroundColor: WHITE,
+    backgroundColor: ACCENT,
   },
   logoImage: {
     width: 80,
