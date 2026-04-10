@@ -19,6 +19,42 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
+// ── Mailchimp ─────────────────────────────────────────────────────────────────
+async function subscribeToMailchimp(
+  email: string,
+  firstName: string,
+  auditUrl: string,
+): Promise<void> {
+  const apiKey = process.env.MAILCHIMP_API_KEY;
+  const audienceId = process.env.MAILCHIMP_AUDIENCE_ID;
+  const dc = process.env.MAILCHIMP_DC;
+
+  if (!apiKey || !audienceId || !dc) return;
+
+  try {
+    await fetch(
+      `https://${dc}.api.mailchimp.com/3.0/lists/${audienceId}/members`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${Buffer.from(`anystring:${apiKey}`).toString("base64")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email_address: email,
+          status: "subscribed",
+          merge_fields: {
+            FNAME: firstName,
+            AUDITURL: auditUrl,
+          },
+        }),
+      },
+    );
+  } catch (err) {
+    console.error("[Mailchimp subscribe error]", err);
+  }
+}
+
 // ── Blocked email domains ─────────────────────────────────────────────────────
 const BLOCKED_EMAIL_DOMAINS = [
   "mailinator.com",
@@ -1010,13 +1046,18 @@ export async function POST(req: NextRequest) {
       .flatMap((c) => c.checks)
       .filter((c) => !c.passed);
 
-    const fixes = await generateFixes(domain, failingChecks, {
-      mobileScore,
-      monthlyVisitors: seoData.monthlyVisitors,
-      keywordsRanking: seoData.keywordsRanking,
-      platform: techStack.platform,
-      bookingPlatform: techStack.bookingPlatform,
-    });
+let fixes: Record<string, string> = {};
+try {
+  fixes = await generateFixes(domain, failingChecks, {
+    mobileScore,
+    monthlyVisitors: seoData.monthlyVisitors,
+    keywordsRanking: seoData.keywordsRanking,
+    platform: techStack.platform,
+    bookingPlatform: techStack.bookingPlatform,
+  });
+} catch (err) {
+  console.error("[generateFixes error]", err);
+}
 
     const categoriesWithFixes = categories.map((cat) => ({
       ...cat,
@@ -1075,6 +1116,9 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error("[audit email/pdf error]", err);
     }
+
+    // Subscribe to Mailchimp — non-blocking
+    subscribeToMailchimp(email, name, normalized).catch(() => {});
 
     return NextResponse.json({
       url: normalized,
