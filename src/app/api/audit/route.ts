@@ -1046,18 +1046,18 @@ export async function POST(req: NextRequest) {
       .flatMap((c) => c.checks)
       .filter((c) => !c.passed);
 
-let fixes: Record<string, string> = {};
-try {
-  fixes = await generateFixes(domain, failingChecks, {
-    mobileScore,
-    monthlyVisitors: seoData.monthlyVisitors,
-    keywordsRanking: seoData.keywordsRanking,
-    platform: techStack.platform,
-    bookingPlatform: techStack.bookingPlatform,
-  });
-} catch (err) {
-  console.error("[generateFixes error]", err);
-}
+    let fixes: Record<string, string> = {};
+    try {
+      fixes = await generateFixes(domain, failingChecks, {
+        mobileScore,
+        monthlyVisitors: seoData.monthlyVisitors,
+        keywordsRanking: seoData.keywordsRanking,
+        platform: techStack.platform,
+        bookingPlatform: techStack.bookingPlatform,
+      });
+    } catch (err) {
+      console.error("[generateFixes error]", err);
+    }
 
     const categoriesWithFixes = categories.map((cat) => ({
       ...cat,
@@ -1118,7 +1118,7 @@ try {
     }
 
     // Subscribe to Mailchimp — non-blocking
-    subscribeToMailchimp(email, name, normalized).catch(() => {});
+    await subscribeToMailchimp(email, name, normalized);
 
     return NextResponse.json({
       url: normalized,
