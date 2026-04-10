@@ -2,6 +2,58 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendAuditReportEmail } from "@/lib/emails";
 import { generateAuditPDF } from "@/lib/audit/generateAuditPDF";
 
+// ── Rate limiter ──────────────────────────────────────────────────────────────
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+  entry.count += 1;
+  return true;
+}
+
+// ── Blocked email domains ─────────────────────────────────────────────────────
+const BLOCKED_EMAIL_DOMAINS = [
+  "mailinator.com",
+  "guerrillamail.com",
+  "tempmail.com",
+  "throwam.com",
+  "yopmail.com",
+  "sharklasers.com",
+  "trashmail.com",
+  "fakeinbox.com",
+  "maildrop.cc",
+  "dispostable.com",
+  "spamgourmet.com",
+  "trashmail.me",
+];
+
+// ── Industry keyword allowlist ────────────────────────────────────────────────
+const LIMO_KEYWORDS = [
+  "limo",
+  "limousine",
+  "black car",
+  "car service",
+  "chauffeured",
+  "chauffeur",
+  "town car",
+  "sedan service",
+  "ground transportation",
+  "airport transfer",
+  "airport transportation",
+  "executive car",
+  "private driver",
+  "car hire",
+  "luxury transportation",
+];
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Check {
   id: string;
@@ -224,21 +276,13 @@ function detectTechStack(html: string): {
   ) {
     analytics.push("Google Analytics");
   }
-  if (lower.includes("googletagmanager.com")) {
+  if (lower.includes("googletagmanager.com"))
     analytics.push("Google Tag Manager");
-  }
-  if (lower.includes("connect.facebook.net") || lower.includes("fbq(")) {
+  if (lower.includes("connect.facebook.net") || lower.includes("fbq("))
     analytics.push("Facebook Pixel");
-  }
-  if (lower.includes("hotjar.com")) {
-    analytics.push("Hotjar");
-  }
-  if (lower.includes("clarity.ms")) {
-    analytics.push("Microsoft Clarity");
-  }
-  if (lower.includes("plausible.io")) {
-    analytics.push("Plausible");
-  }
+  if (lower.includes("hotjar.com")) analytics.push("Hotjar");
+  if (lower.includes("clarity.ms")) analytics.push("Microsoft Clarity");
+  if (lower.includes("plausible.io")) analytics.push("Plausible");
 
   const hasFavicon =
     lower.includes('rel="icon"') ||
@@ -289,15 +333,11 @@ function detectDesign(html: string): {
 } {
   const lower = html.toLowerCase();
 
-  // Mobile viewport tag
   const hasViewport =
     lower.includes('name="viewport"') || lower.includes("name='viewport'");
-
-  // Real homepage imagery — 3+ img tags suggests actual photography
   const imgCount = (lower.match(/<img/g) || []).length;
   const hasHeroImages = imgCount >= 3;
 
-  // Stock photography — known stock CDN domains in img src attributes
   const stockDomains = [
     "shutterstock.com",
     "gettyimages.com",
@@ -310,7 +350,6 @@ function detectDesign(html: string): {
   ];
   const hasStockPhotos = stockDomains.some((d) => lower.includes(d));
 
-  // Default WordPress themes — a dead giveaway of an uncustomized site
   const defaultThemeIndicators = [
     "twentytwenty",
     "twentytwentyone",
@@ -323,11 +362,9 @@ function detectDesign(html: string): {
   ];
   const hasDefaultTheme = defaultThemeIndicators.some((t) => lower.includes(t));
 
-  // Font overload — more than 2 Google Font imports is a DIY signal
   const fontCount = (lower.match(/fonts\.googleapis\.com/g) || []).length;
   const fontOverload = fontCount > 2;
 
-  // Excessive inline styles — template-built sites typically have 80+
   const inlineStyleCount = (lower.match(/style="/g) || []).length;
   const excessiveInlineStyles = inlineStyleCount > 80;
 
@@ -435,7 +472,6 @@ function buildCategories(
 } {
   const lower = html.toLowerCase();
 
-  // ── Performance ──
   const audits = (psData?.lighthouseResult as Record<string, unknown>)
     ?.audits as Record<string, Record<string, unknown>> | undefined;
   const fcpScore = audits?.["first-contentful-paint"]?.score as
@@ -483,7 +519,6 @@ function buildCategories(
     },
   ];
 
-  // ── Booking ──
   const hasBookingForm =
     lower.includes("book") ||
     lower.includes("reserve") ||
@@ -538,7 +573,6 @@ function buildCategories(
     },
   ];
 
-  // ── SEO ──
   const hasMetaDesc =
     lower.includes('meta name="description"') ||
     lower.includes("meta name='description'");
@@ -628,7 +662,6 @@ function buildCategories(
     },
   ];
 
-  // ── Trust ──
   const hasPhone =
     lower.includes("tel:") ||
     /\(\d{3}\)\s?\d{3}[-.\s]?\d{4}/.test(html) ||
@@ -694,7 +727,6 @@ function buildCategories(
     },
   ];
 
-  // ── Tech Stack ──
   const techStack = detectTechStack(html);
 
   const platformPassed = !["Wix", "Squarespace", "Weebly"].includes(
@@ -714,11 +746,10 @@ function buildCategories(
     ? `${techStack.bookingPlatform} detected — you're paying per-booking fees on every ride processed through this platform.`
     : "No third-party booking platform detected — you may be keeping 100% of each booking.";
 
-  const analyticsMessage = (() => {
-    if (techStack.analytics.length === 0)
-      return "No web analytics detected. You have no visibility into where your visitors come from or what they do on your site.";
-    return `Analytics detected: ${techStack.analytics.join(", ")}.`;
-  })();
+  const analyticsMessage =
+    techStack.analytics.length === 0
+      ? "No web analytics detected. You have no visibility into where your visitors come from or what they do on your site."
+      : `Analytics detected: ${techStack.analytics.join(", ")}.`;
 
   const techChecks: Check[] = [
     {
@@ -780,7 +811,6 @@ function buildCategories(
     },
   ];
 
-  // ── Brand & Design ──────────────────────────────────────────────────────────
   const design = detectDesign(html);
 
   const designChecks: Check[] = [
@@ -913,6 +943,8 @@ function buildCategories(
 export async function POST(req: NextRequest) {
   try {
     const { url, email, firstName } = await req.json();
+
+    // 1 — Required fields first
     if (!url || !email) {
       return NextResponse.json(
         { error: "URL and email are required." },
@@ -920,20 +952,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const BLOCKED_EMAIL_DOMAINS = [
-      "mailinator.com",
-      "guerrillamail.com",
-      "tempmail.com",
-      "throwam.com",
-      "yopmail.com",
-      "sharklasers.com",
-      "trashmail.com",
-      "fakeinbox.com",
-      "maildrop.cc",
-      "dispostable.com",
-      "spamgourmet.com",
-      "trashmail.me",
-    ];
+    // 2 — Rate limit by IP
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
+
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "You've run 3 audits today. Please try again tomorrow." },
+        { status: 429 },
+      );
+    }
+
+    // 3 — Block disposable email domains
     const emailDomain = email.split("@")[1]?.toLowerCase();
     if (!emailDomain || BLOCKED_EMAIL_DOMAINS.includes(emailDomain)) {
       return NextResponse.json(
@@ -954,23 +986,7 @@ export async function POST(req: NextRequest) {
       checkRobotsTxt(normalized),
     ]);
 
-    const LIMO_KEYWORDS = [
-      "limo",
-      "limousine",
-      "black car",
-      "car service",
-      "chauffeured",
-      "chauffeur",
-      "town car",
-      "sedan service",
-      "ground transportation",
-      "airport transfer",
-      "airport transportation",
-      "executive car",
-      "private driver",
-      "car hire",
-      "luxury transportation",
-    ];
+    // 4 — Industry keyword check
     const htmlLower = html.toLowerCase();
     const isLimoSite = LIMO_KEYWORDS.some((k) => htmlLower.includes(k));
     if (!isLimoSite) {
