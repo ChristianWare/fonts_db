@@ -14,22 +14,25 @@ const RED = "#ff0026";
 const ORANGE = "#d97706";
 
 export const auditPdfStyles = StyleSheet.create({
-  // ── Page — paddingTop: 0 so header is flush on page 1
-  // Continuation page spacing is handled via marginTop on categoryBlocks
+  // ── Page ──
+  // paddingTop: 40 on ALL pages — gives 40px top margin everywhere including page 1
+  // paddingBottom: 180 protects content from the absolute-positioned CTA block
   page: {
     fontFamily: FONT,
     fontSize: 10,
-    paddingTop: 0,
+    paddingTop: 50,
+    paddingBottom: 180,
     backgroundColor: WHITE,
   },
 
-  // ── Header band ──
+  // ── Header ──
   header: {
     backgroundColor: BLACK,
     padding: "32px 40px 28px 40px",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    marginTop: -50,
   },
   headerLeft: {
     flexDirection: "column",
@@ -138,7 +141,77 @@ export const auditPdfStyles = StyleSheet.create({
     letterSpacing: 0.6,
   },
 
-  // ── Body ──
+  // ── Introduction section ──
+  introSection: {
+    padding: "28px 40px 24px 40px",
+  },
+  introTitle: {
+    fontSize: 8,
+    fontFamily: FONT_BOLD,
+    color: GRAY,
+    textTransform: "uppercase",
+    letterSpacing: 1.4,
+    marginBottom: 12,
+  },
+  introPara: {
+    fontSize: 10,
+    color: "#333333",
+    lineHeight: 1.7,
+    marginBottom: 14,
+  },
+  introSubhead: {
+    fontSize: 8,
+    fontFamily: FONT_BOLD,
+    color: BLACK,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 6,
+    marginTop: 4,
+  },
+  introCategoryList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 14,
+  },
+  introCategoryPill: {
+    fontSize: 8,
+    fontFamily: FONT_BOLD,
+    color: WHITE,
+    backgroundColor: BLACK,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  introImpactRow: {
+    flexDirection: "row",
+    gap: 16,
+    marginBottom: 6,
+  },
+  introImpactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  introImpactDot: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+  },
+  introImpactLabel: {
+    fontSize: 9,
+    color: "#444444",
+  },
+  introNote: {
+    fontSize: 9,
+    color: GRAY,
+    lineHeight: 1.6,
+    borderLeftWidth: 2,
+    borderLeftColor: ACCENT,
+    paddingLeft: 10,
+    marginTop: 4,
+  },
+
+  // ── Body (starts on page 2 via break prop) ──
   body: {
     padding: "24px 40px 0 40px",
   },
@@ -154,7 +227,7 @@ export const auditPdfStyles = StyleSheet.create({
 
   // ── Checklist overview ──
   checklistSection: {
-    marginBottom: 24,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: BORDER,
   },
@@ -183,24 +256,31 @@ export const auditPdfStyles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 5,
   },
-  checklistIconBox: {
-    width: 16,
-    height: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 8,
-    borderRadius: 2,
-  },
-  checklistIconBoxPass: {
-    backgroundColor: GREEN,
-  },
-  checklistIconBoxFail: {
-    backgroundColor: RED,
-  },
-  checklistIconText: {
-    fontSize: 9,
+  // ── Checklist icons: border applied DIRECTLY to Text element ──
+  // This avoids the View centering issue that caused empty boxes
+  checklistIconPass: {
+    fontSize: 8,
     fontFamily: FONT_BOLD,
-    color: WHITE,
+    color: GREEN,
+    borderWidth: 1,
+    borderColor: GREEN,
+    paddingHorizontal: 3,
+    paddingVertical: 2,
+    marginRight: 8,
+    textAlign: "center",
+    width: 14,
+  },
+  checklistIconFail: {
+    fontSize: 8,
+    fontFamily: FONT_BOLD,
+    color: RED,
+    borderWidth: 1,
+    borderColor: RED,
+    paddingHorizontal: 3,
+    paddingVertical: 2,
+    marginRight: 8,
+    textAlign: "center",
+    width: 14,
   },
   checklistItemName: {
     fontSize: 8,
@@ -208,12 +288,20 @@ export const auditPdfStyles = StyleSheet.create({
     flex: 1,
   },
 
-  // ── Category block ──
+  // ── Category block — first chunk ──
   categoryBlock: {
-    marginBottom: 16,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: BORDER,
-    marginTop: 0,
+  },
+  // ── Category block — continuation chunks ──
+  // Has a heavier top border to signal it's a new block continuing the category
+  categoryBlockContinuation: {
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: BORDER,
+    borderTopWidth: 2,
+    borderTopColor: BLACK,
   },
   categoryHeader: {
     flexDirection: "row",
@@ -223,6 +311,22 @@ export const auditPdfStyles = StyleSheet.create({
     backgroundColor: LIGHT_GRAY,
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
+  },
+  categoryHeaderContinued: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "7px 14px",
+    backgroundColor: "#f0f0f0",
+    borderBottomWidth: 1,
+    borderBottomColor: BORDER,
+  },
+  categoryHeaderContinuedLabel: {
+    fontSize: 9,
+    fontFamily: FONT_BOLD,
+    color: GRAY,
+    textTransform: "uppercase",
+    letterSpacing: -0.2,
   },
   categoryHeaderLeft: {
     flexDirection: "row",
@@ -265,8 +369,8 @@ export const auditPdfStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     paddingHorizontal: 14,
-    paddingTop: 12,
-    paddingBottom: 14,
+    paddingTop: 10,
+    paddingBottom: 11,
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
   },
@@ -274,8 +378,8 @@ export const auditPdfStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     paddingHorizontal: 14,
-    paddingTop: 12,
-    paddingBottom: 14,
+    paddingTop: 10,
+    paddingBottom: 11,
   },
   checkIcon: {
     fontSize: 10,
@@ -298,26 +402,26 @@ export const auditPdfStyles = StyleSheet.create({
     fontFamily: FONT_BOLD,
     color: BLACK,
     letterSpacing: 0.1,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   checkWhat: {
     fontSize: 9,
     color: GRAY,
-    lineHeight: 1.6,
-    marginBottom: 5,
+    lineHeight: 1.5,
+    marginBottom: 3,
   },
   checkWhy: {
     fontSize: 9,
     color: "#444444",
-    lineHeight: 1.6,
-    marginBottom: 5,
+    lineHeight: 1.5,
+    marginBottom: 3,
     fontFamily: FONT_BOLD,
   },
   checkPositive: {
     fontSize: 9,
     color: GREEN,
-    lineHeight: 1.6,
-    marginTop: 5,
+    lineHeight: 1.5,
+    marginTop: 3,
     fontFamily: FONT_BOLD,
   },
   checkFix: {
@@ -325,9 +429,9 @@ export const auditPdfStyles = StyleSheet.create({
     color: "#7a5c00",
     backgroundColor: "#fff8e1",
     paddingHorizontal: 8,
-    paddingVertical: 6,
-    marginTop: 8,
-    lineHeight: 1.6,
+    paddingVertical: 5,
+    marginTop: 5,
+    lineHeight: 1.5,
     borderLeftWidth: 2,
     borderLeftColor: ACCENT,
   },
@@ -354,7 +458,7 @@ export const auditPdfStyles = StyleSheet.create({
     color: GREEN,
   },
 
-  // ── Written audit summary ──
+  // ── Written summary ──
   auditSummarySection: {
     marginTop: 8,
     marginBottom: 16,
@@ -375,7 +479,7 @@ export const auditPdfStyles = StyleSheet.create({
     letterSpacing: 0.8,
   },
   auditSummaryBody: {
-    padding: "16px 20px",
+    padding: "14px 18px",
   },
   auditSummarySubhead: {
     fontSize: 9,
@@ -383,8 +487,8 @@ export const auditPdfStyles = StyleSheet.create({
     color: BLACK,
     textTransform: "uppercase",
     letterSpacing: 0.5,
-    marginBottom: 5,
-    marginTop: 12,
+    marginBottom: 4,
+    marginTop: 10,
   },
   auditSummarySubheadFirst: {
     fontSize: 9,
@@ -392,24 +496,27 @@ export const auditPdfStyles = StyleSheet.create({
     color: BLACK,
     textTransform: "uppercase",
     letterSpacing: 0.5,
-    marginBottom: 5,
+    marginBottom: 4,
     marginTop: 0,
   },
   auditSummaryText: {
     fontSize: 9,
     color: "#333333",
-    lineHeight: 1.7,
+    lineHeight: 1.6,
   },
 
-  // ── CTA wrapper — wrap={false} in JSX so it stays together or moves to new page ──
-  ctaWrapper: {
-    marginTop: 16,
-    marginBottom: 0,
+  // ── CTA — pinned to bottom of last page ──
+  ctaAbsoluteWrapper: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   logoWrap: {
     paddingHorizontal: 40,
-    paddingBottom: 20,
-    paddingTop: 20,
+    paddingBottom: 16,
+    paddingTop: 16,
+    backgroundColor: WHITE,
   },
   logoImage: {
     width: 80,
@@ -418,14 +525,14 @@ export const auditPdfStyles = StyleSheet.create({
   },
   ctaSection: {
     backgroundColor: ACCENT,
-    padding: "24px 40px",
+    padding: "20px 40px",
     flexDirection: "column",
   },
   ctaText: {
     fontSize: 11,
     color: BLACK,
     lineHeight: 1.6,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   ctaLink: {
     fontSize: 12,
@@ -433,15 +540,14 @@ export const auditPdfStyles = StyleSheet.create({
     color: BLACK,
     textDecoration: "underline",
   },
-
-  // ── PDF footer ──
   pdfFooter: {
-    padding: "12px 40px",
+    padding: "10px 40px",
     borderTopWidth: 1,
     borderTopColor: BORDER,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: WHITE,
   },
   pdfFooterText: {
     fontSize: 8,
@@ -456,15 +562,4 @@ export const auditPdfStyles = StyleSheet.create({
   gradeC: { backgroundColor: BLACK, color: ACCENT },
   gradeD: { backgroundColor: ORANGE },
   gradeF: { backgroundColor: RED },
-
-  finalPage: {
-    fontFamily: "Helvetica",
-    fontSize: 10,
-    paddingTop: 40,
-    backgroundColor: "#ffffff",
-    flexDirection: "column",
-  },
-  finalPageSpacer: {
-    flex: 1,
-  },
 });

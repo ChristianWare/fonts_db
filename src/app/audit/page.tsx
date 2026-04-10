@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -382,6 +383,36 @@ function ResultsView({
   result: AuditResult;
   onReset: () => void;
 }) {
+  async function handleDownload() {
+    try {
+      const res = await fetch("/api/audit/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: result.url,
+          score: result.score,
+          grade: result.grade,
+          summary: result.summary,
+          monthlyVisitors: result.monthlyVisitors,
+          keywordsRanking: result.keywordsRanking,
+          estimatedLostBookings: result.estimatedLostBookings,
+          categories: result.categories,
+          firstName: result.firstName,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to generate PDF");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `audit-${new URL(result.url).hostname}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[download error]", err);
+    }
+  }
+
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
@@ -435,6 +466,13 @@ function ResultsView({
                 </div>
               </div>
 
+              <p className={styles.resultSummary}>
+                *** Estimated using your monthly organic visitor count, a 2%
+                industry-average booking conversion rate, and the number of
+                high-impact issues found. Each unresolved high-impact issue is
+                estimated to reduce conversions by 15%.
+              </p>
+
               {/* ── Tech stack pills ── */}
               {result.techStack && (
                 <TechStackDisplay techStack={result.techStack} />
@@ -444,6 +482,9 @@ function ResultsView({
               <button onClick={onReset} className={styles.resetBtn}>
                 ← Run another audit
               </button>
+              {/* <button onClick={handleDownload} className={styles.resetBtn}>
+                ↓ Download PDF report
+              </button> */}
             </div>
           </div>
 
@@ -494,17 +535,16 @@ function ResultsView({
                   </div>
                   <div className={styles.catTeaser}>
                     <span className={styles.catTeaserText}>
-                      {cat.checks.filter((c) => !c.passed).length} issue
-                      {cat.checks.filter((c) => !c.passed).length !== 1
-                        ? "s"
-                        : ""}{" "}
-                      found
-                      {cat.checks.filter(
-                        (c) => !c.passed && c.impact === "high",
-                      ).length > 0
-                        ? ` — ${cat.checks.filter((c) => !c.passed && c.impact === "high").length} high impact`
-                        : ""}
-                      . Full fixes in your email.
+                      {(() => {
+                        const failCount = cat.checks.filter(
+                          (c) => !c.passed,
+                        ).length;
+                        const highCount = cat.checks.filter(
+                          (c) => !c.passed && c.impact === "high",
+                        ).length;
+                        if (failCount === 0) return "0 issues found.";
+                        return `${failCount} issue${failCount !== 1 ? "s" : ""} found${highCount > 0 ? ` — ${highCount} high impact` : ""}. Full fixes in your email.`;
+                      })()}
                     </span>
                   </div>
                 </div>

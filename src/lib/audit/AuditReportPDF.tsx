@@ -2,6 +2,7 @@
 // lib/audit/AuditReportPDF.tsx
 import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
 import { auditPdfStyles as s } from "./AuditReportPDF.styles";
+// import LogoImg from "../../../public/logos/fnf_logo_black.png";
 
 interface Check {
   id: string;
@@ -32,15 +33,10 @@ interface AuditReportPDFProps {
   firstName?: string;
 }
 
-// ── Check descriptions ─────────────────────────────────────────────────────────
+// ── Check descriptions ────────────────────────────────────────────────────────
 const CHECK_INFO: Record<
   string,
-  {
-    name: string;
-    what: string;
-    why: string;
-    positive: string;
-  }
+  { name: string; what: string; why: string; positive: string }
 > = {
   speed: {
     name: "Page Speed Score",
@@ -290,7 +286,7 @@ function impactStyle(impact: string) {
   return s.impactLow;
 }
 
-// ── Written audit summary generator ──────────────────────────────────────────
+// ── Written summary ───────────────────────────────────────────────────────────
 function buildWrittenSummary(categories: Category[], domain: string) {
   const allChecks = categories.flatMap((c) => c.checks);
   const failingHigh = allChecks.filter((c) => !c.passed && c.impact === "high");
@@ -299,7 +295,6 @@ function buildWrittenSummary(categories: Category[], domain: string) {
     .filter((c) => c.score < 75)
     .sort((a, b) => a.score - b.score);
   const strongCategories = categories.filter((c) => c.score >= 75);
-
   const strengthNames = passingHigh
     .slice(0, 3)
     .map((c) => (CHECK_INFO[c.id]?.name ?? c.label).toLowerCase());
@@ -309,7 +304,6 @@ function buildWrittenSummary(categories: Category[], domain: string) {
   const weakestCat = weakCategories[0];
   const strongCatNames = strongCategories.map((c) => c.label.toLowerCase());
 
-  // Strengths paragraph
   let strengths = "";
   if (strengthNames.length >= 2) {
     strengths = `${domain} has a solid foundation in several key areas. ${strengthNames
@@ -324,7 +318,6 @@ function buildWrittenSummary(categories: Category[], domain: string) {
     strengths = `This audit identified significant opportunities for improvement across all key areas of your site. The good news — every issue found in this report has a clear, documented fix, and none of them require rebuilding your site from scratch.`;
   }
 
-  // Improvements paragraph
   let improvements = "";
   if (weakNames.length >= 2) {
     improvements = `The highest-priority improvements are ${weakNames[0]} and ${weakNames[1]}${weakNames.length >= 3 ? `, along with ${weakNames[2]}` : ""}. These are high-impact issues that are actively costing you bookings every week. Each has a specific, actionable fix outlined in this report. Addressing them in order — starting with the highest-impact items first — will produce the most significant results in the shortest time.`;
@@ -334,12 +327,11 @@ function buildWrittenSummary(categories: Category[], domain: string) {
     improvements = `No critical high-impact issues were found. Focus on the medium-priority improvements identified in this report to continue optimizing your site and widening your competitive lead.`;
   }
 
-  // Impact paragraph
   let impact = "";
   if (weakestCat && failingHigh.length > 0) {
-    impact = `Based on the ${failingHigh.length} high-impact failing check${failingHigh.length !== 1 ? "s" : ""} identified in this report, your site is estimated to be losing approximately ${failingHigh.length * 3} potential bookings per month. Your ${weakestCat.label.toLowerCase()} category scored ${weakestCat.score}/100 and represents your single biggest opportunity for improvement. A focused effort on the fixes outlined in this report — particularly in that category — could meaningfully increase your monthly booking volume within 60 to 90 days without any additional ad spend.`;
+    impact = `Based on the ${failingHigh.length} high-impact failing check${failingHigh.length !== 1 ? "s" : ""} identified in this report, your site is estimated to be losing approximately ${failingHigh.length * 3} potential bookings per month. Your ${weakestCat.label.toLowerCase()} category scored ${weakestCat.score}/100 and represents your single biggest opportunity for improvement. A focused effort on the fixes outlined in this report could meaningfully increase your monthly booking volume within 60 to 90 days without any additional ad spend.`;
   } else if (failingHigh.length === 0) {
-    impact = `Your site is in strong shape with no critical high-impact issues identified. The remaining improvements in this report are refinements that will help you maintain your competitive advantage and incrementally increase conversions over time. Continue monitoring your analytics and booking data to identify new opportunities as your market evolves.`;
+    impact = `Your site is in strong shape with no critical high-impact issues identified. The remaining improvements in this report are refinements that will help you maintain your competitive advantage and incrementally increase conversions over time.`;
   } else {
     impact = `Addressing the improvements outlined in this report has the potential to meaningfully increase your monthly booking volume. The fixes are targeted and specific — you do not need to rebuild your site. Even resolving two or three of the highest-impact items could produce measurable results within 30 to 60 days.`;
   }
@@ -357,6 +349,7 @@ export default function AuditReportPDF({
   keywordsRanking,
   estimatedLostBookings,
   categories,
+  firstName,
 }: AuditReportPDFProps) {
   const domain = (() => {
     try {
@@ -371,24 +364,15 @@ export default function AuditReportPDF({
     categories,
     domain,
   );
+  const name = firstName && firstName !== "there" ? firstName : null;
 
   return (
     <Document>
       <Page size='A4' style={s.page}>
-        {/* ── FIX 1: No top margin on page 1, 40px on all other pages ──
-            react-pdf's render prop with fixed lets us conditionally render
-            a spacer only on continuation pages */}
-        <View
-          fixed
-          style={{ height: 0 }}
-          render={({ pageNumber }) =>
-            pageNumber > 1 ? (
-              <View style={{ height: 40, backgroundColor: "white" }} />
-            ) : null
-          }
-        />
+        {/* ═══════════════════════════════════════════
+            PAGE 1 — Header + Introduction
+        ═══════════════════════════════════════════ */}
 
-        {/* ── Header ── */}
         <View style={s.header}>
           <View style={s.headerLeft}>
             <Text style={s.headerLabel}>
@@ -406,15 +390,13 @@ export default function AuditReportPDF({
           </View>
         </View>
 
-        {/* ── Summary ── */}
         <View style={s.summaryBar}>
           <Text style={s.summaryText}>{summary}</Text>
         </View>
 
-        {/* ── Stats ── */}
         <View style={s.statsRow}>
           <View style={s.statCell}>
-            <Text style={s.statVal}>~{monthlyVisitors}</Text>
+            <Text style={s.statVal}>~ {monthlyVisitors}</Text>
             <Text style={s.statLabel}>Monthly organic visitors</Text>
           </View>
           <View style={s.statCell}>
@@ -422,16 +404,81 @@ export default function AuditReportPDF({
             <Text style={s.statLabel}>Keywords ranking</Text>
           </View>
           <View style={s.statCellLast}>
-            <Text style={s.statValRed}>~{estimatedLostBookings}</Text>
+            <Text style={s.statValRed}>~ {estimatedLostBookings}</Text>
             <Text style={s.statLabel}>Est. bookings lost/month</Text>
           </View>
         </View>
 
-        {/* ── Body ── */}
-        <View style={s.body}>
+        <View style={s.introSection}>
+          <Text style={s.introTitle}>About This Report</Text>
+          <Text style={s.introPara}>
+            {name ? `Hi ${name}, this` : "This"} report was generated by Fonts &
+            Footers — a web agency that builds custom booking websites
+            exclusively for black car and limousine operators. Your website was
+            analyzed across 6 categories covering every factor that directly
+            affects your ability to rank on Google and convert visitors into
+            paying clients.
+          </Text>
+          <Text style={s.introSubhead}>What We Checked</Text>
+          <View style={s.introCategoryList}>
+            {[
+              "Page Performance",
+              "Booking Capability",
+              "SEO & Keyword Traffic",
+              "Trust & Conversion",
+              "Tech Stack",
+              "Brand & Design",
+            ].map((cat) => (
+              <Text key={cat} style={s.introCategoryPill}>
+                {cat}
+              </Text>
+            ))}
+          </View>
+          <Text style={s.introSubhead}>How To Read This Report</Text>
+          <Text style={s.introPara}>
+            Each check is marked passing (✓) or failing (✗) alongside an impact
+            rating indicating how significantly that issue is costing you in
+            potential bookings.
+          </Text>
+          <View style={s.introImpactRow}>
+            <Image
+              src='https://fontsandfooters.com/logos/fnf_logo_black.png'
+              style={s.logoImage}
+            />
+            <View style={s.introImpactItem}>
+              <Text style={[s.introImpactDot, { color: "#ff0026" }]}>●</Text>
+              <Text style={s.introImpactLabel}>
+                HIGH — Directly losing bookings right now
+              </Text>
+            </View>
+            <View style={s.introImpactItem}>
+              <Text style={[s.introImpactDot, { color: "#d97706" }]}>●</Text>
+              <Text style={s.introImpactLabel}>
+                MEDIUM — Limiting your growth
+              </Text>
+            </View>
+            <View style={s.introImpactItem}>
+              <Text style={[s.introImpactDot, { color: "#0e8e0e" }]}>●</Text>
+              <Text style={s.introImpactLabel}>
+                LOW — Worth addressing over time
+              </Text>
+            </View>
+          </View>
+          <Text style={s.introNote}>
+            For every failing check, this report includes a personalized fix
+            recommendation generated specifically for {domain} based on your
+            site&apos;s actual data — not generic advice.
+          </Text>
+        </View>
+
+        {/* ═══════════════════════════════════════════
+            PAGE 2+ — Full Breakdown
+            break prop forces this to start on a new page
+        ═══════════════════════════════════════════ */}
+        <View break style={s.body}>
           <Text style={s.sectionTitle}>Full Breakdown</Text>
 
-          {/* ── FIX 3: Checklist overview — all checks with pass/fail at a glance ── */}
+          {/* Checklist overview */}
           <View style={s.checklistSection} wrap={false}>
             <View style={s.checklistSectionHeader}>
               <Text style={s.checklistSectionTitle}>
@@ -441,18 +488,19 @@ export default function AuditReportPDF({
             <View style={s.checklistGrid}>
               {allChecks.map((chk) => (
                 <View key={chk.id} style={s.checklistItem}>
-                  <View
-                    style={[
-                      s.checklistIconBox,
-                      chk.passed
-                        ? s.checklistIconBoxPass
-                        : s.checklistIconBoxFail,
-                    ]}
+                  {/*
+                    CHECKLIST ICONS: border applied directly to Text element.
+                    This avoids the View centering issue that caused empty boxes.
+                    Green border + green text = pass ✓
+                    Red border + red text = fail ✗
+                  */}
+                  <Text
+                    style={
+                      chk.passed ? s.checklistIconPass : s.checklistIconFail
+                    }
                   >
-                    <Text style={s.checklistIconText}>
-                      {chk.passed ? "✓" : "✗"}
-                    </Text>
-                  </View>
+                    {chk.passed ? "✓" : "✗"}
+                  </Text>
                   <Text style={s.checklistItemName}>
                     {CHECK_INFO[chk.id]?.name ?? chk.label}
                   </Text>
@@ -461,87 +509,126 @@ export default function AuditReportPDF({
             </View>
           </View>
 
-          {/* ── FIX 2: Categories — no wrap={false} on blocks or headers,
-              only on individual check rows so they don't split mid-item ── */}
+          {/* Categories — split into chunks of 4 checks max
+              CRITICAL: wrap={false} is on the CHUNK VIEW, not individual rows.
+              This means the header + its checks always move together as one unit.
+              A header can NEVER be stranded alone creating white space. */}
           {categories.map((cat) => {
             const categoryPassing = cat.score >= 75;
-            return (
-              <View key={cat.id} style={s.categoryBlock}>
-                {/* Category header */}
-                <View style={s.categoryHeader}>
-                  <View style={s.categoryHeaderLeft}>
-                    <Text
-                      style={[
-                        s.categoryStatusIcon,
-                        categoryPassing
-                          ? s.categoryStatusPass
-                          : s.categoryStatusFail,
-                      ]}
-                    >
-                      {categoryPassing ? "✓" : "✗"}
-                    </Text>
-                    <Text style={[s.gradeBadgeSmall, gradeStyle(cat.grade)]}>
-                      {cat.grade}
-                    </Text>
-                    <Text style={s.categoryLabel}>{cat.label}</Text>
-                  </View>
-                  <Text style={s.categoryScore}>{cat.score}/100</Text>
-                </View>
 
-                {/* Check rows — wrap={false} keeps each check intact */}
-                {cat.checks.map((chk, idx) => {
-                  const isLast = idx === cat.checks.length - 1;
-                  const info = CHECK_INFO[chk.id];
-                  return (
-                    <View
-                      key={chk.id}
-                      style={isLast ? s.checkRowLast : s.checkRow}
-                      wrap={false}
-                    >
-                      <Text
-                        style={[
-                          s.checkIcon,
-                          chk.passed ? s.checkIconPass : s.checkIconFail,
-                        ]}
-                      >
-                        {chk.passed ? "✓" : "✗"}
-                      </Text>
+            // Split checks into max-4 chunks
+            const chunks: Check[][] = [];
+            for (let i = 0; i < cat.checks.length; i += 4) {
+              chunks.push(cat.checks.slice(i, i + 4));
+            }
 
-                      <View style={s.checkContent}>
-                        <Text style={s.checkLabel}>
-                          {info?.name ?? chk.label}
+            return chunks.map((chunk, chunkIdx) => {
+              const isFirstChunk = chunkIdx === 0;
+              const isLastChunk = chunkIdx === chunks.length - 1;
+
+              return (
+                // wrap={false} on the entire chunk keeps header + checks together.
+                // If it doesn't fit on the current page, the WHOLE chunk moves to
+                // the next page — the header is never left stranded with white space below it.
+                <View
+                  key={`${cat.id}-chunk-${chunkIdx}`}
+                  style={
+                    isFirstChunk ? s.categoryBlock : s.categoryBlockContinuation
+                  }
+                  wrap={false}
+                >
+                  {/* Full category header — first chunk only */}
+                  {isFirstChunk && (
+                    <View style={s.categoryHeader}>
+                      <View style={s.categoryHeaderLeft}>
+                        <Text
+                          style={[
+                            s.categoryStatusIcon,
+                            categoryPassing
+                              ? s.categoryStatusPass
+                              : s.categoryStatusFail,
+                          ]}
+                        >
+                          {categoryPassing ? "✓" : "✗"}
                         </Text>
-
-                        {info?.what && (
-                          <Text style={s.checkWhat}>{info.what}</Text>
-                        )}
-
-                        {info?.why && (
-                          <Text style={s.checkWhy}>{info.why}</Text>
-                        )}
-
-                        {chk.passed && info?.positive && (
-                          <Text style={s.checkPositive}>✓ {info.positive}</Text>
-                        )}
-
-                        {!chk.passed && chk.fix && (
-                          <Text style={s.checkFix}>
-                            → How to fix it: {chk.fix}
-                          </Text>
-                        )}
+                        <Text
+                          style={[s.gradeBadgeSmall, gradeStyle(cat.grade)]}
+                        >
+                          {cat.grade}
+                        </Text>
+                        <Text style={s.categoryLabel}>{cat.label}</Text>
                       </View>
-
-                      <Text style={[s.impactBadge, impactStyle(chk.impact)]}>
-                        {chk.impact}
-                      </Text>
+                      <Text style={s.categoryScore}>{cat.score}/100</Text>
                     </View>
-                  );
-                })}
-              </View>
-            );
+                  )}
+
+                  {/* Continuation header — subsequent chunks only */}
+                  {!isFirstChunk && (
+                    <View style={s.categoryHeaderContinued}>
+                      <Text style={s.categoryHeaderContinuedLabel}>
+                        {cat.label} (continued)
+                      </Text>
+                      <Text style={s.categoryScore}>{cat.score}/100</Text>
+                    </View>
+                  )}
+
+                  {/* Check rows — no wrap={false} needed here since the
+                      chunk view handles keeping everything together */}
+                  {chunk.map((chk, idx) => {
+                    const isLastInChunk = idx === chunk.length - 1;
+                    const isLastInCategory = isLastChunk && isLastInChunk;
+                    const info = CHECK_INFO[chk.id];
+
+                    return (
+                      <View
+                        key={chk.id}
+                        style={
+                          isLastInChunk && isLastInCategory
+                            ? s.checkRowLast
+                            : s.checkRow
+                        }
+                      >
+                        <Text
+                          style={[
+                            s.checkIcon,
+                            chk.passed ? s.checkIconPass : s.checkIconFail,
+                          ]}
+                        >
+                          {chk.passed ? "✓" : "✗"}
+                        </Text>
+                        <View style={s.checkContent}>
+                          <Text style={s.checkLabel}>
+                            {info?.name ?? chk.label}
+                          </Text>
+                          {info?.what && (
+                            <Text style={s.checkWhat}>{info.what}</Text>
+                          )}
+                          {info?.why && (
+                            <Text style={s.checkWhy}>{info.why}</Text>
+                          )}
+                          {chk.passed && info?.positive && (
+                            <Text style={s.checkPositive}>
+                              ✓ {info.positive}
+                            </Text>
+                          )}
+                          {!chk.passed && chk.fix && (
+                            <Text style={s.checkFix}>
+                              → How to fix it: {chk.fix}
+                            </Text>
+                          )}
+                        </View>
+                        <Text style={[s.impactBadge, impactStyle(chk.impact)]}>
+                          {chk.impact}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            });
           })}
 
-          {/* ── FIX 4: Written audit summary ── */}
+          {/* Written summary */}
           <View style={s.auditSummarySection} wrap={false}>
             <View style={s.auditSummaryHeader}>
               <Text style={s.auditSummaryHeaderTitle}>
@@ -553,19 +640,16 @@ export default function AuditReportPDF({
                 What you&apos;re doing well
               </Text>
               <Text style={s.auditSummaryText}>{strengths}</Text>
-
               <Text style={s.auditSummarySubhead}>What needs improvement</Text>
               <Text style={s.auditSummaryText}>{improvements}</Text>
-
               <Text style={s.auditSummarySubhead}>Expected impact</Text>
               <Text style={s.auditSummaryText}>{impact}</Text>
             </View>
           </View>
         </View>
 
-        {/* ── FIX 5: Logo + CTA — wrap={false} keeps it together.
-            Stays on current page if there's room, otherwise moves to next page as a unit ── */}
-        <View style={s.ctaWrapper} wrap={false}>
+        {/* CTA — pinned to bottom of every page via absolute positioning */}
+        <View style={s.ctaAbsoluteWrapper}>
           <View style={s.logoWrap}>
             <Image
               src='https://fontsandfooters.com/logos/fnf_logo_black.png'
@@ -575,7 +659,8 @@ export default function AuditReportPDF({
           <View style={s.ctaSection}>
             <Text style={s.ctaText}>
               Want us to walk you through these results? Book a free 15-minute
-              call and we&apos;ll show you the 2–3 things costing you the most rides.
+              call and we&apos;ll show you the 2–3 things costing you the most
+              rides.
             </Text>
             <Text style={s.ctaLink}>
               calendly.com/chris-fontsandfooters/30min

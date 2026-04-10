@@ -989,27 +989,25 @@ export async function POST(req: NextRequest) {
       firstName: name,
     };
 
-    // Generate PDF and send email — non-blocking
-    (async () => {
-      try {
-        const pdfBuffer = await generateAuditPDF(pdfData);
-        await sendAuditReportEmail({
-          to: email,
-          firstName: name,
-          url: normalized,
-          score: totalScore,
-          grade,
-          summary: summaryMap[grade],
-          monthlyVisitors: seoData.monthlyVisitors,
-          keywordsRanking: seoData.keywordsRanking,
-          estimatedLostBookings,
-          categories: categoriesWithFixes,
-          pdfBuffer,
-        });
-      } catch (err) {
-        console.error("[audit email/pdf error]", err);
-      }
-    })();
+    // Generate PDF and send email — awaited so Vercel doesn't kill it early
+    try {
+      const pdfBuffer = await generateAuditPDF(pdfData);
+      await sendAuditReportEmail({
+        to: email,
+        firstName: name,
+        url: normalized,
+        score: totalScore,
+        grade,
+        summary: summaryMap[grade],
+        monthlyVisitors: seoData.monthlyVisitors,
+        keywordsRanking: seoData.keywordsRanking,
+        estimatedLostBookings,
+        categories: categoriesWithFixes,
+        pdfBuffer,
+      });
+    } catch (err) {
+      console.error("[audit email/pdf error]", err);
+    }
 
     return NextResponse.json({
       url: normalized,
