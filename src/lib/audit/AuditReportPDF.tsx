@@ -441,10 +441,10 @@ export default function AuditReportPDF({
             potential bookings.
           </Text>
           <View style={s.introImpactRow}>
-            <Image
+            {/* <Image
               src='https://fontsandfooters.com/logos/fnf_logo_black.png'
               style={s.logoImage}
-            />
+            /> */}
             <View style={s.introImpactItem}>
               <Text style={[s.introImpactDot, { color: "#ff0026" }]}>●</Text>
               <Text style={s.introImpactLabel}>
