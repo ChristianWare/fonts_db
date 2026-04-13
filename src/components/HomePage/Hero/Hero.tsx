@@ -3,7 +3,8 @@ import Image from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
 import BgImage from "../../../../public/images/heroiv.png";
-import HeroScrollButton from "./HeroScrollButton";
+// import HeroScrollButton from "./HeroScrollButton";
+import Button from "@/components/shared/Button/Button";
 
 export default function Hero() {
   return (
@@ -32,27 +33,52 @@ export default function Hero() {
             </div>
             <div className={styles.bottom}>
               <div className={styles.topCopy}>
-                Websites Built exclusively for{" "}
+                What we offer exclusively to{" "}
                 <span className={styles.accent}>
-                  black car & limo companies
+                  black car & limo companies:
                 </span>
               </div>
               <h1 className={styles.heading}>
-                Custom Direct <br /> booking websites
+                {/* Custom Direct <br /> booking websites */}
+                {/* Everything a black
+                <br /> 
+                 car 
+                operator <br />needs to grow */}
+                Audits. Leads. <br /> Websites.
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
-                  Stop paying a platform to rent your own customers. We build
-                  black car operators a direct booking platform they actually
-                  own —{" "}
+                  {/* Your operation deserves better than generic software. Fonts &
+                  Footers builds the tools black car operators actually need —{" "}
                   <span className={styles.span}>
                     {" "}
-                    so every ride earns more, every client stays yours, and your
-                    brand looks like the premium service you already are.
+                    a free audit that shows what your site is costing you, a
+                    lead system that finds clients before your competitors do,
+                    and a custom booking website that keeps every dollar you
+                    earn.
+                  </span> */}
+                  Fonts & Footers is the only growth platform built exclusively
+                  for black car and limo operators. A free website audit, a lead
+                  generation tool, and a custom booking website —
+                  <span className={styles.span}>
+                    three products designed to work together and grow your
+                    business from the ground up.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>
-                  <HeroScrollButton />
+                  {/* <HeroScrollButton /> */}
+                  <Button
+                    href='/audit'
+                    text='Run your free audit'
+                    btnType='accent'
+                    arrow
+                  />
+                  <Button
+                    href='/audit'
+                    text='Get leads to your market'
+                    btnType='white'
+                    arrow
+                  />
                 </div>
               </div>
               <div className={styles.imgContainerii}>

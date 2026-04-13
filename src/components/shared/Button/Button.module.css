@@ -91,3 +91,9 @@
     transform: rotate(90deg) translateY(-5px);
   }
 }
+
+@media screen and (max-width: 568px) {
+  .btn {
+    font-size: 14px;
+  }
+}

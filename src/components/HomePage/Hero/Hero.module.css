@@ -173,11 +173,12 @@
 
 .copyBtnContainer {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
-  width: 70%;
-  gap: 5rem;
-  margin-top: 6rem;
+  width: 60%;
+  gap: 3rem;
+  /* margin-top: 6rem; */
 }
 
 .copy,
@@ -191,6 +192,12 @@
 
 .span {
   color: var(--white);
+}
+
+.btnContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
 }
 
 @media screen and (max-width: 1268px) {
@@ -239,11 +246,11 @@
     background-size: 5px 5px;
   }
 
-  .copy,
+  /* .copy,
   .span {
     font-size: 1.6rem;
     letter-spacing: -0.9px;
-  }
+  } */
 
   .imgContainer {
     display: none;

@@ -172,7 +172,7 @@ h3,
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  line-height: 0.9em;
+  line-height: 1.1;
   font-feature-settings:
     "blwf" on,
     "cv09" on,
@@ -201,7 +201,7 @@ h5,
   font-size: 3.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 h6,
@@ -310,10 +310,18 @@ textarea:focus {
     font-size: 50%;
   }
 
+  .h1,
+  h1,
   .h2ii {
+    line-height: 1.1em;
+    font-size: 4.9rem;
+    letter-spacing: -0.9px;
+  }
+
+  /* .h2ii {
     font-size: 2.8rem;
     letter-spacing: -0.8px;
-  }
+  } */
 
   h3,
   .h3 {
