@@ -28,8 +28,8 @@ export default function HomePage() {
         <Solutionii />
         <Solution />
         <ProjectSection />
-        <Faq />
         <Chris />
+        <Faq />
         <ContactSection />
         {/* <ProblemSolution />
         <Solution /> */}

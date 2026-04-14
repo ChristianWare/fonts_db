@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Img1 from "../../public/images/cadi_cash.png";
-import Img2 from "../../public/images/work.jpg";
-import Img3 from "../../public/images/cadi_drive.png";
+import Img1 from "../../public/images/audit.jpg";
+import Img2 from "../../public/images/leads.jpg";
+import Img3 from "../../public/images/website.jpg";
 import Img4 from "../../public/images/system.jpg";
 import Img5 from "../../public/images/chevy_corp.png";
 
@@ -32,88 +32,46 @@ import Customer from "@/components/shared/icons/Customer/Customer";
 export const SolutionData = [
   {
     id: 1,
-    oneWordDesc: "Flat",
-    title: "Keep every dollar you earn",
+    oneWordDesc: "Step 1",
+    title: "Run the free audit",
     src: Img1,
     description:
-      "At 100 rides a month, per-booking fees cost you $400+. At 300 rides, over $1,200. Flat $499/month — no cuts, no percentages, no surprises, ever.",
+      "Find out exactly what your website is missing and where you stand against competitors in your market. Free, no email required, takes 60 seconds.",
     bullets: [
-      "Flat $499/month",
-      "Zero per-booking fees",
-      "No fee increases",
-      "Every dollar stays yours",
+      "Google visibility score",
+      "Mobile & speed check",
+      "Conversion gap report",
+      "Competitor comparison",
     ],
   },
   {
     id: 2,
-    oneWordDesc: "Branded",
-    title: "Clients remember your name, not your software's",
+    oneWordDesc: "Step 2",
+    title: "Start finding leads",
     src: Img2,
     description:
-      "Your domain, your colors, your brand throughout — from the first page they land on to the receipt in their inbox. No third-party name anywhere.",
+      "While your website situation becomes clear, you start building your pipeline — reaching out to venues, hotels, and corporate clients. Every new account makes fixing your website more urgent.",
     bullets: [
-      "Your domain",
-      "Your colors",
-      "Your emails",
-      "Zero third-party branding",
+      "Hot, warm & cold leads",
+      "Verified contact info",
+      "AI outreach scripts",
+      "Built-in CRM",
     ],
   },
   {
     id: 3,
-    oneWordDesc: "Yours",
-    title: "Your customer list is yours to keep",
+    oneWordDesc: "Step 3",
+    title: "Launch your custom website",
     src: Img3,
     description:
-      "Every booking, every contact, every relationship lives on your platform. Market to them, build loyalty, re-engage them — without asking anyone's permission.",
+      "Now the system is complete. The audit identified the problems. The leads tool created urgency. The website closes the deals you're finding. Your business has a foundation it didn't have before — and it compounds from here.",
     bullets: [
-      "Full data ownership",
-      "Direct client access",
-      "Built-in CRM",
-      "No middleman",
+      "Direct booking engine",
+      "No per-booking fees",
+      "Flight tracking included",
+      "Driver & admin portal",
     ],
   },
-  // {
-  //   id: 4,
-  //   oneWordDesc: "Controlled",
-  //   title: "Nothing changes unless you change it",
-  //   src: Img4,
-  //   description:
-  //     "Your pricing, your policies, your rules. No algorithm updates, no surprise fee increases, no platform decisions that affect your business overnight.",
-  //   bullets: [
-  //     "Your pricing",
-  //     "Your policies",
-  //     "No surprise changes",
-  //     "Full control",
-  //   ],
-  // },
-  // {
-  //   id: 5,
-  //   oneWordDesc: "Premium",
-  //   title: "Win corporate clients before they book",
-  //   src: Img5,
-  //   description:
-  //     "Executives judge you the moment they land on your site. A custom-built platform signals a serious operation — and that's often what closes the contract.",
-  //   bullets: [
-  //     "Custom design",
-  //     "Premium first impression",
-  //     "Built for black car",
-  //     "Closes corporate deals",
-  //   ],
-  // },
-  // {
-  //   id: 6,
-  //   oneWordDesc: "Connected",
-  //   title: "One place to run everything",
-  //   src: Img62,
-  //   description:
-  //     "Bookings, drivers, payments, and corporate accounts all in a single dashboard. Nothing slipping through because two systems don't talk to each other.",
-  //   bullets: [
-  //     "One dashboard",
-  //     "Every role covered",
-  //     "Zero gaps",
-  //     "Nothing falls through",
-  //   ],
-  // },
 ] as const;
 
 export const DashboardFeatures = [

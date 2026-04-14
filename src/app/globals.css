@@ -109,7 +109,7 @@ h2,
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: -2.7px;
-  line-height: 0.9em;
+  line-height: 1;
   font-feature-settings:
     "blwf" on,
     "cv09" on,
@@ -140,7 +140,7 @@ h2,
   font-style: normal;
   text-transform: uppercase;
   letter-spacing: -2.1px;
-  line-height: 0.9em;
+  line-height: 1;
   font-feature-settings:
     "blwf" on,
     "cv09" on,

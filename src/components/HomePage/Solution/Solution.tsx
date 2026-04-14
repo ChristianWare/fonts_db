@@ -17,25 +17,20 @@ export default function Solution() {
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.topLeft}>
-                <SectionIntro text='Solution' />
+                <SectionIntro text='The system' />
                 <h2 className={`${styles.heading} h2ii`}>
-                  Your brand.
-                  <br />
-                  Your platform.
-                  <br />
-                  Your customers.
-                  <br />
-                  We just build it.
+                  Each product makes the next one more powerful.
                 </h2>
               </div>
               <div className={styles.topRight}>
                 <p className={styles.copy}>
-                  Most black car operators are running premium services on
-                  platforms that undercut them on every ride. We build you a
-                  direct booking platform you actually own —{" "}
+                  The audit shows you what&apos;s broken. The lead tool sends
+                  people to your website before it&apos;s fixed. The website
+                  converts the leads the lead tool finds.
                   <span className={styles.accent}>
-                    so every client stays yours, every dollar stays yours, and
-                    your brand shows up the way your service deserves.
+                    This is the sequence every operator who works with us
+                    follows — and it&apos;s why the products are priced and
+                    designed the way they are.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>
@@ -55,9 +50,10 @@ export default function Solution() {
                     <div className={styles.cardLeft}>
                       <div className={styles.cardLeftTop}>
                         <span className={styles.oneWordDesc}>
-                          0{x.id} {x.oneWordDesc}
+                          {x.oneWordDesc}
                         </span>
                         <h3 className={styles.cardHeading}>{x.title}</h3>
+                        <p className={styles.desc}>{x.description}</p>
                       </div>
                       <div className={styles.cardLeftBottom}>
                         <ul className={styles.bulletList}>
@@ -82,7 +78,7 @@ export default function Solution() {
                           className={styles.img}
                         />
                         <div className={styles.imgOverlay} />
-                        <p className={styles.imgDescription}>{x.description}</p>
+                        {/* <p className={styles.imgDescription}>{x.description}</p> */}
                       </div>
                     </div>
                   </div>

@@ -3,6 +3,7 @@ import styles from "./Chris.module.css";
 import Image from "next/image";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import ChrisImg from "../../../../public/images/chris.png";
+import Button from "@/components/shared/Button/Button";
 
 export default function Chris() {
   return (
@@ -40,6 +41,14 @@ export default function Chris() {
               drivers, and real corporate clients — not a prototype, and not
               built for someone else&apos;s operation.
             </p>
+            <div className={styles.btnContainer}>
+              <Button
+                href='/about'
+                text='About Fonts & Footers'
+                btnType='black'
+                arrow
+              />
+            </div>
           </div>
         </div>
       </LayoutWrapper>
