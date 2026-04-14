@@ -44,7 +44,7 @@
 .bottom {
   padding: 2rem;
   /* Extra bottom padding so staggered cards don't get clipped */
-  padding-bottom: 30rem;
+  /* padding-bottom: 30rem; */
 }
 
 /* ── Grid: align-items: start so cards don't stretch to equal height ── */

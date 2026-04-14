@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Img1 from "../../public/images/cadi_cash.png";
 import Img2 from "../../public/images/work.jpg";
 import Img3 from "../../public/images/cadi_drive.png";
@@ -71,48 +72,48 @@ export const SolutionData = [
       "No middleman",
     ],
   },
-  {
-    id: 4,
-    oneWordDesc: "Controlled",
-    title: "Nothing changes unless you change it",
-    src: Img4,
-    description:
-      "Your pricing, your policies, your rules. No algorithm updates, no surprise fee increases, no platform decisions that affect your business overnight.",
-    bullets: [
-      "Your pricing",
-      "Your policies",
-      "No surprise changes",
-      "Full control",
-    ],
-  },
-  {
-    id: 5,
-    oneWordDesc: "Premium",
-    title: "Win corporate clients before they book",
-    src: Img5,
-    description:
-      "Executives judge you the moment they land on your site. A custom-built platform signals a serious operation — and that's often what closes the contract.",
-    bullets: [
-      "Custom design",
-      "Premium first impression",
-      "Built for black car",
-      "Closes corporate deals",
-    ],
-  },
-  {
-    id: 6,
-    oneWordDesc: "Connected",
-    title: "One place to run everything",
-    src: Img62,
-    description:
-      "Bookings, drivers, payments, and corporate accounts all in a single dashboard. Nothing slipping through because two systems don't talk to each other.",
-    bullets: [
-      "One dashboard",
-      "Every role covered",
-      "Zero gaps",
-      "Nothing falls through",
-    ],
-  },
+  // {
+  //   id: 4,
+  //   oneWordDesc: "Controlled",
+  //   title: "Nothing changes unless you change it",
+  //   src: Img4,
+  //   description:
+  //     "Your pricing, your policies, your rules. No algorithm updates, no surprise fee increases, no platform decisions that affect your business overnight.",
+  //   bullets: [
+  //     "Your pricing",
+  //     "Your policies",
+  //     "No surprise changes",
+  //     "Full control",
+  //   ],
+  // },
+  // {
+  //   id: 5,
+  //   oneWordDesc: "Premium",
+  //   title: "Win corporate clients before they book",
+  //   src: Img5,
+  //   description:
+  //     "Executives judge you the moment they land on your site. A custom-built platform signals a serious operation — and that's often what closes the contract.",
+  //   bullets: [
+  //     "Custom design",
+  //     "Premium first impression",
+  //     "Built for black car",
+  //     "Closes corporate deals",
+  //   ],
+  // },
+  // {
+  //   id: 6,
+  //   oneWordDesc: "Connected",
+  //   title: "One place to run everything",
+  //   src: Img62,
+  //   description:
+  //     "Bookings, drivers, payments, and corporate accounts all in a single dashboard. Nothing slipping through because two systems don't talk to each other.",
+  //   bullets: [
+  //     "One dashboard",
+  //     "Every role covered",
+  //     "Zero gaps",
+  //     "Nothing falls through",
+  //   ],
+  // },
 ] as const;
 
 export const DashboardFeatures = [
