@@ -289,14 +289,14 @@ textarea:focus {
 @media screen and (max-width: 768px) {
   h1,
   .h1 {
-    font-size: 4.9rem;
-    letter-spacing: -0.9px;
+    font-size: 5rem;
+    letter-spacing: -0.8px;
   }
 
   h2,
   .h2 {
-    font-size: 4.4rem;
-    letter-spacing: -1.3px;
+    font-size: 4.7rem;
+    letter-spacing: -0.9px;
   }
 
   .h2ii {

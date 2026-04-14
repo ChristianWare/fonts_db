@@ -23,6 +23,7 @@ export default function HomePage() {
       <Hero />
       <div id='learn-more'>
         <Outgrow />
+        {/* <ProblemSolution /> */}
         {/* <OtherDashboards /> */}
         <Solutionii />
         {/* <ProblemSolution />

@@ -17,52 +17,53 @@ import { ScrollTrigger } from "gsap/all";
 // import ScatteredIcon from "@/components/shared/icons/ScatteredIcon/ScatteredIcon";
 // import NoControl from "@/components/shared/icons/NoControl/NoControl";
 // import NoControlii from "@/components/shared/icons/NoControlii/NoControlii";
-import XIcon from "@/components/shared/icons/XIcon/XIcon";
+// import XIcon from "@/components/shared/icons/XIcon/XIcon";
+import ProblemSolution from "../ProblemSolution/ProblemSolution";
 
-const data = [
-  {
-    id: 1,
-    title: "You're invisible when it matters most",
-    desc: "When someone searches for black car service in your city, your competitors show up. You don't. The operators getting those calls aren't better than you — they're just more visible.",
-    icon: <XIcon className={styles.icon} />,
-  },
-  {
-    id: 2,
-    title: "Your website isn't closing anyone",
-    desc: "Even when people find you, your site isn't built to convert them. No instant quote, slow load time, doesn't work on mobile. They move on before they book.",
-    icon: <XIcon className={styles.icon} />,
-  },
-  {
-    id: 3,
-    title: "You don't own your client relationships",
-    desc: "Your booking history, customer data, and client list live on someone else's platform. If they change their terms, raise fees, or shut down — you start over with nothing.",
-    icon: <XIcon className={styles.icon} />,
-  },
-  {
-    id: 3.1,
-    title: "",
-    desc: "",
-    icon: "",
-  },
-  {
-    id: 4,
-    title: "No system for finding new accounts",
-    desc: "There's no proactive process for reaching the hotels, venues, and corporate clients that should be sending you rides every month. Every new booking still feels like luck.",
-    icon: <XIcon className={styles.icon} />,
-  },
-  {
-    id: 5,
-    title: "Every booking costs you twice",
-    desc: "Once to run the ride, once to pay the platform. At $4–6 per booking you're writing a check to someone else every single day — with no ceiling on it.",
-    icon: <XIcon className={styles.icon} />,
-  },
-  {
-    id: 6,
-    title: "Your operation runs on workarounds",
-    desc: "Bookings in one app, drivers in another, payments somewhere else. Nothing talks to each other and things fall through during your busiest moments.",
-    icon: <XIcon className={styles.icon} />,
-  },
-];
+// const data = [
+//   {
+//     id: 1,
+//     title: "You're invisible when it matters most",
+//     desc: "When someone searches for black car service in your city, your competitors show up. You don't. The operators getting those calls aren't better than you — they're just more visible.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+//   {
+//     id: 2,
+//     title: "Your website isn't closing anyone",
+//     desc: "Even when people find you, your site isn't built to convert them. No instant quote, slow load time, doesn't work on mobile. They move on before they book.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+//   {
+//     id: 3,
+//     title: "You don't own your client relationships",
+//     desc: "Your booking history, customer data, and client list live on someone else's platform. If they change their terms, raise fees, or shut down — you start over with nothing.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+//   {
+//     id: 3.1,
+//     title: "",
+//     desc: "",
+//     icon: "",
+//   },
+//   {
+//     id: 4,
+//     title: "No system for finding new accounts",
+//     desc: "There's no proactive process for reaching the hotels, venues, and corporate clients that should be sending you rides every month. Every new booking still feels like luck.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+//   {
+//     id: 5,
+//     title: "Every booking costs you twice",
+//     desc: "Once to run the ride, once to pay the platform. At $4–6 per booking you're writing a check to someone else every single day — with no ceiling on it.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+//   {
+//     id: 6,
+//     title: "Your operation runs on workarounds",
+//     desc: "Bookings in one app, drivers in another, payments somewhere else. Nothing talks to each other and things fall through during your busiest moments.",
+//     icon: <XIcon className={styles.icon} />,
+//   },
+// ];
 export default function Outgrow() {
   const [lettersRef, setLettersRef] = useArrayRef();
   const triggerRef = useRef(null);
@@ -136,14 +137,14 @@ export default function Outgrow() {
                     </span>
                   ))}
                 </h2>
-                <p className={styles.copy}>
+                {/* <p className={styles.copy}>
                   You&apos;re running a premium service, but you&apos;re still
                   chasing bookings one at a time. You&apos;re not showing up
                   when people search, your website isn&apos;t closing the ones
                   who find you, and there&apos;s no real system for finding the
                   corporate accounts that should be filling your calendar every
                   month.
-                </p>
+                </p> */}
               </div>
               <div className={styles.topRight}>
                 <div className={styles.imgContainer}>
@@ -157,12 +158,14 @@ export default function Outgrow() {
                 </div>
               </div>
             </div>
-            <h3 className={`${styles.headingii} h5`}>
+            {/* <h3 className={`${styles.headingii} h5`}>
               The six problems we see on almost every black car operator&apos;s
               business:
-            </h3>
+            </h3> */}
 
-            <div className={styles.bottom}>
+            <ProblemSolution />
+
+            {/* <div className={styles.bottom}>
               {data.map((item) => (
                 <div className={styles.card} key={item.id}>
                   <h3 className={styles.title}>
@@ -174,7 +177,7 @@ export default function Outgrow() {
                   <p className={styles.desc}>{item.desc}</p>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </LayoutWrapper>
