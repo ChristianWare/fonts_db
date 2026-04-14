@@ -5,6 +5,7 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./Solutionii.module.css";
 import LightBulb from "@/components/shared/icons/LightBulb/LightBulb";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
+import Button from "@/components/shared/Button/Button";
 
 type Card = {
   id: number;
@@ -121,6 +122,14 @@ export default function Solutionii() {
                     </div>
                     <div className={styles.cardBottom}>
                       <p className={styles.body}>{x.body}</p>
+                      <div className={styles.btnContainer}>
+                        <Button
+                          href='/'
+                          text='Learn more'
+                          btnType='accent'
+                          arrow
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}

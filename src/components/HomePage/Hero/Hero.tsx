@@ -66,7 +66,6 @@ export default function Hero() {
                   </span>
                 </p>
                 <div className={styles.btnContainer}>
-                  {/* <HeroScrollButton /> */}
                   <Button
                     href='/audit'
                     text='Run your free audit'
@@ -74,7 +73,7 @@ export default function Hero() {
                     arrow
                   />
                   <Button
-                    href='/audit'
+                    href='/leads'
                     text='Get leads to your market'
                     btnType='white'
                     arrow

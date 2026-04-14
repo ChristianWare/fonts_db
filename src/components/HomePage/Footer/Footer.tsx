@@ -44,8 +44,8 @@ export default function Footer() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>
-              Custom Direct <br />
-              <span className={styles.accent}>booking websites.</span>
+              Audits. Leads. <br /> 
+              <span className={styles.accent}>websites.</span>
             </h2>
           </div>
           <div className={styles.bottom}>

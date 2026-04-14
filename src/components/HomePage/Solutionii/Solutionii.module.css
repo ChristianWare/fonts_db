@@ -70,7 +70,7 @@
 /* ── Card base ── */
 .card {
   width: 100%;
-  min-height: 520px;
+  min-height: 550px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -129,9 +129,10 @@
   height: 100%;
 }
 
-.img {
-  object-fit: cover;
-  object-position: top;
+.cardBottom {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 1rem;
 }
 
 /* ── Tablet: 2 columns, reduce stagger ── */
@@ -153,8 +154,6 @@
 
 /* ── Mobile: 1 column, no stagger, no parallax ── */
 @media screen and (max-width: 768px) {
-
-
   .top {
     padding: 10rem 3rem;
     display: flex;
