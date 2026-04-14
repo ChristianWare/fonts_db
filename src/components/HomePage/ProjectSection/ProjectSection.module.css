@@ -1,3 +1,7 @@
+.container {
+  background-color: var(--accent);
+}
+
 .parent {
   border-top: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
@@ -137,7 +141,7 @@
 
   .btnContainer {
     display: grid;
-    
+
     width: 100%;
   }
 }

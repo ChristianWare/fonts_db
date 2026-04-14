@@ -66,7 +66,7 @@ export default function ProjectSection() {
                   href='https://www.niertransportation.com/'
                   target='_blank'
                   text='see live site'
-                  btnType='accent'
+                  btnType='white'
                   arrow
                 />
               </div>

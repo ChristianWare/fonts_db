@@ -27,6 +27,10 @@ export default function HomePage() {
         {/* <OtherDashboards /> */}
         <Solutionii />
         <Solution />
+        <ProjectSection />
+        <Faq />
+        <Chris />
+        <ContactSection />
         {/* <ProblemSolution />
         <Solution /> */}
       </div>
