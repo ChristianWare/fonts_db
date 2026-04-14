@@ -212,72 +212,72 @@ export type QuestionItem = {
 export const questions: readonly QuestionItem[] = [
   {
     id: 1,
-    question: "What exactly does Fonts & Footers build?",
+    question: "Do I have to use all three products?",
     answer:
-      "We build fully custom direct booking websites and white-label booking platforms exclusively for black car and limousine companies. Every platform includes a branded booking engine, admin dashboard, driver portal, customer portal, corporate account management, flight tracking, and Stripe payment processing — all under your brand, on your domain. We build for one industry and one industry only.",
-    sections: ["home", "about"],
+      "No. Each product works independently. Most operators start with the free audit — it takes 60 seconds and costs nothing. From there you can add the lead tool, the website, or both in whatever order makes sense for where your business is right now.",
+    sections: ["home"],
   },
   {
     id: 2,
-    question: "How is pricing structured?",
+    question: "What does the free audit actually show me?",
     answer:
-      "One-time setup fee of $500, then $499 per month flat. No per-booking fees, no per-driver fees, no seat-based pricing, and no upgrade fees as we add new features. Operators who come on board now lock in the $499 rate for life — this is our founding client rate and it will increase for future clients as the platform grows.",
-    sections: ["pricing", "home"],
+      "It analyzes your website across the key factors that determine whether you get found on Google, whether visitors trust you enough to book, and whether your site is technically healthy. You get a score and a specific breakdown of what to fix. No email required, no signup, under 60 seconds.",
+    sections: ["home"],
   },
   {
     id: 3,
-    question: "How long does it take to launch?",
+    question: "What kind of leads does the lead tool find?",
     answer:
-      "Most clients are live within 2 to 3 weeks. Week one is the discovery call and build. Week two is configuration and your review. Week three is final refinements and launch. We move fast because the platform is already built and battle-tested — we're configuring it to your operation, not starting from scratch.",
-    sections: ["home", "work"],
+      "Three types. Hot leads are people actively requesting transportation right now — in Facebook groups, on Nextdoor, and through event listings with public contact info. Warm leads are businesses showing signals of upcoming transportation need. Cold leads are the B2B accounts that generate consistent recurring demand — wedding venues, hotels, law firms, funeral homes, event planners, and more. Every lead includes the specific contact person and verified contact info when available.",
+    sections: ["home"],
   },
   {
     id: 4,
-    question: "Do I own my website and customer data?",
+    question: "Do multiple operators in the same city see the same leads?",
     answer:
-      "Yes — completely. Your brand, your domain, your customer relationships, and your booking data belong to you. We never put our name on your platform and your clients will never see the Fonts & Footers name. If you ever decide to leave, we'll provide a full data export. You built your customer base — it stays yours.",
-    sections: ["about", "pricing"],
+      "Yes — the lead database is shared. This works because you're targeting businesses, not individuals. A wedding venue can have relationships with multiple transportation vendors. The operator who wins the account is the one who reaches out first and follows up best — not whoever got an exclusive lead.",
+    sections: ["home"],
   },
   {
     id: 5,
-    question: "Will this work for my specific operation?",
+    question: "How much does the lead tool cost?",
     answer:
-      "If you run a black car or limo company, yes. The platform is built around how transportation operators actually work — multiple vehicle types, service areas, hourly and point-to-point pricing, driver dispatch, corporate accounts, and airport transfers with live flight tracking. We configure everything around your services, your vehicles, and your pricing structure.",
-    sections: ["home", "work"],
+      "$125 per month, full access, no credits, no tiers. Every lead category, every market feature, AI outreach scripts, and the built-in CRM are all included. There's a free 7-day trial with no credit card required so you can see real leads in your market before you commit.",
+    sections: ["home"],
   },
   {
     id: 6,
-    question: "What happens to my existing bookings and customers?",
+    question: "How is the website priced?",
     answer:
-      "We handle the transition. If your current platform allows data export, we migrate your customer list and any future bookings before you go live. We also help you communicate the switch to your existing clients so the experience stays seamless on their end.",
-    sections: ["work", "contact"],
+      "$499 per month flat. No setup fee, no per-booking fees, no per-driver fees. Design, development, hosting, booking engine, admin dashboard, driver portal, flight tracking, payment processing, and ongoing support are all included. One number, everything covered.",
+    sections: ["home"],
   },
   {
     id: 7,
-    question: "How do payments work?",
+    question: "How long does it take to launch the website?",
     answer:
-      "All payments run through Stripe — the most trusted payment processor in the industry. You keep your own Stripe merchant account and receive payouts directly. We support deposits, full prepayment, balance collection, tips, refunds, and card-on-file for repeat customers. Corporate accounts get centralized billing with invoices generated automatically.",
-    sections: ["pricing", "home"],
+      "Most clients are live within 2 to 3 weeks. The platform is already built and running with real operators — we're configuring it to your company, not starting from scratch.",
+    sections: ["home"],
   },
   {
     id: 8,
-    question: "What does the driver portal include?",
+    question: "Do I own my website and customer data?",
     answer:
-      "Every driver on your roster gets their own dedicated portal with their full trip schedule, passenger details, pickup and drop-off information, and real-time status updates. It installs like a native app on their phone — no App Store download required. Push notifications fire automatically for new assignments, updates, and cancellations.",
-    sections: ["work"],
+      "Yes — completely. Your brand, your domain, your customer relationships, and your booking data belong to you. We never put our name on your platform and your clients will never see the Fonts & Footers name. If you ever decide to leave, we provide a full data export.",
+    sections: ["home"],
   },
   {
     id: 9,
-    question: "What if I already have a website?",
+    question: "What kind of support do I get?",
     answer:
-      "We replace it entirely with something built specifically for how black car operators work and how their clients book. Most existing transportation websites weren't designed with a booking engine at their core — they're brochure sites with a form or a third-party widget bolted on. We build the booking experience as the foundation, not an afterthought.",
-    sections: ["home", "contact"],
+      "Direct access to Chris — the person who built the platform. Not a ticket system, not a support team. Most issues get resolved same day. New features added to the platform are included in your monthly rate at no extra charge.",
+    sections: ["home"],
   },
   {
     id: 10,
-    question: "What kind of support do I get after launch?",
+    question: "Where do I start?",
     answer:
-      "Ongoing support is included in your monthly subscription. You'll have a direct line for questions, fixes, and small updates. Most issues are resolved same or next business day. As we ship new features to the platform, they're added to your site automatically at no extra charge — your $499 rate covers everything we build going forward.",
-    sections: ["about", "contact", "home"],
+      "Run the free audit. It takes 60 seconds, requires no email, and shows you exactly where your website stands right now. Most operators start there and the next steps become obvious from what they find.",
+    sections: ["home"],
   },
 ] as const;

@@ -149,9 +149,9 @@ export default function Faq() {
                       <div className={styles.headingArrowContainer}>
                         <div className={styles.h3Container}>
                           <h3 className={styles.question} lang='en'>
-                            <span style={{ marginRight: "3rem" }}>
+                            {/* <span style={{ marginRight: "3rem" }}>
                               0{i + 1}.
-                            </span>
+                            </span> */}
                             {q.question}
                           </h3>
                         </div>
