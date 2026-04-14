@@ -15,6 +15,7 @@ import ContactSection from "@/components/HomePage/ContactSection/ContactSection"
 import Chris from "@/components/HomePage/Chris/Chris";
 import ProblemSolution from "@/components/HomePage/ProblemSolution/ProblemSolution";
 import ROICalculator from "@/components/HomePage/ROICalculator/ROICalculator";
+import Solutionii from "@/components/HomePage/Solutionii/Solutionii";
 
 export default function HomePage() {
   return (
@@ -22,7 +23,8 @@ export default function HomePage() {
       <Hero />
       <div id='learn-more'>
         <Outgrow />
-        <OtherDashboards />
+        {/* <OtherDashboards /> */}
+        <Solutionii />
         {/* <ProblemSolution />
         <Solution /> */}
       </div>

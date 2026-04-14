@@ -206,9 +206,9 @@ h5,
 
 h6,
 .h6 {
-  font-size: 2.4rem;
-  letter-spacing: -0.4px;
-  line-height: 1;
+  font-size: 2.8rem;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -313,7 +313,7 @@ textarea:focus {
   .h1,
   h1,
   .h2ii {
-    line-height: 1.1em;
+    /* line-height: 1.1em; */
     font-size: 4.9rem;
     letter-spacing: -0.9px;
   }
@@ -332,9 +332,7 @@ textarea:focus {
 
   h6,
   .h6 {
-    font-size: 2rem;
-    letter-spacing: -0.4px;
-    line-height: 1;
+    font-size: 2.5rem;
   }
 
   p,
