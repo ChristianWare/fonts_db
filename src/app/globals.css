@@ -299,10 +299,10 @@ textarea:focus {
     letter-spacing: -0.9px;
   }
 
-  .h2ii {
+  /* .h2ii {
     font-size: 3.4rem;
     letter-spacing: -1px;
-  }
+  } */
 }
 
 @media screen and (max-width: 568px) {

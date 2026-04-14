@@ -4,6 +4,7 @@ import Nier from "../../../../public/images/nierLogo.png";
 import Image from "next/image";
 import NierHomePage from "../../../../public/images/nierHomePage.png";
 import Button from "../../shared/Button/Button";
+import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 
 export default function ProjectSection() {
   return (
@@ -12,7 +13,7 @@ export default function ProjectSection() {
         <div className={styles.parent}>
           <div className={styles.content}>
             <div className={styles.left}>
-              <div className={styles.logoContainer}>
+              {/* <div className={styles.logoContainer}>
                 <Image
                   src={Nier}
                   alt='Nier Transportation Logo'
@@ -20,9 +21,14 @@ export default function ProjectSection() {
                   className={styles.img}
                 />
                 <span className={styles.logoText}>Nier Transportation</span>
-              </div>
+              </div> */}
+              <SectionIntro
+                text='Real results'
+                background='bgBlack'
+                color='colorWhite'
+              />
               <h2 className={styles.heading}>
-                Feature Project: <br /> Nier Transportation
+                Built, deployed, and proven with a real operator.
               </h2>
               <div className={styles.imgContainerii}>
                 <Image

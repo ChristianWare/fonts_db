@@ -12,7 +12,7 @@
   padding: 10rem 5rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 5rem;
+  grid-gap: 7rem;
 }
 
 .left {
@@ -44,7 +44,6 @@
 .heading {
   font-size: 7.2rem;
   letter-spacing: -2.2px;
-  white-space: nowrap;
 }
 
 .accent {

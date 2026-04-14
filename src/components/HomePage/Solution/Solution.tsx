@@ -23,6 +23,9 @@ export default function Solution() {
                 </h2>
               </div>
               <div className={styles.topRight}>
+                <h3 className={`${styles.subheading} h6`}>
+                  HOW THEY WORK TOGETHER:
+                </h3>
                 <p className={styles.copy}>
                   The audit shows you what&apos;s broken. The lead tool sends
                   people to your website before it&apos;s fixed. The website

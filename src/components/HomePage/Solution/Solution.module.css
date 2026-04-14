@@ -147,13 +147,17 @@
   width: 80%;
 }
 
+.subheading {
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 1268px) {
   .content {
     margin-top: 20rem;
   }
 
   .heading {
-    width: 80%;
+    max-width: 650px;
   }
 
   .top {
@@ -178,8 +182,15 @@
     gap: 2rem;
   }
 
+  .subheading {
+    text-align: center;
+    width: 100%;
+  }
+
+  
+
   .copy {
-    width: 90%;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -191,6 +202,13 @@
     width: 100%;
   }
 }
+
+@media screen and (max-width: 968px) {
+  .heading {
+    max-width: 500px;
+  }
+}
+
 
 @media screen and (max-width: 768px) {
   .content {
@@ -237,6 +255,11 @@
   }
 
   .heading {
+    width: 100%;
+  }
+
+  .subheading {
+    text-align: left;
     width: 100%;
   }
 
