@@ -46,12 +46,13 @@ export default function Nav({
   };
 
   const items = [
+    { text: "Audit", href: "/audit" },
     { text: "About", href: "/about" },
     { text: "Solutions", href: "/solutions" },
     { text: "Pricing", href: "/pricing" },
     { text: "Work", href: "/work" },
     { text: "Contact", href: "/contact" },
-    { text: "My Account", href: "/dashboard" },
+    // { text: "My Account", href: "/dashboard" },
   ];
 
   return (
