@@ -17,19 +17,19 @@ type Card = {
 const cards: Card[] = [
   {
     id: 7,
-    label: "Product 1",
+    label: "Solution 1",
     heading: "Free Website Audit",
     body: "Enter your URL and get a full breakdown of what's costing you bookings — your Google visibility, site speed, mobile performance, and conversion gaps. Free, no email required, under a minute.",
   },
   {
     id: 8,
-    label: "Product 2",
+    label: "Solution 2",
     heading: "Lead Generation Tool",
     body: "Find the businesses in your market that generate consistent transportation demand. Every lead comes with a specific contact, verified email or phone, and an AI-written outreach script personalized to that business.",
   },
   {
     id: 9,
-    label: "Product 3",
+    label: "Solution 3",
     heading: "Custom Booking Website",
     body: "A professionally built booking website designed specifically for black car operators. Direct booking, no per-booking fees, flight tracking, driver portal, and payment processing — all included at one flat monthly rate.",
   },
@@ -94,7 +94,7 @@ export default function Solutionii() {
                   <span className={styles.accent}> those problems ↑</span>
                 </h2>
                 <h3 className={`${styles.subheading} h6`}>
-                  Three products. One system. Built to grow your black car
+                  Three solutions. One system. Built to grow your black car
                   business.
                 </h3>
                 {/*  fixes it */}

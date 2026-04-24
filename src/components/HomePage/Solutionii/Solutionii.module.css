@@ -132,7 +132,17 @@
 .cardBottom {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 2rem;
+}
+
+.body {
+  /* font-size: 1.6rem; */
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  letter-spacing: normal;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.6rem;
 }
 
 /* ── Tablet: 2 columns, reduce stagger ── */
@@ -198,6 +208,6 @@
   }
 
   .body {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
