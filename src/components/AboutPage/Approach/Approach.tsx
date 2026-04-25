@@ -1,54 +1,56 @@
-'use client';
+"use client";
 
-import LayoutWrapper from '@/components/shared/LayoutWrapper'
-import styles from './Approach.module.css'
+import LayoutWrapper from "@/components/shared/LayoutWrapper";
+import styles from "./Approach.module.css";
 import { useEffect, useRef, useState } from "react";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import { approachData } from "@/lib/data";
 
 export default function Approach() {
-     const [activeIndex, setActiveIndex] = useState(0);
-      const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-    
-      useEffect(() => {
-        const handleScroll = () => {
-          const viewportCenter = window.innerHeight / 2;
-          let closestIndex = 0;
-          let closestDistance = Infinity;
-    
-          cardRefs.current.forEach((el, index) => {
-            if (!el) return;
-            const rect = el.getBoundingClientRect();
-            const cardCenter = rect.top + rect.height / 2;
-            const distance = Math.abs(cardCenter - viewportCenter);
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closestIndex = index;
-            }
-          });
-    
-          setActiveIndex(closestIndex);
-        };
-    
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        handleScroll();
-    
-        return () => window.removeEventListener("scroll", handleScroll);
-      }, []);
-    
-      const activeFeature = approachData[activeIndex];
-      const ActiveIcon = activeFeature.icon;
-    
+  const [activeIndex, setActiveIndex] = useState(0);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const viewportCenter = window.innerHeight / 2;
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+
+      cardRefs.current.forEach((el, index) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const activeFeature = approachData[activeIndex];
+  const ActiveIcon = activeFeature.icon;
+
   return (
     <section className={styles.container}>
       <LayoutWrapper>
         <div className={styles.parent}>
           <div className={styles.content}>
             <div className={styles.top}>
-              <SectionIntro text='Features' />
+              <SectionIntro text='How We Work' />
               <h2 className={styles.heading}>
-                Everything <br /> your operation
-                <br /> needs to run
+                Three principles <br />
+                that shape
+                <br />
+                every product
               </h2>
             </div>
             <div className={styles.bottom}>

@@ -20,6 +20,9 @@ import Alert from "@/components/shared/Alert/Alert";
 import Invoice from "@/components/shared/icons/Invoice/Invoice";
 import Notifications from "@/components/shared/icons/Notifications/Notifications";
 import Customer from "@/components/shared/icons/Customer/Customer";
+import Hammer from "@/components/shared/icons/Hammer/Hammer";
+import Target from "@/components/shared/icons/Target/Target";
+import Lock from "@/components/shared/icons/Lock/Lock";
 
 export const SolutionData = [
   {
@@ -188,10 +191,22 @@ export const featureData = [
 
 export const approachData = [
   {
-    title: "Your driver is never in the wrong place",
-    desc: "Live routing pulls the exact route, distance, and drive time at booking. Flight tracking adjusts automatically if a flight is delayed — your driver arrives when the passenger does, not an hour before.",
-    src: LiveGoogleMaps,
-    icon: Location,
+    title: "Built in public, not in theory",
+    desc: "Barry La Nier of Nier Transportation in Phoenix was the first operator to deploy the platform. His site went live, took real bookings, and exposed every gap in the product. Everything here was refined against a real operation — not a prototype, not a demo environment.",
+    // src: BuiltInPublic,
+    icon: Hammer,
+  },
+  {
+    title: "One industry, full depth",
+    desc: "Most agencies serve every vertical and go an inch deep on each one. Fonts & Footers serves black car and limo operators only. The audit knows what a good black car website looks like. The lead tool knows where corporate accounts come from. The website platform knows how this business actually runs.",
+    // src: OneIndustry,
+    icon: Target,
+  },
+  {
+    title: "You own everything",
+    desc: "Your brand, your domain, your customer data, your booking history. We never put our name on your platform. Your clients will never see ours. If you ever leave, you take everything with you — full data export, no friction.",
+    // src: YouOwn,
+    icon: Lock,
   },
 ] as const;
 
