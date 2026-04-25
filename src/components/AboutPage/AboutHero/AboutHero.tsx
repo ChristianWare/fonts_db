@@ -1,12 +1,11 @@
-import styles from "./Hero.module.css";
+import LayoutWrapper from "@/components/shared/LayoutWrapper";
+import styles from "./AboutHero.module.css";
 import Image from "next/image";
-import LayoutWrapper from "../../shared/LayoutWrapper";
-import Nav from "../../shared/Nav/Nav";
-import BgImage from "../../../../public/images/heroiv.png";
-// import HeroScrollButton from "./HeroScrollButton";
+import BgImage from "../../../../public/images/cadiii.png";
+import Nav from "@/components/shared/Nav/Nav";
 import Button from "@/components/shared/Button/Button";
 
-export default function Hero() {
+export default function AboutHero() {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -29,7 +28,7 @@ export default function Hero() {
           </div>
           <div className={styles.content}>
             <div className={styles.top}>
-              <Nav />
+              <Nav variant='black' hamburgerColor='hamburgerBlack' />{" "}
             </div>
             <div className={styles.bottom}>
               <div className={styles.topCopy}>

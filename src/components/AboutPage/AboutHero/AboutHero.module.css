@@ -1,0 +1,271 @@
+.container {
+  background-color: var(--white);
+}
+
+.parent {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+  width: 100%;
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--black);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+  top: unset;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+  top: unset;
+  left: unset;
+}
+
+.backgroundImgContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  z-index: 0;
+}
+
+.backgroundImgContainer::before {
+  content: "";
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  border-top: 1px solid var(--lightGray);
+  left: 50%;
+  top: -1px;
+  transform: translateX(-50%);
+}
+
+.backgroundImgContainer::after {
+  content: "";
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  border-top: 1px solid var(--lightGray);
+  left: 50%;
+  bottom: -2px;
+  transform: translateX(-50%);
+}
+
+.imgContainer,
+.imgContainerii {
+  position: relative;
+  width: 100%;
+}
+
+.img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.imgContainerii {
+  display: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 5rem;
+  width: 100%;
+  flex: 1;
+}
+
+.top {
+  width: 100%;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  width: 100%;
+  margin-top: auto;
+}
+
+.topCopy {
+  color: var(--white);
+  font-size: 1.4rem;
+  line-height: 1.5;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  position: relative;
+  margin-left: 1.6rem;
+  letter-spacing: 0.56px;
+  margin-bottom: 2rem;
+}
+
+.topCopy::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: var(--accent);
+  left: -12px;
+  bottom: 0px;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.heading {
+  color: var(--white);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 5px 5px;
+  padding: 1rem 2rem;
+  padding-top: 2rem;
+}
+
+.copyBtnContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 60%;
+  gap: 3rem;
+  /* margin-top: 6rem; */
+}
+
+.copy,
+.span {
+  color: var(--gray);
+  font-size: 2.2rem;
+  letter-spacing: -0.7px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.span {
+  color: var(--white);
+}
+
+.btnContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+}
+
+@media screen and (max-width: 1268px) {
+  .parent {
+    padding: 3rem;
+  }
+
+  .container {
+    min-height: auto;
+  }
+
+  .content {
+    gap: 10rem;
+  }
+  .copyBtnContainer {
+    width: 100%;
+    margin-top: 3rem;
+  }
+
+  .topCopy {
+    margin-bottom: 1rem;
+  }
+
+  .copy,
+  .span {
+    font-size: 1.9rem;
+    letter-spacing: -0.6px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .parent {
+    padding: 2rem;
+  }
+
+  .copyBtnContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .heading {
+    background-size: 5px 5px;
+  }
+
+  /* .copy,
+  .span {
+    font-size: 1.6rem;
+    letter-spacing: -0.9px;
+  } */
+
+  .imgContainer {
+    display: none;
+  }
+
+  .imgContainerii {
+    display: block;
+    height: 300px;
+  }
+
+  .overlay {
+    background: rgba(0, 0, 0, 0);
+  }
+
+  .btnContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
+  }
+}

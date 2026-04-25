@@ -19,7 +19,7 @@ export default function Solution() {
               <div className={styles.topLeft}>
                 <SectionIntro text='The system' />
                 <h2 className={`${styles.heading} h2ii`}>
-                  Each product makes the next one more powerful.
+                  Each solution makes the next one more powerful.
                 </h2>
               </div>
               <div className={styles.topRight}>
@@ -32,7 +32,7 @@ export default function Solution() {
                   converts the leads the lead tool finds.
                   <span className={styles.accent}>
                     This is the sequence every operator who works with us
-                    follows — and it&apos;s why the products are priced and
+                    follows — and it&apos;s why the solutions are priced and
                     designed the way they are.
                   </span>
                 </p>

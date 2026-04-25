@@ -9,15 +9,30 @@
   width: 29px;
   height: 17px;
   object-fit: contain;
+}
+
+/* The source asset is black; invert it for the white variant */
+.logoWhite {
   filter: brightness(0) invert(1);
+}
+
+.logoBlack {
+  filter: none;
 }
 
 .text {
   font-size: 1.8rem;
-  color: var(--white);
   font-family: var(--GeistMono);
   line-height: 1;
   text-transform: uppercase;
+}
+
+.textWhite {
+  color: var(--white);
+}
+
+.textBlack {
+  color: var(--black);
 }
 
 @media screen and (max-width: 568px) {

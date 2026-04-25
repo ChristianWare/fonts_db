@@ -5,15 +5,18 @@ import Link from "next/link";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent } from "react";
-// import Image from "next/image";
-// import Img1 from "../../../../../public/images/whydb.jpg";
+
+type NavVariant = "white" | "black";
+
+interface NavProps {
+  variant?: NavVariant;
+  hamburgerColor?: string;
+}
 
 export default function Nav({
+  variant = "white",
   hamburgerColor = "",
-}: {
-  color?: string;
-  hamburgerColor?: string;
-}) {
+}: NavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -40,6 +43,7 @@ export default function Nav({
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   const handleHamburgerClick = (e: MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     toggleMenu();
@@ -55,12 +59,19 @@ export default function Nav({
     // { text: "My Account", href: "/dashboard" },
   ];
 
+  // Variant-based styling
+  const btnType = variant === "black" ? "navYellow" : "navWhite";
+  const navItemClass =
+    variant === "black"
+      ? `${styles.navItem} ${styles.navItemBlack}`
+      : styles.navItem;
+
   return (
     <header className={styles.header}>
       <nav className={styles.navbar}>
         <div className={styles.navLeft}>
           <div className={styles.logoContainer}>
-            <Logo />
+            <Logo variant={variant} />
           </div>
           <div
             className={
@@ -71,7 +82,7 @@ export default function Nav({
               <Link
                 key={item.href}
                 href={item.href}
-                className={styles.navItem}
+                className={navItemClass}
                 onClick={(e) => handleNavClick(e, item.href)}
               >
                 {item.text}
@@ -85,7 +96,7 @@ export default function Nav({
                 href='https://calendly.com/chris-ware-dev/discovery-call'
                 target='_blank'
                 text='Book your discovery call'
-                btnType='navWhite'
+                btnType={btnType}
                 onClick={closeMenu}
                 arrow
               />
@@ -99,7 +110,7 @@ export default function Nav({
               href='https://calendly.com/chris-ware-dev/discovery-call'
               target='_blank'
               text='Book discovery call'
-              btnType='navWhite'
+              btnType={btnType}
             />
           </div>
           <div

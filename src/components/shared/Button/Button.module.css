@@ -64,6 +64,12 @@
   color: var(--black);
 }
 
+.navYellow {
+  padding: 1.5rem 2rem;
+  background-color: var(--accent);
+  color: var(--black);
+}
+
 .arrowContainer {
   background-color: var(--black);
   width: 2rem;

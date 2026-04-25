@@ -50,6 +50,11 @@
   transition: all 0.3s ease-in;
 }
 
+/* Black variant for use on light backgrounds */
+.navItemBlack {
+  color: var(--black);
+}
+
 .navItemActive {
   color: var(--accent) !important;
   text-decoration: line-through !important;
@@ -171,32 +176,33 @@
 
   .navItems {
     position: fixed;
-    top: 0;           /* flush to top — no gap */
+    top: 0;
     left: 0;
     right: 0;
-    margin: 0;        /* no margin so it's edge-to-edge */
-    border-radius: 0; /* no rounding at top */
+    margin: 0;
+    border-radius: 0;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 3rem;
     padding: 2rem;
-    padding-top: 8rem; /* push content below the hamburger bar */
+    padding-top: 8rem;
     background: var(--accent);
     height: auto;
     max-height: 90vh;
     overflow-y: auto;
-    transform: translateY(-110%); /* slides UP off screen */
+    transform: translateY(-110%);
     transition: transform 0.35s ease-in-out;
     z-index: 9995;
     box-sizing: border-box;
   }
 
   .navItems.active {
-    transform: translateY(0); /* slides DOWN into view */
+    transform: translateY(0);
   }
 
-  .navItem {
+  .navItem,
+  .navItemBlack {
     color: var(--black) !important;
   }
 
@@ -216,26 +222,24 @@
     gap: 2rem;
     padding: 0.5rem;
     padding-left: 1rem;
-    background-color: var(--white); /* default state */
+    background-color: var(--white);
     transition: background-color 0.2s ease;
   }
 
-  /* hamburgerContainer when menu is open */
   .hamburgerContainerOpen {
     background-color: var(--black) !important;
     position: relative;
-    z-index: 9999; /* always on top of the menu */
+    z-index: 9999;
   }
 
   .menuText {
     font-family: var(--GeistMono);
     font-size: 1.1rem;
-    color: var(--black); /* default */
+    color: var(--black);
     transition: color 0.2s ease;
     display: block;
   }
 
-  /* menuText turns white when open */
   .menuTextOpen {
     color: var(--white) !important;
   }
@@ -247,7 +251,6 @@
     transition: background-color 0.2s ease;
   }
 
-  /* hamburger bg turns white when open */
   .hamburger.active {
     background-color: var(--white) !important;
   }
