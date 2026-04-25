@@ -1,7 +1,7 @@
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import styles from "./Chris.module.css";
-import Image from "next/image";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
+import Image from "next/image";
 import ChrisImg from "../../../../public/images/chris.png";
 import Button from "@/components/shared/Button/Button";
 

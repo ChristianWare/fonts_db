@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import AboutHero from "@/components/AboutPage/AboutHero/AboutHero";
+import ChrisAboutPage from "@/components/AboutPage/ChrisAboutPage/ChrisAboutPage";
 import AdminDashboardFeatures from "@/components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
+import Chris from "@/components/HomePage/Chris/Chris";
 import Features from "@/components/HomePage/Features/Features";
 import HowItWorks from "@/components/HomePage/HowItWorks/HowItWorks";
 import OtherDashboards from "@/components/HomePage/OtherDashboards/OtherDashboards";
@@ -11,6 +13,8 @@ export default function AboutPage() {
   return (
     <div>
       <AboutHero />
+      <ChrisAboutPage />
+      {/* <Chris /> */}
       {/* <AdminDashboardFeatures /> */}
       {/* <Features /> */}
       {/* <OtherDashboards /> */}
