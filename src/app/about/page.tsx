@@ -2,6 +2,7 @@
 import AboutHero from "@/components/AboutPage/AboutHero/AboutHero";
 import Approach from "@/components/AboutPage/Approach/Approach";
 import ChrisAboutPage from "@/components/AboutPage/ChrisAboutPage/ChrisAboutPage";
+import ThreeProducts from "@/components/AboutPage/ThreeProducts/ThreeProducts";
 import AdminDashboardFeatures from "@/components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
 import Chris from "@/components/HomePage/Chris/Chris";
 import Features from "@/components/HomePage/Features/Features";
@@ -16,6 +17,7 @@ export default function AboutPage() {
       <AboutHero />
       <ChrisAboutPage />
       <Approach />
+      <ThreeProducts />
       {/* <Chris /> */}
       {/* <AdminDashboardFeatures /> */}
       {/* <Features /> */}
