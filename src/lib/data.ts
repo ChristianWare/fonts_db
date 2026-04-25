@@ -6,9 +6,9 @@ import Img4 from "../../public/images/system.jpg";
 import Img5 from "../../public/images/chevy_corp.png";
 
 import Img62 from "../../public/images/connected.jpg";
-import LiveGoogleMaps from "../../public/images/liveGoogleMaps.png";
-import PaymentProcessing from "../../public/images/paymentProcessesing.png";
-import FlightTracking from "../../public/images/flightTracking.png";
+import LiveGoogleMaps from "../../public/images/WhyWeExist.jpg";
+import PaymentProcessing from "../../public/images/WhyWeExist.jpg";
+import FlightTracking from "../../public/images/WhyWeExist.jpg";
 import Location from "@/components/shared/icons/Location/Location";
 import Payment from "@/components/shared/icons/Payment/Payment";
 import Plane from "@/components/shared/icons/Plane/Plane";
@@ -117,74 +117,83 @@ export const SolutionData = [
 //   },
 // ] as const;
 
-// export const featureData = [
-//   {
-//     title: "Your driver is never in the wrong place",
-//     desc: "Live routing pulls the exact route, distance, and drive time at booking. Flight tracking adjusts automatically if a flight is delayed — your driver arrives when the passenger does, not an hour before.",
-//     src: LiveGoogleMaps,
-//     icon: Location,
-//   },
-//   {
-//     title: "Payments that just work",
-//     desc: "All payments run through Stripe. Collect deposits at booking, send balance links after the ride, store cards for repeat clients — everything on your schedule, nothing chased manually.",
-//     src: PaymentProcessing,
-//     icon: Payment,
-//   },
-//   {
-//     title: "Flights tracked. Drivers adjusted.",
-//     desc: "Customers enter their flight number once. The platform watches it from there — if it's delayed, the booking reflects it automatically. No calls, no recalculating, no driver waiting an hour early.",
-//     src: FlightTracking,
-//     icon: Plane,
-//   },
-//   {
-//     title: "Clients book in under two minutes",
-//     desc: "No account required to book. Customers get through the flow fast, on any device — and if they want to save their details for next time, they can. Never forced.",
-//     src: Img9,
-//     icon: Bell,
-//   },
-//   {
-//     title: "Corporate clients sign themselves up",
-//     desc: "Business clients apply for a corporate account directly through your platform. Once approved, they get centralized billing and employee management — the kind of setup that makes companies stick around.",
-//     src: Img10,
-//     icon: Business,
-//   },
-//   {
-//     title: "Your entire operation in one screen",
-//     desc: "Bookings, drivers, payments, customers, and reports all live in one dashboard. No spreadsheets, no jumping between apps, nothing falling through because two systems don't talk.",
-//     src: Img11,
-//     icon: Analytics,
-//   },
-//   {
-//     title: "Drivers always know what's next",
-//     desc: "Every driver gets their own portal with their full schedule, passenger details, and real-time updates — straight to their phone. No calls to relay trip info. No confusion about which job is theirs.",
-//     src: Img12,
-//     icon: Driver,
-//   },
-//   {
-//     title: "An experience worth coming back to",
-//     desc: "Every rider gets a branded customer portal — upcoming trips, past receipts, saved addresses. It runs under your name, not ours. The kind of experience that turns a one-time booking into a regular client.",
-//     src: Img13,
-//     icon: Customer,
-//   },
-//   {
-//     title: "No calls to dispatch a driver",
-//     desc: "New assignments, updates, and cancellations go straight to the driver's phone as push notifications. The platform handles the communication — you handle the business.",
-//     src: Img13,
-//     icon: Notifications,
-//   },
-//   {
-//     title: "Nothing important gets buried",
-//     desc: "The moment you log in, the dashboard flags what needs attention — outstanding balances, unassigned drivers, stuck bookings, recent tips. You see what matters first, every time.",
-//     src: Img13,
-//     icon: Alert,
-//   },
-//   {
-//     title: "Invoices sent without lifting a finger",
-//     desc: "Professional PDF invoices generate automatically for every completed booking. Corporate clients download them directly from their portal — nothing manual required on your end.",
-//     src: Img13,
-//     icon: Invoice,
-//   },
-// ] as const;
+export const featureData = [
+  {
+    title: "Your driver is never in the wrong place",
+    desc: "Live routing pulls the exact route, distance, and drive time at booking. Flight tracking adjusts automatically if a flight is delayed — your driver arrives when the passenger does, not an hour before.",
+    src: LiveGoogleMaps,
+    icon: Location,
+  },
+  {
+    title: "Payments that just work",
+    desc: "All payments run through Stripe. Collect deposits at booking, send balance links after the ride, store cards for repeat clients — everything on your schedule, nothing chased manually.",
+    src: PaymentProcessing,
+    icon: Payment,
+  },
+  {
+    title: "Flights tracked. Drivers adjusted.",
+    desc: "Customers enter their flight number once. The platform watches it from there — if it's delayed, the booking reflects it automatically. No calls, no recalculating, no driver waiting an hour early.",
+    src: FlightTracking,
+    icon: Plane,
+  },
+  {
+    title: "Clients book in under two minutes",
+    desc: "No account required to book. Customers get through the flow fast, on any device — and if they want to save their details for next time, they can. Never forced.",
+    src: Img1,
+    icon: Bell,
+  },
+  {
+    title: "Corporate clients sign themselves up",
+    desc: "Business clients apply for a corporate account directly through your platform. Once approved, they get centralized billing and employee management — the kind of setup that makes companies stick around.",
+    src: Img1,
+    icon: Business,
+  },
+  {
+    title: "Your entire operation in one screen",
+    desc: "Bookings, drivers, payments, customers, and reports all live in one dashboard. No spreadsheets, no jumping between apps, nothing falling through because two systems don't talk.",
+    src: Img1,
+    icon: Analytics,
+  },
+  {
+    title: "Drivers always know what's next",
+    desc: "Every driver gets their own portal with their full schedule, passenger details, and real-time updates — straight to their phone. No calls to relay trip info. No confusion about which job is theirs.",
+    src: Img1,
+    icon: Driver,
+  },
+  {
+    title: "An experience worth coming back to",
+    desc: "Every rider gets a branded customer portal — upcoming trips, past receipts, saved addresses. It runs under your name, not ours. The kind of experience that turns a one-time booking into a regular client.",
+    src: Img1,
+    icon: Customer,
+  },
+  {
+    title: "No calls to dispatch a driver",
+    desc: "New assignments, updates, and cancellations go straight to the driver's phone as push notifications. The platform handles the communication — you handle the business.",
+    src: Img1,
+    icon: Notifications,
+  },
+  {
+    title: "Nothing important gets buried",
+    desc: "The moment you log in, the dashboard flags what needs attention — outstanding balances, unassigned drivers, stuck bookings, recent tips. You see what matters first, every time.",
+    src: Img1,
+    icon: Alert,
+  },
+  {
+    title: "Invoices sent without lifting a finger",
+    desc: "Professional PDF invoices generate automatically for every completed booking. Corporate clients download them directly from their portal — nothing manual required on your end.",
+    src: Img1,
+    icon: Invoice,
+  },
+] as const;
+
+export const approachData = [
+  {
+    title: "Your driver is never in the wrong place",
+    desc: "Live routing pulls the exact route, distance, and drive time at booking. Flight tracking adjusts automatically if a flight is delayed — your driver arrives when the passenger does, not an hour before.",
+    src: LiveGoogleMaps,
+    icon: Location,
+  },
+] as const;
 
 export type SectionKey =
   | "home"

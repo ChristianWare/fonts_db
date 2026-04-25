@@ -1,44 +1,44 @@
-"use client";
+'use client';
 
-import styles from "./Features.module.css";
-import LayoutWrapper from "../../shared/LayoutWrapper";
+import LayoutWrapper from '@/components/shared/LayoutWrapper'
+import styles from './Approach.module.css'
 import { useEffect, useRef, useState } from "react";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
-import { featureData } from "@/lib/data";
+import { approachData } from "@/lib/data";
 
-export default function Features() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const viewportCenter = window.innerHeight / 2;
-      let closestIndex = 0;
-      let closestDistance = Infinity;
-
-      cardRefs.current.forEach((el, index) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(cardCenter - viewportCenter);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      setActiveIndex(closestIndex);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const activeFeature = featureData[activeIndex];
-  const ActiveIcon = activeFeature.icon;
-
+export default function Approach() {
+     const [activeIndex, setActiveIndex] = useState(0);
+      const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+    
+      useEffect(() => {
+        const handleScroll = () => {
+          const viewportCenter = window.innerHeight / 2;
+          let closestIndex = 0;
+          let closestDistance = Infinity;
+    
+          cardRefs.current.forEach((el, index) => {
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const cardCenter = rect.top + rect.height / 2;
+            const distance = Math.abs(cardCenter - viewportCenter);
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = index;
+            }
+          });
+    
+          setActiveIndex(closestIndex);
+        };
+    
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+    
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+    
+      const activeFeature = approachData[activeIndex];
+      const ActiveIcon = activeFeature.icon;
+    
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -67,7 +67,7 @@ export default function Features() {
                     </div>
                   </div>
                   <div className={styles.bottomRight}>
-                    {featureData.map((x, index) => {
+                    {approachData.map((x, index) => {
                       const CardIcon = x.icon;
                       return (
                         <div

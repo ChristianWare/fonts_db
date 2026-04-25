@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import AboutHero from "@/components/AboutPage/AboutHero/AboutHero";
+import Approach from "@/components/AboutPage/Approach/Approach";
 import ChrisAboutPage from "@/components/AboutPage/ChrisAboutPage/ChrisAboutPage";
 import AdminDashboardFeatures from "@/components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
 import Chris from "@/components/HomePage/Chris/Chris";
@@ -14,6 +15,7 @@ export default function AboutPage() {
     <div>
       <AboutHero />
       <ChrisAboutPage />
+      <Approach />
       {/* <Chris /> */}
       {/* <AdminDashboardFeatures /> */}
       {/* <Features /> */}
