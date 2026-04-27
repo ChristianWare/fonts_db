@@ -6,6 +6,8 @@ import ChrisAboutPage from "@/components/AboutPage/ChrisAboutPage/ChrisAboutPage
 import ThreeProducts from "@/components/AboutPage/ThreeProducts/ThreeProducts";
 import AdminDashboardFeatures from "@/components/HomePage/AdminDashboardFeatures/AdminDashboardFeatures";
 import Chris from "@/components/HomePage/Chris/Chris";
+import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
+import Faq from "@/components/HomePage/Faq/Faq";
 import Features from "@/components/HomePage/Features/Features";
 import HowItWorks from "@/components/HomePage/HowItWorks/HowItWorks";
 import OtherDashboards from "@/components/HomePage/OtherDashboards/OtherDashboards";
@@ -20,8 +22,9 @@ export default function AboutPage() {
       <Approach />
       <ThreeProducts />
       <AboutPageProject />
-      {/* <Chris /> */}
       <AdminDashboardFeatures />
+      <Faq />
+      <ContactSection />
       {/* <Features /> */}
       {/* <OtherDashboards /> */}
       {/* <ProjectSection /> */}

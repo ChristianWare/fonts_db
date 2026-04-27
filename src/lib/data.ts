@@ -219,7 +219,9 @@ export type QuestionItem = {
   sections: SectionKey[];
 };
 
+
 export const questions: readonly QuestionItem[] = [
+  // HOME PAGE QUESTIONS
   {
     id: 1,
     question: "Do I have to use all three products?",
@@ -289,5 +291,49 @@ export const questions: readonly QuestionItem[] = [
     answer:
       "Run the free audit. It takes 60 seconds, requires no email, and shows you exactly where your website stands right now. Most operators start there and the next steps become obvious from what they find.",
     sections: ["home"],
+  },
+
+  // ABOUT PAGE QUESTIONS
+  {
+    id: 11,
+    question: "Who is behind Fonts & Footers?",
+    answer:
+      "Chris Ware — the developer who built every product on the platform. Not a team, not a sales staff, not a support layer between you and the person doing the work. When you book a call, talk to support, or get a feature shipped, you're working directly with Chris.",
+    sections: ["about"],
+  },
+  {
+    id: 12,
+    question: "Why only black car and limo operators?",
+    answer:
+      "Because going deep beats going wide. Most agencies serve every industry and go an inch deep on each one. We chose to understand black car so completely that every product solves a real problem operators are actually having — not a problem we assumed they had. That focus is the difference you feel from the first product you use.",
+    sections: ["about"],
+  },
+  {
+    id: 13,
+    question: "Where is Fonts & Footers based?",
+    answer:
+      "Phoenix, Arizona. The first deployed client — Nier Transportation — is also based in Phoenix. That said, the platform works for black car operators across the US. The audit tool, lead tool, and website platform all work regardless of your location.",
+    sections: ["about"],
+  },
+  {
+    id: 14,
+    question: "How do I know the products actually work?",
+    answer:
+      "Because they're already running with a real operator. Barry La Nier of Nier Transportation in Phoenix was the first deployment. His site is live, taking direct bookings, and operating without per-booking fees. Every product was refined against his operation before it shipped to anyone else.",
+    sections: ["about"],
+  },
+  {
+    id: 15,
+    question: "What's the long-term vision?",
+    answer:
+      "To build the operating system black car operators actually need — every tool, every integration, every workflow built specifically for how this industry works. The three products available today are the foundation. More is coming, all built on the same principle: deep specialization, refined with real operators.",
+    sections: ["about"],
+  },
+  {
+    id: 16,
+    question: "Are you open to partnerships or referrals?",
+    answer:
+      "Yes. If you work with black car operators in any capacity — software, insurance, fleet management, marketing — and there's a way our products complement what you offer, reach out. The industry is small enough that aligned partnerships create real value for everyone involved.",
+    sections: ["about"],
   },
 ] as const;
