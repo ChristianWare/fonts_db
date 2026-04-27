@@ -1,10 +1,10 @@
 .container {
-  background-color: var(--accent);
+  background-color: var(--white);
 }
 
 .parent {
-  border-top: 1px solid var(--blackii);
-  border-bottom: 1px solid var(--blackii);
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
   margin-top: 10rem;
 }
 

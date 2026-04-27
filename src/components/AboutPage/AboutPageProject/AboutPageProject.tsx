@@ -1,34 +1,23 @@
 import LayoutWrapper from "../../shared/LayoutWrapper";
-import styles from "./ProjectSection.module.css";
+import styles from "./AboutPageProject.module.css";
 import Image from "next/image";
 import NierHomePage from "../../../../public/images/nierHomePage.png";
 import Button from "../../shared/Button/Button";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 
-export default function ProjectSection() {
+export default function AboutPageProject() {
   return (
     <section className={styles.container}>
-      <LayoutWrapper borderDark>
+      <LayoutWrapper>
         <div className={styles.parent}>
           <div className={styles.content}>
             <div className={styles.left}>
-              {/* <div className={styles.logoContainer}>
-                <Image
-                  src={Nier}
-                  alt='Nier Transportation Logo'
-                  title='Nier Transportation Logo'
-                  className={styles.img}
-                />
-                <span className={styles.logoText}>Nier Transportation</span>
-              </div> */}
               <SectionIntro
-                text='Real results'
+                text='Proof'
                 background='bgBlack'
                 color='colorWhite'
               />
-              <h2 className={styles.heading}>
-                Built, deployed, and proven with a real operator.
-              </h2>
+              <h2 className={styles.heading}>Proven with a real operator</h2>
               <div className={styles.imgContainerii}>
                 <Image
                   src={NierHomePage}
@@ -39,21 +28,20 @@ export default function ProjectSection() {
                 />
               </div>
               <p>
-                Nier Transportation has been running black car and private
-                transportation services in Phoenix since 2004. When they came to
-                Fonts & Footers, they were managing bookings through third-party
-                platforms; paying per-booking fees, operating under someone
-                else&apos;s brand, and losing ownership of their customer
-                relationships.
+                Nier Transportation was the first black car company to run on
+                the Fonts & Footers platform. Barry La Nier runs professional
+                black car and executive transportation service in the Phoenix
+                metro. His platform handles direct bookings, corporate accounts,
+                driver dispatch, and payment processing — without per-booking
+                fees to any third-party platform.
                 <br />
                 <br />
                 <span className={styles.accent}>
-                  We built them a fully custom direct booking platform from the
-                  ground up; branded entirely to Nier, on their own domain.
-                  Complete with a multi-step booking engine, admin dashboard,
-                  driver portal, customer portal, corporate account management,
-                  live flight tracking, and Stripe payment processing. One
-                  system. Every role covered. Zero platform fees.
+                  Every product Fonts & Footers builds is tested against his
+                  operation before it ever ships to another client. That&lsquo;s
+                  how we make sure what we&lsquo;re building actually works —
+                  not in a demo, but in the field, every day, with real drivers
+                  and real bookings.
                 </span>
               </p>
               <div className={styles.statBox}>
