@@ -5,13 +5,13 @@ import LayoutWrapper from "../../shared/LayoutWrapper";
 import Arrow from "../../shared/icons/Arrow/Arrow";
 // import Image from "next/image";
 import { useEffect, useState } from "react";
-import { DashboardFeatures } from "@/lib/data";
+import { FocusFeatures } from "@/lib/data";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 
-export default function AdminDashboardFeatures() {
+export default function AdminFocusFeatures() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNarrow, setIsNarrow] = useState(false);
-  const total = DashboardFeatures.length;
+  const total = FocusFeatures.length;
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,9 +24,9 @@ export default function AdminDashboardFeatures() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const orderedFeatures = DashboardFeatures.map((_, idx) => {
+  const orderedFeatures = FocusFeatures.map((_, idx) => {
     const featureIndex = (currentIndex + idx) % total;
-    return DashboardFeatures[featureIndex];
+    return FocusFeatures[featureIndex];
   });
 
   const handleNext = () => {
@@ -44,25 +44,25 @@ export default function AdminDashboardFeatures() {
           <div className={styles.content}>
             <div className={styles.top}>
               <SectionIntro
-                text='Your command center'
+                text='The focus'
                 color='colorWhite'
                 background='bgBlack'
               />
               <h2 className={styles.heading}>
-                Stop running your business <br /> from five different tabs
+                Why we only build <br /> for black car operators
               </h2>
               <p className={styles.copy}>
-                Every booking, driver, payment, and customer lives in one place,
-                visible the moment you log in. No spreadsheets, no separate
-                apps, no information falling through because two systems
-                don&apos;t talk to each other.
+                Black car operators run a specific kind of business with
+                specific kinds of problems. Generic platforms can&apos;t solve
+                them because they were never designed to. We chose depth over
+                reach — and that focus shows up in every product we ship.
               </p>
               <div className={styles.arrowsContainer}>
                 <button
                   type='button'
                   className={styles.arrowButton}
                   onClick={handlePrev}
-                  aria-label='Previous feature'
+                  aria-label='Previous reason'
                 >
                   <Arrow className={styles.arrowLeft} />
                 </button>
@@ -70,7 +70,7 @@ export default function AdminDashboardFeatures() {
                   type='button'
                   className={styles.arrowButton}
                   onClick={handleNext}
-                  aria-label='Next feature'
+                  aria-label='Next reason'
                 >
                   <Arrow className={styles.arrowRight} />
                 </button>
@@ -79,7 +79,7 @@ export default function AdminDashboardFeatures() {
             <div className={styles.bottom}>
               <div className={styles.bottomLeft}>
                 <div className={styles.featureList}>
-                  {DashboardFeatures.map((feature, idx) => (
+                  {FocusFeatures.map((feature, idx) => (
                     <button
                       key={feature.id}
                       type='button'
@@ -147,7 +147,7 @@ export default function AdminDashboardFeatures() {
           </div>
           <div className={styles.bottomMsg}>
             <h2 className={styles.bottomMsgHeading}>
-              Your entire operation, <br /> one powerful dashboard
+              Built for black car. <br /> Only black car.
             </h2>
           </div>
         </div>

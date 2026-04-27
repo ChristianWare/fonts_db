@@ -69,56 +69,50 @@ export const SolutionData = [
   },
 ] as const;
 
-// export const DashboardFeatures = [
-//   {
-//     id: 1,
-//     title: "Every booking, fully visible",
-//     desc: "Route, vehicle, passenger info, flight data, pricing, and payment status — all in one place the moment a booking comes in. Approve, edit, assign, and update without touching another app.",
-//     src: Img6,
-//   },
-//   {
-//     id: 2,
-//     title: "Price and confirm in one move",
-//     desc: "New bookings land as pending. Review the details, set the final price — calculated automatically from distance, vehicle, and your rates — then confirm to the rider. All from one screen, no back and forth.",
-//     src: Img7,
-//   },
-//   {
-//     id: 3,
-//     title: "No more chasing payments",
-//     desc: "Collect deposits at booking, send balance links when the ride is done, track outstanding balances, issue refunds — everything in one place. You always know exactly where every dollar stands.",
-//     src: Img8,
-//   },
-//   {
-//     id: 4,
-//     title: "Assign a driver in seconds",
-//     desc: "Pick from your available roster, and the driver gets an automatic notification with full trip details. The dashboard flags conflicts — you'll never accidentally double-book a driver.",
-//     src: Img9,
-//   },
-//   {
-//     id: 5,
-//     title: "The important stuff surfaces itself",
-//     desc: "Outstanding balances, upcoming trips without a driver, bookings stuck in review, recent tips — all flagged automatically on your home screen. You see what needs attention first, every time you log in.",
-//     src: Img10,
-//   },
-//   {
-//     id: 6,
-//     title: "Every client relationship in one place",
-//     desc: "A full directory of everyone who has ever booked with you — contact info, booking history, total spend, account type. Individual clients, corporate accounts, and guest bookers all organized and searchable.",
-//     src: Img11,
-//   },
-//   {
-//     id: 7,
-//     title: "Know exactly how your business is performing",
-//     desc: "Revenue by date range, bookings by service type, driver performance, top clients by spend. Export for accounting or use the built-in charts to spot what's working and what isn't.",
-//     src: Img12,
-//   },
-//   {
-//     id: 8,
-//     title: "Change anything. No developer needed.",
-//     desc: "Update your logo, service area, pricing, email details, or notification preferences from a single settings panel — whenever you need to. Your platform stays current without a support ticket.",
-//     src: Img13,
-//   },
-// ] as const;
+export const FocusFeatures = [
+  {
+    id: 1,
+    title: "Black car buyers are a specific kind of buyer",
+    desc: "A law firm booking executive transportation isn't the same buyer as a family ordering an Uber. The questions they ask, the trust signals they need, and the way they make decisions are completely different. Generic tools treat them the same anyway.",
+    src: Img1,
+  },
+  {
+    id: 2,
+    title: "Wedding venues aren't booking ride-shares",
+    desc: "A wedding venue selecting a preferred transportation vendor cares about reliability, professionalism, and consistency — not pricing per mile. The platforms that try to serve every industry can't speak that language.",
+    src: Img1,
+  },
+  {
+    id: 3,
+    title: "Funeral homes need discretion, not transactions",
+    desc: "Arranging transportation for a grieving family isn't a booking — it's a relationship that requires sensitivity, professionalism, and someone who understands the moment. That's not something generic software can deliver.",
+    src: Img1,
+  },
+  {
+    id: 4,
+    title: "Generic platforms serve everyone equally poorly",
+    desc: "The same tools point at airport shuttles, pet grooming services, and roofing companies. When your software is built to do everything for everyone, it does nothing exceptionally well for anyone.",
+    src: Img1,
+  },
+  {
+    id: 5,
+    title: "Specialization shows up in the details",
+    desc: "Flight tracking, corporate account billing, driver dispatch, airport meet-and-greet logistics — these aren't features you bolt onto a generic platform. They're features you only build correctly when this is the only industry you serve.",
+    src: Img1,
+  },
+  {
+    id: 6,
+    title: "We chose depth over reach",
+    desc: "Most agencies serve every vertical and go an inch deep on each one. We decided early on to go deep instead of wide — to understand black car so completely that every product we ship solves a real problem, not an assumed one.",
+    src: Img1,
+  },
+  {
+    id: 7,
+    title: "That focus is why this works",
+    desc: "Every detail in every product was built specifically for black car operators. The audit knows what good looks like for your industry. The lead tool knows where your accounts come from. The website platform knows how your business actually runs.",
+    src: Img1,
+  },
+] as const;
 
 export const featureData = [
   {

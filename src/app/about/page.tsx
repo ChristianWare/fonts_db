@@ -21,7 +21,7 @@ export default function AboutPage() {
       <ThreeProducts />
       <AboutPageProject />
       {/* <Chris /> */}
-      {/* <AdminDashboardFeatures /> */}
+      <AdminDashboardFeatures />
       {/* <Features /> */}
       {/* <OtherDashboards /> */}
       {/* <ProjectSection /> */}

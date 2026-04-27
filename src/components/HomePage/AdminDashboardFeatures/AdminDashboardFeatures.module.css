@@ -287,7 +287,7 @@
   }
 }
 
-@media screen and (max-width: 568px) {
+@media screen and (max-width: 768px) {
   .content {
     margin-top: 10rem;
   }
@@ -307,16 +307,35 @@
     height: 450px;
   }
 
+  .projectCard {
+    padding: 0rem;
+    height: 100%;
+    width: 100%;
+  }
+
   .projectInfo {
     flex-direction: column;
   }
 
   .projectText {
     max-width: 100%;
+    
   }
 
   .projectTitle {
-    font-size: 40px;
+    font-size: 30px;
     letter-spacing: -0.03em;
+    width: 100%;
   }
 }
+
+
+@media screen and (max-width: 480px) {
+  .projectText {
+    padding: 0rem;
+  }
+  
+  .projectTitle  {
+    font-size: 7vw;
+  }
+} 

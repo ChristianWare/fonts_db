@@ -59,7 +59,7 @@ export default function AboutPageProject() {
                   href='https://www.niertransportation.com/'
                   target='_blank'
                   text='see live site'
-                  btnType='white'
+                  btnType='accent'
                   arrow
                 />
               </div>
