@@ -6,16 +6,16 @@ export default function Lock(props: SVGProps<SVGSVGElement>) {
       xmlns='http://www.w3.org/2000/svg'
       width='24'
       height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth={2}
-      strokeLinecap='round'
-      strokeLinejoin='round'
+      viewBox='0 0 16 16'
+      fill='currentColor'
+      stroke='none'
       {...props}
     >
-      <rect width='18' height='11' x='3' y='11' rx='2' ry='2' />
-      <path d='M7 11V7a5 5 0 0 1 10 0v4' />
+      <path
+        fillRule='evenodd'
+        clipRule='evenodd'
+        d='M4 6V4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4V6H14V16H2V6H4ZM6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4V6H6V4ZM7 13V9H9V13H7Z'
+      />
     </svg>
   );
 }
