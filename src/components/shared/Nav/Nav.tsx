@@ -50,12 +50,11 @@ export default function Nav({
   };
 
   const items = [
-    { text: "Audit", href: "/audit" },
     { text: "About", href: "/about" },
-    { text: "Solutions", href: "/solutions" },
-    { text: "Pricing", href: "/pricing" },
+    { text: "Free Audit", href: "/audit" },
+    { text: "Leads", href: "/leads" },
+    { text: "Websites", href: "/websites" },
     { text: "Work", href: "/work" },
-    { text: "Contact", href: "/contact" },
     // { text: "My Account", href: "/dashboard" },
   ];
 
