@@ -1,11 +1,11 @@
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./AuditHero.module.css";
 // import Image from "next/image";
-import BgImage from "../../../public/images/benz.png";
+import BgImage from "../../../../public/images/benz.png";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Image from "next/image";
-import Button from "../shared/Button/Button";
+import Button from "@/components/shared/Button/Button";
 // import Button from "@/components/shared/Button/Button";
 
 export default function AuditHero() {

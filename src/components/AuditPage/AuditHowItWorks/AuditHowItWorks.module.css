@@ -1,0 +1,148 @@
+.container {
+  background-color: var(--white);
+}
+
+.content {
+  padding: 10rem 3rem;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.copy {
+  width: 40%;
+  color: var(--text);
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: normal;
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  margin-top: 7rem;
+}
+
+.card {
+  border: 1px solid var(--lightGray);
+  background-color: var(--lightGrayiii);
+  padding: 3rem;
+  padding-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6rem;
+  position: relative;
+}
+
+.card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: 0.03;
+  pointer-events: none;
+  background: url("/images/noise.gif");
+}
+
+.cardTop,
+.cardMiddle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.id {
+  display: block;
+}
+
+.week {
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.desc {
+  font-size: 1.6rem;
+}
+
+.imgContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.img {
+  object-fit: cover;
+  border-bottom: none;
+}
+
+@media screen and (max-width: 1268px) {
+  .bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    gap: 3rem;
+  }
+
+  .imgContainer {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1068px) {
+  .content {
+    padding: 7rem 2rem;
+  }
+
+  .copy {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 668px) {
+  .content {
+    padding: 7rem 1rem;
+  }
+
+  .copy {
+    width: 100%;
+  }
+  .bottom {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .card {
+    gap: 3rem;
+    align-self: flex-start;
+    height: 100%;
+    position: sticky;
+    top: 90px;
+  }
+
+  .desc {
+    font-size: 1.6rem;
+  }
+
+  .imgContainer {
+    height: 250px;
+  }
+
+  .img {
+    padding: 0rem;
+  }
+}

@@ -6,7 +6,8 @@ import styles from "./audit.module.css";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Link from "next/link";
-import AuditHero from "@/components/AuditHero/AuditHero";
+import AuditHero from "@/components/AuditPage/AuditHero/AuditHero";
+import AuditHowItWorks from "@/components/AuditPage/AuditHowItWorks/AuditHowItWorks";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -168,6 +169,7 @@ function EntryView({
   return (
     <main className={styles.container}>
       <AuditHero />
+      <AuditHowItWorks />
       <LayoutWrapper borderDark>
         <section className={styles.content}>
           <div className={styles.dot1} />
