@@ -6,6 +6,7 @@ import styles from "./audit.module.css";
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Link from "next/link";
+import AuditHero from "@/components/AuditHero/AuditHero";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -165,9 +166,10 @@ function EntryView({
   }
 
   return (
-    <section className={styles.container}>
+    <main className={styles.container}>
+      <AuditHero />
       <LayoutWrapper borderDark>
-        <div className={styles.content}>
+        <section className={styles.content}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
           <div className={styles.dot3} />
@@ -300,9 +302,9 @@ function EntryView({
               </p>
             </form>
           </div>
-        </div>
+        </section>
       </LayoutWrapper>
-    </section>
+    </main>
   );
 }
 
