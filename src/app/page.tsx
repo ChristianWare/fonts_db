@@ -6,6 +6,7 @@ import Solution from "../components/HomePage/Solution/Solution";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 import Chris from "@/components/HomePage/Chris/Chris";
 import Solutionii from "@/components/HomePage/Solutionii/Solutionii";
+import ParallaxArea from "@/components/HomePage/ParallaxArea/ParallaxArea";
 
 export default function HomePage() {
   return (
@@ -16,6 +17,7 @@ export default function HomePage() {
       <Solution />
       <ProjectSection />
       <Chris />
+      <ParallaxArea />
       <Faq />
       <ContactSection />
     </main>

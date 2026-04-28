@@ -37,11 +37,11 @@
 
 .heading {
   color: white;
-  font-size: clamp(3rem, 10vw, 8rem);
-  font-size: 10vw;
+  /* font-size: clamp(3rem, 10vw, 8rem);
+  font-size: 5vw;
   line-height: 1;
   letter-spacing: -3px;
-  font-weight: 500;
+  font-weight: 500; */
 }
 
 .imgContainer {
