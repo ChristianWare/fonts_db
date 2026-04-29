@@ -10,6 +10,7 @@ import AuditHero from "@/components/AuditPage/AuditHero/AuditHero";
 import AuditHowItWorks from "@/components/AuditPage/AuditHowItWorks/AuditHowItWorks";
 import AuditParallaxResults from "@/components/AuditPage/AuditParallaxResults/AuditParallaxResults";
 import AuditExpectations from "@/components/AuditPage/AuditExpectations/AuditExpectations";
+import Faq from "@/components/HomePage/Faq/Faq";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -174,6 +175,7 @@ function EntryView({
       <AuditHowItWorks />
       <AuditParallaxResults />
       <AuditExpectations />
+        <Faq />
       <LayoutWrapper borderDark>
         <section className={styles.content}>
           <div className={styles.dot1} />

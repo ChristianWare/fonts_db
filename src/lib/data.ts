@@ -208,6 +208,7 @@ export type SectionKey =
   | "home"
   | "pricing"
   | "about"
+  | "audit"
   | "work"
   | "blog"
   | "contact";
@@ -218,7 +219,6 @@ export type QuestionItem = {
   answer: string;
   sections: SectionKey[];
 };
-
 
 export const questions: readonly QuestionItem[] = [
   // HOME PAGE QUESTIONS
@@ -335,5 +335,62 @@ export const questions: readonly QuestionItem[] = [
     answer:
       "Yes. If you work with black car operators in any capacity — software, insurance, fleet management, marketing — and there's a way our products complement what you offer, reach out. The industry is small enough that aligned partnerships create real value for everyone involved.",
     sections: ["about"],
+  },
+  // AUDIT PAGE QUESTIONS
+  {
+    id: 17,
+    question: "Is it really free?",
+    answer:
+      "Yes. No email, no account, no credit card. You enter your URL and get your results in under 60 seconds. There's nothing to opt out of because there's no list to be on.",
+    sections: ["audit"],
+  },
+  {
+    id: 18,
+    question: "How accurate is the audit?",
+    answer:
+      "The audit uses the same technical signals Google uses to rank websites — page speed, mobile usability, structured data, and local SEO factors. The competitor comparison pulls live data from your specific market. Results are accurate and specific to your site.",
+    sections: ["audit"],
+  },
+  {
+    id: 19,
+    question: "What if my score is low?",
+    answer:
+      "Most operators score lower than they expect. A low score is useful information — it shows you specifically what to fix and in what order. The audit results page includes a recommended next step based on your score and what was found.",
+    sections: ["audit"],
+  },
+  {
+    id: 20,
+    question: "Can I run it on a competitor's site?",
+    answer:
+      "Yes. Enter any URL and the tool will analyze it the same way. Some operators run the audit on every competitor in their market to understand the competitive landscape before deciding what to fix on their own site.",
+    sections: ["audit"],
+  },
+  {
+    id: 21,
+    question: "Will I get spam emails after running it?",
+    answer:
+      "No. The tool doesn't collect your email address. There's no follow-up sequence, no salesperson calling you, no list to be added to. The results are yours to do whatever you want with.",
+    sections: ["audit"],
+  },
+  {
+    id: 22,
+    question: "Can I run the audit more than once?",
+    answer:
+      "Yes. Run it on your site today, fix what was flagged, and run it again next month. The score improves as the issues get resolved. Many operators use it as an ongoing benchmark.",
+    sections: ["audit"],
+  },
+  {
+    id: 23,
+    question: "What if I don't have a website yet?",
+    answer:
+      "The audit tool requires a live URL. If you don't have a website yet, the next step isn't the audit — it's a discovery call to talk about the website product directly.",
+    sections: ["audit"],
+  },
+  {
+    id: 24,
+    question: "Is the audit specific to black car operators?",
+    answer:
+      "Yes. Most free website audit tools are built for any business. This one was built specifically for black car operators — it knows what corporate clients look for, what wedding venues need to see, and what trust signals matter most in this specific industry.",
+    sections: ["audit"],
   },
 ] as const;

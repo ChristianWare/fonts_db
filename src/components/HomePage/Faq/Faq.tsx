@@ -17,6 +17,8 @@ function sectionFromPath(pathname: string): SectionKey {
   if (pathname.startsWith("/work")) return "work";
   if (pathname.startsWith("/blog")) return "blog";
   if (pathname.startsWith("/contact")) return "contact";
+  if (pathname.startsWith("/audit")) return "audit";
+  if (pathname.startsWith("/solutions/audit")) return "audit";
   return "home";
 }
 
@@ -39,6 +41,11 @@ const SECTION_META: Record<
     headingSpan: "Who we are",
     headingRest: "and how we work.",
   },
+  audit: {
+    title: "Audit FAQ",
+    headingSpan: "What you'll know",
+    headingRest: "before you run it.",
+  },
   work: {
     title: "Project & Process FAQ",
     headingSpan: "Process clarity",
@@ -58,6 +65,8 @@ const SECTION_META: Record<
 
 const SECTION_ORDER: SectionKey[] = [
   "home",
+  "audit",
+
   "pricing",
   "about",
   "work",
