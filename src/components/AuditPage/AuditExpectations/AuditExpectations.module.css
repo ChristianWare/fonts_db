@@ -245,6 +245,13 @@
   padding: 0.5rem 1rem;
 }
 
+.btnContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 3rem; */
+}
+
 @media screen and (max-width: 1468px) {
   .content {
     padding: 10rem 2rem;
@@ -355,5 +362,12 @@
   .leftList,
   .rightList {
     padding: 2rem;
+  }
+
+  .btnContainer {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0rem 2rem;
   }
 }

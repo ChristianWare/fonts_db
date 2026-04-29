@@ -139,7 +139,7 @@ export default function AuditPage() {
       <AuditHero onOpenModal={handleOpenModal} />
       <AuditHowItWorks onOpenModal={handleOpenModal} />
       <AuditParallaxResults onOpenModal={handleOpenModal} />
-      <AuditExpectations />
+      <AuditExpectations onOpenModal={handleOpenModal} />
       <Faq />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

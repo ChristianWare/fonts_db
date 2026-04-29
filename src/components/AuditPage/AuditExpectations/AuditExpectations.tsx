@@ -3,6 +3,7 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import XIcon from "@/components/shared/icons/XIcon/XIcon";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Check from "@/components/shared/Check/Check";
+import Button from "@/components/shared/Button/Button";
 
 const situationOne = [
   {
@@ -60,7 +61,11 @@ const situationTwo = [
   },
 ];
 
-export default function AuditExpectations() {
+interface Props {
+  onOpenModal: () => void;
+}
+
+export default function AuditExpectations({ onOpenModal }: Props) {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -154,6 +159,14 @@ export default function AuditExpectations() {
               </p>
             </div>
           </div>
+        </div>
+        <div className={styles.btnContainer}>
+          <Button
+            onClick={onOpenModal}
+            text='Try it for free'
+            btnType='accent'
+            arrow
+          />
         </div>
       </LayoutWrapper>
     </section>

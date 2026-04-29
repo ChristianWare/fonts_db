@@ -106,10 +106,11 @@
 }
 
 .copy {
-  font-family: var(--GeistMono);
+  /* font-family: var(--GeistMono); */
   letter-spacing: normal;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   color: var(--gray);
+  width: 90%;
 }
 
 .b2Right {
@@ -147,7 +148,8 @@
   .copy,
   .span {
     font-size: 1.9rem;
-    letter-spacing: -0.6px;
+    width: 100%;
+    /* letter-spacing: -0.6px; */
   }
 
   .b2 {

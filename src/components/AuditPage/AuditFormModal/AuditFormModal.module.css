@@ -28,7 +28,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: var(--text);
   line-height: 1.4;
 }
@@ -42,8 +42,7 @@
   /* padding: 2rem; */
   /* margin: 2rem auto; */
 
-    border: 1px solid var(--blackii);
-
+  border: 1px solid var(--blackii);
 }
 
 .labelInputBox {
@@ -85,7 +84,7 @@
 }
 
 .labelInputBox span {
-  font-size: 1.4rem;
+  font-size: 14px;
   color: var(--blue);
   width: 100%;
   padding: 1rem 2rem;
@@ -95,7 +94,7 @@
   color: var(--black);
   text-transform: uppercase;
   opacity: 0.5;
-  font-size: 1.4rem;
+  font-size: 14px;
 }
 
 .error {
@@ -110,7 +109,7 @@
 .errorMsg {
   color: red;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 14px;
   letter-spacing: 0.3px;
   padding: 1rem 2rem;
 }
@@ -134,7 +133,7 @@
 
 .small {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);
