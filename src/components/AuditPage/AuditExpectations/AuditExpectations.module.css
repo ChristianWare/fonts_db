@@ -45,7 +45,7 @@
   content: "";
   position: absolute;
   top: 50%;
-  transform: translateY(-25%);
+  transform: translateY(-50%);
   right: -6rem;
   width: 99%;
   height: 50%;
@@ -58,7 +58,7 @@
   content: "";
   position: absolute;
   top: 50%;
-  transform: translateY(-25%);
+  transform: translateY(-50%);
   left: -6rem;
   width: 99%;
   height: 50%;
@@ -271,7 +271,7 @@
   .content {
     grid-template-columns: repeat(1, 1fr);
     padding: 7rem 2rem;
-    gap: 3rem;
+    gap: 5rem;
   }
 
   .topContent {
@@ -291,22 +291,22 @@
     padding: 3rem;
   }
 
-  .left::after,
+ .left::after,
   .right::after {
     top: auto;
-    bottom: -1.5rem;
+    bottom: -5rem;
     right: auto;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 3rem;
+    height: 5rem;
     border: none;
     border-left: 2px dashed var(--lightGray);
     background-color: transparent;
   }
 
   .right::after {
-    top: -1.5rem;
+    top: -5rem;
     bottom: auto;
   }
 
