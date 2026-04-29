@@ -1,0 +1,157 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.formHeading {
+  padding: 4rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid var(--blackii);
+}
+
+.heading {
+  font-family: var(--RobotoFlexii);
+  font-size: 3.2rem;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  color: var(--black);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-variation-settings: "wght" 700;
+  -webkit-font-smoothing: antialiased;
+}
+
+.subheading {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.everythingElse {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  /* gap: 2rem; */
+  /* padding: 2rem; */
+  /* margin: 2rem auto; */
+
+    border: 1px solid var(--blackii);
+
+}
+
+.labelInputBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.labelInputBox label {
+  padding: 1.6rem 2rem;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  color: var(--black);
+  width: 100%;
+  /* border-top: 1px solid var(--blackii); */
+  border-bottom: 1px solid var(--blackii);
+}
+
+.labelInputBox input {
+  height: 50px;
+  width: 100%;
+  border: none;
+  background-color: var(--accent300);
+  color: var(--black);
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  /* font-family: var(--GeistMono); */
+  font-size: 1.6rem;
+  font-weight: bold;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--blackii);
+}
+
+.labelInputBox input:focus {
+  outline: none;
+  background-color: var(--white);
+}
+
+.labelInputBox span {
+  font-size: 1.4rem;
+  color: var(--blue);
+  width: 100%;
+  padding: 1rem 2rem;
+}
+
+.labelInputBox ::placeholder {
+  color: var(--black);
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-size: 1.4rem;
+}
+
+.error {
+  font-family: var(--Roboto);
+  color: red !important;
+  padding: 1rem 2rem;
+  width: 100%;
+  background-color: rgba(255, 0, 0, 0.05);
+  border-bottom: 1px solid var(--blackii);
+}
+
+.errorMsg {
+  color: red;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.3px;
+  padding: 1rem 2rem;
+}
+
+.required {
+  color: var(--accent);
+}
+
+.btnBtnContainer {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 100%;
+}
+
+.smallParent {
+  width: 100%;
+  border-top: 1px solid var(--blackii);
+  padding: 1.6rem 2rem;
+}
+
+.small {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text);
+  text-align: center;
+  display: block;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 568px) {
+  .heading {
+    font-size: 2.6rem;
+  }
+  .formHeading {
+    padding: 3rem 2rem 1.5rem;
+  }
+  .labelInputBox input {
+    height: auto;
+    padding: 1.4rem 2rem;
+  }
+}

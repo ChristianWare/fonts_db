@@ -90,6 +90,13 @@
   border-bottom: none;
 }
 
+.btnContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  height: fit-content;
+  margin-top: auto;
+}
+
 @media screen and (max-width: 1268px) {
   .bottom {
     grid-template-columns: repeat(2, 1fr);

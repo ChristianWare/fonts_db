@@ -5,6 +5,7 @@ import LayoutWrapper from "../../shared/LayoutWrapper";
 import Img1 from "../../../../public/images/range.jpg";
 import ParallaxImageLarge from "@/components/HomePage/ParallaxImageLarge/ParallaxImageLarge";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
+import Button from "@/components/shared/Button/Button";
 
 const data = [
   {
@@ -13,13 +14,11 @@ const data = [
   },
   {
     id: 2,
-    title:
-      "YCategory scores across all six areas",
+    title: "YCategory scores across all six areas",
   },
   {
     id: 3,
-    title:
-      "A prioritized list of specific issues with severity flagged",
+    title: "A prioritized list of specific issues with severity flagged",
   },
   {
     id: 4,
@@ -28,12 +27,15 @@ const data = [
   },
   {
     id: 5,
-    title:
-      "A recommended next step based on what the audit finds",
+    title: "A recommended next step based on what the audit finds",
   },
 ];
 
-export default function AuditParallaxResults() {
+interface Props {
+  onOpenModal: () => void;
+}
+
+export default function AuditParallaxResults({ onOpenModal }: Props) {
   return (
     <section className={styles.container}>
       <ParallaxImageLarge src={Img1} alt='Parallax background' />
@@ -41,7 +43,6 @@ export default function AuditParallaxResults() {
       <LayoutWrapper>
         <div className={styles.content}>
           <div className={styles.contentChildren}>
-            {/* <h2 className={styles.heading}>WHAT YOU GET:</h2> */}
             <h2 className={styles.heading}>
               A score. <br /> a breakdown.
               <br />a clear list of what to fix.
@@ -50,16 +51,13 @@ export default function AuditParallaxResults() {
               <div className={styles.left}>
                 <p className={styles.copy}>
                   The audit returns a score out of 100 with a full breakdown by
-                  category. Each issue is flagged specifically — not &ldquo;your SEO
-                  needs work&rdquo; but &ldquo;your page title tag is missing the city name,
-                  which is costing you local search visibility for your
-                  market.&rdquo;
+                  category. Each issue is flagged specifically — not &ldquo;your
+                  SEO needs work&rdquo; but &ldquo;your page title tag is
+                  missing the city name, which is costing you local search
+                  visibility for your market.&rdquo;
                 </p>
               </div>
               <div className={styles.right}>
-                {/* <div className={styles.imgContainer}>
-                  <Image src={Img2} alt='' fill className={styles.img} />
-                </div> */}
                 <div className={styles.sectionIntroContainer}>
                   <SectionIntro text='You get' />
                 </div>
@@ -70,6 +68,14 @@ export default function AuditParallaxResults() {
                     </li>
                   ))}
                 </ul>
+                <div className={styles.btnContainer}>
+                  <Button
+                    onClick={onOpenModal}
+                    text='Try it for free'
+                    btnType='accent'
+                    arrow
+                  />
+                </div>
               </div>
             </div>
           </div>

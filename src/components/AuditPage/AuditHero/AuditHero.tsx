@@ -1,14 +1,18 @@
+"use client";
+
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./AuditHero.module.css";
-// import Image from "next/image";
 import BgImage from "../../../../public/images/benz.png";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Image from "next/image";
 import Button from "@/components/shared/Button/Button";
-// import Button from "@/components/shared/Button/Button";
 
-export default function AuditHero() {
+interface Props {
+  onOpenModal: () => void;
+}
+
+export default function AuditHero({ onOpenModal }: Props) {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -35,11 +39,12 @@ export default function AuditHero() {
                     The Fonts & Footers audit tool analyzes your website across
                     the factors that determine whether you get found, whether
                     visitors trust you, and whether your site actually converts.
-                    Free, no email, no signup. Just enter your URL.
+                    Free, instant results, with the full report sent straight to
+                    your inbox.
                   </p>
                   <div className={styles.btnContainer}>
                     <Button
-                      href='/audit'
+                      onClick={onOpenModal}
                       text='Try it for free'
                       btnType='accent'
                       arrow

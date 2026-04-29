@@ -220,7 +220,6 @@ export type QuestionItem = {
   sections: SectionKey[];
 };
 
-
 export const questions: readonly QuestionItem[] = [
   // HOME PAGE QUESTIONS
   {
@@ -234,7 +233,7 @@ export const questions: readonly QuestionItem[] = [
     id: 2,
     question: "What does the free audit actually show me?",
     answer:
-      "It analyzes your website across the key factors that determine whether you get found on Google, whether visitors trust you enough to book, and whether your site is technically healthy. You get a score and a specific breakdown of what to fix. No email required, no signup, under 60 seconds.",
+      "It analyzes your website across the key factors that determine whether you get found on Google, whether visitors trust you enough to book, and whether your site is technically healthy. You see your score immediately on-screen, and your full detailed report — with prioritized fixes and competitor comparison — is delivered to your inbox in seconds. Free, no payment required, under 60 seconds.",
     sections: ["home"],
   },
   {

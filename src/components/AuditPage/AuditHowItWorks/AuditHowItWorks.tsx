@@ -3,6 +3,7 @@
 import styles from "./AuditHowItWorks.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
+import Button from "@/components/shared/Button/Button";
 
 const process = [
   {
@@ -49,7 +50,11 @@ const process = [
   },
 ];
 
-export default function AuditHowItWorks() {
+interface Props {
+  onOpenModal: () => void;
+}
+
+export default function AuditHowItWorks({ onOpenModal }: Props) {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -78,6 +83,14 @@ export default function AuditHowItWorks() {
                 )}
               </>
             ))}
+            <div className={styles.btnContainer}>
+              <Button
+                onClick={onOpenModal}
+                text='Try it for free'
+                btnType='accent'
+                arrow
+              />
+            </div>
           </div>
         </div>
       </LayoutWrapper>
