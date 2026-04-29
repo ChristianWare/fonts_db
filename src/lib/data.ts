@@ -220,6 +220,7 @@ export type QuestionItem = {
   sections: SectionKey[];
 };
 
+
 export const questions: readonly QuestionItem[] = [
   // HOME PAGE QUESTIONS
   {
@@ -341,53 +342,60 @@ export const questions: readonly QuestionItem[] = [
     id: 17,
     question: "Is it really free?",
     answer:
-      "Yes. No email, no account, no credit card. You enter your URL and get your results in under 60 seconds. There's nothing to opt out of because there's no list to be on.",
+      "Yes. No payment, no credit card, no obligation. You enter your URL and email, and your full audit results are delivered to your inbox within seconds.",
     sections: ["audit"],
   },
   {
     id: 18,
+    question: "Why do I need to enter my email?",
+    answer:
+      "You see your overall score and a high-level breakdown immediately on screen. The full report — with detailed issues, prioritized fixes, and your competitor comparison — gets delivered to your inbox so you can reference it later, share it with your team, or come back to it as you make changes. Your email also lets us send you occasional updates about the platform if you want them.",
+    sections: ["audit"],
+  },
+  {
+    id: 19,
     question: "How accurate is the audit?",
     answer:
       "The audit uses the same technical signals Google uses to rank websites — page speed, mobile usability, structured data, and local SEO factors. The competitor comparison pulls live data from your specific market. Results are accurate and specific to your site.",
     sections: ["audit"],
   },
   {
-    id: 19,
+    id: 20,
     question: "What if my score is low?",
     answer:
-      "Most operators score lower than they expect. A low score is useful information — it shows you specifically what to fix and in what order. The audit results page includes a recommended next step based on your score and what was found.",
+      "Most operators score lower than they expect. A low score is useful information — it shows you specifically what to fix and in what order. The full report includes a recommended next step based on your score and what was found.",
     sections: ["audit"],
   },
   {
-    id: 20,
+    id: 21,
     question: "Can I run it on a competitor's site?",
     answer:
       "Yes. Enter any URL and the tool will analyze it the same way. Some operators run the audit on every competitor in their market to understand the competitive landscape before deciding what to fix on their own site.",
     sections: ["audit"],
   },
   {
-    id: 21,
-    question: "Will I get spam emails after running it?",
+    id: 22,
+    question: "Will I get spammed with emails?",
     answer:
-      "No. The tool doesn't collect your email address. There's no follow-up sequence, no salesperson calling you, no list to be added to. The results are yours to do whatever you want with.",
+      "No. You'll receive your audit report and occasional valuable updates — new product launches, industry insights, or platform improvements that might help your business. No daily emails, no aggressive sales sequences. You can unsubscribe at any time with one click.",
     sections: ["audit"],
   },
   {
-    id: 22,
+    id: 23,
     question: "Can I run the audit more than once?",
     answer:
       "Yes. Run it on your site today, fix what was flagged, and run it again next month. The score improves as the issues get resolved. Many operators use it as an ongoing benchmark.",
     sections: ["audit"],
   },
   {
-    id: 23,
+    id: 24,
     question: "What if I don't have a website yet?",
     answer:
       "The audit tool requires a live URL. If you don't have a website yet, the next step isn't the audit — it's a discovery call to talk about the website product directly.",
     sections: ["audit"],
   },
   {
-    id: 24,
+    id: 25,
     question: "Is the audit specific to black car operators?",
     answer:
       "Yes. Most free website audit tools are built for any business. This one was built specifically for black car operators — it knows what corporate clients look for, what wedding venues need to see, and what trust signals matter most in this specific industry.",
