@@ -118,9 +118,9 @@
   letter-spacing: -0.7px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
-      font-family: var(--GeistMono);
+      /* font-family: var(--GeistMono); */
     letter-spacing: normal;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     color: var(--black);
 }
 
