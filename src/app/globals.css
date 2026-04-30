@@ -206,9 +206,9 @@ h5,
 
 h6,
 .h6 {
-  font-size: 2.8rem;
-  letter-spacing: -0.3px;
-  line-height: 1.3;
+  font-size: 2.4rem;
+  letter-spacing: -0.2px;
+  line-height: 1.2;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
