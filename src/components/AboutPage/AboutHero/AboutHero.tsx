@@ -18,7 +18,7 @@ export default function AboutHero() {
           <div className={styles.dot4} />
           <div className={styles.content}>
             <div className={styles.top}>
-              <Nav variant='black' hamburgerColor='hamburgerBlack' />{" "}
+              <Nav variant='black' hamburgerColor='hamburgerBlack' />
             </div>
             <div className={styles.bottom}>
               <div className={styles.b1}>

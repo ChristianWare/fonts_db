@@ -1,7 +1,10 @@
-import React from 'react'
+import WebsitesPageHero from "@/components/WebsitesPage/WebsitesPageHero/WebsitesPageHero";
+import React from "react";
 
 export default function WebsitesPage() {
   return (
-    <div>WebsitesPage</div>
-  )
+    <main>
+      <WebsitesPageHero />
+    </main>
+  );
 }

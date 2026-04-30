@@ -27,7 +27,7 @@ export default function AuditHero({ onOpenModal }: Props) {
             </div>
             <div className={styles.bottom}>
               <div className={styles.b1}>
-                <SectionIntro text='Free Audit' />
+                <SectionIntro text='Product 01 of 03' />
                 <h1 className={`${styles.heading} h2`}>
                   Find out exactly what&apos;s costing you bookings —
                   <br /> <span className={styles.accent}>in 60 seconds. </span>
