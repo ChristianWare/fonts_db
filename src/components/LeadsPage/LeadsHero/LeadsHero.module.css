@@ -1,0 +1,162 @@
+.container {
+  background-color: var(--white);
+}
+
+.parent {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+  width: 100%;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--black);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+  top: unset;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+  top: unset;
+  left: unset;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10rem;
+  width: 100%;
+  flex: 1;
+}
+
+.top {
+  width: 100%;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5rem;
+  width: 100%;
+  margin-top: auto;
+}
+
+.b1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.heading {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 5px 5px;
+  text-align: center;
+  padding: 1rem 2rem;
+  padding-top: 2rem;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.b2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10rem;
+}
+
+.b2Left {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.copy,
+.span {
+  color: var(--text);
+  font-size: 2.2rem;
+  letter-spacing: -0.7px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: normal;
+  text-align: center;
+  color: var(--text);
+  max-width: 900px;
+}
+
+.span {
+  color: var(--black);
+}
+
+@media screen and (max-width: 1268px) {
+  .parent {
+    padding: 3rem;
+  }
+
+  .content {
+    gap: 7rem;
+  }
+
+  .copy,
+  .span {
+    font-size: 1.9rem;
+    letter-spacing: -0.6px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .parent {
+    padding: 2rem;
+  }
+
+  .content {
+    gap: 5rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .heading {
+    background-size: 5px 5px;
+  }
+}

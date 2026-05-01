@@ -1,7 +1,10 @@
-import React from 'react'
+import LeadsHero from "@/components/LeadsPage/LeadsHero/LeadsHero";
+import React from "react";
 
 export default function LeadsPage() {
   return (
-    <div>LeadsPage</div>
-  )
+    <main>
+      <LeadsHero />
+    </main>
+  );
 }
