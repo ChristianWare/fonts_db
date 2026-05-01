@@ -61,11 +61,7 @@ const situationTwo = [
   },
 ];
 
-interface Props {
-  onOpenModal: () => void;
-}
-
-export default function AuditExpectations({ onOpenModal }: Props) {
+export default function AuditExpectations() {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -161,12 +157,7 @@ export default function AuditExpectations({ onOpenModal }: Props) {
           </div>
         </div>
         <div className={styles.btnContainer}>
-          <Button
-            onClick={onOpenModal}
-            text='Try it for free'
-            btnType='accent'
-            arrow
-          />
+          <Button text='Try it for free' btnType='accent' arrow />
         </div>
       </LayoutWrapper>
     </section>

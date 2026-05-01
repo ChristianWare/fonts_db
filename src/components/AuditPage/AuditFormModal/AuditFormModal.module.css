@@ -28,7 +28,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   line-height: 1.4;
 }
@@ -67,7 +67,7 @@
   height: 50px;
   width: 100%;
   border: none;
-  background-color: var(--accent300);
+  background-color: var(--accent);
   color: var(--black);
   padding: 1rem 2rem;
   box-sizing: border-box;
@@ -133,7 +133,7 @@
 
 .small {
   font-family: var(--GeistMono);
-  font-size: 14px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);

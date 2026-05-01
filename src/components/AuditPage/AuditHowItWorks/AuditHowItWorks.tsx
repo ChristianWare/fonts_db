@@ -50,11 +50,9 @@ const process = [
   },
 ];
 
-interface Props {
-  onOpenModal: () => void;
-}
 
-export default function AuditHowItWorks({ onOpenModal }: Props) {
+
+export default function AuditHowItWorks() {
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -85,7 +83,6 @@ export default function AuditHowItWorks({ onOpenModal }: Props) {
             ))}
             <div className={styles.btnContainer}>
               <Button
-                onClick={onOpenModal}
                 text='Try it for free'
                 btnType='accent'
                 arrow

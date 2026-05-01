@@ -31,11 +31,7 @@ const data = [
   },
 ];
 
-interface Props {
-  onOpenModal: () => void;
-}
-
-export default function AuditParallaxResults({ onOpenModal }: Props) {
+export default function AuditParallaxResults() {
   return (
     <section className={styles.container}>
       <ParallaxImageLarge src={Img1} alt='Parallax background' />
@@ -69,12 +65,7 @@ export default function AuditParallaxResults({ onOpenModal }: Props) {
                   ))}
                 </ul>
                 <div className={styles.btnContainer}>
-                  <Button
-                    onClick={onOpenModal}
-                    text='Try it for free'
-                    btnType='accent'
-                    arrow
-                  />
+                  <Button text='Try it for free' btnType='accent' arrow />
                 </div>
               </div>
             </div>

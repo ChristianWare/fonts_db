@@ -7,8 +7,6 @@ import AuditHowItWorks from "@/components/AuditPage/AuditHowItWorks/AuditHowItWo
 import AuditParallaxResults from "@/components/AuditPage/AuditParallaxResults/AuditParallaxResults";
 import AuditExpectations from "@/components/AuditPage/AuditExpectations/AuditExpectations";
 import Faq from "@/components/HomePage/Faq/Faq";
-import Modal from "@/components/shared/Modal/Modal";
-import AuditModalContent from "@/components/AuditPage/AuditModalContent/AuditModalContent";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -53,7 +51,6 @@ export interface Check {
   impact: "high" | "medium" | "low";
 }
 
-// ── Scanning steps ────────────────────────────────────────────────────────────
 export const SCAN_STEPS = [
   "Resolving domain...",
   "Checking SSL certificate...",
@@ -69,30 +66,12 @@ export const SCAN_STEPS = [
 
 export type ModalState = "form" | "scanning" | "results";
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ROOT PAGE
-// ═══════════════════════════════════════════════════════════════════════════════
 export default function AuditPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalState, setModalState] = useState<ModalState>("form");
   const [scanStep, setScanStep] = useState(0);
   const [scanComplete, setScanComplete] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
-
-  function handleOpenModal() {
-    // reset state when opening
-    setModalState("form");
-    setError("");
-    setResult(null);
-    setScanStep(0);
-    setScanComplete(false);
-    setIsModalOpen(true);
-  }
-
-  function handleCloseModal() {
-    setIsModalOpen(false);
-  }
 
   async function handleSubmit(url: string, email: string, firstName: string) {
     setError("");
@@ -136,24 +115,19 @@ export default function AuditPage() {
 
   return (
     <main className={styles.container}>
-      <AuditHero onOpenModal={handleOpenModal} />
-      <AuditHowItWorks onOpenModal={handleOpenModal} />
-      <AuditParallaxResults onOpenModal={handleOpenModal} />
-      <AuditExpectations onOpenModal={handleOpenModal} />
+      <AuditHero
+        state={modalState}
+        scanStep={scanStep}
+        scanComplete={scanComplete}
+        result={result}
+        error={error}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+      />
+      <AuditHowItWorks />
+      <AuditParallaxResults />
+      <AuditExpectations />
       <Faq />
-
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <AuditModalContent
-          state={modalState}
-          scanStep={scanStep}
-          scanComplete={scanComplete}
-          result={result}
-          error={error}
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-          onClose={handleCloseModal}
-        />
-      </Modal>
     </main>
   );
 }

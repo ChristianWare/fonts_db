@@ -15,7 +15,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.5rem;
+  font-size: 16px;
   color: var(--text);
   line-height: 1.4;
 }
