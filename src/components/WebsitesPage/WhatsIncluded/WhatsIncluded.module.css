@@ -1,5 +1,6 @@
 .content {
   border-top: 1px solid var(--lightGray);
+  margin-bottom: 10rem;
   margin-top: 30rem;
   background-color: var(--lightGrayii);
 }

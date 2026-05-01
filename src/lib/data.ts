@@ -386,6 +386,7 @@ export type SectionKey =
   | "pricing"
   | "about"
   | "audit"
+  | "websites"
   | "work"
   | "blog"
   | "contact";
@@ -576,5 +577,76 @@ export const questions: readonly QuestionItem[] = [
     answer:
       "Yes. Most free website audit tools are built for any business. This one was built specifically for black car operators — it knows what corporate clients look for, what wedding venues need to see, and what trust signals matter most in this specific industry.",
     sections: ["audit"],
+  },
+  // SOLUTIONS: WEBSITES PAGE QUESTIONS
+  {
+    id: 26,
+    question: "What if I already have a website?",
+    answer:
+      "We replace it entirely. Most existing black car websites are brochure sites with a booking form bolted on — they weren't built with the booking engine as the foundation. We rebuild from scratch with direct booking as the core feature.",
+    sections: ["websites"],
+  },
+  {
+    id: 27,
+    question: "Do I need technical knowledge to manage it?",
+    answer:
+      "No. The admin dashboard is designed for operators, not developers. Managing bookings, updating pricing, adding vehicles, and reviewing corporate accounts all happen through a clean interface that requires no technical knowledge.",
+    sections: ["websites"],
+  },
+  {
+    id: 28,
+    question: "What happens to my existing bookings when we switch?",
+    answer:
+      "We handle the transition. If your current platform allows data export, we migrate your customer list and future bookings before launch. We also help you communicate the switch to existing clients so the experience stays seamless on their end.",
+    sections: ["websites"],
+  },
+  {
+    id: 29,
+    question: "How long does it take to launch?",
+    answer:
+      "Most clients are live within 2 to 3 weeks from the discovery call. The platform is already built and battle-tested — we're configuring it to your operation, not starting from scratch.",
+    sections: ["websites"],
+  },
+  {
+    id: 30,
+    question: "Is there a contract?",
+    answer:
+      "No. Month-to-month. That said, the platform becomes the operational backbone of your booking process — operators don't leave because it's working.",
+    sections: ["websites"],
+  },
+  {
+    id: 31,
+    question: "What if I need something custom?",
+    answer:
+      "Most custom requests — additional service types, specific pricing rules, new vehicle categories — are handled as part of the build at no extra charge. If something requires significant custom development beyond the platform's current scope, we'll discuss it before we start.",
+    sections: ["websites"],
+  },
+  {
+    id: 32,
+    question: "Do I own my customer data?",
+    answer:
+      "Yes — completely. Customer list, booking history, payment data, and corporate accounts all belong to you. If you ever leave, we provide a full data export.",
+    sections: ["websites"],
+  },
+  {
+    id: 33,
+    question: "How does payment processing work?",
+    answer:
+      "You set up your own Stripe account. Payments flow directly to you — Fonts & Footers never touches your money. Stripe's standard processing fees apply (2.9% + $0.30 per transaction for cards) but those go to Stripe, not us.",
+    sections: ["websites"],
+  },
+  {
+    id: 34,
+    question: "What if my drivers aren't tech-savvy?",
+    answer:
+      "The driver portal is designed to be simple. Most drivers are operating it within 5 minutes. It works on any smartphone, installs like a native app, and the interface is built around the four actions drivers actually do — accept, on the way, arrived, completed.",
+    sections: ["websites"],
+  },
+  {
+    id: 35,
+    question: "Will my site rank on Google?",
+    answer:
+      "The platform includes 640+ auto-generated SEO pages targeting every service type and city combination in your market. Combined with proper local SEO setup and schema markup, your site is built to rank. SEO performance also depends on your content and review activity over time — the foundation is there, the long-term ranking is up to how you operate.",
+    sections: ["websites"],
   },
 ] as const;

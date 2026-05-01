@@ -17,11 +17,12 @@ function sectionFromPath(pathname: string): SectionKey {
   if (pathname.startsWith("/work")) return "work";
   if (pathname.startsWith("/blog")) return "blog";
   if (pathname.startsWith("/contact")) return "contact";
-  if (pathname.startsWith("/audit")) return "audit";
   if (pathname.startsWith("/solutions/audit")) return "audit";
+  if (pathname.startsWith("/solutions/websites")) return "websites";
+  if (pathname.startsWith("/audit")) return "audit";
+  if (pathname.startsWith("/websites")) return "websites";
   return "home";
 }
-
 const SECTION_META: Record<
   SectionKey,
   { title: string; headingSpan: string; headingRest: string }
@@ -46,6 +47,11 @@ const SECTION_META: Record<
     headingSpan: "What you'll know",
     headingRest: "before you run it.",
   },
+  websites: {
+    title: "Websites FAQ",
+    headingSpan: "What you'll get",
+    headingRest: "with your platform.",
+  },
   work: {
     title: "Project & Process FAQ",
     headingSpan: "Process clarity",
@@ -66,14 +72,13 @@ const SECTION_META: Record<
 const SECTION_ORDER: SectionKey[] = [
   "home",
   "audit",
-
+  "websites",
   "pricing",
   "about",
   "work",
   "blog",
   "contact",
 ];
-
 function bySection(section: SectionKey, list: readonly QuestionItem[]) {
   return list.filter((q) => q.sections.includes(section));
 }
@@ -190,15 +195,14 @@ export default function Faq() {
             <div className={styles.bottomii}>
               <div className={styles.bottomiiContent}>
                 <div className={styles.bcLeft}>
-                  <h3 className={styles.headingii}>
-                    Still need <br /> a hand?
-                  </h3>
+                  <h3 className={styles.headingii}>Ready to talk?</h3>
                 </div>
                 <div className={styles.bcRight}>
                   <p className={styles.copyii}>
-                    We’re here to help you find the right setup for your team.
-                    If you didn’t find what you were looking for, our success
-                    team will point you in the right direction.
+                    Book a 20-minute discovery call. We&apos;ll walk through your
+                    operation, show you the live platform, and figure out
+                    whether it makes sense for your business. No pitch, no
+                    pressure.
                   </p>
                   <div className={styles.btnContainer}>
                     <Button

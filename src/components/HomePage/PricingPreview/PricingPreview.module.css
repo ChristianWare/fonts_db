@@ -1,6 +1,5 @@
 .container {
-  background-color: var(--white);
-  padding-bottom: 10rem;
+  background-color: var(--black);
   border-bottom: 1px solid var(--lightGray);
 }
 
@@ -8,6 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: 5rem;
+  padding-top: 10rem;
 }
 
 .top {
@@ -23,16 +23,20 @@
 
 .heading {
   text-align: center;
-  max-width: 1068;
+  max-width: 1068px;
+  color: var(--white);
 }
 
 .copy {
   max-width: 600px;
   text-align: center;
+  color: var(--textii);
 }
 
 .bottom {
   padding: 2rem;
+  /* border: 1px solid var(--lightGray); */
+  /* margin: 2rem; */
 }
 
 .card {
@@ -167,7 +171,7 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .list {
@@ -181,7 +185,7 @@
   display: flex;
   align-items: flex-start;
   gap: 2rem;
-  font-size: 1.5rem;
+  font-size: 16px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
   font-family: var(--Roboto);
