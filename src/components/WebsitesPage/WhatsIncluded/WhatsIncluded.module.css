@@ -1,0 +1,314 @@
+.content {
+  border-top: 1px solid var(--lightGray);
+  margin-top: 30rem;
+  background-color: var(--lightGrayii);
+}
+
+.top {
+  padding: 7rem 5rem;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-gap: 5rem;
+}
+
+.topLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.topRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+
+.accent {
+  color: var(--black);
+}
+
+.mapDataContainer {
+  border-top: 1px solid var(--lightGray);
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 2rem;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  background-color: var(--white);
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  align-self: flex-start;
+  position: sticky;
+  top: 90px;
+  height: 100%;
+}
+
+.card:first-child {
+  margin-top: -2px;
+}
+
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  /* gap: 10rem; */
+  padding: 4rem;
+}
+
+.cardLeftTop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1em;
+}
+
+.oneWordDesc {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.desc {
+  max-width: 650px;
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  letter-spacing: normal;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.6rem;
+}
+
+.bulletList {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 0.8rem;
+  margin-left: 2rem;
+  list-style: none;
+}
+
+.bulletTitle {
+  font-size: 2.4rem;
+  font-family: var(--RobotoFlexii);
+  opacity: 0.3;
+  position: relative;
+}
+
+.bulletTitle::after {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  background-color: var(--black);
+  opacity: 0.3;
+}
+
+.imgContainer {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  border: 1px solid var(--accent);
+  margin: 2rem;
+}
+
+.img {
+  object-fit: cover;
+  background-color: var(--accent);
+  object-position: top;
+}
+
+.imgOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.imgDescription {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 2.5rem;
+  right: 2.5rem;
+  z-index: 2;
+  color: var(--white);
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  letter-spacing: normal;
+  margin: 0;
+  font-size: 1.6rem;
+  width: 80%;
+}
+
+.subheading {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 1268px) {
+  .content {
+    margin-top: 20rem;
+  }
+
+  .heading {
+    max-width: 650px;
+  }
+
+  .top {
+    padding: 7rem 3rem;
+  }
+
+  .cardHeading {
+    width: 100%;
+  }
+
+  /* .imgContainer {
+    height: 370px;
+  } */
+
+  .top,
+  .topLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .subheading {
+    text-align: center;
+    width: 100%;
+  }
+
+  .copy {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btnContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .content {
+    margin-top: 15rem;
+  }
+
+  .top {
+    padding: 7rem 2rem;
+  }
+
+  .heading {
+    max-width: 500px;
+  }
+
+  .copy {
+    width: 100%;
+  }
+
+  .mapDataContainer {
+    gap: 5rem;
+  }
+
+  .card {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardLeft {
+    padding: 3rem;
+    gap: 5rem;
+  }
+
+  .imgContainer {
+    width: 100%;
+    height: 100%;
+    /* height: 300px; */
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .content {
+    margin-top: 10rem;
+  }
+
+  .top,
+  .topLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 2rem;
+  }
+
+  .heading {
+    width: 100%;
+  }
+
+  .subheading {
+    text-align: left;
+    width: 100%;
+  }
+
+  .bottom {
+    gap: 5rem;
+  }
+
+  .card {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .cardLeft {
+    gap: 3rem;
+  }
+
+  .cardRight {
+    padding: 2rem;
+  }
+
+  .imgContainer {
+    width: 100%;
+    height: 500px;
+    /* height: 300px; */
+    margin: 0rem;
+  }
+
+  /* .img {
+    object-position: top;
+  } */
+
+  .btnContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .card {
+    box-shadow: 0 7px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .bulletTitle {
+    font-size: 1.8rem;
+    color: var(--blackii);
+    opacity: 1;
+    border-bottom: 1px solid var(--blackii);
+    padding-bottom: 0.5rem;
+  }
+}

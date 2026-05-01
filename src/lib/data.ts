@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Img1 from "../../public/images/audit.jpg";
 import Img2 from "../../public/images/leads.jpg";
-// import Img3 from "../../public/images/website.jpg";
+import Img3 from "../../public/images/website.jpg";
+import WIOne from "../../public/images/nierHomePage.png";
+import WITwo from "../../public/images/directBooking.png";
+import WIThree from "../../public/images/adminDashboard.png";
+import WIFour from "../../public/images/driverPortal.png";
+import WIFive from "../../public/images/userDashboard.png";
+import WISix from "../../public/images/corpDashboard.png";
+import WISeven from "../../public/images/flightTracking.png";
+import WIEight from "../../public/images/payment.png";
+import WINine from "../../public/images/notifications.png";
 import Img4 from "../../public/images/system.jpg";
 import Img5 from "../../public/images/chevy_corp.png";
 
@@ -57,7 +66,7 @@ export const SolutionData = [
     id: 3,
     oneWordDesc: "Step 3",
     title: "Launch your custom website",
-    src: 2,
+    src: Img3,
     description:
       "Now the system is complete. The audit identified the problems. The leads tool created urgency. The website closes the deals you're finding. Your business has a foundation it didn't have before — and it compounds from here.",
     bullets: [
@@ -67,6 +76,174 @@ export const SolutionData = [
       "Driver & admin portal",
     ],
   },
+] as const;
+
+export const whatsIncludedData = [
+  {
+    id: 1,
+    oneWordDesc: "Brand",
+    title: "Custom Branded Website",
+    src: WIOne,
+    description:
+      "A website designed specifically for your company — your colors, your fonts, your vehicles, your service areas. Built to load fast, work on every device, and look premium from the first second a visitor lands.",
+    bullets: [
+      "Custom homepage and service pages",
+      "About, contact, and service area pages",
+      "Mobile-optimized for every device",
+      "Fast load times and clean code",
+      "Built for conversion, not just decoration",
+    ],
+  },
+  {
+    id: 2,
+    oneWordDesc: "Bookings",
+    title: "Direct Booking Engine",
+    src: WITwo,
+    description:
+      "Clients book and pay directly on your domain. No redirects, no third-party branding, no fees per ride. Just a clean, fast booking flow built for the way your customers actually book.",
+    bullets: [
+      "Instant quote calculation by route, vehicle, and time",
+      "Multi-step booking flow optimized for mobile",
+      "Service selection — point-to-point, hourly, airport",
+      "Vehicle selection from your fleet",
+      "Payment in one flow with deposit and balance options",
+    ],
+  },
+  {
+    id: 3,
+    oneWordDesc: "Operations",
+    title: "Admin Dashboard",
+    src: WIThree,
+    description:
+      "The full operations backend where you run everything. One screen for bookings, drivers, payments, clients, and corporate accounts.",
+    bullets: [
+      "Live booking feed with status filters",
+      "Driver assignment and dispatch",
+      "Payment tracking — deposits, balances, tips, refunds",
+      "Customer database with full history",
+      "Reporting by date, service, driver, and account",
+    ],
+  },
+  {
+    id: 4,
+    oneWordDesc: "Drivers",
+    title: "Driver Portal",
+    src: WIFour,
+    description:
+      "Every driver on your roster gets their own portal. Installs like a native app on their phone — no App Store download required.",
+    bullets: [
+      "Full trip schedule with pickup, drop-off, and flight info",
+      "Real-time status updates",
+      "Earnings and tips tracking by period",
+      "Push notifications for new assignments",
+      "PWA technology — works like a native app",
+    ],
+  },
+  {
+    id: 5,
+    oneWordDesc: "Clients",
+    title: "Customer Portal",
+    src: WIFive,
+    description:
+      "Give your clients a branded space to manage their relationship with your company — receipts, trip history, saved addresses, and corporate booking management.",
+    bullets: [
+      "View upcoming and past trips with full details",
+      "Download PDF receipts and invoices",
+      "Save frequently used addresses",
+      "Track upcoming trips and driver assignments",
+      "Corporate clients manage employees in one place",
+    ],
+  },
+  {
+    id: 6,
+    oneWordDesc: "Corporate",
+    title: "Corporate Account Management",
+    src: WISix,
+    description:
+      "The feature that turns one-time corporate bookings into recurring accounts. Centralized billing, employee management, and dedicated booking flows for business travel.",
+    bullets: [
+      "Online application from your booking site",
+      "One-click approval from your admin dashboard",
+      "Centralized billing — track spend by employee or department",
+      "Employee management — control who can book",
+      "Filter all bookings by corporate account",
+    ],
+  },
+  {
+    id: 7,
+    oneWordDesc: "Airport",
+    title: "Flight Tracking",
+    src: WISeven,
+    description:
+      "When a customer books an airport pickup, the platform takes care of the rest. Live aviation data feeds the booking automatically — your driver arrives when the passenger does, every time.",
+    bullets: [
+      "Customer enters flight number at booking",
+      "Live aviation data pulled automatically",
+      "Airline, terminal, gate, scheduled and actual arrival",
+      "Delays automatically reflected in the booking",
+      "No manual tracking required from you",
+    ],
+  },
+  {
+    id: 8,
+    oneWordDesc: "Payments",
+    title: "Stripe Payment Processing",
+    src: WIEight,
+    description:
+      "Full payment infrastructure with the most trusted processor in the industry. You keep your own Stripe account and receive payouts directly. We never touch your money.",
+    bullets: [
+      "Deposits, full prepayment, and balance collection",
+      "Tip processing built in",
+      "Refunds with full audit trail",
+      "Card-on-file for repeat clients",
+      "Corporate invoicing",
+    ],
+  },
+  {
+    id: 9,
+    oneWordDesc: "Notifications",
+    title: "Automated Notifications",
+    src: WINine,
+    description:
+      "Every booking, status change, and payment event triggers the right message to the right person automatically. Customers, drivers, and admins all stay in the loop without you lifting a finger.",
+    bullets: [
+      "Booking confirmations and payment receipts",
+      "Driver trip assignments via email and push",
+      "Update and cancellation alerts",
+      "New booking alerts to admins",
+      "Corporate inquiry notifications",
+    ],
+  },
+  // {
+  //   id: 10,
+  //   oneWordDesc: "Visibility",
+  //   title: "SEO & Local Visibility",
+  //   src: Img2,
+  //   description:
+  //     "Get found by clients ready to book. The platform includes 640+ auto-generated SEO pages targeting every service-and-city combination in your market.",
+  //   bullets: [
+  //     "640+ auto-generated SEO pages",
+  //     "Local SEO optimization for your market",
+  //     "Schema markup for service businesses",
+  //     "Page structure built for Google rankings",
+  //     "Blog platform for ongoing content marketing",
+  //   ],
+  // },
+  // {
+  //   id: 11,
+  //   oneWordDesc: "Support",
+  //   title: "Ongoing Support and Updates",
+  //   src: Img2,
+  //   description:
+  //     "Direct access to Chris — the person who built the platform. Most issues resolved same day. New features added to the platform are included automatically at no extra charge.",
+  //   bullets: [
+  //     "Direct line to Chris — no ticket queues",
+  //     "Most issues resolved same day",
+  //     "New features included automatically",
+  //     "No support tiers or upgrade fees",
+  //     "One point of contact for everything",
+  //   ],
+  // },
 ] as const;
 
 export const FocusFeatures = [

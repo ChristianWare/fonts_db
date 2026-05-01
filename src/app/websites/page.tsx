@@ -1,5 +1,6 @@
 import WebsiteOutcomes from "@/components/WebsitesPage/WebsiteOutcomes/WebsiteOutcomes";
 import WebsitesPageHero from "@/components/WebsitesPage/WebsitesPageHero/WebsitesPageHero";
+import WhatsIncluded from "@/components/WebsitesPage/WhatsIncluded/WhatsIncluded";
 import React from "react";
 
 export default function WebsitesPage() {
@@ -7,6 +8,7 @@ export default function WebsitesPage() {
     <main>
       <WebsitesPageHero />
       <WebsiteOutcomes />
+      <WhatsIncluded />
     </main>
   );
 }
