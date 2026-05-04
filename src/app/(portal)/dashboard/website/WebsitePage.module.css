@@ -1,0 +1,452 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.greeting {
+  font-family: var(--GeistMono);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.businessName {
+  font-family: var(--GeistMono);
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  background-color: var(--black);
+  padding: 1rem;
+  width: fit-content;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+.liveBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  background-color: #16a34a;
+  padding: 0.5rem 1.2rem;
+  flex-shrink: 0;
+}
+
+.liveDot {
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: var(--white);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ── Action card ── */
+.actionCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 3rem 5rem;
+  background-color: var(--accent);
+  border-bottom: 1px solid var(--grayii);
+}
+
+.actionCardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.actionLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  opacity: 0.6;
+}
+
+.actionText {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  max-width: 450px;
+}
+
+.actionBtn {
+  flex-shrink: 0;
+  padding: 1.2rem 2.8rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.actionBtn:hover {
+  opacity: 0.85;
+}
+
+/* ── Tracker card (outer wrapper) ── */
+.trackerCard {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--grayii);
+}
+
+/* ── Tracker section (each half) ── */
+.trackerSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section header — black bg, accent text, design system rule */
+.trackerSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 5rem;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--grayii);
+}
+
+.trackerSectionHeadingBlock {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.trackerSectionNumber {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  /* opacity: 0.5; */
+  font-weight: 700;
+}
+
+.trackerSectionHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.trackerCount {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  opacity: 0.4;
+}
+
+/* ── Divider between the two sections ── */
+.trackerDivider {
+  height: 1px;
+  background-color: var(--grayii);
+}
+
+/* ── Stages list ── */
+.stages {
+  display: flex;
+  flex-direction: column;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0 2rem;
+  position: relative;
+  padding: 2.8rem 5rem;
+  align-items: start;
+  border-bottom: 1px solid var(--grayii);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.stage:last-child {
+  border-bottom: none;
+}
+
+.stageClickable {
+  cursor: pointer;
+}
+
+.stageClickable:hover {
+  background-color: var(--lightGrayiii);
+}
+
+/* Vertical connector line */
+.connector {
+  position: absolute;
+  left: calc(5rem + 1rem);
+  top: calc(2.8rem + 2rem);
+  width: 2px;
+  height: 100%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.connectorCompleted {
+  background-color: var(--black);
+}
+
+.connectorUpcoming {
+  background-color: var(--grayii);
+}
+
+/* ── Stage dot ── */
+.stageDot {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-top: 0.1rem;
+}
+
+.stageCompleted .stageDot {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.stageCurrent .stageDot {
+  background-color: var(--white);
+  border: 2px solid var(--black);
+}
+
+.stageUpcoming .stageDot {
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+
+.stageDotInner {
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: var(--black);
+}
+
+/* ── Stage text ── */
+.stageText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 0.1rem;
+}
+
+.stageLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.stageLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+}
+
+.stageUpcoming .stageLabel {
+  color: var(--text);
+}
+
+/* Completed date badge — green */
+.stageDate {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  padding: 0.2rem 0.8rem;
+}
+
+/* In progress badge — accent */
+.stageDateActive {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 0.2rem 0.8rem;
+}
+
+.stageDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.6;
+}
+
+/* Action link inside a stage row */
+.moreInfo {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 0.2rem;
+  display: inline-block;
+  transition: opacity 0.15s ease;
+}
+
+.moreInfo:hover {
+  opacity: 0.6;
+}
+
+/* ── Site / blueprint / preview links ── */
+.siteLink {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 0.2rem;
+  display: inline-block;
+  transition: opacity 0.15s ease;
+}
+
+.siteLink:hover {
+  opacity: 0.6;
+}
+
+/* ── Quick links ── */
+.quickLinks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--grayii);
+}
+
+.quickLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.4rem 5rem;
+  border-right: 1px solid var(--grayii);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  color: var(--black);
+  text-decoration: none;
+  gap: 2rem;
+}
+
+.quickLink:last-child {
+  border-right: none;
+}
+
+.quickLink:hover {
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.quickLinkLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 3rem 2rem;
+  }
+
+  .actionCard {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2.4rem 2rem;
+  }
+
+  .actionBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .trackerSectionHeader {
+    padding: 2rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .stage {
+    padding: 2.4rem 2rem;
+  }
+
+  .connector {
+    left: calc(2rem + 1rem);
+    top: calc(2.8rem + 1rem);
+  }
+
+  .quickLinks {
+    grid-template-columns: 1fr;
+  }
+
+  .quickLink {
+    border-right: none;
+    border-bottom: 1px solid var(--grayii);
+    padding: 2rem 2rem;
+  }
+
+  .quickLink:last-child {
+    border-bottom: none;
+  }
+}

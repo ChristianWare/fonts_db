@@ -7,7 +7,7 @@
 
 /* ── Sidebar ── */
 .sidebar {
-  width: 240px;
+  width: 300px;
   background-color: var(--white);
   border-right: 1px solid var(--lightGray);
   display: flex;
@@ -346,6 +346,37 @@
   flex: 1;
   padding: 0;
 }
+
+/* ── Nav groups ── */
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+
+.navSpacer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.navGroupLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  padding: 0.8rem 2rem;
+  opacity: 0.5;
+}
+
+.navGroupDivider {
+  height: 1px;
+  background-color: var(--lightGray);
+  margin: 0.6rem 1rem;
+}
+
 
 /* ── Responsive: 768px ── */
 @media screen and (max-width: 768px) {
