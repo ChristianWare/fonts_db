@@ -1,5 +1,5 @@
 // prisma/schema.prisma
-// Fonts & Footers — Client Portal
+// Fonts & Footers — Client Portal + Leads Tool
 
 datasource db {
   provider = "postgresql"
@@ -85,6 +85,75 @@ enum ChangeRequestStatus {
 enum SupportTicketStatus {
   OPEN
   CLOSED
+}
+
+enum SitemapStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+}
+
+// =========================
+// LEADS TOOL — ENUMS
+// =========================
+
+enum ProductType {
+  WEBSITE
+  LEADS
+}
+
+enum LeadType {
+  HOT
+  WARM
+  COLD
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  NURTURING
+  SNOOZED
+  WON
+  DEAD
+}
+
+enum ApolloConfidence {
+  HIGH
+  MEDIUM
+  LOW
+  UNVERIFIED
+}
+
+enum ScriptFormat {
+  EMAIL
+  CALL
+  LINKEDIN
+}
+
+enum LeadActivityType {
+  CREATED
+  STATUS_CHANGED
+  NOTE_ADDED
+  SCRIPT_GENERATED
+  CONTACTED
+  SNOOZED
+  REMINDER_SENT
+  WON
+  DEAD
+}
+
+enum HotLeadSource {
+  FACEBOOK
+  NEXTDOOR
+  EVENTBRITE
+}
+
+enum WarmLeadSignalType {
+  NEW_HOTEL
+  CORPORATE_EVENT
+  VENUE_REVIEW
+  JOB_POSTING
+  ENGAGEMENT_ANNOUNCEMENT
 }
 
 // =========================
@@ -199,30 +268,40 @@ model ClientProfile {
   state        String?
   website      String? // Their current site if they have one
 
-  // Where they are in the onboarding process
+  // Where they are in the onboarding process (website product)
   onboardingStage OnboardingStage @default(REGISTERED)
 
   // Internal admin notes (never visible to client)
   internalNotes String? @db.Text
 
-  // Stripe
+  // Stripe customer (one per client across all products)
   stripeCustomerId     String? @unique
+  // NOTE: stripeSubscriptionId is legacy — kept for backwards compat with
+  // existing website webhook code. New code should query Subscription rows
+  // directly. Holds the WEBSITE subscription ID only.
   stripeSubscriptionId String? @unique
 
-  // Relations
+  // Website product relations
   questionnaire  Questionnaire?
   documents      Document[]
   brandAssets    BrandAsset[]
-  subscription   Subscription?
   invoices       Invoice[]
   changeRequests ChangeRequest[]
   supportTickets SupportTicket[]
   stageLog       StageChangeLog[]
+  sitemapPages   SitemapPage[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // Multi-product subscriptions (was: subscription Subscription?)
+  subscriptions Subscription[]
 
-  // Per-client billing rates (admin-editable before setup fee is paid)
+  // Leads product relations
+  leadsSettings   LeadsSettings?
+  savedLeads      SavedLead[]
+  outreachScripts OutreachScript[]
+  leadActivities  LeadActivity[]
+
+  // Per-client billing rates for website product
+  // (admin-editable before setup fee is paid)
   setupFeeAmountCents Int     @default(50000) // $500 default
   monthlyAmountCents  Int     @default(49900) // $499 default
   setupFeePaid        Boolean @default(false)
@@ -230,9 +309,11 @@ model ClientProfile {
   previewUrl String?
   liveUrl    String?
 
-  questionnaireSkipped Boolean       @default(false)
-  assetsSkipped        Boolean       @default(false)
-  sitemapPages         SitemapPage[]
+  questionnaireSkipped Boolean @default(false)
+  assetsSkipped        Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([onboardingStage])
 }
@@ -345,13 +426,13 @@ model BrandAsset {
   // Admin can leave a note on a specific asset (e.g. "Need higher resolution")
   adminNote String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   selected     Boolean @default(false)
   clientNotes  String?
   templateName String?
   sourceUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([clientProfileId])
   @@index([label])
@@ -359,13 +440,18 @@ model BrandAsset {
 
 // =========================
 // SUBSCRIPTION
-// One per client. Mirrors their Stripe subscription.
+// One row per (client × product). A client subscribed to both
+// website and leads will have TWO rows here.
+// Mirrors their Stripe subscription.
 // =========================
 
 model Subscription {
   id              String        @id @default(cuid())
-  clientProfileId String        @unique
+  clientProfileId String
   clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  // Which product this subscription is for
+  productType ProductType
 
   stripeSubscriptionId String? @unique
   stripePriceId        String?
@@ -382,12 +468,22 @@ model Subscription {
   cancelledAt DateTime?
   pausedAt    DateTime?
 
+  // Setup fee fields (relevant for WEBSITE; defaults to 0 for LEADS)
+  setupFeeAmountCents Int     @default(50000)
+  monthlyAmountCents  Int     @default(49900)
+  setupFeePaid        Boolean @default(false)
+
+  // 7-day trial tracking (used by LEADS product)
+  trialEndsAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  setupFeeAmountCents Int     @default(50000) // $500 default, admin-editable
-  monthlyAmountCents  Int     @default(49900) // $499 default, admin-editable
-  setupFeePaid        Boolean @default(false)
+  // A client can only have ONE subscription per product type.
+  @@unique([clientProfileId, productType])
+  @@index([clientProfileId])
+  @@index([productType])
+  @@index([status])
 }
 
 // =========================
@@ -419,12 +515,16 @@ model Invoice {
 
   description String? // e.g. "Monthly subscription — March 2026"
 
+  // Which product this invoice is for (nullable for backfill compat)
+  productType ProductType?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([clientProfileId])
   @@index([status])
   @@index([createdAt])
+  @@index([productType])
 }
 
 // =========================
@@ -482,11 +582,9 @@ model SupportTicket {
   @@index([status])
 }
 
-enum SitemapStatus {
-  DRAFT
-  REVIEW
-  APPROVED
-}
+// =========================
+// SITEMAP
+// =========================
 
 model SitemapPage {
   id              String           @id @default(cuid())
@@ -528,4 +626,272 @@ model SitemapComment {
   createdAt  DateTime       @default(now())
 
   @@index([sectionId])
+}
+
+// =========================
+// LEADS — User settings
+// One per ClientProfile. Drives hot/warm/eventbrite filtering
+// via primary market. Cold search can override per-request.
+// =========================
+
+model LeadsSettings {
+  id              String        @id @default(cuid())
+  clientProfileId String        @unique
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  // Primary market — drives hot/warm/eventbrite feeds
+  primaryCity        String?
+  primaryState       String?
+  primaryLat         Float?
+  primaryLng         Float?
+  serviceRadiusMiles Int     @default(50)
+
+  // SMS notifications
+  phoneNumber  String?
+  smsEnabled   Boolean @default(true)
+  emailEnabled Boolean @default(true)
+
+  // Onboarding modal completion
+  onboardingCompletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =========================
+// LEADS — Saved leads (user's personal pipeline)
+// All three lead types live here with a discriminator column
+// so the kanban can drag any type into any column.
+// =========================
+
+model SavedLead {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  // Classification
+  leadType LeadType
+  source   String // "google_places", "facebook", "eventbrite", etc.
+  category String // "wedding_venue", "hotel", "law_firm", etc.
+
+  // Business info (mostly cold leads)
+  businessName    String?
+  businessAddress String?
+  businessLat     Float?
+  businessLng     Float?
+  businessPhone   String?
+  businessWebsite String?
+  googlePlaceId   String?
+  rating          Float?
+  reviewCount     Int?
+
+  // Contact info (Apollo-enriched or pulled from post)
+  contactName      String?
+  contactTitle     String?
+  contactEmail     String?
+  contactPhone     String?
+  contactLinkedin  String?
+  apolloConfidence ApolloConfidence?
+
+  // Hot lead fields
+  sourceUrl      String?
+  sourcePostText String?   @db.Text
+  sourcePostDate DateTime?
+
+  // Warm lead fields
+  signalType String?
+  signalData Json?
+
+  // Pipeline state
+  status          LeadStatus @default(NEW)
+  notes           String?    @db.Text
+  snoozeUntil     DateTime?
+  lastContactedAt DateTime?
+  wonAt           DateTime?
+  estimatedValue  Int?
+
+  // AI metadata
+  aiScore       Int?
+  aiScoreReason String? @db.Text
+
+  outreachScripts OutreachScript[]
+  activities      LeadActivity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientProfileId, status])
+  @@index([clientProfileId, leadType])
+  @@index([snoozeUntil])
+  @@index([googlePlaceId])
+}
+
+// =========================
+// LEADS — AI-generated outreach scripts
+// One lead can have multiple (email + call + LinkedIn variants).
+// =========================
+
+model OutreachScript {
+  id              String        @id @default(cuid())
+  savedLeadId     String
+  savedLead       SavedLead     @relation(fields: [savedLeadId], references: [id], onDelete: Cascade)
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  format  ScriptFormat
+  subject String?
+  body    String       @db.Text
+
+  generatedAt DateTime  @default(now())
+  editedAt    DateTime?
+  usedAt      DateTime?
+
+  @@index([savedLeadId])
+  @@index([clientProfileId])
+}
+
+// =========================
+// LEADS — Activity log per lead
+// Audit trail for status changes, notes, contact attempts.
+// =========================
+
+model LeadActivity {
+  id              String        @id @default(cuid())
+  savedLeadId     String
+  savedLead       SavedLead     @relation(fields: [savedLeadId], references: [id], onDelete: Cascade)
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  activityType LeadActivityType
+  description  String?          @db.Text
+  metadata     Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([savedLeadId])
+  @@index([clientProfileId])
+}
+
+// =========================
+// LEADS — Shared market feeds
+// NOT user-scoped. Filtered in API routes by user's primary market.
+// Scraped on cron, auto-expired on schedule.
+// =========================
+
+model HotLeadFeed {
+  id        String        @id @default(cuid())
+  source    HotLeadSource
+  sourceUrl String        @unique
+
+  // Market scoping
+  marketCity  String
+  marketState String?
+  marketLat   Float?
+  marketLng   Float?
+
+  // Poster info (when scraped)
+  posterName  String?
+  posterPhone String?
+  posterEmail String?
+
+  // Post content
+  postText          String?   @db.Text
+  postDate          DateTime?
+  serviceNeededDate DateTime?
+
+  // AI processing
+  aiSummary String? @db.Text
+  aiScore   Int?
+
+  // Lifecycle — auto-expire after 72hr
+  expiresAt DateTime
+  scrapedAt DateTime @default(now())
+
+  @@index([marketCity, marketState])
+  @@index([expiresAt])
+}
+
+model WarmLeadFeed {
+  id           String             @id @default(cuid())
+  signalType   WarmLeadSignalType
+  signalSource String // "linkedin", "google_reviews", "yelp", etc.
+  sourceUrl    String?
+
+  // Business
+  businessName    String?
+  businessAddress String?
+  businessLat     Float?
+  businessLng     Float?
+  businessWebsite String?
+
+  // Signal payload
+  signalSummary String? @db.Text
+  signalData    Json?
+
+  // Market scoping
+  marketCity  String
+  marketState String?
+
+  // Lifecycle
+  detectedAt DateTime @default(now())
+  expiresAt  DateTime
+  aiScore    Int?
+
+  @@index([marketCity, marketState])
+  @@index([expiresAt])
+}
+
+model EventbriteEvent {
+  id           String   @id @default(cuid())
+  eventbriteId String   @unique
+  eventName    String
+  eventDate    DateTime
+
+  // Venue
+  venueName    String?
+  venueAddress String?
+  venueLat     Float?
+  venueLng     Float?
+
+  // Sizing
+  expectedAttendance Int?
+  ticketPriceMin     Decimal?
+  ticketPriceMax     Decimal?
+
+  // Organizer (when public)
+  organizerName  String?
+  organizerEmail String?
+  organizerPhone String?
+
+  // Categorization & market
+  category    String?
+  marketCity  String
+  marketState String?
+
+  aiScore   Int?
+  fetchedAt DateTime @default(now())
+
+  @@index([marketCity, marketState])
+  @@index([eventDate])
+}
+
+model NewBusiness {
+  id            String @id @default(cuid())
+  googlePlaceId String @unique
+  businessName  String
+  category      String
+
+  address String?
+  lat     Float?
+  lng     Float?
+  website String?
+  phone   String?
+
+  marketCity  String
+  marketState String?
+
+  firstDetectedAt DateTime @default(now())
+
+  @@index([marketCity, marketState])
+  @@index([firstDetectedAt])
 }
