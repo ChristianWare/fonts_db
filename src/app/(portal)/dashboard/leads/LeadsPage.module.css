@@ -1,0 +1,114 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.eyebrow {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.heading {
+  font-family: var(--RobotoFlexii);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1;
+}
+
+.placeholder {
+  padding: 6rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 760px;
+}
+
+.placeholderTag {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.8rem 1.2rem;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.placeholderTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 3rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1;
+}
+
+.placeholderDesc {
+  font-family: var(--Roboto);
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.placeholderActions {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.placeholderCta {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  text-decoration: none;
+  padding: 1.4rem 2rem;
+  background-color: var(--accent);
+  transition: opacity 0.15s ease;
+}
+
+.placeholderCta:hover {
+  opacity: 0.85;
+}
+
+.placeholderCtaSecondary {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  text-decoration: none;
+  padding: 1.4rem 0;
+  transition: color 0.15s ease;
+}
+
+.placeholderCtaSecondary:hover {
+  color: var(--black);
+}
+
+@media screen and (max-width: 768px) {
+  .header,
+  .placeholder {
+    padding: 3rem 2rem;
+  }
+}

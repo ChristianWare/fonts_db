@@ -4,93 +4,98 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  background-color: var(--black);
+  background-color: var(--white);
 }
 
 .card {
   width: 100%;
-  max-width: 640px;
-  padding: 4rem;
-  border: 1px solid var(--lightGray);
-  background-color: var(--black);
+  max-width: 720px;
+  padding: 5rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
 }
 
 .eyebrow {
   font-family: var(--GeistMono);
-  font-size: 0.85rem;
-  color: var(--accent);
+  font-size: 1.6rem;
+  color: var(--text);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1.5rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 2rem;
+  opacity: 0.7;
 }
 
 .headline {
   font-family: var(--RobotoFlexii);
-  font-size: 3.5rem;
-  line-height: 0.95em;
-  letter-spacing: -2px;
+  font-size: 4rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
-  color: var(--white);
-  font-weight: 400;
+  color: var(--black);
   font-variation-settings: "wght" 700, "wdth" 81;
   -webkit-font-smoothing: antialiased;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .headline span {
   color: var(--accent);
+  background-color: var(--black);
+  padding: 0 1rem;
+  display: inline-block;
+  line-height: 1;
 }
 
 .subhead {
-  font-family: var(--GeistMono);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--lightGray);
-  margin-bottom: 2.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 3rem;
 }
 
 .priceRow {
   display: flex;
   align-items: baseline;
-  gap: 0.75rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
-  margin-bottom: 2rem;
+  gap: 1rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--grayii);
+  margin-bottom: 3rem;
 }
 
 .price {
   font-family: var(--RobotoFlexii);
   font-size: 3rem;
-  color: var(--white);
-  font-weight: 400;
+  color: var(--black);
   font-variation-settings: "wght" 700, "wdth" 81;
-  letter-spacing: -1px;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .priceMeta {
   font-family: var(--GeistMono);
-  font-size: 0.9rem;
-  color: var(--lightGray);
+  font-size: 1.6rem;
+  color: var(--text);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .features {
   list-style: none;
   padding: 0;
-  margin: 0 0 2.5rem;
+  margin: 0 0 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .features li {
-  font-family: var(--GeistMono);
-  font-size: 0.95rem;
-  color: var(--white);
-  padding-left: 1.5rem;
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--black);
+  padding-left: 2rem;
   position: relative;
+  line-height: 1.4;
 }
 
 .features li::before {
@@ -98,26 +103,29 @@
   position: absolute;
   left: 0;
   color: var(--accent);
+  font-family: var(--GeistMono);
+  font-weight: 700;
 }
 
 .notice {
   font-family: var(--GeistMono);
-  font-size: 0.85rem;
-  color: var(--accent);
-  padding: 1rem;
-  border: 1px solid var(--accent);
-  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  color: var(--black);
+  padding: 2rem;
+  background-color: var(--accent);
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
 }
 
 .cta {
   width: 100%;
-  padding: 1.25rem 2rem;
+  padding: 2rem;
   font-family: var(--GeistMono);
-  font-size: 1rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--black);
-  background-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--black);
   border: none;
   cursor: pointer;
   transition: opacity 0.15s ease;
@@ -133,16 +141,41 @@
 }
 
 .error {
-  font-family: var(--GeistMono);
-  font-size: 0.85rem;
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
   color: #ff4444;
   margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ff4444;
+  background-color: rgba(255, 68, 68, 0.05);
 }
 
 .fineprint {
   font-family: var(--GeistMono);
-  font-size: 0.75rem;
-  color: var(--lightGray);
-  margin-top: 1.5rem;
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.7;
+  margin-top: 2rem;
   line-height: 1.5;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.betaTag {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    padding: 3rem;
+  }
+
+  .headline {
+    font-size: 3rem;
+  }
+
+  .price {
+    font-size: 3rem;
+  }
 }

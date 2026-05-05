@@ -1,0 +1,167 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+.modal {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--white);
+  padding: 4rem;
+  border: 1px solid var(--lightGray);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.welcomeBanner {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.title {
+  font-family: var(--RobotoFlexii);
+  font-size: 3rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 1.5rem;
+  line-height: 1;
+}
+
+.subtitle {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 3rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.fieldRow2col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.label {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+
+.input {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  color: var(--black);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.hint {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
+  opacity: 0.7;
+  line-height: 1.4;
+  margin-top: -0.4rem;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.checkbox {
+  width: 1.6rem;
+  height: 1.6rem;
+  cursor: pointer;
+  accent-color: var(--black);
+}
+
+.checkboxLabel {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--black);
+  cursor: pointer;
+}
+
+.submit {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1.5rem 2rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: opacity 0.15s ease;
+}
+
+.submit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: #ff4444;
+  padding: 1rem;
+  border: 1px solid #ff4444;
+  background-color: rgba(255, 68, 68, 0.05);
+}
+
+@media screen and (max-width: 568px) {
+  .modal {
+    padding: 2.5rem;
+  }
+  .title {
+    font-size: 2.4rem;
+  }
+  .fieldRow2col {
+    grid-template-columns: 1fr;
+  }
+}

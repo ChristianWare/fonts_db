@@ -13,12 +13,22 @@ export const getClientProfile = async () => {
       questionnaire: true,
       documents: true,
       brandAssets: true,
-      subscription: true,
+      subscriptions: true,
       invoices: {
         orderBy: { createdAt: "desc" },
       },
     },
   });
 
-  return profile;
+  if (!profile) return null;
+
+  // Alias the WEBSITE subscription as `subscription` (singular) for
+  // backwards compat with existing dashboard code that does
+  // `profile.subscription?.status`. New code should use
+  // `profile.subscriptions` directly.
+  return {
+    ...profile,
+    subscription:
+      profile.subscriptions.find((s) => s.productType === "WEBSITE") ?? null,
+  };
 };
