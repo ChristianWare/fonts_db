@@ -35,6 +35,7 @@
   font-variation-settings: "wght" 700, "wdth" 81;
   -webkit-font-smoothing: antialiased;
   margin-bottom: 2rem;
+  line-height: 1.5;
 }
 
 .headline span {
@@ -42,7 +43,7 @@
   background-color: var(--black);
   padding: 0 1rem;
   display: inline-block;
-  line-height: 1;
+  line-height: 1.5;
 }
 
 .subhead {
@@ -96,12 +97,13 @@
   padding-left: 2rem;
   position: relative;
   line-height: 1.4;
+  margin-left: 1rem;
 }
 
 .features li::before {
   content: "→";
   position: absolute;
-  left: 0;
+  left: -2rem;
   color: var(--accent);
   font-family: var(--GeistMono);
   font-weight: 700;
