@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import styles from "./PortalLayout.module.css";
 import Logo from "@/components/shared/Logo/Logo";
@@ -395,8 +395,16 @@ export default function PortalLayout({
 }) {
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.innerWidth <= 568;
+    return window.innerWidth <= 1268;
   });
+
+  useEffect(() => {
+   const handleResize = () => {
+     setCollapsed(window.innerWidth <= 1268);
+   };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -411,10 +419,21 @@ export default function PortalLayout({
     return true;
   });
 
-  const isItemActive = (href: string) => {
-    if (href === "/dashboard") return pathname === "/dashboard";
-    return pathname.startsWith(href);
-  };
+ const allItemHrefs = [
+   ...topNav.map((i) => i.href),
+   ...productGroups.flatMap((g) => g.items.map((i) => i.href)),
+   ...bottomNav.map((i) => i.href),
+ ];
+
+ const activeHref = allItemHrefs
+   .filter((h) => pathname === h || pathname.startsWith(h + "/"))
+   .reduce(
+     (longest, current) =>
+       current.length > longest.length ? current : longest,
+     "",
+   );
+
+ const isItemActive = (href: string) => href === activeHref;
 
   const renderNavItem = (item: NavItem) => {
     const isActive = isItemActive(item.href);
@@ -422,6 +441,11 @@ export default function PortalLayout({
       <Link
         key={item.href}
         href={item.href}
+        onClick={() => {
+          if (typeof window !== "undefined" && window.innerWidth <= 1268) {
+            setCollapsed(true);
+          }
+        }}
         className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
       >
         <span className={styles.navIcon}>{item.icon}</span>
@@ -528,6 +552,13 @@ export default function PortalLayout({
           </button>
         </div>
       </aside>
+
+      {/* Mobile overlay */}
+      <div
+        className={`${styles.overlay} ${!collapsed ? styles.overlayVisible : ""}`}
+        onClick={() => setCollapsed(true)}
+        aria-hidden='true'
+      />
 
       {/* MAIN */}
       <main className={styles.main}>

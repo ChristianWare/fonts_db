@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Link from "next/link";
 import styles from "./PipelinePage.module.css";
 
 type LeadStatus =
@@ -14,160 +14,286 @@ type LeadStatus =
 
 type SerializedLead = {
   id: string;
+  status: LeadStatus;
   category: string;
   businessName: string | null;
-  businessAddress: string | null;
   rating: number | null;
   reviewCount: number | null;
-  status: LeadStatus;
+  businessPhone: string | null;
   createdAt: string;
 };
 
-const COLUMNS: Array<{ status: LeadStatus; label: string }> = [
-  { status: "NEW", label: "New" },
-  { status: "CONTACTED", label: "Contacted" },
-  { status: "NURTURING", label: "Nurturing" },
-  { status: "SNOOZED", label: "Snoozed" },
-  { status: "WON", label: "Won" },
-  { status: "DEAD", label: "Dead" },
+const STATUSES: LeadStatus[] = [
+  "NEW",
+  "CONTACTED",
+  "NURTURING",
+  "SNOOZED",
+  "WON",
+  "DEAD",
 ];
 
-export default function PipelineBoard({ leads }: { leads: SerializedLead[] }) {
-  const router = useRouter();
-  const [, startTransition] = useTransition();
-  const [optimistic, setOptimistic] = useState<SerializedLead[]>(leads);
+function formatRelative(iso: string): string {
+  const date = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
+function groupByStatus(
+  leads: SerializedLead[],
+): Record<LeadStatus, SerializedLead[]> {
+  const grouped: Record<LeadStatus, SerializedLead[]> = {
+    NEW: [],
+    CONTACTED: [],
+    NURTURING: [],
+    SNOOZED: [],
+    WON: [],
+    DEAD: [],
+  };
+  for (const lead of leads) {
+    grouped[lead.status].push(lead);
+  }
+  return grouped;
+}
+
+export default function PipelineBoard({
+  initialLeads,
+}: {
+  initialLeads: SerializedLead[];
+}) {
+  const [leadsByStatus, setLeadsByStatus] = useState(() =>
+    groupByStatus(initialLeads),
+  );
+  const [collapsed, setCollapsed] = useState<Set<LeadStatus>>(new Set());
   const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [dragOverColumn, setDragOverColumn] = useState<LeadStatus | null>(null);
+  const [draggingFrom, setDraggingFrom] = useState<LeadStatus | null>(null);
+  const [dropTarget, setDropTarget] = useState<LeadStatus | null>(null);
 
-  // Re-sync local state when server state changes (after router.refresh)
-  useEffect(() => {
-    setOptimistic(leads);
-  }, [leads]);
+  function toggleCollapsed(status: LeadStatus) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(status)) next.delete(status);
+      else next.add(status);
+      return next;
+    });
+  }
 
-  function handleDragStart(e: React.DragEvent, leadId: string) {
-    e.dataTransfer.setData("leadId", leadId);
+  function clearDragState() {
+    setDraggingId(null);
+    setDraggingFrom(null);
+    setDropTarget(null);
+  }
+
+  function handleDragStart(
+    e: React.DragEvent,
+    lead: SerializedLead,
+    fromStatus: LeadStatus,
+  ) {
+    setDraggingId(lead.id);
+    setDraggingFrom(fromStatus);
     e.dataTransfer.effectAllowed = "move";
-    setDraggingId(leadId);
+    e.dataTransfer.setData(
+      "application/json",
+      JSON.stringify({ id: lead.id, fromStatus }),
+    );
   }
 
   function handleDragEnd() {
-    setDraggingId(null);
-    setDragOverColumn(null);
+    // Safety net for cancelled drags (Esc key, drop outside any zone).
+    // For successful drops, handleDrop has already cleared state.
+    clearDragState();
   }
 
   function handleDragOver(e: React.DragEvent, status: LeadStatus) {
+    if (draggingFrom === status) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-    setDragOverColumn(status);
+    if (dropTarget !== status) {
+      setDropTarget(status);
+    }
   }
 
-  function handleDragLeave() {
-    setDragOverColumn(null);
-  }
-
-  async function handleDrop(e: React.DragEvent, newStatus: LeadStatus) {
+  async function handleDrop(e: React.DragEvent, toStatus: LeadStatus) {
     e.preventDefault();
-    const leadId = e.dataTransfer.getData("leadId");
-    setDraggingId(null);
-    setDragOverColumn(null);
+    e.stopPropagation();
 
-    if (!leadId) return;
+    // Clear drag state IMMEDIATELY. The optimistic update below unmounts
+    // the original <tr>, so its onDragEnd never fires — without this,
+    // draggingId stays set and the new row renders ghosted.
+    clearDragState();
 
-    const lead = optimistic.find((l) => l.id === leadId);
-    if (!lead || lead.status === newStatus) return;
-
-    const previousStatus = lead.status;
-
-    // Optimistic update — card moves immediately, server sync follows
-    setOptimistic((prev) =>
-      prev.map((l) => (l.id === leadId ? { ...l, status: newStatus } : l)),
-    );
-
+    let payload: { id: string; fromStatus: LeadStatus };
     try {
-      const res = await fetch(`/api/leads/${leadId}`, {
+      payload = JSON.parse(e.dataTransfer.getData("application/json"));
+    } catch {
+      return;
+    }
+
+    if (payload.fromStatus === toStatus) return;
+
+    const lead = leadsByStatus[payload.fromStatus]?.find(
+      (l) => l.id === payload.id,
+    );
+    if (!lead) return;
+
+    // Auto-expand destination if collapsed so user sees the result
+    if (collapsed.has(toStatus)) {
+      setCollapsed((prev) => {
+        const next = new Set(prev);
+        next.delete(toStatus);
+        return next;
+      });
+    }
+
+    // Optimistic update
+    setLeadsByStatus((prev) => ({
+      ...prev,
+      [payload.fromStatus]: prev[payload.fromStatus].filter(
+        (l) => l.id !== payload.id,
+      ),
+      [toStatus]: [{ ...lead, status: toStatus }, ...prev[toStatus]],
+    }));
+
+    // Persist
+    try {
+      const res = await fetch(`/api/leads/${payload.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: toStatus }),
       });
-
       if (!res.ok) {
         console.error("Status update failed", await res.text());
-        // Revert on failure
-        setOptimistic((prev) =>
-          prev.map((l) =>
-            l.id === leadId ? { ...l, status: previousStatus } : l,
-          ),
-        );
-        return;
+        // Rollback
+        setLeadsByStatus((prev) => ({
+          ...prev,
+          [toStatus]: prev[toStatus].filter((l) => l.id !== payload.id),
+          [payload.fromStatus]: [
+            { ...lead, status: payload.fromStatus },
+            ...prev[payload.fromStatus],
+          ],
+        }));
       }
-
-      startTransition(() => router.refresh());
     } catch (err) {
       console.error("Status update failed", err);
-      setOptimistic((prev) =>
-        prev.map((l) =>
-          l.id === leadId ? { ...l, status: previousStatus } : l,
-        ),
-      );
+      // Rollback
+      setLeadsByStatus((prev) => ({
+        ...prev,
+        [toStatus]: prev[toStatus].filter((l) => l.id !== payload.id),
+        [payload.fromStatus]: [
+          { ...lead, status: payload.fromStatus },
+          ...prev[payload.fromStatus],
+        ],
+      }));
     }
   }
 
   return (
-    <div className={styles.board}>
-      {COLUMNS.map((col) => {
-        const columnLeads = optimistic.filter((l) => l.status === col.status);
-        const isDragOver = dragOverColumn === col.status;
+    <div className={styles.spreadsheet}>
+      {STATUSES.map((status) => {
+        const leadsInStatus = leadsByStatus[status];
+        const isCollapsed = collapsed.has(status);
+        const isDropTarget = dropTarget === status;
 
         return (
-          <div
-            key={col.status}
-            className={`${styles.column} ${isDragOver ? styles.columnDragOver : ""}`}
-            onDragOver={(e) => handleDragOver(e, col.status)}
-            onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, col.status)}
+          <section
+            key={status}
+            className={`${styles.section} ${isDropTarget ? styles.sectionDragOver : ""}`}
+            onDragOver={(e) => handleDragOver(e, status)}
+            onDrop={(e) => handleDrop(e, status)}
           >
-            <div className={styles.columnHeader}>
-              <span
-                className={`${styles.columnLabel} ${styles[`label_${col.status}`]}`}
-              >
-                {col.label}
+            <button
+              type='button'
+              onClick={() => toggleCollapsed(status)}
+              className={styles.sectionHeader}
+            >
+              <span className={styles.collapseIcon}>
+                {isCollapsed ? "▶" : "▼"}
               </span>
-              <span className={styles.columnCount}>{columnLeads.length}</span>
-            </div>
+              <span
+                className={`${styles.statusLabel} ${styles[`status_${status}`]}`}
+              >
+                {status}
+              </span>
+              <span className={styles.sectionCount}>
+                ({leadsInStatus.length})
+              </span>
+            </button>
 
-            <div className={styles.columnCards}>
-              {columnLeads.length === 0 ? (
-                <p className={styles.columnEmpty}>—</p>
-              ) : (
-                columnLeads.map((lead) => (
-                  <div
-                    key={lead.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, lead.id)}
-                    onDragEnd={handleDragEnd}
-                    className={`${styles.leadCard} ${draggingId === lead.id ? styles.leadCardDragging : ""}`}
-                  >
-                    <p className={styles.leadCategory}>
-                      {lead.category.replace(/_/g, " ")}
-                    </p>
-                    <p className={styles.leadName}>
-                      {lead.businessName ?? "Unnamed"}
-                    </p>
-                    {lead.businessAddress && (
-                      <p className={styles.leadAddress}>
-                        {lead.businessAddress}
-                      </p>
-                    )}
-                    {lead.rating !== null && (
-                      <p className={styles.leadRating}>
-                        ★ {lead.rating.toFixed(1)}
-                      </p>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+            {!isCollapsed && (
+              <div className={styles.sectionBody}>
+                {leadsInStatus.length === 0 ? (
+                  <p className={styles.emptyRow}>
+                    {isDropTarget
+                      ? "Drop here to move into this section"
+                      : "No leads in this section"}
+                  </p>
+                ) : (
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th className={styles.dragHeaderCell}></th>
+                        <th>Business</th>
+                        <th>Rating</th>
+                        <th>Phone</th>
+                        <th>Saved</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leadsInStatus.map((lead) => (
+                        <tr
+                          key={lead.id}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, lead, status)}
+                          onDragEnd={handleDragEnd}
+                          className={`${styles.row} ${draggingId === lead.id ? styles.rowDragging : ""}`}
+                        >
+                          <td className={styles.dragCell}>
+                            <span className={styles.dragHandle}>≡</span>
+                          </td>
+                          <td className={styles.nameCell}>
+                            <div className={styles.businessName}>
+                              {lead.businessName ?? "Unnamed"}
+                            </div>
+                            <div className={styles.category}>
+                              {lead.category.replace(/_/g, " ")}
+                            </div>
+                          </td>
+                          <td className={styles.ratingCell}>
+                            {lead.rating !== null
+                              ? `★ ${lead.rating.toFixed(1)} (${lead.reviewCount ?? 0})`
+                              : "—"}
+                          </td>
+                          <td className={styles.phoneCell}>
+                            {lead.businessPhone ?? "—"}
+                          </td>
+                          <td className={styles.savedCell}>
+                            {formatRelative(lead.createdAt)}
+                          </td>
+                          <td className={styles.actionCell}>
+                            <Link
+                              href={`/dashboard/leads/${lead.id}`}
+                              className={styles.viewLink}
+                            >
+                              View →
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
+          </section>
         );
       })}
     </div>

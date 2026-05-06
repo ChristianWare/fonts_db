@@ -1,20 +1,28 @@
 .shell {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
   min-height: 100vh;
   background-color: var(--white);
+  --sidebar-width: 300px;
+  transition: grid-template-columns 0.25s ease;
 }
 
-/* ── Sidebar ── */
+/* When sidebar is collapsed at any width, follow it with the topbar */
+.shell:has(.sidebarCollapsed) {
+  --sidebar-width: 56px;
+}
+
+/* ── Sidebar (FIXED — entire sidebar pinned to viewport) ── */
 .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 300px;
+  height: 100vh;
   background-color: var(--white);
   border-right: 1px solid var(--lightGray);
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
   overflow: hidden;
   transition: width 0.25s ease;
   z-index: 10;
@@ -130,14 +138,11 @@
   background-color: var(--textii);
 }
 
-.navItemActive {
-  color: var(--black);
-  border-left-color: var(--black);
-  background-color: var(--textii);
-}
-
+.navItemActive,
 .navItemActive:hover {
   color: var(--black);
+  border-left-color: var(--black);
+  background-color: var(--accent);
 }
 
 .navIcon {
@@ -274,19 +279,21 @@
   background-color: var(--textii);
 }
 
-/* ── Topbar ── */
+/* ── Topbar (FIXED — always pinned to viewport top) ── */
 .topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 5rem;
+  padding: 0 5rem 0 calc(var(--sidebar-width) + 5rem);
   height: 56px;
   background-color: var(--white);
   border-bottom: 1px solid var(--lightGray);
-  position: sticky;
-  top: 0;
   z-index: 5;
-  flex-shrink: 0;
+  transition: padding-left 0.25s ease;
 }
 
 .topbarLeft {
@@ -333,13 +340,15 @@
   justify-content: center;
 }
 
-/* ── Main ── */
+/* ── Main (explicit grid-column: 2 since sidebar is now fixed) ── */
 .main {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
   background-color: var(--white);
+  padding-top: 56px;
 }
 
 .content {
@@ -377,16 +386,27 @@
   margin: 0.6rem 1rem;
 }
 
+/* ── Mobile overlay default (overridden inside the 1268px breakpoint) ── */
+.overlay {
+  display: none;
+}
 
 /* ── Responsive: 768px ── */
 @media screen and (max-width: 768px) {
   .topbar {
-    padding: 0 2rem;
+    padding: 0 2rem 0 calc(var(--sidebar-width) + 2rem);
   }
 }
 
-/* ── Responsive: 568px — bigger collapse button for easier tapping ── */
-@media screen and (max-width: 568px) {
+/* ── Responsive: 1268px — sidebar becomes a drawer + bigger toggle ── */
+@media screen and (max-width: 1268px) {
+  /* Lock grid + CSS var so the topbar always begins right after the 56px strip */
+  .shell {
+    grid-template-columns: 56px 1fr;
+    --sidebar-width: 56px;
+  }
+
+  /* Bigger collapse button for easier tapping */
   .collapseBtn {
     width: 4rem;
     height: 4rem;
@@ -402,5 +422,30 @@
 
   .topbar {
     height: 64px;
+  }
+
+  .main {
+    padding-top: 64px;
+  }
+
+  /* Drop shadow on the open drawer for depth */
+  .sidebar:not(.sidebarCollapsed) {
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Overlay sits between sidebar (z-index 10) and topbar (z-index 5) */
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 9;
+    pointer-events: none;
+    transition: background-color 0.25s ease;
+  }
+
+  .overlayVisible {
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
   }
 }
