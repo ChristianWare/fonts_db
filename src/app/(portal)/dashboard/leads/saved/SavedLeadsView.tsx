@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./SavedLeadsPage.module.css";
 
 type LeadStatus =
@@ -26,6 +27,8 @@ type SerializedLead = {
   status: LeadStatus;
   notes: string | null;
   createdAt: string;
+  hasScripts: boolean;
+  hasBrief: boolean;
 };
 
 type Counts = {
@@ -116,19 +119,17 @@ export default function SavedLeadsView({
 
   return (
     <>
-      {/* Filter chips */}
       <div className={styles.filters}>
         {FILTERS.map((f) => {
           const count =
             f.value === "all" ? counts.all : counts[f.value as LeadStatus];
-          // Hide empty filters except "All" or the currently selected one
           if (count === 0 && f.value !== "all" && filter !== f.value) {
             return null;
           }
           return (
             <button
               key={f.value}
-              type="button"
+              type='button'
               onClick={() => setFilter(f.value)}
               className={
                 filter === f.value
@@ -142,7 +143,6 @@ export default function SavedLeadsView({
         })}
       </div>
 
-      {/* Cards */}
       {filtered.length === 0 ? (
         <p className={styles.filterEmpty}>No leads with this status.</p>
       ) : (
@@ -169,9 +169,7 @@ export default function SavedLeadsView({
                 </h3>
 
                 {lead.businessAddress && (
-                  <p className={styles.cardAddress}>
-                    {lead.businessAddress}
-                  </p>
+                  <p className={styles.cardAddress}>{lead.businessAddress}</p>
                 )}
 
                 {lead.rating !== null && (
@@ -195,14 +193,27 @@ export default function SavedLeadsView({
                   {lead.businessWebsite && (
                     <a
                       href={lead.businessWebsite}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target='_blank'
+                      rel='noopener noreferrer'
                       className={styles.cardLink}
                     >
                       Website ↗
                     </a>
                   )}
                 </div>
+
+                {(lead.hasBrief || lead.hasScripts) && (
+                  <div className={styles.indicators}>
+                    {lead.hasBrief && (
+                      <span className={styles.indicator}>
+                        ✓ Brief generated
+                      </span>
+                    )}
+                    {lead.hasScripts && (
+                      <span className={styles.indicator}>✓ Scripts ready</span>
+                    )}
+                  </div>
+                )}
 
                 <div className={styles.cardActions}>
                   <label className={styles.actionLabel}>
@@ -241,12 +252,19 @@ export default function SavedLeadsView({
                           updateLead(lead.id, { notes: currentNote });
                         }
                       }}
-                      placeholder="Quick notes — autosave on blur"
+                      placeholder='Quick notes — autosave on blur'
                       className={styles.notesInput}
                       rows={2}
                     />
                   </label>
                 </div>
+
+                <Link
+                  href={`/dashboard/leads/${lead.id}`}
+                  className={styles.detailsLink}
+                >
+                  View details →
+                </Link>
 
                 <p className={styles.cardSaved}>
                   Saved {formatRelative(lead.createdAt)}

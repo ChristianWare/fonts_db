@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Query is required" }, { status: 400 });
   }
 
-  // Determine center: override if both city + state are passed, else saved
   let lat: number;
   let lng: number;
   let radiusMiles: number;
@@ -81,7 +80,6 @@ export async function POST(req: NextRequest) {
     radiusMiles = body.radiusMilesOverride ?? settings.serviceRadiusMiles ?? 50;
   }
 
-  // Search
   try {
     const results = await searchPlaces({
       query,
@@ -91,23 +89,35 @@ export async function POST(req: NextRequest) {
       maxResults: 20,
     });
 
-    // Mark which results are already saved by this user — so the UI can
-    // render them as "Saved" without making the user re-discover that.
     const placeIds = results.map((r) => r.placeId);
-    const alreadySaved = await db.savedLead.findMany({
+    const matchingSaved = await db.savedLead.findMany({
       where: {
         clientProfileId: profile.id,
         googlePlaceId: { in: placeIds },
       },
-      select: { googlePlaceId: true },
+      select: { id: true, googlePlaceId: true, isFavorite: true },
     });
-    const savedSet = new Set(alreadySaved.map((s) => s.googlePlaceId));
+    const savedMap = new Map(
+      matchingSaved.map((s) => [
+        s.googlePlaceId ?? "",
+        { id: s.id, isFavorite: s.isFavorite },
+      ]),
+    );
 
     return NextResponse.json({
-      results: results.map((r) => ({
-        ...r,
-        alreadySaved: savedSet.has(r.placeId),
-      })),
+      results: results.map((r) => {
+        const saved = savedMap.get(r.placeId);
+        const savedState = !saved
+          ? "none"
+          : saved.isFavorite
+            ? "favorite"
+            : "pipeline";
+        return {
+          ...r,
+          savedState,
+          savedLeadId: saved?.id ?? null,
+        };
+      }),
       center: { lat, lng },
       radiusMiles,
     });

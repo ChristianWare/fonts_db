@@ -15,6 +15,7 @@ type Body = {
   phone?: string | null;
   website?: string | null;
   category?: string;
+  isFavorite?: boolean;
 };
 
 export async function POST(req: NextRequest) {
@@ -45,7 +46,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Block duplicates per user — same place can be saved by different users
   const existing = await db.savedLead.findFirst({
     where: {
       clientProfileId: profile.id,
@@ -75,16 +75,18 @@ export async function POST(req: NextRequest) {
       rating: body.rating ?? null,
       reviewCount: body.reviewCount ?? null,
       status: "NEW",
+      isFavorite: body.isFavorite ?? false,
     },
   });
 
-  // Activity log
   await db.leadActivity.create({
     data: {
       savedLeadId: lead.id,
       clientProfileId: profile.id,
       activityType: "CREATED",
-      description: `Saved cold lead: ${body.name}`,
+      description: body.isFavorite
+        ? `Favorited: ${body.name}`
+        : `Saved cold lead: ${body.name}`,
     },
   });
 

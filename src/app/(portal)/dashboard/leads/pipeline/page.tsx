@@ -3,12 +3,12 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
-import SavedLeadsView from "./SavedLeadsView";
-import styles from "./SavedLeadsPage.module.css";
+import PipelineBoard from "./PipelineBoard";
+import styles from "./PipelinePage.module.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function SavedLeadsPage() {
+export default async function PipelinePage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -26,63 +26,42 @@ export default async function SavedLeadsPage() {
 
   const leads = await db.savedLead.findMany({
     where: { clientProfileId: profile.id, isFavorite: false },
-    include: {
-      _count: {
-        select: { outreachScripts: true },
-      },
-    },
     orderBy: { createdAt: "desc" },
   });
 
-  const counts = {
-    all: leads.length,
-    NEW: leads.filter((l) => l.status === "NEW").length,
-    CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
-    NURTURING: leads.filter((l) => l.status === "NURTURING").length,
-    SNOOZED: leads.filter((l) => l.status === "SNOOZED").length,
-    WON: leads.filter((l) => l.status === "WON").length,
-    DEAD: leads.filter((l) => l.status === "DEAD").length,
-  };
-
   const serialized = leads.map((l) => ({
     id: l.id,
-    leadType: l.leadType,
-    source: l.source,
     category: l.category,
     businessName: l.businessName,
     businessAddress: l.businessAddress,
-    businessPhone: l.businessPhone,
-    businessWebsite: l.businessWebsite,
     rating: l.rating,
     reviewCount: l.reviewCount,
     status: l.status,
-    notes: l.notes,
     createdAt: l.createdAt.toISOString(),
-    hasScripts: l._count.outreachScripts > 0,
-    hasBrief: !!l.strategicBrief,
   }));
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Saved Leads</h1>
+        <h1 className={styles.heading}>Pipeline</h1>
       </div>
 
       <div className={styles.body}>
         {leads.length === 0 ? (
           <div className={styles.emptyState}>
-            <p className={styles.emptyTitle}>No saved leads yet</p>
+            <p className={styles.emptyTitle}>No leads in your pipeline</p>
             <p className={styles.emptyDesc}>
-              Head to search to find businesses in your market and save the ones
-              you want to pursue.
+              Search for businesses and save them to populate your pipeline.
+              Drag cards across columns to track them through your sales
+              process.
             </p>
             <Link href='/dashboard/leads/search' className={styles.emptyCta}>
               Search for leads →
             </Link>
           </div>
         ) : (
-          <SavedLeadsView leads={serialized} counts={counts} />
+          <PipelineBoard leads={serialized} />
         )}
       </div>
     </div>

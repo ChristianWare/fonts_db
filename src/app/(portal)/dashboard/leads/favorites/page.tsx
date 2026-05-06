@@ -3,12 +3,12 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
-import SavedLeadsView from "./SavedLeadsView";
-import styles from "./SavedLeadsPage.module.css";
+import FavoritesView from "./FavoritesView";
+import styles from "./FavoritesPage.module.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function SavedLeadsPage() {
+export default async function FavoritesPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -24,30 +24,16 @@ export default async function SavedLeadsPage() {
     redirect("/dashboard/enroll/leads");
   }
 
-  const leads = await db.savedLead.findMany({
-    where: { clientProfileId: profile.id, isFavorite: false },
-    include: {
-      _count: {
-        select: { outreachScripts: true },
-      },
+  const favorites = await db.savedLead.findMany({
+    where: {
+      clientProfileId: profile.id,
+      isFavorite: true,
     },
     orderBy: { createdAt: "desc" },
   });
 
-  const counts = {
-    all: leads.length,
-    NEW: leads.filter((l) => l.status === "NEW").length,
-    CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
-    NURTURING: leads.filter((l) => l.status === "NURTURING").length,
-    SNOOZED: leads.filter((l) => l.status === "SNOOZED").length,
-    WON: leads.filter((l) => l.status === "WON").length,
-    DEAD: leads.filter((l) => l.status === "DEAD").length,
-  };
-
-  const serialized = leads.map((l) => ({
+  const serialized = favorites.map((l) => ({
     id: l.id,
-    leadType: l.leadType,
-    source: l.source,
     category: l.category,
     businessName: l.businessName,
     businessAddress: l.businessAddress,
@@ -55,34 +41,31 @@ export default async function SavedLeadsPage() {
     businessWebsite: l.businessWebsite,
     rating: l.rating,
     reviewCount: l.reviewCount,
-    status: l.status,
-    notes: l.notes,
     createdAt: l.createdAt.toISOString(),
-    hasScripts: l._count.outreachScripts > 0,
-    hasBrief: !!l.strategicBrief,
   }));
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Saved Leads</h1>
+        <h1 className={styles.heading}>Favorites</h1>
       </div>
 
       <div className={styles.body}>
-        {leads.length === 0 ? (
+        {favorites.length === 0 ? (
           <div className={styles.emptyState}>
-            <p className={styles.emptyTitle}>No saved leads yet</p>
+            <p className={styles.emptyTitle}>No favorites yet</p>
             <p className={styles.emptyDesc}>
-              Head to search to find businesses in your market and save the ones
-              you want to pursue.
+              Click the heart icon on any search result to bookmark it here.
+              Favorites are leads you&apos;re still researching — they
+              don&apos;t clutter your active pipeline.
             </p>
             <Link href='/dashboard/leads/search' className={styles.emptyCta}>
               Search for leads →
             </Link>
           </div>
         ) : (
-          <SavedLeadsView leads={serialized} counts={counts} />
+          <FavoritesView leads={serialized} />
         )}
       </div>
     </div>

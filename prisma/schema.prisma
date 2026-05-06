@@ -720,6 +720,12 @@ model SavedLead {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  strategicBrief String? @db.Text
+
+  isFavorite              Boolean @default(false)
+  reviewIntelligence      String? @db.Text
+  decisionMakerHypothesis String? @db.Text
+
   @@index([clientProfileId, status])
   @@index([clientProfileId, leadType])
   @@index([snoozeUntil])

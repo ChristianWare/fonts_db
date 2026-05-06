@@ -30,11 +30,13 @@ export type PlaceSearchResult = {
   types: string[];
 };
 
-/**
- * Returns the API key, throwing if it isn't configured. Using a function
- * (instead of TS's `asserts` syntax) so callers get a plain `string` at
- * each call site — which `asserts` can't do for module-level variables.
- */
+export type PlaceReview = {
+  rating: number;
+  text: string;
+  authorName: string;
+  publishedTime: string | null;
+};
+
 function getApiKey(): string {
   if (!API_KEY) {
     throw new Error(
@@ -44,17 +46,11 @@ function getApiKey(): string {
   return API_KEY;
 }
 
-/**
- * Convert a city + state into lat/lng coordinates.
- * Returns null on failure (404, no results, API error) — caller decides
- * whether to fail loudly or just skip saving coords.
- */
 export async function geocodeCity(
   city: string,
   state: string,
 ): Promise<GeocodingResult | null> {
   const apiKey = getApiKey();
-
   const address = `${city}, ${state}, USA`;
   const url = `${GEOCODE_BASE}?address=${encodeURIComponent(address)}&key=${apiKey}`;
 
@@ -64,7 +60,6 @@ export async function geocodeCity(
       console.error("Geocoding API HTTP error", res.status);
       return null;
     }
-
     const data = await res.json();
     if (data.status !== "OK" || !data.results?.[0]) {
       console.error(
@@ -74,7 +69,6 @@ export async function geocodeCity(
       );
       return null;
     }
-
     const top = data.results[0];
     return {
       formattedAddress: top.formatted_address,
@@ -89,40 +83,25 @@ export async function geocodeCity(
   }
 }
 
-/**
- * Compute a lat/lng bounding box (low/high) from a center + radius in miles.
- * Used for Places API location restriction since the circle radius caps
- * at 50km and we need to support up to 150 miles.
- */
 function radiusToBounds(lat: number, lng: number, miles: number) {
   const latDelta = (miles / EARTH_RADIUS_MILES) * (180 / Math.PI);
   const lngDelta =
     ((miles / EARTH_RADIUS_MILES) * (180 / Math.PI)) /
     Math.cos((lat * Math.PI) / 180);
-
   return {
     low: { latitude: lat - latDelta, longitude: lng - lngDelta },
     high: { latitude: lat + latDelta, longitude: lng + lngDelta },
   };
 }
 
-/**
- * Search for businesses by free-text query within a radius of a point.
- * Uses Places API (New) Text Search with locationRestriction (hard radius
- * limit so we don't get cross-country results).
- *
- * Field-masked to only return what we display — keeps cost down per
- * Places API (New) pricing model.
- */
 export async function searchPlaces(opts: {
-  query: string; // e.g. "wedding venues" or "hotels"
+  query: string;
   lat: number;
   lng: number;
   radiusMiles: number;
   maxResults?: number;
 }): Promise<PlaceSearchResult[]> {
   const apiKey = getApiKey();
-
   const bounds = radiusToBounds(opts.lat, opts.lng, opts.radiusMiles);
 
   const fieldMask = [
@@ -146,9 +125,7 @@ export async function searchPlaces(opts: {
     },
     body: JSON.stringify({
       textQuery: opts.query,
-      locationRestriction: {
-        rectangle: bounds,
-      },
+      locationRestriction: { rectangle: bounds },
       maxResultCount: Math.min(opts.maxResults ?? 20, 20),
     }),
   });
@@ -179,5 +156,45 @@ export async function searchPlaces(opts: {
   }));
 }
 
-// Re-export the meters constant in case anything else needs it
+/**
+ * Fetch reviews for a specific place via Place Details API.
+ * Google returns up to 5 most-relevant reviews per place.
+ */
+export async function fetchPlaceReviews(
+  placeId: string,
+): Promise<PlaceReview[] | null> {
+  const apiKey = getApiKey();
+
+  const url = `${PLACES_BASE}/places/${encodeURIComponent(placeId)}`;
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "X-Goog-Api-Key": apiKey,
+        "X-Goog-FieldMask": "reviews",
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Place Details API error", res.status, await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const reviews: any[] = data.reviews ?? [];
+
+    return reviews.map((r) => ({
+      rating: r.rating ?? 0,
+      text: r.text?.text ?? r.originalText?.text ?? "",
+      authorName: r.authorAttribution?.displayName ?? "Anonymous",
+      publishedTime: r.publishTime ?? null,
+    }));
+  } catch (err) {
+    console.error("Place Details fetch failed", err);
+    return null;
+  }
+}
+
 export { MILES_TO_METERS };

@@ -1,0 +1,246 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 4rem 5rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.eyebrow {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.7;
+  margin-bottom: 1rem;
+}
+
+.heading {
+  font-family: var(--RobotoFlexii);
+  font-size: 4rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1;
+}
+
+.body {
+  padding: 4rem 5rem;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 6rem 4rem;
+  border: 1px dashed var(--lightGray);
+  text-align: center;
+}
+
+.emptyTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 3rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.emptyDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 50ch;
+}
+
+.emptyCta {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2rem 4rem;
+  background-color: var(--black);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(240px, 1fr));
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 2rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--grayii);
+  min-height: 500px;
+  transition: all 0.15s ease;
+}
+
+.columnDragOver {
+  background-color: rgba(252, 211, 77, 0.1);
+  border-color: var(--accent);
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  border-bottom: 1px solid var(--grayii);
+  background-color: var(--white);
+}
+
+.columnLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 1rem;
+}
+
+.label_NEW {
+  background-color: var(--accent);
+  color: var(--black);
+}
+
+.label_CONTACTED {
+  background-color: #3b82f6;
+  color: var(--white);
+}
+
+.label_NURTURING {
+  background-color: #f59e0b;
+  color: var(--white);
+}
+
+.label_SNOOZED {
+  background-color: var(--lightGray);
+  color: var(--white);
+}
+
+.label_WON {
+  background-color: #16a34a;
+  color: var(--white);
+}
+
+.label_DEAD {
+  background-color: #ef4444;
+  color: var(--white);
+}
+
+.columnCount {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.columnCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  flex: 1;
+}
+
+.columnEmpty {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.4;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Lead card */
+.leadCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+  cursor: grab;
+  transition: all 0.15s ease;
+}
+
+.leadCard:hover {
+  border-color: var(--black);
+}
+
+.leadCard:active {
+  cursor: grabbing;
+}
+
+.leadCardDragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.leadCategory {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.leadName {
+  font-family: var(--RobotoFlexii);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.leadAddress {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.leadRating {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--black);
+}
+
+@media screen and (max-width: 768px) {
+  .header,
+  .body {
+    padding: 3rem 2rem;
+  }
+
+  .heading {
+    font-size: 3rem;
+  }
+
+  .board {
+    gap: 1rem;
+  }
+}

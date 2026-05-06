@@ -328,3 +328,106 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* New action layout */
+.cardActionRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heartBtn {
+  font-size: 2.4rem;
+  width: 5rem;
+  height: 5rem;
+  background-color: var(--white);
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.heartBtn:hover:not(:disabled) {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.heartBtnActive {
+  background-color: #ef4444;
+  color: var(--white);
+  border-color: #ef4444;
+}
+
+.heartBtnActive:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+.heartBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.savedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 2rem;
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  flex: 1;
+  text-align: center;
+}
+
+.saveBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 2rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  flex: 1;
+  transition: all 0.15s ease;
+}
+
+.saveBtn:hover:not(:disabled) {
+  border-color: var(--black);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.detailsBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  transition: opacity 0.15s ease;
+}
+
+.detailsBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.detailsBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

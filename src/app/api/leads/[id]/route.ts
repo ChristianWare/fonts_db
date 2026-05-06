@@ -18,6 +18,7 @@ type Body = {
   status?: string;
   notes?: string;
   snoozeUntil?: string | null;
+  isFavorite?: boolean;
 };
 
 export async function PATCH(
@@ -39,7 +40,6 @@ export async function PATCH(
 
   const { id } = await params;
 
-  // Verify ownership before any update
   const lead = await db.savedLead.findUnique({
     where: { id },
     select: { id: true, clientProfileId: true, status: true },
@@ -68,14 +68,8 @@ export async function PATCH(
       data.status = candidate;
       statusChanged = true;
       newStatus = candidate;
-
-      // Side effects: stamp timestamps for state transitions
-      if (candidate === "CONTACTED") {
-        data.lastContactedAt = new Date();
-      }
-      if (candidate === "WON") {
-        data.wonAt = new Date();
-      }
+      if (candidate === "CONTACTED") data.lastContactedAt = new Date();
+      if (candidate === "WON") data.wonAt = new Date();
     }
   }
 
@@ -87,16 +81,16 @@ export async function PATCH(
     data.snoozeUntil = body.snoozeUntil ? new Date(body.snoozeUntil) : null;
   }
 
+  if (body.isFavorite !== undefined) {
+    data.isFavorite = body.isFavorite;
+  }
+
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ success: true, noop: true });
   }
 
-  const updated = await db.savedLead.update({
-    where: { id },
-    data,
-  });
+  const updated = await db.savedLead.update({ where: { id }, data });
 
-  // Activity log — only for status changes (notes get noisy)
   if (statusChanged && newStatus) {
     await db.leadActivity.create({
       data: {
@@ -110,4 +104,40 @@ export async function PATCH(
   }
 
   return NextResponse.json({ success: true, lead: updated });
+}
+
+/**
+ * DELETE — used when un-favoriting a lead from search results.
+ * Cascade-deletes scripts, brief, activities (per onDelete: Cascade in schema).
+ */
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const profile = await db.clientProfile.findUnique({
+    where: { userId: session.user.id },
+    select: { id: true },
+  });
+  if (!profile) {
+    return NextResponse.json({ error: "No profile" }, { status: 404 });
+  }
+
+  const { id } = await params;
+
+  const lead = await db.savedLead.findUnique({
+    where: { id },
+    select: { id: true, clientProfileId: true },
+  });
+  if (!lead || lead.clientProfileId !== profile.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  await db.savedLead.delete({ where: { id } });
+
+  return NextResponse.json({ success: true });
 }
