@@ -30,6 +30,11 @@ export type PlaceSearchResult = {
   types: string[];
 };
 
+export type PlaceSearchResponse = {
+  places: PlaceSearchResult[];
+  nextPageToken: string | null;
+};
+
 export type PlaceReview = {
   rating: number;
   text: string;
@@ -99,8 +104,9 @@ export async function searchPlaces(opts: {
   lat: number;
   lng: number;
   radiusMiles: number;
-  maxResults?: number;
-}): Promise<PlaceSearchResult[]> {
+  pageSize?: number;
+  pageToken?: string;
+}): Promise<PlaceSearchResponse> {
   const apiKey = getApiKey();
   const bounds = radiusToBounds(opts.lat, opts.lng, opts.radiusMiles);
 
@@ -114,7 +120,19 @@ export async function searchPlaces(opts: {
     "places.nationalPhoneNumber",
     "places.websiteUri",
     "places.types",
+    "nextPageToken",
   ].join(",");
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const body: Record<string, any> = {
+    textQuery: opts.query,
+    locationRestriction: { rectangle: bounds },
+    pageSize: Math.min(opts.pageSize ?? 20, 20),
+  };
+
+  if (opts.pageToken) {
+    body.pageToken = opts.pageToken;
+  }
 
   const res = await fetch(`${PLACES_BASE}/places:searchText`, {
     method: "POST",
@@ -123,11 +141,7 @@ export async function searchPlaces(opts: {
       "X-Goog-Api-Key": apiKey,
       "X-Goog-FieldMask": fieldMask,
     },
-    body: JSON.stringify({
-      textQuery: opts.query,
-      locationRestriction: { rectangle: bounds },
-      maxResultCount: Math.min(opts.maxResults ?? 20, 20),
-    }),
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
@@ -140,20 +154,23 @@ export async function searchPlaces(opts: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const places: any[] = data.places ?? [];
 
-  return places.map((p) => ({
-    placeId: p.id,
-    name: p.displayName?.text ?? "",
-    address: p.formattedAddress ?? "",
-    coordinates: {
-      lat: p.location?.latitude ?? 0,
-      lng: p.location?.longitude ?? 0,
-    },
-    rating: p.rating ?? null,
-    reviewCount: p.userRatingCount ?? null,
-    phone: p.nationalPhoneNumber ?? null,
-    website: p.websiteUri ?? null,
-    types: p.types ?? [],
-  }));
+  return {
+    places: places.map((p) => ({
+      placeId: p.id,
+      name: p.displayName?.text ?? "",
+      address: p.formattedAddress ?? "",
+      coordinates: {
+        lat: p.location?.latitude ?? 0,
+        lng: p.location?.longitude ?? 0,
+      },
+      rating: p.rating ?? null,
+      reviewCount: p.userRatingCount ?? null,
+      phone: p.nationalPhoneNumber ?? null,
+      website: p.websiteUri ?? null,
+      types: p.types ?? [],
+    })),
+    nextPageToken: data.nextPageToken ?? null,
+  };
 }
 
 /**

@@ -10,6 +10,7 @@ type Body = {
   cityOverride?: string;
   stateOverride?: string;
   radiusMilesOverride?: number;
+  pageToken?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -81,22 +82,25 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const results = await searchPlaces({
+    const result = await searchPlaces({
       query,
       lat,
       lng,
       radiusMiles,
-      maxResults: 20,
+      pageSize: 20,
+      pageToken: body.pageToken,
     });
 
-    const placeIds = results.map((r) => r.placeId);
-    const matchingSaved = await db.savedLead.findMany({
-      where: {
-        clientProfileId: profile.id,
-        googlePlaceId: { in: placeIds },
-      },
-      select: { id: true, googlePlaceId: true, isFavorite: true },
-    });
+    const placeIds = result.places.map((r) => r.placeId);
+    const matchingSaved = placeIds.length
+      ? await db.savedLead.findMany({
+          where: {
+            clientProfileId: profile.id,
+            googlePlaceId: { in: placeIds },
+          },
+          select: { id: true, googlePlaceId: true, isFavorite: true },
+        })
+      : [];
     const savedMap = new Map(
       matchingSaved.map((s) => [
         s.googlePlaceId ?? "",
@@ -105,7 +109,7 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({
-      results: results.map((r) => {
+      results: result.places.map((r) => {
         const saved = savedMap.get(r.placeId);
         const savedState = !saved
           ? "none"
@@ -120,6 +124,7 @@ export async function POST(req: NextRequest) {
       }),
       center: { lat, lng },
       radiusMiles,
+      nextPageToken: result.nextPageToken,
     });
   } catch (err) {
     console.error("Search failed", err);
