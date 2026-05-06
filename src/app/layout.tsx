@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import SessionProviderWrap from "@/components/shared/Providers/SessionProvider/SessionProvider";
 import Footer from "@/components/HomePage/Footer/Footer";
 import PlausibleProvider from "next-plausible";
+import TopLoadingBar from "@/components/shared/TopLoadingBar/TopLoadingBar";
 
 const RobotoFlex = localFont({
   src: "../../public/fonts/RobotoFlex.woff2",
@@ -67,7 +68,7 @@ export default function RootLayout({
       <body
         className={`${RobotoFlex.variable} ${RobotoFlexii.variable} ${RobotoCondensed.variable} ${Roboto.variable} ${GeistMono.variable}`}
       >
-        {" "}
+        <TopLoadingBar />
         <PlausibleProvider
           domain='fontsandfooters.com'
           trackLocalhost={false}

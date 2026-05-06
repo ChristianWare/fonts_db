@@ -58,8 +58,8 @@
   letter-spacing: -0.03em;
   font-weight: 400;
   font-variation-settings:
-    "wght" 700,
-    "wdth" 81;
+  "wght" 700,
+  "wdth" 81;
   -webkit-font-smoothing: antialiased;
   white-space: nowrap;
 }
