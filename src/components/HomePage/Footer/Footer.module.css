@@ -20,6 +20,7 @@
   );
   background-size: 7px 7px;
   padding: 1rem 2rem;
+  text-align: right;
 }
 
 .accent {
@@ -150,7 +151,7 @@
 
 @media screen and (max-width: 768px) {
   .heading {
-    text-align: left;
+    text-align: right;
   }
 
   .bottom {
@@ -158,8 +159,8 @@
   }
 
   .bottomLeft {
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .navItems {
@@ -181,6 +182,18 @@
   .footerSocials {
     align-items: center;
     justify-content: center;
+  }
+
+  .bottomRight {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .btnContainer {
+    display: block;
+    width: fit-content;
   }
 }
 

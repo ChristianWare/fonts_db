@@ -60,7 +60,7 @@
   text-decoration: none;
 }
 
-/* Saved banner (after save) */
+/* Saved banner */
 .savedBanner {
   display: flex;
   align-items: center;
@@ -147,6 +147,31 @@
   opacity: 0.8;
 }
 
+.establishedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 1.2rem;
+  background-color: var(--accent);
+  color: var(--black);
+}
+
+.openBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: #16a34a;
+  letter-spacing: 0.04em;
+}
+
+.closedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.6;
+  letter-spacing: 0.04em;
+}
+
 .heroStatusWarn {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -176,17 +201,76 @@
   color: #1d4ed8;
 }
 
-/* Distance card */
-.distanceCard {
+/* Photos */
+.photosSection {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 3rem;
-  background-color: var(--black);
-  color: var(--white);
 }
 
-.distanceValue {
+.photosRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.photoWrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.photoThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Location card with map + distance + drive time */
+.locationCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background-color: var(--black);
+  color: var(--white);
+  overflow: hidden;
+}
+
+.locationMap {
+  position: relative;
+  min-height: 280px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.mapImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.locationStats {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3rem;
+  justify-content: center;
+}
+
+.locationStatRow {
+  display: flex;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.locationStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.locationStatValue {
   font-family: var(--RobotoFlexii);
   font-size: 4rem;
   color: var(--accent);
@@ -197,10 +281,24 @@
   line-height: 1;
 }
 
-.distanceDesc {
+.locationStatLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--lightGray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.trafficNote {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.locationDesc {
   font-family: var(--Roboto);
   font-size: 1.6rem;
   color: var(--lightGray);
+  line-height: 1.4;
 }
 
 /* Sections */
@@ -222,6 +320,124 @@
   line-height: 1;
 }
 
+/* Editorial summary */
+.editorialBody {
+  font-family: var(--Roboto);
+  font-size: 1.8rem;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 70ch;
+}
+
+/* Atmosphere chips */
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.atmosphereChip {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  padding: 1rem 2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Hours */
+.hoursList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.hoursItem {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  padding: 0.8rem 1rem;
+  margin: 0 -1rem;
+}
+
+.hoursItemToday {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--black);
+  font-weight: 700;
+  background-color: rgba(252, 211, 77, 0.2);
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1rem;
+  margin: 0 -1rem;
+}
+
+/* Reviews */
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.reviewCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 3rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-left: 3px solid var(--lightGray);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.reviewAuthor {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.reviewMeta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.stars {
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  font-size: 1.8rem;
+}
+
+.starsEmpty {
+  color: var(--lightGray);
+}
+
+.reviewTime {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.reviewText {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* Category type chips */
 .typesList {
   display: flex;
   flex-wrap: wrap;
@@ -234,20 +450,6 @@
   text-transform: capitalize;
   padding: 1rem 2rem;
   background-color: rgba(0, 0, 0, 0.05);
-  color: var(--text);
-}
-
-.hoursList {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-}
-
-.hoursItem {
-  font-family: var(--Roboto);
-  font-size: 1.6rem;
   color: var(--text);
 }
 
@@ -399,6 +601,14 @@
   .sidebarSticky {
     position: static;
   }
+
+  .locationCard {
+    grid-template-columns: 1fr;
+  }
+
+  .locationMap {
+    min-height: 200px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -419,5 +629,17 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .reviewCard {
+    padding: 2rem;
+  }
+
+  .locationStats {
+    padding: 2rem;
+  }
+
+  .locationStatValue {
+    font-size: 3rem;
   }
 }
