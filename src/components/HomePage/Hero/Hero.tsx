@@ -39,24 +39,10 @@ export default function Hero() {
                 </span>
               </div>
               <h1 className={styles.heading}>
-                {/* Custom Direct <br /> booking websites */}
-                {/* Everything a black
-                <br /> 
-                 car 
-                operator <br />needs to grow */}
                 Audits. Leads. <br /> Websites.
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
-                  {/* Your operation deserves better than generic software. Fonts &
-                  Footers builds the tools black car operators actually need —{" "}
-                  <span className={styles.span}>
-                    {" "}
-                    a free audit that shows what your site is costing you, a
-                    lead system that finds clients before your competitors do,
-                    and a custom booking website that keeps every dollar you
-                    earn.
-                  </span> */}
                   Fonts & Footers is the only growth platform built exclusively
                   for black car and limo operators. A free website audit, a lead
                   generation tool, and a custom booking website —

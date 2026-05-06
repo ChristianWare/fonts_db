@@ -46,23 +46,24 @@
 
 /* Spreadsheet */
 .spreadsheet {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--grayii);
   background-color: var(--white);
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 5rem;
 }
 
 .section {
-  border-bottom: 1px solid var(--grayii);
+  border: 1px solid var(--black);
   background-color: var(--white);
+  padding: 1rem;
   transition:
     background-color 0.15s ease,
     box-shadow 0.15s ease;
 }
 
-.section:last-child {
+/* .section:last-child {
   border-bottom: none;
-}
+} */
 
 .sectionDragOver {
   background-color: rgba(252, 211, 77, 0.08);
@@ -84,6 +85,7 @@
   text-align: left;
   font-family: inherit;
   transition: background-color 0.15s ease;
+  border: 1px solid var(--grayiii);
 }
 
 .sectionHeader:hover {
@@ -286,7 +288,7 @@
 
 .actionCell {
   text-align: right;
-  width: 12rem;
+  /* width: 12rem; */
 }
 
 .viewLink {
@@ -310,7 +312,7 @@
 }
 
 /* Stack everything vertically on narrow screens — no columns hidden */
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1268px) {
   .table thead {
     display: none;
   }
@@ -375,6 +377,11 @@
   .viewLink {
     display: inline-block;
   }
+
+  .btnContainer {
+  display: grid;
+  width: 50%;
+}
 }
 
 @media screen and (max-width: 768px) {
@@ -402,5 +409,11 @@
 
   .businessName {
     font-size: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .btnContainer {
+    width: 100%;
   }
 }

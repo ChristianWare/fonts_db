@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import styles from "./PipelinePage.module.css";
+import Button from "@/components/shared/Button/Button";
 
 type LeadStatus =
   | "NEW"
@@ -279,12 +280,20 @@ export default function PipelineBoard({
                             {formatRelative(lead.createdAt)}
                           </td>
                           <td className={styles.actionCell}>
-                            <Link
+                            {/* <Link
                               href={`/dashboard/leads/${lead.id}`}
                               className={styles.viewLink}
                             >
                               View →
-                            </Link>
+                            </Link> */}
+                            <div className={styles.btnContainer}>
+                              <Button
+                                href={`/dashboard/leads/${lead.id}`}
+                                text='View'
+                                btnType='accent'
+                                arrow
+                              />
+                            </div>
                           </td>
                         </tr>
                       ))}
