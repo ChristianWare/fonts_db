@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
+import { geocodeCity } from "@/lib/googlePlaces";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,7 @@ type Body = {
   serviceRadiusMiles?: number;
   phoneNumber?: string;
   smsEnabled?: boolean;
+  emailEnabled?: boolean;
 };
 
 export async function POST(req: NextRequest) {
@@ -61,28 +63,42 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Upsert because admin users may not have a LeadsSettings row yet
-  // (it's normally bootstrapped by checkout, but admins bypass that).
+  // Geocode the city → lat/lng. Failure here is non-fatal — we still
+  // save the user's settings, just without coordinates. Cold lead search
+  // will surface the missing-coords state and prompt a re-save.
+  const geocoded = await geocodeCity(city, state);
+  const lat = geocoded?.coordinates.lat ?? null;
+  const lng = geocoded?.coordinates.lng ?? null;
+
   await db.leadsSettings.upsert({
     where: { clientProfileId: profile.id },
     create: {
       clientProfileId: profile.id,
       primaryCity: city,
       primaryState: state,
+      primaryLat: lat,
+      primaryLng: lng,
       serviceRadiusMiles: radius,
       phoneNumber: phone,
       smsEnabled: body.smsEnabled ?? true,
+      emailEnabled: body.emailEnabled ?? true,
       onboardingCompletedAt: new Date(),
     },
     update: {
       primaryCity: city,
       primaryState: state,
+      primaryLat: lat,
+      primaryLng: lng,
       serviceRadiusMiles: radius,
       phoneNumber: phone,
       smsEnabled: body.smsEnabled ?? true,
+      emailEnabled: body.emailEnabled ?? true,
       onboardingCompletedAt: new Date(),
     },
   });
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    success: true,
+    geocoded: !!geocoded,
+  });
 }
