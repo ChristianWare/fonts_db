@@ -22,7 +22,7 @@ type Props = {
   defaultRadius: number;
 };
 
-const SUGGESTIONS = [
+const CATEGORIES = [
   "wedding venues",
   "hotels",
   "law firms",
@@ -62,14 +62,12 @@ export default function ColdLeadSearchForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
-          cityOverride:
-            city.trim() !== defaultCity ? city.trim() : undefined,
+          cityOverride: city.trim() !== defaultCity ? city.trim() : undefined,
           stateOverride:
             state.trim() !== defaultState
               ? state.trim().toUpperCase()
               : undefined,
-          radiusMilesOverride:
-            radius !== defaultRadius ? radius : undefined,
+          radiusMilesOverride: radius !== defaultRadius ? radius : undefined,
         }),
       });
 
@@ -98,7 +96,6 @@ export default function ColdLeadSearchForm({
   }
 
   async function handleSave(result: SearchResult) {
-    // Optimistic update
     setSavedIds((prev) => new Set(prev).add(result.placeId));
 
     try {
@@ -119,12 +116,10 @@ export default function ColdLeadSearchForm({
         }),
       });
 
-      // 409 means it was already saved — that's a fine no-op
       if (!res.ok && res.status !== 409) {
         throw new Error("Save failed");
       }
     } catch {
-      // Revert optimistic update on real failure
       setSavedIds((prev) => {
         const next = new Set(prev);
         next.delete(result.placeId);
@@ -137,51 +132,44 @@ export default function ColdLeadSearchForm({
     <div className={styles.body}>
       <form onSubmit={handleSearch} className={styles.searchCard}>
         <div className={styles.field}>
-          <label htmlFor="query" className={styles.label}>
-            What are you searching for?
+          <label htmlFor='category' className={styles.label}>
+            Category
           </label>
-          <input
-            id="query"
-            type="text"
+          <select
+            id='category'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g. wedding venues, hotels, law firms"
-            className={styles.input}
-          />
-          <div className={styles.suggestions}>
-            {SUGGESTIONS.map((sug) => (
-              <button
-                key={sug}
-                type="button"
-                onClick={() => setQuery(sug)}
-                className={styles.suggestion}
-              >
-                {sug}
-              </button>
+            className={styles.select}
+          >
+            <option value=''>Select a category</option>
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
             ))}
-          </div>
+          </select>
         </div>
 
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor="city" className={styles.label}>
+            <label htmlFor='city' className={styles.label}>
               City
             </label>
             <input
-              id="city"
-              type="text"
+              id='city'
+              type='text'
               value={city}
               onChange={(e) => setCity(e.target.value)}
               className={styles.input}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="state" className={styles.label}>
+            <label htmlFor='state' className={styles.label}>
               State
             </label>
             <input
-              id="state"
-              type="text"
+              id='state'
+              type='text'
               value={state}
               onChange={(e) => setState(e.target.value)}
               maxLength={2}
@@ -189,12 +177,12 @@ export default function ColdLeadSearchForm({
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="radius" className={styles.label}>
+            <label htmlFor='radius' className={styles.label}>
               Radius (miles)
             </label>
             <input
-              id="radius"
-              type="number"
+              id='radius'
+              type='number'
               value={radius}
               onChange={(e) => setRadius(parseInt(e.target.value, 10) || 50)}
               min={10}
@@ -205,7 +193,7 @@ export default function ColdLeadSearchForm({
         </div>
 
         <button
-          type="submit"
+          type='submit'
           disabled={loading || !query.trim()}
           className={styles.searchBtn}
         >
@@ -226,40 +214,43 @@ export default function ColdLeadSearchForm({
               const saved = savedIds.has(r.placeId);
               return (
                 <div key={r.placeId} className={styles.resultCard}>
-                  <h3 className={styles.resultName}>{r.name}</h3>
-                  <p className={styles.resultAddress}>{r.address}</p>
+                  <div className={styles.cardTop}>
+                    <h3 className={styles.resultName}>{r.name}</h3>
+                    <p className={styles.resultAddress}>{r.address}</p>
 
-                  {r.rating !== null && (
-                    <p className={styles.resultRating}>
-                      ★ {r.rating.toFixed(1)}{" "}
-                      <span className={styles.resultReviewCount}>
-                        ({r.reviewCount ?? 0} reviews)
-                      </span>
-                    </p>
-                  )}
-
-                  <div className={styles.resultMeta}>
-                    {r.phone && <span>{r.phone}</span>}
-                    {r.website && (
-                      <a
-                        href={r.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.resultLink}
-                      >
-                        Visit website ↗
-                      </a>
+                    {r.rating !== null && (
+                      <p className={styles.resultRating}>
+                        ★ {r.rating.toFixed(1)}{" "}
+                        <span className={styles.resultReviewCount}>
+                          ({r.reviewCount ?? 0} reviews)
+                        </span>
+                      </p>
                     )}
-                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleSave(r)}
-                    disabled={saved}
-                    className={saved ? styles.savedBtn : styles.saveBtn}
-                  >
-                    {saved ? "Saved ✓" : "+ Save to pipeline"}
-                  </button>
+                    <div className={styles.resultMeta}>
+                      {r.phone && <span>{r.phone}</span>}
+                      {r.website && (
+                        <a
+                          href={r.website}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className={styles.resultLink}
+                        >
+                          Visit website ↗
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.cardBottom}>
+                    <button
+                      type='button'
+                      onClick={() => handleSave(r)}
+                      disabled={saved}
+                      className={saved ? styles.savedBtn : styles.saveBtn}
+                    >
+                      {saved ? "Saved ✓" : "+ Save to pipeline"}
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -269,8 +260,8 @@ export default function ColdLeadSearchForm({
 
       {!loading && !error && results.length === 0 && searchedQuery && (
         <p className={styles.emptyState}>
-          No results for &ldquo;{searchedQuery}&rdquo;. Try a different
-          category or expand your radius.
+          No results for &ldquo;{searchedQuery}&rdquo;. Try a different category
+          or expand your radius.
         </p>
       )}
     </div>

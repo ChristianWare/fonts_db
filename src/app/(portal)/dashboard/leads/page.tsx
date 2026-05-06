@@ -24,16 +24,18 @@ export default async function LeadsPage({
 
   const access = await getProductAccess(profile.id);
   const isAdmin = session.user.roles?.includes("ADMIN") ?? false;
-
-  // Gate: must have leads access (real or admin) to be on this page
   if (!access.hasLeads && !isAdmin) {
     redirect("/dashboard/enroll/leads");
   }
 
-  // Read settings to determine onboarding state
-  const settings = await db.leadsSettings.findUnique({
-    where: { clientProfileId: profile.id },
-  });
+  const [settings, savedCount] = await Promise.all([
+    db.leadsSettings.findUnique({
+      where: { clientProfileId: profile.id },
+    }),
+    db.savedLead.count({
+      where: { clientProfileId: profile.id },
+    }),
+  ]);
 
   const onboardingComplete = !!settings?.onboardingCompletedAt;
   const { welcome } = await searchParams;
@@ -48,33 +50,80 @@ export default async function LeadsPage({
       {!onboardingComplete && <OnboardingModal welcomeFlow={!!welcome} />}
 
       {onboardingComplete && (
-        <div className={styles.placeholder}>
-          <p className={styles.placeholderTag}>You&apos;re all set.</p>
-          <h2 className={styles.placeholderTitle}>
-            Your tool is being prepared.
-          </h2>
-          <p className={styles.placeholderDesc}>
-            We&apos;ve got you configured for{" "}
-            <strong>
-              {settings?.primaryCity}
-              {settings?.primaryState ? `, ${settings.primaryState}` : ""}
-            </strong>{" "}
-            with a <strong>{settings?.serviceRadiusMiles}-mile radius</strong>.
-            Lead feeds will start populating within 24 hours. We&apos;ll text you at{" "}
-            <strong>{settings?.phoneNumber}</strong> the moment your first hot
-            lead drops.
-          </p>
-          <div className={styles.placeholderActions}>
-            <Link
-              href='/dashboard/leads/settings'
-              className={styles.placeholderCta}
-            >
+        <div className={styles.body}>
+          {/* Market info bar */}
+          <section className={styles.marketCard}>
+            <div>
+              <p className={styles.marketLabel}>Your market</p>
+              <p className={styles.marketValue}>
+                {settings?.primaryCity}, {settings?.primaryState}
+                <span className={styles.marketRadius}>
+                  &nbsp;· {settings?.serviceRadiusMiles}-mile radius
+                </span>
+              </p>
+            </div>
+            <Link href='/dashboard/leads/settings' className={styles.marketCta}>
               Manage settings →
             </Link>
-            <Link href='/dashboard' className={styles.placeholderCtaSecondary}>
-              Back to dashboard
+          </section>
+
+          {/* Cold Leads — LIVE */}
+          <section className={styles.feedCard}>
+            <div className={styles.feedHeader}>
+              <span className={styles.statusBadgeLive}>Live</span>
+              <h2 className={styles.feedTitle}>Cold Leads</h2>
+            </div>
+            <p className={styles.feedDesc}>
+              Search for businesses that match your ideal customer profile —
+              wedding venues, hotels, law firms, country clubs. Find them by
+              category and radius, save the ones you want to pursue, and
+              we&apos;ll generate AI outreach scripts for each.
+            </p>
+            <Link href='/dashboard/leads/search' className={styles.feedCta}>
+              Search for leads →
             </Link>
-          </div>
+          </section>
+
+          {/* Hot Leads — COMING SOON */}
+          <section className={`${styles.feedCard} ${styles.feedCardSoon}`}>
+            <div className={styles.feedHeader}>
+              <span className={styles.statusBadgeSoon}>Coming soon</span>
+              <h2 className={styles.feedTitle}>Hot Leads</h2>
+            </div>
+            <p className={styles.feedDesc}>
+              Real-time leads scraped from Facebook groups, Nextdoor, and
+              Eventbrite — people in your market actively asking for the
+              services you provide. SMS alerts the moment one drops.
+            </p>
+          </section>
+
+          {/* Warm Leads — COMING SOON */}
+          <section className={`${styles.feedCard} ${styles.feedCardSoon}`}>
+            <div className={styles.feedHeader}>
+              <span className={styles.statusBadgeSoon}>Coming soon</span>
+              <h2 className={styles.feedTitle}>Warm Leads</h2>
+            </div>
+            <p className={styles.feedDesc}>
+              Signal-based opportunities — new hotels opening in your area,
+              corporate events being scheduled, venues hiring transportation
+              coordinators. Surfaced before your competitors notice.
+            </p>
+          </section>
+
+          {/* Saved leads summary — only shows if there are any */}
+          {savedCount > 0 && (
+            <section className={styles.savedCard}>
+              <div>
+                <p className={styles.savedCount}>{savedCount}</p>
+                <p className={styles.savedLabel}>
+                  saved lead{savedCount === 1 ? "" : "s"} in your pipeline
+                </p>
+              </div>
+              <Link href='/dashboard/leads/saved' className={styles.savedCta}>
+                View pipeline →
+              </Link>
+            </section>
+          )}
         </div>
       )}
     </div>
