@@ -3,10 +3,30 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
-import SavedLeadsView from "./SavedLeadsView";
+import SavedLeadsHub from "./SavedLeadsHub";
 import styles from "./SavedLeadsPage.module.css";
 
 export const dynamic = "force-dynamic";
+
+type LeadStatus =
+  | "NEW"
+  | "CONTACTED"
+  | "NURTURING"
+  | "SNOOZED"
+  | "WON"
+  | "DEAD";
+
+function buildCounts(leads: { status: LeadStatus }[]) {
+  return {
+    all: leads.length,
+    NEW: leads.filter((l) => l.status === "NEW").length,
+    CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
+    NURTURING: leads.filter((l) => l.status === "NURTURING").length,
+    SNOOZED: leads.filter((l) => l.status === "SNOOZED").length,
+    WON: leads.filter((l) => l.status === "WON").length,
+    DEAD: leads.filter((l) => l.status === "DEAD").length,
+  };
+}
 
 export default async function SavedLeadsPage() {
   const session = await auth();
@@ -24,27 +44,15 @@ export default async function SavedLeadsPage() {
     redirect("/dashboard/enroll/leads");
   }
 
-  const leads = await db.savedLead.findMany({
-    where: { clientProfileId: profile.id, isFavorite: false },
+  const allLeads = await db.savedLead.findMany({
+    where: { clientProfileId: profile.id },
     include: {
-      _count: {
-        select: { outreachScripts: true },
-      },
+      _count: { select: { outreachScripts: true } },
     },
     orderBy: { createdAt: "desc" },
   });
 
-  const counts = {
-    all: leads.length,
-    NEW: leads.filter((l) => l.status === "NEW").length,
-    CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
-    NURTURING: leads.filter((l) => l.status === "NURTURING").length,
-    SNOOZED: leads.filter((l) => l.status === "SNOOZED").length,
-    WON: leads.filter((l) => l.status === "WON").length,
-    DEAD: leads.filter((l) => l.status === "DEAD").length,
-  };
-
-  const serialized = leads.map((l) => ({
+  const leads = allLeads.map((l) => ({
     id: l.id,
     leadType: l.leadType,
     source: l.source,
@@ -61,6 +69,8 @@ export default async function SavedLeadsPage() {
     hasScripts: l._count.outreachScripts > 0,
     hasBrief: !!l.strategicBrief,
   }));
+
+  const counts = buildCounts(leads);
 
   return (
     <div className={styles.page}>
@@ -82,7 +92,7 @@ export default async function SavedLeadsPage() {
             </Link>
           </div>
         ) : (
-          <SavedLeadsView leads={serialized} counts={counts} />
+          <SavedLeadsHub leads={leads} counts={counts} />
         )}
       </div>
     </div>

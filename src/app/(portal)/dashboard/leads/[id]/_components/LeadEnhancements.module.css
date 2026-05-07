@@ -1,0 +1,384 @@
+/* Source bar */
+.sourceBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.5rem 3rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--grayii);
+  flex-wrap: wrap;
+}
+.sourceBarLeft,
+.sourceBarRight {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.sourceBarItem {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+.typeBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 1.5rem;
+  font-weight: 700;
+}
+.typeBadgeHot {
+  background-color: #ef4444;
+  color: var(--white);
+}
+.typeBadgeWarm {
+  background-color: var(--accent);
+  color: var(--black);
+}
+.typeBadgeCold {
+  background-color: #2563eb;
+  color: var(--white);
+}
+
+/* Move card */
+.moveCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 3rem;
+  border-left: 4px solid var(--accent);
+  background-color: rgba(252, 211, 77, 0.08);
+}
+.moveCardUrgent {
+  border-left-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+}
+.moveCardDue {
+  border-left-color: var(--accent);
+  background-color: rgba(252, 211, 77, 0.12);
+}
+.moveCardWait,
+.moveCardInfo {
+  border-left-color: var(--lightGray);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.moveCardLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.7;
+}
+.moveCardHeadline {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.5rem;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--black);
+  text-transform: uppercase;
+}
+.moveCardDetail {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.moveCardChannel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.5rem;
+}
+
+/* Activity feed */
+.feedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.feedTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.5rem;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  line-height: 1;
+}
+.noteComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--grayii);
+}
+.noteInput {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  padding: 1.5rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+  color: var(--text);
+  resize: vertical;
+}
+.noteInput:focus {
+  outline: none;
+  border-color: var(--black);
+}
+.noteSubmit {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1.5rem 2rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.15s ease;
+}
+.noteSubmit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+.noteSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-left: 1px solid var(--grayii);
+  padding-left: 2rem;
+}
+.timelineItem {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.timelineIcon {
+  position: absolute;
+  left: -3.5rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--text);
+}
+.timelineBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.timelineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.timelineType {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+.timelineTime {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.6;
+}
+.timelineDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.timelineEmpty {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.7;
+  padding: 2rem 0;
+  list-style: none;
+}
+
+/* Sidebar — Next action */
+.nextActionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+.nextActionTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+.nextActionDate,
+.nextActionNote {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  padding: 1rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+  color: var(--text);
+}
+.nextActionNote {
+  resize: vertical;
+}
+.nextActionDate:focus,
+.nextActionNote:focus {
+  outline: none;
+  border-color: var(--black);
+}
+.nextActionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+.nextActionSave {
+  flex: 1;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+}
+.nextActionSave:hover:not(:disabled) {
+  opacity: 0.85;
+}
+.nextActionSave:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.nextActionClear {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 1.5rem;
+  background-color: var(--white);
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+}
+.nextActionClear:hover:not(:disabled) {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* Sidebar — Outreach quick log */
+.outreachLogCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+.outreachLogTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+.outreachChannelGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.outreachChannelBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.outreachChannelBtn:hover {
+  border-color: var(--black);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.outreachChannelChosen {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+.outreachLogNote {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  padding: 1rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+  color: var(--text);
+  resize: vertical;
+}
+.outreachLogButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+.outreachLogSubmit {
+  flex: 1;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+}
+.outreachLogCancel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 1.5rem;
+  background-color: var(--white);
+  color: var(--text);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+}

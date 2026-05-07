@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./PreviewPage.module.css";
 
-type SavedState = "none" | "favorite" | "pipeline";
-
 type ParkingOptions = {
   freeParkingLot?: boolean;
   paidParkingLot?: boolean;
@@ -50,6 +48,7 @@ type PreviewData = {
   priceRange?: PriceRange | null;
   businessStatus?: string | null;
   editorialSummary?: string | null;
+  generativeSummary?: string | null;
   photos?: Photo[] | null;
   parkingOptions?: ParkingOptions | null;
   reservable?: boolean | null;
@@ -71,7 +70,6 @@ type PreviewData = {
   curbsidePickup?: boolean | null;
   reviews?: Review[] | null;
   category?: string;
-  savedState?: SavedState;
   savedLeadId?: string | null;
 };
 
@@ -207,116 +205,88 @@ export default function PreviewClient({
     seconds: number;
     staticSeconds: number | null;
   } | null>(null);
-  const [savingState, setSavingState] = useState<
-    null | "favorite" | "pipeline"
-  >(null);
-  const [savedAs, setSavedAs] = useState<"favorite" | "pipeline" | null>(null);
+  const [saving, setSaving] = useState(false);
   const [savedLeadId, setSavedLeadId] = useState<string | null>(null);
 
-useEffect(() => {
-  let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-  async function loadDriveTime(toLat: number, toLng: number) {
-    if (primaryLat == null || primaryLng == null) return;
-    try {
-      const res = await fetch(
-        `/api/leads/drive-time?fromLat=${primaryLat}&fromLng=${primaryLng}&toLat=${toLat}&toLng=${toLng}`,
-      );
-      if (!res.ok) {
-        const body = await res.text();
-        console.warn("[preview] drive-time failed:", res.status, body);
-        return;
+    async function loadDriveTime(toLat: number, toLng: number) {
+      if (primaryLat == null || primaryLng == null) return;
+      try {
+        const res = await fetch(
+          `/api/leads/drive-time?fromLat=${primaryLat}&fromLng=${primaryLng}&toLat=${toLat}&toLng=${toLng}`,
+        );
+        if (!res.ok) return;
+        const body = await res.json();
+        if (!cancelled && body.driveTimeSeconds) {
+          setDriveTime({
+            seconds: body.driveTimeSeconds,
+            staticSeconds: body.driveTimeStaticSeconds ?? null,
+          });
+        }
+      } catch (err) {
+        console.warn("[preview] drive-time threw:", err);
       }
-      const body = await res.json();
-      if (!cancelled && body.driveTimeSeconds) {
-        setDriveTime({
-          seconds: body.driveTimeSeconds,
-          staticSeconds: body.driveTimeStaticSeconds ?? null,
-        });
-      }
-    } catch (err) {
-      console.warn("[preview] drive-time threw:", err);
     }
-  }
 
-  async function load() {
-    setLoading(true);
-    setError(null);
+    async function load() {
+      setLoading(true);
+      setError(null);
 
-    let cachedData: PreviewData | null = null;
-    try {
-      const cached = sessionStorage.getItem(`preview:${placeId}`);
-      if (cached) {
-        cachedData = JSON.parse(cached) as PreviewData;
-        if (!cancelled) {
-          setData(cachedData);
-          if (cachedData.savedState === "favorite" && cachedData.savedLeadId) {
-            setSavedAs("favorite");
-            setSavedLeadId(cachedData.savedLeadId);
-          } else if (
-            cachedData.savedState === "pipeline" &&
-            cachedData.savedLeadId
-          ) {
-            setSavedAs("pipeline");
-            setSavedLeadId(cachedData.savedLeadId);
+      let cachedData: PreviewData | null = null;
+      try {
+        const cached = sessionStorage.getItem(`preview:${placeId}`);
+        if (cached) {
+          cachedData = JSON.parse(cached) as PreviewData;
+          if (!cancelled) {
+            setData(cachedData);
+            if (cachedData.savedLeadId) {
+              setSavedLeadId(cachedData.savedLeadId);
+            }
           }
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
-    }
 
-    try {
-      const res = await fetch(
-        `/api/leads/place-details/${encodeURIComponent(placeId)}`,
-      );
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        console.error("[preview] place-details failed:", res.status, body);
-        throw new Error(
-          body.googleError
-            ? `Google API error (${body.googleStatus}): ${body.googleError}`
-            : "Couldn't load business details",
+      try {
+        const res = await fetch(
+          `/api/leads/place-details/${encodeURIComponent(placeId)}`,
         );
-      }
-      const fetched = (await res.json()) as PreviewData;
-      console.log("[preview] place-details fetched:", {
-        hasPhotos: !!fetched.photos?.length,
-        hasEditorial: !!fetched.editorialSummary,
-        hasReviews: !!fetched.reviews?.length,
-        hasParking: !!fetched.parkingOptions,
-      });
-      if (!cancelled) {
-        setData((prev) => ({
-          ...fetched,
-          category: prev?.category ?? cachedData?.category,
-          savedState: prev?.savedState ?? cachedData?.savedState,
-          savedLeadId: prev?.savedLeadId ?? cachedData?.savedLeadId,
-        }));
-        if (fetched.coordinates.lat && fetched.coordinates.lng) {
-          loadDriveTime(fetched.coordinates.lat, fetched.coordinates.lng);
+        if (!res.ok) {
+          throw new Error("Couldn't load business details");
         }
+        const fetched = (await res.json()) as PreviewData;
+        if (!cancelled) {
+          setData((prev) => ({
+            ...fetched,
+            category: prev?.category ?? cachedData?.category,
+            savedLeadId: prev?.savedLeadId ?? cachedData?.savedLeadId,
+          }));
+          if (fetched.coordinates.lat && fetched.coordinates.lng) {
+            loadDriveTime(fetched.coordinates.lat, fetched.coordinates.lng);
+          }
+        }
+      } catch (err) {
+        if (!cancelled && !cachedData) {
+          setError(err instanceof Error ? err.message : "Failed to load");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    } catch (err) {
-      console.error("[preview] details load error:", err);
-      if (!cancelled && !cachedData) {
-        setError(err instanceof Error ? err.message : "Failed to load");
-      }
-    } finally {
-      if (!cancelled) setLoading(false);
     }
-  }
 
-  load();
-  return () => {
-    cancelled = true;
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [placeId]);
+    load();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placeId]);
 
-  async function save(intent: "favorite" | "pipeline") {
-    if (!data) return;
-    setSavingState(intent);
+  async function save() {
+    if (!data || savedLeadId) return;
+    setSaving(true);
     try {
       const res = await fetch("/api/leads/save-cold", {
         method: "POST",
@@ -332,27 +302,20 @@ useEffect(() => {
           phone: data.phone,
           website: data.website,
           category: data.category ?? "uncategorized",
-          isFavorite: intent === "favorite",
         }),
       });
       const body = await res.json();
       if (res.ok && body.id) {
-        setSavedAs(intent);
         setSavedLeadId(body.id);
         try {
           sessionStorage.setItem(
             `preview:${placeId}`,
-            JSON.stringify({
-              ...data,
-              savedState: intent,
-              savedLeadId: body.id,
-            }),
+            JSON.stringify({ ...data, savedLeadId: body.id }),
           );
         } catch {
           // ignore
         }
       } else if (res.status === 409 && body.id) {
-        setSavedAs(intent);
         setSavedLeadId(body.id);
       } else {
         console.error("Save failed", body);
@@ -360,7 +323,7 @@ useEffect(() => {
     } catch (err) {
       console.error("Save failed", err);
     } finally {
-      setSavingState(null);
+      setSaving(false);
     }
   }
 
@@ -438,12 +401,10 @@ useEffect(() => {
 
       <div className={styles.layout}>
         <div className={styles.body}>
-          {savedAs && savedLeadId && (
+          {savedLeadId && (
             <div className={styles.savedBanner}>
               <span className={styles.savedBannerText}>
-                {savedAs === "favorite"
-                  ? "♥ Saved to favorites"
-                  : "✓ Saved to pipeline"}
+                ✓ Saved to your leads
               </span>
               <Link
                 href={`/dashboard/leads/${savedLeadId}`}
@@ -454,7 +415,6 @@ useEffect(() => {
             </div>
           )}
 
-          {/* Hero */}
           <section className={styles.hero}>
             <p className={styles.eyebrow}>Preview · not yet saved</p>
             <h1 className={styles.heroName}>{data.name || "Unnamed"}</h1>
@@ -480,11 +440,12 @@ useEffect(() => {
               {data.openNow === false && (
                 <span className={styles.closedBadge}>● Closed</span>
               )}
-              {data.businessStatus && data.businessStatus !== "OPERATIONAL" && (
-                <span className={styles.heroStatusWarn}>
-                  {data.businessStatus.replace(/_/g, " ")}
-                </span>
-              )}
+              {data.businessStatus &&
+                data.businessStatus !== "OPERATIONAL" && (
+                  <span className={styles.heroStatusWarn}>
+                    {data.businessStatus.replace(/_/g, " ")}
+                  </span>
+                )}
             </div>
 
             <div className={styles.heroLinks}>
@@ -514,7 +475,6 @@ useEffect(() => {
             </div>
           </section>
 
-          {/* Photos */}
           {data.photos && data.photos.length > 0 && (
             <section className={styles.photosSection}>
               <div className={styles.photosRow}>
@@ -533,7 +493,6 @@ useEffect(() => {
             </section>
           )}
 
-          {/* Location card with map + distance + drive time */}
           {distance !== null && primaryCity && data.coordinates.lat && (
             <section
               className={`${styles.locationCard} ${mapFailed ? styles.locationCardNoMap : ""}`}
@@ -545,10 +504,7 @@ useEffect(() => {
                     src={`/api/leads/static-map?lat=${data.coordinates.lat}&lng=${data.coordinates.lng}&zoom=14&width=600&height=300`}
                     alt={`Map of ${data.name}`}
                     className={styles.mapImage}
-                    onError={() => {
-                      console.warn("[preview] static map failed to load");
-                      setMapFailed(true);
-                    }}
+                    onError={() => setMapFailed(true)}
                   />
                 </div>
               )}
@@ -587,15 +543,20 @@ useEffect(() => {
             </section>
           )}
 
-          {/* Editorial Summary */}
-          {data.editorialSummary && (
+          {(data.editorialSummary || data.generativeSummary) && (
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>About</h2>
-              <p className={styles.editorialBody}>{data.editorialSummary}</p>
+              <p className={styles.editorialBody}>
+                {data.generativeSummary ?? data.editorialSummary}
+              </p>
+              {data.generativeSummary && (
+                <p className={styles.aiCredit}>
+                  AI-generated summary from Google reviews
+                </p>
+              )}
             </section>
           )}
 
-          {/* At a glance — atmosphere + parking chips */}
           {allChips.length > 0 && (
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>At a glance</h2>
@@ -609,7 +570,6 @@ useEffect(() => {
             </section>
           )}
 
-          {/* Hours */}
           {data.hours && data.hours.length > 0 && (
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>Hours</h2>
@@ -630,7 +590,6 @@ useEffect(() => {
             </section>
           )}
 
-          {/* Recent reviews */}
           {sortedReviews && sortedReviews.length > 0 && (
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>Recent reviews</h2>
@@ -657,7 +616,6 @@ useEffect(() => {
             </section>
           )}
 
-          {/* Categories */}
           {data.types.length > 0 && (
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>Categories</h2>
@@ -671,49 +629,26 @@ useEffect(() => {
             </section>
           )}
 
-          {/* AI tease */}
           <section className={styles.aiTease}>
             <p className={styles.aiTeaseTitle}>
               Want the strategic brief, review intelligence, and outreach
               scripts?
             </p>
             <p className={styles.aiTeaseDesc}>
-              Save this lead — to favorites for further research, or directly to
-              your pipeline — and you&apos;ll get the full AI-powered detail
+              Save this lead and you&apos;ll get the full AI-powered detail
               page with brief generation, review analysis, decision-maker
               identification, and personalized outreach scripts.
             </p>
           </section>
         </div>
 
-        {/* Sidebar */}
         <aside className={styles.sidebar}>
           <div className={styles.sidebarSticky}>
             <h3 className={styles.sidebarTitle}>Save this lead</h3>
 
-            {savedAs === "favorite" ? (
+            {savedLeadId ? (
               <div className={styles.savedNotice}>
-                <p>♥ Already in your favorites</p>
-                <Link
-                  href={`/dashboard/leads/${savedLeadId}`}
-                  className={styles.sidebarBtnPrimary}
-                >
-                  Open full page →
-                </Link>
-                <button
-                  type='button'
-                  onClick={() => save("pipeline")}
-                  disabled={savingState !== null}
-                  className={styles.sidebarBtn}
-                >
-                  {savingState === "pipeline"
-                    ? "Promoting..."
-                    : "Promote to pipeline"}
-                </button>
-              </div>
-            ) : savedAs === "pipeline" ? (
-              <div className={styles.savedNotice}>
-                <p>✓ Already in your pipeline</p>
+                <p>✓ Already saved</p>
                 <Link
                   href={`/dashboard/leads/${savedLeadId}`}
                   className={styles.sidebarBtnPrimary}
@@ -725,29 +660,17 @@ useEffect(() => {
               <>
                 <button
                   type='button'
-                  onClick={() => save("favorite")}
-                  disabled={savingState !== null}
-                  className={styles.sidebarBtnFavorite}
-                >
-                  {savingState === "favorite"
-                    ? "Saving..."
-                    : "♡ Save to favorites"}
-                </button>
-
-                <button
-                  type='button'
-                  onClick={() => save("pipeline")}
-                  disabled={savingState !== null}
+                  onClick={save}
+                  disabled={saving}
                   className={styles.sidebarBtnPrimary}
                 >
-                  {savingState === "pipeline"
-                    ? "Saving..."
-                    : "+ Save to pipeline"}
+                  {saving ? "Saving..." : "+ Save lead"}
                 </button>
 
                 <p className={styles.sidebarHint}>
-                  Favorites = bookmarks for later research. Pipeline = leads
-                  you&apos;re actively pursuing.
+                  Saving unlocks the full detail page with strategic brief,
+                  review analysis, decision-maker hypothesis, and personalized
+                  outreach scripts.
                 </p>
               </>
             )}

@@ -15,7 +15,6 @@ type Body = {
   phone?: string | null;
   website?: string | null;
   category?: string;
-  isFavorite?: boolean;
 };
 
 export async function POST(req: NextRequest) {
@@ -75,7 +74,7 @@ export async function POST(req: NextRequest) {
       rating: body.rating ?? null,
       reviewCount: body.reviewCount ?? null,
       status: "NEW",
-      isFavorite: body.isFavorite ?? false,
+      isFavorite: false,
     },
   });
 
@@ -84,9 +83,7 @@ export async function POST(req: NextRequest) {
       savedLeadId: lead.id,
       clientProfileId: profile.id,
       activityType: "CREATED",
-      description: body.isFavorite
-        ? `Favorited: ${body.name}`
-        : `Saved cold lead: ${body.name}`,
+      description: `Saved cold lead: ${body.name}`,
     },
   });
 

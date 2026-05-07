@@ -140,6 +140,11 @@ enum LeadActivityType {
   REMINDER_SENT
   WON
   DEAD
+  EMAIL_SENT
+  CALL_MADE
+  LINKEDIN_SENT
+  SMS_SENT
+  IN_PERSON_VISIT
 }
 
 enum HotLeadSource {
@@ -706,6 +711,8 @@ model SavedLead {
   status          LeadStatus @default(NEW)
   notes           String?    @db.Text
   snoozeUntil     DateTime?
+  nextActionAt    DateTime?
+  nextActionNote  String?
   lastContactedAt DateTime?
   wonAt           DateTime?
   estimatedValue  Int?

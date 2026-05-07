@@ -3,6 +3,11 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
+import {
+  computeNextMove,
+  countOutreachAttempts,
+  daysSinceLastContact,
+} from "@/lib/leadNextMove";
 import LeadDetailClient from "./LeadDetailClient";
 import styles from "./LeadDetailPage.module.css";
 
@@ -65,7 +70,10 @@ export default async function LeadDetailPage({
     notFound();
   }
 
-  // Distance calculation
+  const nextMove = computeNextMove(lead);
+  const outreachAttempts = countOutreachAttempts(lead.activities);
+  const lastContactDays = daysSinceLastContact(lead.activities);
+
   let distance: number | null = null;
   if (
     settings?.primaryLat != null &&
@@ -81,7 +89,6 @@ export default async function LeadDetailPage({
     );
   }
 
-  // Parse decision-maker JSON if present
   let decisionMaker: {
     primary: { title: string; why: string };
     secondary: { title: string; why: string };
@@ -108,7 +115,6 @@ export default async function LeadDetailPage({
     reviewCount: lead.reviewCount,
     status: lead.status,
     notes: lead.notes,
-    isFavorite: lead.isFavorite,
     strategicBrief: lead.strategicBrief,
     reviewIntelligence: lead.reviewIntelligence,
     decisionMaker,
@@ -119,6 +125,8 @@ export default async function LeadDetailPage({
     serviceRadiusMiles: settings?.serviceRadiusMiles ?? null,
     snoozeUntil: lead.snoozeUntil?.toISOString() ?? null,
     lastContactedAt: lead.lastContactedAt?.toISOString() ?? null,
+    nextActionAt: lead.nextActionAt?.toISOString() ?? null,
+    nextActionNote: lead.nextActionNote,
     createdAt: lead.createdAt.toISOString(),
     outreachScripts: lead.outreachScripts.map((s) => ({
       id: s.id,
@@ -138,18 +146,16 @@ export default async function LeadDetailPage({
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
-        <Link
-          href={
-            lead.isFavorite
-              ? "/dashboard/leads/favorites"
-              : "/dashboard/leads/saved"
-          }
-          className={styles.backLink}
-        >
-          ← Back to {lead.isFavorite ? "favorites" : "saved leads"}
+        <Link href='/dashboard/leads/saved' className={styles.backLink}>
+          ← Back to saved leads
         </Link>
       </div>
-      <LeadDetailClient lead={serialized} />
+      <LeadDetailClient
+        lead={serialized}
+        nextMove={nextMove}
+        outreachAttempts={outreachAttempts}
+        lastContactDays={lastContactDays}
+      />
     </div>
   );
 }

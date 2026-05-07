@@ -3,6 +3,12 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./LeadDetailPage.module.css";
+import LeadSourceBar from "./_components/LeadSourceBar";
+import RecommendedMoveCard from "./_components/RecommendedMoveCard";
+import NotesActivityFeed from "./_components/NotesActivityFeed";
+import NextActionCard from "./_components/NextActionCard";
+import OutreachQuickLog from "./_components/OutreachQuickLog";
+import type { NextMoveSuggestion } from "@/lib/leadNextMove";
 
 type LeadStatus =
   | "NEW"
@@ -48,7 +54,6 @@ type SerializedLead = {
   reviewCount: number | null;
   status: LeadStatus;
   notes: string | null;
-  isFavorite: boolean;
   strategicBrief: string | null;
   reviewIntelligence: string | null;
   decisionMaker: DecisionMaker | null;
@@ -57,9 +62,18 @@ type SerializedLead = {
   serviceRadiusMiles: number | null;
   snoozeUntil: string | null;
   lastContactedAt: string | null;
+  nextActionAt: string | null;
+  nextActionNote: string | null;
   createdAt: string;
   outreachScripts: SerializedScript[];
   activities: SerializedActivity[];
+};
+
+type Props = {
+  lead: SerializedLead;
+  nextMove: NextMoveSuggestion;
+  outreachAttempts: number;
+  lastContactDays: number | null;
 };
 
 const STATUS_OPTIONS: LeadStatus[] = [
@@ -78,22 +92,12 @@ const FORMAT_LABELS: Record<ScriptFormat, string> = {
   SMS: "SMS",
 };
 
-function formatActivityDate(iso: string): string {
-  const date = new Date(iso);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
 export default function LeadDetailClient({
   lead,
-}: {
-  lead: SerializedLead;
-}) {
+  nextMove,
+  outreachAttempts,
+  lastContactDays,
+}: Props) {
   const router = useRouter();
   const [, startTransition] = useTransition();
 
@@ -102,7 +106,6 @@ export default function LeadDetailClient({
   const [generatingReviews, setGeneratingReviews] = useState(false);
   const [generatingDM, setGeneratingDM] = useState(false);
   const [generatingScripts, setGeneratingScripts] = useState(false);
-  const [promoting, setPromoting] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [snoozeDate, setSnoozeDate] = useState(
     lead.snoozeUntil?.split("T")[0] ?? "",
@@ -154,15 +157,6 @@ export default function LeadDetailClient({
     }
   }
 
-  async function promoteToPipeline() {
-    setPromoting(true);
-    try {
-      await patchLead({ isFavorite: false });
-    } finally {
-      setPromoting(false);
-    }
-  }
-
   async function generate(
     endpoint: string,
     setLoading: (v: boolean) => void,
@@ -202,24 +196,15 @@ export default function LeadDetailClient({
   return (
     <div className={styles.layout}>
       <div className={styles.body}>
-        {/* Favorite banner */}
-        {lead.isFavorite && (
-          <div className={styles.favoriteBanner}>
-            <span className={styles.favoriteBannerText}>
-              ★ This is a favorite — not yet in your pipeline
-            </span>
-            <button
-              type='button'
-              onClick={promoteToPipeline}
-              disabled={promoting}
-              className={styles.promoteBtn}
-            >
-              {promoting ? "Promoting..." : "Promote to pipeline →"}
-            </button>
-          </div>
-        )}
+        <LeadSourceBar
+          leadType={lead.leadType as "HOT" | "WARM" | "COLD"}
+          category={lead.category}
+          source={lead.source}
+          createdAt={lead.createdAt}
+          outreachAttempts={outreachAttempts}
+          daysSinceLastContact={lastContactDays}
+        />
 
-        {/* Hero */}
         <section className={styles.hero}>
           <div className={styles.heroMeta}>
             <span
@@ -262,7 +247,8 @@ export default function LeadDetailClient({
           </div>
         </section>
 
-        {/* Distance */}
+        <RecommendedMoveCard suggestion={nextMove} />
+
         {lead.distanceMiles !== null && lead.primaryMarket && (
           <section className={styles.distanceCard}>
             <p className={styles.distanceValue}>
@@ -280,7 +266,6 @@ export default function LeadDetailClient({
           </section>
         )}
 
-        {/* Strategic Brief */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Strategic Brief</h2>
@@ -324,7 +309,6 @@ export default function LeadDetailClient({
           )}
         </section>
 
-        {/* Review Intelligence */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Review Intelligence</h2>
@@ -353,8 +337,8 @@ export default function LeadDetailClient({
             <div className={styles.emptyBlock}>
               <p className={styles.emptyDesc}>
                 Pull recent reviews from Google and let Claude extract themes —
-                what customers love, complain about, and any transportation pain
-                points worth pitching.
+                what customers love, complain about, and any transportation
+                pain points worth pitching.
               </p>
               <button
                 type='button'
@@ -370,7 +354,6 @@ export default function LeadDetailClient({
           )}
         </section>
 
-        {/* Decision Maker Hypothesis */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Who to Contact</h2>
@@ -433,7 +416,6 @@ export default function LeadDetailClient({
           )}
         </section>
 
-        {/* Outreach Scripts */}
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Outreach Scripts</h2>
@@ -505,29 +487,9 @@ export default function LeadDetailClient({
           )}
         </section>
 
-        {/* Activity Timeline */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Activity Timeline</h2>
-          <div className={styles.timeline}>
-            {lead.activities.length === 0 ? (
-              <p className={styles.timelineEmpty}>No activity yet.</p>
-            ) : (
-              lead.activities.map((activity) => (
-                <div key={activity.id} className={styles.timelineItem}>
-                  <p className={styles.timelineDate}>
-                    {formatActivityDate(activity.createdAt)}
-                  </p>
-                  <p className={styles.timelineDesc}>
-                    {activity.description ?? activity.activityType}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
-        </section>
+        <NotesActivityFeed leadId={lead.id} activities={lead.activities} />
       </div>
 
-      {/* Quick Actions Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarSticky}>
           <h3 className={styles.sidebarTitle}>Quick Actions</h3>
@@ -576,6 +538,14 @@ export default function LeadDetailClient({
               Snooze
             </button>
           </div>
+
+          <NextActionCard
+            leadId={lead.id}
+            nextActionAt={lead.nextActionAt}
+            nextActionNote={lead.nextActionNote}
+          />
+
+          <OutreachQuickLog leadId={lead.id} />
 
           {mailtoUrl && (
             <a href={mailtoUrl} className={styles.sidebarBtnPrimary}>

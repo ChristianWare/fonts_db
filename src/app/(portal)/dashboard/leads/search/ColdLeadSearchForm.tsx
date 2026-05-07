@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SearchPage.module.css";
 
-type SavedState = "none" | "favorite" | "pipeline";
+type SavedState = "none" | "favorite" | "pipeline" | "saved";
 
 type SearchResult = {
   placeId: string;
@@ -71,6 +71,11 @@ function saveStored(state: StoredState) {
   }
 }
 
+// Treat any saved state (legacy "favorite" or "pipeline" or new "saved") as saved.
+function isSaved(state: SavedState): boolean {
+  return state !== "none";
+}
+
 export default function ColdLeadSearchForm({
   defaultCity,
   defaultState,
@@ -100,7 +105,6 @@ export default function ColdLeadSearchForm({
 
   const hydrated = useRef(false);
 
-  // Restore from sessionStorage on mount
   useEffect(() => {
     const stored = loadStored();
     if (stored && stored.searchedQuery) {
@@ -117,7 +121,6 @@ export default function ColdLeadSearchForm({
     hydrated.current = true;
   }, []);
 
-  // Persist to sessionStorage on state changes (after hydration)
   useEffect(() => {
     if (!hydrated.current) return;
     if (!searchedQuery) return;
@@ -256,80 +259,29 @@ export default function ColdLeadSearchForm({
     }
   }
 
-  async function toggleFavorite(result: SearchResult) {
+  async function saveLead(result: SearchResult) {
+    if (isSaved(result.savedState)) return;
     setPending(result.placeId, true);
     try {
-      if (result.savedState === "favorite" && result.savedLeadId) {
-        const res = await fetch(`/api/leads/${result.savedLeadId}`, {
-          method: "DELETE",
-        });
-        if (res.ok) {
-          updateResultState(result.placeId, "none", null);
-        }
-      } else if (result.savedState === "none") {
-        const res = await fetch("/api/leads/save-cold", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            placeId: result.placeId,
-            name: result.name,
-            address: result.address,
-            lat: result.coordinates.lat,
-            lng: result.coordinates.lng,
-            rating: result.rating,
-            reviewCount: result.reviewCount,
-            phone: result.phone,
-            website: result.website,
-            category: searchedQuery.toLowerCase().replace(/\s+/g, "_"),
-            isFavorite: true,
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          updateResultState(result.placeId, "favorite", data.id);
-        }
-      }
-    } catch (err) {
-      console.error("Favorite toggle failed", err);
-    } finally {
-      setPending(result.placeId, false);
-    }
-  }
-
-  async function saveToPipeline(result: SearchResult) {
-    setPending(result.placeId, true);
-    try {
-      if (result.savedState === "favorite" && result.savedLeadId) {
-        const res = await fetch(`/api/leads/${result.savedLeadId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isFavorite: false }),
-        });
-        if (res.ok) {
-          updateResultState(result.placeId, "pipeline", result.savedLeadId);
-        }
-      } else if (result.savedState === "none") {
-        const res = await fetch("/api/leads/save-cold", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            placeId: result.placeId,
-            name: result.name,
-            address: result.address,
-            lat: result.coordinates.lat,
-            lng: result.coordinates.lng,
-            rating: result.rating,
-            reviewCount: result.reviewCount,
-            phone: result.phone,
-            website: result.website,
-            category: searchedQuery.toLowerCase().replace(/\s+/g, "_"),
-            isFavorite: false,
-          }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          updateResultState(result.placeId, "pipeline", data.id);
-        }
+      const res = await fetch("/api/leads/save-cold", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          placeId: result.placeId,
+          name: result.name,
+          address: result.address,
+          lat: result.coordinates.lat,
+          lng: result.coordinates.lng,
+          rating: result.rating,
+          reviewCount: result.reviewCount,
+          phone: result.phone,
+          website: result.website,
+          category: searchedQuery.toLowerCase().replace(/\s+/g, "_"),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        updateResultState(result.placeId, "saved", data.id);
       }
     } catch (err) {
       console.error("Save failed", err);
@@ -339,7 +291,6 @@ export default function ColdLeadSearchForm({
   }
 
   function viewDetails(result: SearchResult) {
-    // Cache lookup data for the preview page — no DB write here
     try {
       sessionStorage.setItem(
         `preview:${result.placeId}`,
@@ -462,6 +413,7 @@ export default function ColdLeadSearchForm({
           <div className={styles.resultsGrid}>
             {currentResults.map((r) => {
               const isPending = pendingPlaceIds.has(r.placeId);
+              const saved = isSaved(r.savedState);
               return (
                 <div key={r.placeId} className={styles.resultCard}>
                   <div className={styles.cardTop}>
@@ -494,45 +446,16 @@ export default function ColdLeadSearchForm({
 
                   <div className={styles.cardBottom}>
                     <div className={styles.cardActionRow}>
-                      <button
-                        type='button'
-                        onClick={() => toggleFavorite(r)}
-                        disabled={isPending || r.savedState === "pipeline"}
-                        className={
-                          r.savedState === "favorite"
-                            ? `${styles.heartBtn} ${styles.heartBtnActive}`
-                            : styles.heartBtn
-                        }
-                        aria-label={
-                          r.savedState === "favorite"
-                            ? "Remove favorite"
-                            : "Add to favorites"
-                        }
-                        title={
-                          r.savedState === "pipeline"
-                            ? "Already in pipeline"
-                            : r.savedState === "favorite"
-                              ? "Remove favorite"
-                              : "Add to favorites"
-                        }
-                      >
-                        {r.savedState === "favorite" ? "♥" : "♡"}
-                      </button>
-
-                      {r.savedState === "pipeline" ? (
-                        <span className={styles.savedBadge}>
-                          ✓ In pipeline
-                        </span>
+                      {saved ? (
+                        <span className={styles.savedBadge}>✓ Saved</span>
                       ) : (
                         <button
                           type='button'
-                          onClick={() => saveToPipeline(r)}
+                          onClick={() => saveLead(r)}
                           disabled={isPending}
                           className={styles.saveBtn}
                         >
-                          {r.savedState === "favorite"
-                            ? "+ Promote to pipeline"
-                            : "+ Save to pipeline"}
+                          {isPending ? "Saving..." : "+ Save"}
                         </button>
                       )}
                     </div>

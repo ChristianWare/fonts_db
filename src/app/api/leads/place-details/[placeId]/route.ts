@@ -39,6 +39,7 @@ export async function GET(
     "priceRange",
     "businessStatus",
     "editorialSummary",
+    "generativeSummary",
     "photos",
     "parkingOptions",
     "reservable",
@@ -144,6 +145,10 @@ export async function GET(
         : null,
       businessStatus: data.businessStatus ?? null,
       editorialSummary: data.editorialSummary?.text ?? null,
+      generativeSummary:
+        data.generativeSummary?.description?.text ??
+        data.generativeSummary?.overview?.text ??
+        null,
       photos: Array.isArray(data.photos)
         ? data.photos.map(
             (p: { name: string; widthPx?: number; heightPx?: number }) => ({
