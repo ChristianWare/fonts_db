@@ -20,10 +20,10 @@ export default function LeadsHero() {
               <div className={styles.b1}>
                 <SectionIntro text='Product 02 of 03' />
                 <h1 className={styles.heading}>
-                  Find your next corporate account
+                  Find your <br /> next client
                   <br />{" "}
                   <span className={styles.accent}>
-                    before your competitor does
+                    before your <br /> competitor does
                   </span>
                 </h1>
                 <p className={styles.copy}>
