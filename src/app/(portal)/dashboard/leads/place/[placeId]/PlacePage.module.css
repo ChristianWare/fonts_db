@@ -1,0 +1,105 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  padding: 2rem 5rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.backLink {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--black);
+}
+
+/* Save CTA card (shown in sidebar when isDraft) */
+.saveCtaCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+
+.saveCtaTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.4rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.saveCtaDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.saveCtaBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  width: 100%;
+}
+
+.saveCtaBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.saveCtaBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Scripts gated placeholder (shown when isDraft) */
+.scriptsGated {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 4rem;
+  background-color: rgba(245, 158, 11, 0.08);
+  border-left: 3px solid #f59e0b;
+}
+
+.scriptsGatedTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+
+.scriptsGatedDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 768px) {
+  .topBar {
+    padding: 2rem;
+  }
+}

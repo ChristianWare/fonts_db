@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import styles from "./SearchPage.module.css";
 import Button from "@/components/shared/Button/Button";
 
@@ -73,9 +71,15 @@ function saveStored(state: StoredState) {
   }
 }
 
-// Treat any saved state (legacy "favorite" or "pipeline" or new "saved") as saved.
 function isSaved(state: SavedState): boolean {
   return state !== "none";
+}
+
+function buildPlaceHref(placeId: string, searchedQuery: string): string {
+  const path = `/dashboard/leads/place/${encodeURIComponent(placeId)}`;
+  if (!searchedQuery) return path;
+  const slug = searchedQuery.toLowerCase().replace(/\s+/g, "_");
+  return `${path}?category=${encodeURIComponent(slug)}`;
 }
 
 export default function ColdLeadSearchForm({
@@ -83,8 +87,6 @@ export default function ColdLeadSearchForm({
   defaultState,
   defaultRadius,
 }: Props) {
-  const router = useRouter();
-
   const [query, setQuery] = useState("");
   const [city, setCity] = useState(defaultCity);
   const [state, setState] = useState(defaultState);
@@ -292,33 +294,6 @@ export default function ColdLeadSearchForm({
     }
   }
 
-  function viewDetails(result: SearchResult) {
-    try {
-      sessionStorage.setItem(
-        `preview:${result.placeId}`,
-        JSON.stringify({
-          placeId: result.placeId,
-          name: result.name,
-          address: result.address,
-          coordinates: result.coordinates,
-          rating: result.rating,
-          reviewCount: result.reviewCount,
-          phone: result.phone,
-          website: result.website,
-          types: result.types,
-          category: searchedQuery.toLowerCase().replace(/\s+/g, "_"),
-          savedState: result.savedState,
-          savedLeadId: result.savedLeadId,
-        }),
-      );
-    } catch (err) {
-      console.error("Failed to cache preview data", err);
-    }
-    router.push(
-      `/dashboard/leads/preview/${encodeURIComponent(result.placeId)}`,
-    );
-  }
-
   const currentResults = pagesData[currentPage] ?? [];
   const hasNextPage = !!pageTokens[currentPage];
   const knownTotalPages = totalKnown
@@ -462,55 +437,12 @@ export default function ColdLeadSearchForm({
                       )}
                     </div>
 
-                    {/* <button
-                      type='button'
-                      onClick={() => viewDetails(r)}
-                      disabled={isPending}
-                      className={styles.detailsBtn}
-                    >
-                      {isPending ? "Loading..." : "View details →"}
-                    </button> */}
                     <div className={styles.btnContainer}>
                       <Button
-                        href={
-                          r.savedLeadId
-                            ? `/dashboard/leads/${r.savedLeadId}`
-                            : `/dashboard/leads/preview/${encodeURIComponent(r.placeId)}`
-                        }
+                        href={buildPlaceHref(r.placeId, searchedQuery)}
                         text='View details'
                         btnType='black'
                         arrow
-                        onClick={() => {
-                          // Cache result data so preview page renders instantly without refetching
-                          if (!r.savedLeadId) {
-                            try {
-                              sessionStorage.setItem(
-                                `preview:${r.placeId}`,
-                                JSON.stringify({
-                                  placeId: r.placeId,
-                                  name: r.name,
-                                  address: r.address,
-                                  coordinates: r.coordinates,
-                                  rating: r.rating,
-                                  reviewCount: r.reviewCount,
-                                  phone: r.phone,
-                                  website: r.website,
-                                  types: r.types,
-                                  category: searchedQuery
-                                    .toLowerCase()
-                                    .replace(/\s+/g, "_"),
-                                  savedState: r.savedState,
-                                  savedLeadId: r.savedLeadId,
-                                }),
-                              );
-                            } catch (err) {
-                              console.error(
-                                "Failed to cache preview data",
-                                err,
-                              );
-                            }
-                          }
-                        }}
                       />
                     </div>
                   </div>

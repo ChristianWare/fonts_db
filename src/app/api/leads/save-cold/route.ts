@@ -51,13 +51,30 @@ export async function POST(req: NextRequest) {
       googlePlaceId: body.placeId,
     },
   });
-  if (existing) {
-    return NextResponse.json(
-      { error: "Already saved", id: existing.id },
-      { status: 409 },
-    );
+
+  // Case 1: existing draft → promote to saved
+  if (existing && existing.isDraft) {
+    const updated = await db.savedLead.update({
+      where: { id: existing.id },
+      data: { isDraft: false },
+    });
+    await db.leadActivity.create({
+      data: {
+        savedLeadId: updated.id,
+        clientProfileId: profile.id,
+        activityType: "CREATED",
+        description: `Saved lead: ${updated.businessName ?? body.name}`,
+      },
+    });
+    return NextResponse.json({ success: true, id: updated.id });
   }
 
+  // Case 2: existing non-draft → idempotent return
+  if (existing) {
+    return NextResponse.json({ success: true, id: existing.id });
+  }
+
+  // Case 3: create new non-draft (search-card shortcut path)
   const lead = await db.savedLead.create({
     data: {
       clientProfileId: profile.id,
@@ -75,6 +92,7 @@ export async function POST(req: NextRequest) {
       reviewCount: body.reviewCount ?? null,
       status: "NEW",
       isFavorite: false,
+      isDraft: false,
     },
   });
 

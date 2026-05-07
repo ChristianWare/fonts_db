@@ -730,9 +730,11 @@ model SavedLead {
   strategicBrief String? @db.Text
 
   isFavorite              Boolean @default(false)
+  isDraft                 Boolean @default(true)
   reviewIntelligence      String? @db.Text
   decisionMakerHypothesis String? @db.Text
 
+  @@unique([clientProfileId, googlePlaceId])
   @@index([clientProfileId, status])
   @@index([clientProfileId, leadType])
   @@index([snoozeUntil])

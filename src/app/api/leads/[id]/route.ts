@@ -19,6 +19,7 @@ type Body = {
   notes?: string;
   snoozeUntil?: string | null;
   isFavorite?: boolean;
+  isDraft?: boolean;
 };
 
 export async function PATCH(
@@ -42,7 +43,13 @@ export async function PATCH(
 
   const lead = await db.savedLead.findUnique({
     where: { id },
-    select: { id: true, clientProfileId: true, status: true },
+    select: {
+      id: true,
+      clientProfileId: true,
+      status: true,
+      isDraft: true,
+      businessName: true,
+    },
   });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -58,6 +65,7 @@ export async function PATCH(
   const data: Prisma.SavedLeadUpdateInput = {};
   let statusChanged = false;
   let newStatus: LeadStatus | null = null;
+  let promotedFromDraft = false;
 
   if (body.status !== undefined) {
     const candidate = body.status as LeadStatus;
@@ -85,6 +93,13 @@ export async function PATCH(
     data.isFavorite = body.isFavorite;
   }
 
+  if (body.isDraft !== undefined && body.isDraft !== lead.isDraft) {
+    data.isDraft = body.isDraft;
+    if (lead.isDraft && body.isDraft === false) {
+      promotedFromDraft = true;
+    }
+  }
+
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ success: true, noop: true });
   }
@@ -103,12 +118,22 @@ export async function PATCH(
     });
   }
 
+  if (promotedFromDraft) {
+    await db.leadActivity.create({
+      data: {
+        savedLeadId: id,
+        clientProfileId: profile.id,
+        activityType: "CREATED",
+        description: `Saved lead: ${lead.businessName ?? "Unnamed"}`,
+      },
+    });
+  }
+
   return NextResponse.json({ success: true, lead: updated });
 }
 
 /**
- * DELETE — used when un-favoriting a lead from search results.
- * Cascade-deletes scripts, brief, activities (per onDelete: Cascade in schema).
+ * DELETE — removes a lead and cascades to scripts, brief, activities.
  */
 export async function DELETE(
   _req: NextRequest,

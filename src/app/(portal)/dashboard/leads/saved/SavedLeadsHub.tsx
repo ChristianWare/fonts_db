@@ -22,6 +22,7 @@ type SerializedLead = {
   businessAddress: string | null;
   businessPhone: string | null;
   businessWebsite: string | null;
+  googlePlaceId: string | null;
   rating: number | null;
   reviewCount: number | null;
   status: LeadStatus;
@@ -87,6 +88,7 @@ export default function SavedLeadsHub({ leads, counts }: Props) {
         <PipelineBoard
           initialLeads={leads.map((l) => ({
             id: l.id,
+            googlePlaceId: l.googlePlaceId,
             status: l.status,
             category: l.category,
             businessName: l.businessName,

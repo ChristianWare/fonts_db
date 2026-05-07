@@ -45,7 +45,10 @@ export default async function SavedLeadsPage() {
   }
 
   const allLeads = await db.savedLead.findMany({
-    where: { clientProfileId: profile.id },
+    where: {
+      clientProfileId: profile.id,
+      isDraft: false, // hide drafts
+    },
     include: {
       _count: { select: { outreachScripts: true } },
     },
@@ -61,6 +64,7 @@ export default async function SavedLeadsPage() {
     businessAddress: l.businessAddress,
     businessPhone: l.businessPhone,
     businessWebsite: l.businessWebsite,
+    googlePlaceId: l.googlePlaceId,
     rating: l.rating,
     reviewCount: l.reviewCount,
     status: l.status,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// import Link from "next/link";
 import styles from "./PipelinePage.module.css";
 import Button from "@/components/shared/Button/Button";
 
@@ -15,6 +14,7 @@ type LeadStatus =
 
 type SerializedLead = {
   id: string;
+  googlePlaceId: string | null;
   status: LeadStatus;
   category: string;
   businessName: string | null;
@@ -46,6 +46,13 @@ function formatRelative(iso: string): string {
   if (days < 30) return `${days}d ago`;
   const months = Math.floor(days / 30);
   return `${months}mo ago`;
+}
+
+function leadHref(lead: SerializedLead): string {
+  if (lead.googlePlaceId) {
+    return `/dashboard/leads/place/${encodeURIComponent(lead.googlePlaceId)}`;
+  }
+  return `/dashboard/leads/${lead.id}`;
 }
 
 function groupByStatus(
@@ -108,8 +115,6 @@ export default function PipelineBoard({
   }
 
   function handleDragEnd() {
-    // Safety net for cancelled drags (Esc key, drop outside any zone).
-    // For successful drops, handleDrop has already cleared state.
     clearDragState();
   }
 
@@ -126,9 +131,6 @@ export default function PipelineBoard({
     e.preventDefault();
     e.stopPropagation();
 
-    // Clear drag state IMMEDIATELY. The optimistic update below unmounts
-    // the original <tr>, so its onDragEnd never fires — without this,
-    // draggingId stays set and the new row renders ghosted.
     clearDragState();
 
     let payload: { id: string; fromStatus: LeadStatus };
@@ -145,7 +147,6 @@ export default function PipelineBoard({
     );
     if (!lead) return;
 
-    // Auto-expand destination if collapsed so user sees the result
     if (collapsed.has(toStatus)) {
       setCollapsed((prev) => {
         const next = new Set(prev);
@@ -154,7 +155,6 @@ export default function PipelineBoard({
       });
     }
 
-    // Optimistic update
     setLeadsByStatus((prev) => ({
       ...prev,
       [payload.fromStatus]: prev[payload.fromStatus].filter(
@@ -163,7 +163,6 @@ export default function PipelineBoard({
       [toStatus]: [{ ...lead, status: toStatus }, ...prev[toStatus]],
     }));
 
-    // Persist
     try {
       const res = await fetch(`/api/leads/${payload.id}`, {
         method: "PATCH",
@@ -172,7 +171,6 @@ export default function PipelineBoard({
       });
       if (!res.ok) {
         console.error("Status update failed", await res.text());
-        // Rollback
         setLeadsByStatus((prev) => ({
           ...prev,
           [toStatus]: prev[toStatus].filter((l) => l.id !== payload.id),
@@ -184,7 +182,6 @@ export default function PipelineBoard({
       }
     } catch (err) {
       console.error("Status update failed", err);
-      // Rollback
       setLeadsByStatus((prev) => ({
         ...prev,
         [toStatus]: prev[toStatus].filter((l) => l.id !== payload.id),
@@ -280,15 +277,9 @@ export default function PipelineBoard({
                             {formatRelative(lead.createdAt)}
                           </td>
                           <td className={styles.actionCell}>
-                            {/* <Link
-                              href={`/dashboard/leads/${lead.id}`}
-                              className={styles.viewLink}
-                            >
-                              View →
-                            </Link> */}
                             <div className={styles.btnContainer}>
                               <Button
-                                href={`/dashboard/leads/${lead.id}`}
+                                href={leadHref(lead)}
                                 text='View'
                                 btnType='accent'
                                 arrow

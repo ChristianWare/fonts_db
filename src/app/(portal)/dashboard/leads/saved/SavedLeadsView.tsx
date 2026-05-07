@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-// import Link from "next/link";
 import styles from "./SavedLeadsPage.module.css";
 import Button from "@/components/shared/Button/Button";
 
@@ -24,6 +22,7 @@ type SerializedLead = {
   businessAddress: string | null;
   businessPhone: string | null;
   businessWebsite: string | null;
+  googlePlaceId: string | null;
   rating: number | null;
   reviewCount: number | null;
   status: LeadStatus;
@@ -64,16 +63,11 @@ const STATUS_OPTIONS: LeadStatus[] = [
   "DEAD",
 ];
 
-function formatRelative(iso: string): string {
-  const date = new Date(iso);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  if (days === 0) return "today";
-  if (days === 1) return "yesterday";
-  if (days < 30) return `${days} days ago`;
-  if (days < 365) return `${Math.floor(days / 30)} months ago`;
-  return `${Math.floor(days / 365)} years ago`;
+function leadHref(lead: SerializedLead): string {
+  if (lead.googlePlaceId) {
+    return `/dashboard/leads/place/${encodeURIComponent(lead.googlePlaceId)}`;
+  }
+  return `/dashboard/leads/${lead.id}`;
 }
 
 export default function SavedLeadsView({
@@ -219,58 +213,53 @@ export default function SavedLeadsView({
                 </div>
 
                 <div className={styles.cardBottom}>
-                <div className={styles.cardActions}>
-                  <label className={styles.actionLabel}>
-                    <span className={styles.actionLabelText}>Status</span>
-                    <select
-                      value={lead.status}
-                      disabled={isUpdating}
-                      onChange={(e) =>
-                        updateLead(lead.id, {
-                          status: e.target.value as LeadStatus,
-                        })
-                      }
-                      className={styles.statusSelect}
-                    >
-                      {STATUS_OPTIONS.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className={styles.actionLabel}>
-                    <span className={styles.actionLabelText}>Notes</span>
-                    <textarea
-                      value={currentNote}
-                      disabled={isUpdating}
-                      onChange={(e) =>
-                        setNotesDraft({
-                          ...notesDraft,
-                          [lead.id]: e.target.value,
-                        })
-                      }
-                      onBlur={() => {
-                        if (currentNote !== (lead.notes ?? "")) {
-                          updateLead(lead.id, { notes: currentNote });
+                  <div className={styles.cardActions}>
+                    <label className={styles.actionLabel}>
+                      <span className={styles.actionLabelText}>Status</span>
+                      <select
+                        value={lead.status}
+                        disabled={isUpdating}
+                        onChange={(e) =>
+                          updateLead(lead.id, {
+                            status: e.target.value as LeadStatus,
+                          })
                         }
-                      }}
-                      placeholder='Quick notes — autosave on blur'
-                      className={styles.notesInput}
-                      rows={2}
-                    />
-                  </label>
-                </div>
-                  {/* <Link
-                    href={`/dashboard/leads/${lead.id}`}
-                    className={styles.detailsLink}
-                  >
-                    View details →
-                  </Link> */}
+                        className={styles.statusSelect}
+                      >
+                        {STATUS_OPTIONS.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className={styles.actionLabel}>
+                      <span className={styles.actionLabelText}>Notes</span>
+                      <textarea
+                        value={currentNote}
+                        disabled={isUpdating}
+                        onChange={(e) =>
+                          setNotesDraft({
+                            ...notesDraft,
+                            [lead.id]: e.target.value,
+                          })
+                        }
+                        onBlur={() => {
+                          if (currentNote !== (lead.notes ?? "")) {
+                            updateLead(lead.id, { notes: currentNote });
+                          }
+                        }}
+                        placeholder='Quick notes — autosave on blur'
+                        className={styles.notesInput}
+                        rows={2}
+                      />
+                    </label>
+                  </div>
+
                   <div className={styles.btnContainer}>
                     <Button
-                      href={`/dashboard/leads/${lead.id}`}
+                      href={leadHref(lead)}
                       text='View details'
                       btnType='black'
                       arrow
