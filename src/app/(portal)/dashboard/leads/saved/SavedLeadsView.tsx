@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+// import Link from "next/link";
 import styles from "./SavedLeadsPage.module.css";
+import Button from "@/components/shared/Button/Button";
 
 type LeadStatus =
   | "NEW"
@@ -162,59 +164,61 @@ export default function SavedLeadsView({
                   <span className={styles.cardCategory}>
                     {lead.category.replace(/_/g, " ")}
                   </span>
-                </div>
+                  <h3 className={styles.cardName}>
+                    {lead.businessName ?? "Unnamed"}
+                  </h3>
 
-                <h3 className={styles.cardName}>
-                  {lead.businessName ?? "Unnamed"}
-                </h3>
-
-                {lead.businessAddress && (
-                  <p className={styles.cardAddress}>{lead.businessAddress}</p>
-                )}
-
-                {lead.rating !== null && (
-                  <p className={styles.cardRating}>
-                    ★ {lead.rating.toFixed(1)}
-                    <span className={styles.cardReviewCount}>
-                      &nbsp;({lead.reviewCount ?? 0} reviews)
-                    </span>
-                  </p>
-                )}
-
-                <div className={styles.cardMeta}>
-                  {lead.businessPhone && (
-                    <a
-                      href={`tel:${lead.businessPhone}`}
-                      className={styles.cardLink}
-                    >
-                      {lead.businessPhone}
-                    </a>
+                  {lead.businessAddress && (
+                    <p className={styles.cardAddress}>{lead.businessAddress}</p>
                   )}
-                  {lead.businessWebsite && (
-                    <a
-                      href={lead.businessWebsite}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className={styles.cardLink}
-                    >
-                      Website ↗
-                    </a>
-                  )}
-                </div>
 
-                {(lead.hasBrief || lead.hasScripts) && (
-                  <div className={styles.indicators}>
-                    {lead.hasBrief && (
-                      <span className={styles.indicator}>
-                        ✓ Brief generated
+                  {lead.rating !== null && (
+                    <p className={styles.cardRating}>
+                      ★ {lead.rating.toFixed(1)}
+                      <span className={styles.cardReviewCount}>
+                        &nbsp;({lead.reviewCount ?? 0} reviews)
                       </span>
+                    </p>
+                  )}
+
+                  <div className={styles.cardMeta}>
+                    {lead.businessPhone && (
+                      <a
+                        href={`tel:${lead.businessPhone}`}
+                        className={styles.cardLink}
+                      >
+                        {lead.businessPhone}
+                      </a>
                     )}
-                    {lead.hasScripts && (
-                      <span className={styles.indicator}>✓ Scripts ready</span>
+                    {lead.businessWebsite && (
+                      <a
+                        href={lead.businessWebsite}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={styles.cardLink}
+                      >
+                        Website ↗
+                      </a>
                     )}
                   </div>
-                )}
 
+                  {(lead.hasBrief || lead.hasScripts) && (
+                    <div className={styles.indicators}>
+                      {lead.hasBrief && (
+                        <span className={styles.indicator}>
+                          ✓ Brief generated
+                        </span>
+                      )}
+                      {lead.hasScripts && (
+                        <span className={styles.indicator}>
+                          ✓ Scripts ready
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.cardBottom}>
                 <div className={styles.cardActions}>
                   <label className={styles.actionLabel}>
                     <span className={styles.actionLabelText}>Status</span>
@@ -258,17 +262,21 @@ export default function SavedLeadsView({
                     />
                   </label>
                 </div>
-
-                <Link
-                  href={`/dashboard/leads/${lead.id}`}
-                  className={styles.detailsLink}
-                >
-                  View details →
-                </Link>
-
-                <p className={styles.cardSaved}>
-                  Saved {formatRelative(lead.createdAt)}
-                </p>
+                  {/* <Link
+                    href={`/dashboard/leads/${lead.id}`}
+                    className={styles.detailsLink}
+                  >
+                    View details →
+                  </Link> */}
+                  <div className={styles.btnContainer}>
+                    <Button
+                      href={`/dashboard/leads/${lead.id}`}
+                      text='View details'
+                      btnType='black'
+                      arrow
+                    />
+                  </div>
+                </div>
               </div>
             );
           })}

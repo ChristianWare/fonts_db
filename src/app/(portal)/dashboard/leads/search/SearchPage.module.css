@@ -180,7 +180,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 3rem;
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--black);
   background-color: var(--white);
 }
 
@@ -310,7 +310,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 1rem 2rem;
-  background-color: var(--white);
+  background-color: var(--accent);
   color: var(--black);
   border: 1px solid var(--lightGray);
   cursor: pointer;
