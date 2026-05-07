@@ -8,6 +8,8 @@ import {
   countOutreachAttempts,
   daysSinceLastContact,
 } from "@/lib/leadNextMove";
+import { computeLeadPriority } from "@/lib/leadPriority";
+import { getSeasonalGuidance } from "@/lib/leadSeasonality";
 import PlacePageClient from "./PlacePageClient";
 import styles from "./PlacePage.module.css";
 
@@ -31,17 +33,7 @@ function distanceMiles(
   return EARTH_RADIUS_MILES * c;
 }
 
-// Fetch minimal Place metadata to seed a new draft
-async function fetchPlaceBasics(placeId: string): Promise<{
-  name: string;
-  address: string | null;
-  lat: number | null;
-  lng: number | null;
-  phone: string | null;
-  website: string | null;
-  rating: number | null;
-  reviewCount: number | null;
-} | null> {
+async function fetchPlaceBasics(placeId: string) {
   const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
   if (!apiKey) {
     console.error("[place page] GOOGLE_MAPS_SERVER_KEY not set");
@@ -58,6 +50,7 @@ async function fetchPlaceBasics(placeId: string): Promise<{
     "websiteUri",
     "rating",
     "userRatingCount",
+    "priceLevel",
   ].join(",");
 
   try {
@@ -85,6 +78,7 @@ async function fetchPlaceBasics(placeId: string): Promise<{
       website: data.websiteUri ?? null,
       rating: data.rating ?? null,
       reviewCount: data.userRatingCount ?? null,
+      priceLevel: data.priceLevel ?? null,
     };
   } catch (err) {
     console.error("[place page] Place fetch threw:", err);
@@ -117,7 +111,6 @@ export default async function PlacePage({
   const { placeId } = await params;
   const { category } = await searchParams;
 
-  // Find existing lead or create as draft
   let lead = await db.savedLead.findFirst({
     where: {
       clientProfileId: profile.id,
@@ -168,6 +161,14 @@ export default async function PlacePage({
   const outreachAttempts = countOutreachAttempts(lead.activities);
   const lastContactDays = daysSinceLastContact(lead.activities);
 
+  // NEW: priority + seasonality
+  const priorityResult = computeLeadPriority({
+    category: lead.category,
+    rating: lead.rating,
+    reviewCount: lead.reviewCount,
+  });
+  const seasonality = getSeasonalGuidance(lead.category);
+
   let distance: number | null = null;
   if (
     settings?.primaryLat != null &&
@@ -216,6 +217,30 @@ export default async function PlacePage({
     strategicBrief: lead.strategicBrief,
     reviewIntelligence: lead.reviewIntelligence,
     decisionMaker,
+    competitiveAnalysis: lead.competitiveAnalysis as
+      | {
+          analyzed: true;
+          hasExistingPartner: boolean;
+          partnerName: string | null;
+          evidence: string | null;
+          recommendation: string;
+        }
+      | { analyzed: false; reason: string }
+      | null,
+    apolloEnrichment: lead.apolloEnrichment as
+      | {
+          enabled: true;
+          persons: Array<{
+            name: string;
+            title: string;
+            email: string | null;
+            linkedinUrl: string | null;
+            emailStatus: "verified" | "guessed" | "unavailable";
+          }>;
+          lastEnrichedAt: string;
+        }
+      | { enabled: false; reason: string }
+      | null,
     distanceMiles: distance,
     primaryMarket: settings?.primaryCity
       ? `${settings.primaryCity}, ${settings.primaryState}`
@@ -260,6 +285,8 @@ export default async function PlacePage({
         nextMove={nextMove}
         outreachAttempts={outreachAttempts}
         lastContactDays={lastContactDays}
+        priorityResult={priorityResult}
+        seasonality={seasonality}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { useState } from "react";
 import PipelineBoard from "../pipeline/PipelineBoard";
 import SavedLeadsView from "./SavedLeadsView";
 import styles from "./SavedLeadsPage.module.css";
+import type { LeadPriority } from "@/lib/leadPriority";
 
 type LeadStatus =
   | "NEW"
@@ -27,6 +28,7 @@ type SerializedLead = {
   reviewCount: number | null;
   status: LeadStatus;
   notes: string | null;
+  priority: LeadPriority;
   createdAt: string;
   hasScripts: boolean;
   hasBrief: boolean;
@@ -95,6 +97,7 @@ export default function SavedLeadsHub({ leads, counts }: Props) {
             rating: l.rating,
             reviewCount: l.reviewCount,
             businessPhone: l.businessPhone,
+            priority: l.priority,
             createdAt: l.createdAt,
           }))}
         />

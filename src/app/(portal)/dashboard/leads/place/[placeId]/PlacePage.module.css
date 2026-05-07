@@ -98,6 +98,238 @@
   line-height: 1.5;
 }
 
+/* Priority + seasonality + competitive landscape additions */
+
+.priorityRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.priorityReasoning {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.priorityVolume {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--black);
+  letter-spacing: 0.04em;
+}
+
+.seasonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 3rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+  border-left: 3px solid var(--accent);
+}
+
+.seasonCardOff {
+  border-left-color: var(--lightGray);
+}
+
+.seasonHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.seasonTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.seasonStatus {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1.5rem;
+}
+
+.seasonStatusPeak {
+  background-color: var(--accent);
+  color: var(--black);
+}
+
+.seasonStatusApproaching {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.seasonStatusOff {
+  background-color: var(--lightGray);
+  color: var(--white);
+}
+
+.seasonStatusNeutral {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--text);
+}
+
+.seasonWindow {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--black);
+}
+
+.seasonRec {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.competitiveCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 3rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+
+.competitiveCardWarn {
+  border-left: 3px solid #f59e0b;
+}
+
+.competitiveCardClear {
+  border-left: 3px solid #16a34a;
+}
+
+.competitiveCardError {
+  border-left: 3px solid var(--lightGray);
+}
+
+.competitiveStatus {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+
+.competitivePartner {
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  line-height: 1.2;
+}
+
+.competitiveEvidence {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.competitiveRec {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--black);
+  line-height: 1.5;
+}
+
+.competitiveError {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.apolloPending {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 3rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--grayii);
+  border-left: 3px solid var(--lightGray);
+}
+
+.apolloIcon {
+  font-size: 2.4rem;
+}
+
+.apolloTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  line-height: 1.2;
+}
+
+.apolloDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.apolloPersonsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.apolloPersonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+}
+
+.apolloPersonName {
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  font-variation-settings: "wght" 700, "wdth" 81;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  line-height: 1.2;
+}
+
+.apolloPersonTitle {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.apolloPersonEmail {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.apolloPersonLink {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 768px) {
   .topBar {
     padding: 2rem;

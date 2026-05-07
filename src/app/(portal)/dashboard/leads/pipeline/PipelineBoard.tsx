@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import styles from "./PipelinePage.module.css";
+import { useState } from "react";
+import PriorityBadge from "../[id]/_components/PriorityBadge";
+import type { LeadPriority } from "@/lib/leadPriority";
 import Button from "@/components/shared/Button/Button";
 
 type LeadStatus =
@@ -21,6 +23,7 @@ type SerializedLead = {
   rating: number | null;
   reviewCount: number | null;
   businessPhone: string | null;
+  priority: LeadPriority;
   createdAt: string;
 };
 
@@ -238,6 +241,7 @@ export default function PipelineBoard({
                     <thead>
                       <tr>
                         <th className={styles.dragHeaderCell}></th>
+                        <th>Priority</th>
                         <th>Business</th>
                         <th>Rating</th>
                         <th>Phone</th>
@@ -256,6 +260,9 @@ export default function PipelineBoard({
                         >
                           <td className={styles.dragCell}>
                             <span className={styles.dragHandle}>≡</span>
+                          </td>
+                          <td>
+                            <PriorityBadge priority={lead.priority} />
                           </td>
                           <td className={styles.nameCell}>
                             <div className={styles.businessName}>

@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SavedLeadsPage.module.css";
 import Button from "@/components/shared/Button/Button";
+import PriorityBadge from "../[id]/_components/PriorityBadge";
+import type { LeadPriority } from "@/lib/leadPriority";
 
 type LeadStatus =
   | "NEW"
@@ -27,6 +29,7 @@ type SerializedLead = {
   reviewCount: number | null;
   status: LeadStatus;
   notes: string | null;
+  priority: LeadPriority;
   createdAt: string;
   hasScripts: boolean;
   hasBrief: boolean;
@@ -158,6 +161,9 @@ export default function SavedLeadsView({
                   <span className={styles.cardCategory}>
                     {lead.category.replace(/_/g, " ")}
                   </span>
+                  <div style={{ marginBottom: "1rem" }}>
+                    <PriorityBadge priority={lead.priority} />
+                  </div>
                   <h3 className={styles.cardName}>
                     {lead.businessName ?? "Unnamed"}
                   </h3>

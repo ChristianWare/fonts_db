@@ -1,0 +1,25 @@
+.badge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.priorityHIGH {
+  background-color: var(--accent);
+  color: var(--black);
+}
+
+.priorityMEDIUM {
+  background-color: var(--lightGray);
+  color: var(--white);
+}
+
+.priorityLOW {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--text);
+}

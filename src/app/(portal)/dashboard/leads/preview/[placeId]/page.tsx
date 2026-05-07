@@ -1,45 +1,22 @@
 import { redirect } from "next/navigation";
-import { auth } from "../../../../../../../auth";
-import { db } from "@/lib/db";
-import { getProductAccess } from "@/lib/subscriptions";
-import PreviewClient from "./PreviewClient";
 
-export const dynamic = "force-dynamic";
-
-export default async function PreviewPage({
+export default async function LeadPreviewRedirect({
   params,
+  searchParams,
 }: {
   params: Promise<{ placeId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) redirect("/login");
-
-  const profile = await db.clientProfile.findUnique({
-    where: { userId: session.user.id },
-    select: { id: true },
-  });
-  if (!profile) redirect("/dashboard");
-
-  const access = await getProductAccess(profile.id);
-  const isAdmin = session.user.roles?.includes("ADMIN") ?? false;
-  if (!access.hasLeads && !isAdmin) {
-    redirect("/dashboard/enroll/leads");
-  }
-
   const { placeId } = await params;
+  const queryParams = await searchParams;
 
-  const settings = await db.leadsSettings.findUnique({
-    where: { clientProfileId: profile.id },
-  });
+  const qs = new URLSearchParams();
+  if (typeof queryParams.category === "string") {
+    qs.set("category", queryParams.category);
+  }
+  const queryString = qs.toString();
 
-  return (
-    <PreviewClient
-      placeId={placeId}
-      primaryLat={settings?.primaryLat ?? null}
-      primaryLng={settings?.primaryLng ?? null}
-      primaryCity={settings?.primaryCity ?? null}
-      primaryState={settings?.primaryState ?? null}
-      serviceRadiusMiles={settings?.serviceRadiusMiles ?? null}
-    />
+  redirect(
+    `/dashboard/leads/place/${encodeURIComponent(placeId)}${queryString ? `?${queryString}` : ""}`,
   );
 }

@@ -580,3 +580,7 @@
 .detailsLink:hover {
   opacity: 0.85;
 }
+
+.cardPriorityRow {
+  margin-bottom: 1rem;
+}

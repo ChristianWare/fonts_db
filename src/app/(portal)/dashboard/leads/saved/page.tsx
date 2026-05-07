@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
+import { computeLeadPriority } from "@/lib/leadPriority";
 import SavedLeadsHub from "./SavedLeadsHub";
 import styles from "./SavedLeadsPage.module.css";
 
@@ -47,7 +48,7 @@ export default async function SavedLeadsPage() {
   const allLeads = await db.savedLead.findMany({
     where: {
       clientProfileId: profile.id,
-      isDraft: false, // hide drafts
+      isDraft: false,
     },
     include: {
       _count: { select: { outreachScripts: true } },
@@ -55,24 +56,32 @@ export default async function SavedLeadsPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  const leads = allLeads.map((l) => ({
-    id: l.id,
-    leadType: l.leadType,
-    source: l.source,
-    category: l.category,
-    businessName: l.businessName,
-    businessAddress: l.businessAddress,
-    businessPhone: l.businessPhone,
-    businessWebsite: l.businessWebsite,
-    googlePlaceId: l.googlePlaceId,
-    rating: l.rating,
-    reviewCount: l.reviewCount,
-    status: l.status,
-    notes: l.notes,
-    createdAt: l.createdAt.toISOString(),
-    hasScripts: l._count.outreachScripts > 0,
-    hasBrief: !!l.strategicBrief,
-  }));
+  const leads = allLeads.map((l) => {
+    const priority = computeLeadPriority({
+      category: l.category,
+      rating: l.rating,
+      reviewCount: l.reviewCount,
+    });
+    return {
+      id: l.id,
+      leadType: l.leadType,
+      source: l.source,
+      category: l.category,
+      businessName: l.businessName,
+      businessAddress: l.businessAddress,
+      businessPhone: l.businessPhone,
+      businessWebsite: l.businessWebsite,
+      googlePlaceId: l.googlePlaceId,
+      rating: l.rating,
+      reviewCount: l.reviewCount,
+      status: l.status,
+      notes: l.notes,
+      priority: priority.priority,
+      createdAt: l.createdAt.toISOString(),
+      hasScripts: l._count.outreachScripts > 0,
+      hasBrief: !!l.strategicBrief,
+    };
+  });
 
   const counts = buildCounts(leads);
 

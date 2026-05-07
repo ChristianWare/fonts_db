@@ -717,6 +717,9 @@ model SavedLead {
   wonAt           DateTime?
   estimatedValue  Int?
 
+  competitiveAnalysis Json?
+  apolloEnrichment    Json?
+
   // AI metadata
   aiScore       Int?
   aiScoreReason String? @db.Text

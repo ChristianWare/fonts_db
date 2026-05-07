@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useTransition, useRef } from "react";
@@ -12,6 +13,9 @@ import NotesActivityFeed from "../../[id]/_components/NotesActivityFeed";
 import NextActionCard from "../../[id]/_components/NextActionCard";
 import OutreachQuickLog from "../../[id]/_components/OutreachQuickLog";
 import type { NextMoveSuggestion } from "@/lib/leadNextMove";
+import PriorityBadge from "../../[id]/_components/PriorityBadge";
+import type { LeadPriorityResult } from "@/lib/leadPriority";
+import type { SeasonalGuidance } from "@/lib/leadSeasonality";
 
 type LeadStatus =
   | "NEW"
@@ -44,6 +48,30 @@ type DecisionMaker = {
   linkedinSearch: string;
 };
 
+type CompetitiveAnalysis =
+  | {
+      analyzed: true;
+      hasExistingPartner: boolean;
+      partnerName: string | null;
+      evidence: string | null;
+      recommendation: string;
+    }
+  | { analyzed: false; reason: string };
+
+type ApolloEnrichment =
+  | {
+      enabled: true;
+      persons: Array<{
+        name: string;
+        title: string;
+        email: string | null;
+        linkedinUrl: string | null;
+        emailStatus: "verified" | "guessed" | "unavailable";
+      }>;
+      lastEnrichedAt: string;
+    }
+  | { enabled: false; reason: string };
+
 type SerializedLead = {
   id: string;
   leadType: string;
@@ -64,6 +92,9 @@ type SerializedLead = {
   strategicBrief: string | null;
   reviewIntelligence: string | null;
   decisionMaker: DecisionMaker | null;
+  competitiveAnalysis: CompetitiveAnalysis | null;
+  apolloEnrichment: ApolloEnrichment | null;
+
   distanceMiles: number | null;
   primaryMarket: string | null;
   primaryLat: number | null;
@@ -129,6 +160,8 @@ type Props = {
   nextMove: NextMoveSuggestion;
   outreachAttempts: number;
   lastContactDays: number | null;
+  priorityResult: LeadPriorityResult;
+  seasonality: SeasonalGuidance;
 };
 
 const STATUS_OPTIONS: LeadStatus[] = [
@@ -210,6 +243,8 @@ export default function PlacePageClient({
   nextMove,
   outreachAttempts,
   lastContactDays,
+  priorityResult,
+  seasonality,
 }: Props) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -236,6 +271,14 @@ export default function PlacePageClient({
   );
   const [generatingDM, setGeneratingDM] = useState(!lead.decisionMaker);
   const [generatingScripts, setGeneratingScripts] = useState(false);
+
+  const [generatingCompetitive, setGeneratingCompetitive] = useState(
+    !lead.competitiveAnalysis,
+  );
+
+  const [generatingApollo, setGeneratingApollo] = useState(
+    !lead.apolloEnrichment || lead.apolloEnrichment.enabled === false,
+  );
 
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -309,13 +352,16 @@ export default function PlacePageClient({
     if (!lead.strategicBrief) generateAi("strategic-brief", "brief");
     if (!lead.reviewIntelligence) generateAi("review-intelligence", "reviews");
     if (!lead.decisionMaker) generateAi("decision-maker", "dm");
-    // Scripts only if not draft
+    if (!lead.competitiveAnalysis)
+      generateAi("competitive-check", "competitive");
     if (!lead.isDraft && lead.outreachScripts.length === 0) {
       generateAi("generate-scripts", "scripts");
     }
+    if (!lead.apolloEnrichment || lead.apolloEnrichment.enabled === false) {
+      generateAi("apollo-enrich", "apollo");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   // Clear loading flags once content arrives via router.refresh()
   useEffect(() => {
     if (lead.strategicBrief) setGeneratingBrief(false);
@@ -333,15 +379,21 @@ export default function PlacePageClient({
     if (lead.outreachScripts.length > 0) setGeneratingScripts(false);
   }, [lead.outreachScripts.length]);
 
+  useEffect(() => {
+    if (lead.competitiveAnalysis) setGeneratingCompetitive(false);
+  }, [lead.competitiveAnalysis]);
+
   async function generateAi(
     endpoint: string,
-    field: "brief" | "reviews" | "dm" | "scripts",
+    field: "brief" | "reviews" | "dm" | "scripts" | "competitive" | "apollo",
   ) {
     const setLoading = {
       brief: setGeneratingBrief,
       reviews: setGeneratingReviews,
       dm: setGeneratingDM,
       scripts: setGeneratingScripts,
+      competitive: setGeneratingCompetitive,
+      apollo: setGeneratingApollo,
     }[field];
     setLoading(true);
     try {
@@ -361,6 +413,12 @@ export default function PlacePageClient({
       console.error(`${endpoint} threw`, err);
     }
   }
+
+  useEffect(() => {
+    if (lead.apolloEnrichment && lead.apolloEnrichment.enabled === true) {
+      setGeneratingApollo(false);
+    }
+  }, [lead.apolloEnrichment]);
 
   async function patchLead(patch: Record<string, unknown>) {
     const res = await fetch(`/api/leads/${lead.id}`, {
@@ -466,6 +524,18 @@ export default function PlacePageClient({
           daysSinceLastContact={lastContactDays}
         />
 
+        <div className={placeStyles.priorityRow}>
+          <PriorityBadge priority={priorityResult.priority} />
+          <span className={placeStyles.priorityReasoning}>
+            {priorityResult.reasoning}
+          </span>
+          {priorityResult.estimatedAnnualVolume && (
+            <span className={placeStyles.priorityVolume}>
+              ≈ {priorityResult.estimatedAnnualVolume}
+            </span>
+          )}
+        </div>
+
         {/* HERO */}
         <section className={previewStyles.hero}>
           {!lead.isDraft && (
@@ -500,6 +570,45 @@ export default function PlacePageClient({
               <span className={previewStyles.closedBadge}>● Closed</span>
             )}
           </div>
+          {/* PHOTOS */}
+          {preview?.photos && preview.photos.length > 0 && (
+            <section className={previewStyles.photosSection}>
+              <div className={previewStyles.photosRow}>
+                {preview.photos.slice(0, 6).map((photo, i) => (
+                  <div key={photo.name} className={previewStyles.photoWrap}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/api/leads/place-photo?name=${encodeURIComponent(photo.name)}&maxWidth=600`}
+                      alt={`${lead.businessName ?? "Place"} photo ${i + 1}`}
+                      loading='lazy'
+                      className={previewStyles.photoThumb}
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+          <br />
+          {/* HOURS */}
+          {preview?.hours && preview.hours.length > 0 && (
+            <section className={detailStyles.section}>
+              <h2 className={detailStyles.sectionTitle}>Hours</h2>
+              <ul className={previewStyles.hoursList}>
+                {preview.hours.map((h, i) => (
+                  <li
+                    key={i}
+                    className={
+                      i === todayHoursIndex
+                        ? previewStyles.hoursItemToday
+                        : previewStyles.hoursItem
+                    }
+                  >
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <div className={previewStyles.heroLinks}>
             {lead.businessPhone && (
@@ -531,26 +640,130 @@ export default function PlacePageClient({
               </a>
             )}
           </div>
-        </section>
-
-        {/* PHOTOS */}
-        {preview?.photos && preview.photos.length > 0 && (
-          <section className={previewStyles.photosSection}>
-            <div className={previewStyles.photosRow}>
-              {preview.photos.slice(0, 6).map((photo, i) => (
-                <div key={photo.name} className={previewStyles.photoWrap}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/api/leads/place-photo?name=${encodeURIComponent(photo.name)}&maxWidth=600`}
-                    alt={`${lead.businessName ?? "Place"} photo ${i + 1}`}
-                    loading='lazy'
-                    className={previewStyles.photoThumb}
-                  />
-                </div>
-              ))}
+          <br />
+          {/* Competitive Landscape */}
+          <section className={detailStyles.section}>
+            <div className={detailStyles.sectionHeader}>
+              <h2 className={detailStyles.sectionTitle}>
+                Competitive Landscape
+              </h2>
+              {lead.competitiveAnalysis &&
+                lead.competitiveAnalysis.analyzed === true &&
+                !generatingCompetitive && (
+                  <button
+                    type='button'
+                    onClick={() =>
+                      generateAi("competitive-check", "competitive")
+                    }
+                    className={detailStyles.regenerateBtn}
+                  >
+                    Regenerate
+                  </button>
+                )}
             </div>
+            {generatingCompetitive ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Scanning website for existing transportation partners…
+                </p>
+              </div>
+            ) : !lead.competitiveAnalysis ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Competitive analysis failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("competitive-check", "competitive")}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            ) : lead.competitiveAnalysis.analyzed === false ? (
+              <div
+                className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardError}`}
+              >
+                <span className={placeStyles.competitiveStatus}>
+                  ⚠ Could not analyze
+                </span>
+                <p className={placeStyles.competitiveError}>
+                  {lead.competitiveAnalysis.reason}
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("competitive-check", "competitive")}
+                  className={detailStyles.regenerateBtn}
+                >
+                  Try again
+                </button>
+              </div>
+            ) : lead.competitiveAnalysis.hasExistingPartner ? (
+              <div
+                className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardWarn}`}
+              >
+                <span className={placeStyles.competitiveStatus}>
+                  ⚠ Existing partner detected
+                </span>
+                {lead.competitiveAnalysis.partnerName && (
+                  <p className={placeStyles.competitivePartner}>
+                    {lead.competitiveAnalysis.partnerName}
+                  </p>
+                )}
+                {lead.competitiveAnalysis.evidence && (
+                  <p className={placeStyles.competitiveEvidence}>
+                    &ldquo;{lead.competitiveAnalysis.evidence}&rdquo;
+                  </p>
+                )}
+                <p className={placeStyles.competitiveRec}>
+                  {lead.competitiveAnalysis.recommendation}
+                </p>
+              </div>
+            ) : (
+              <div
+                className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardClear}`}
+              >
+                <span className={placeStyles.competitiveStatus}>
+                  ✓ No existing partnership detected
+                </span>
+                <p className={placeStyles.competitiveRec}>
+                  {lead.competitiveAnalysis.recommendation}
+                </p>
+              </div>
+            )}
           </section>
-        )}
+          <br />
+          {seasonality.applicable && (
+            <section
+              className={`${placeStyles.seasonCard} ${seasonality.currentSeason === "off_season" ? placeStyles.seasonCardOff : ""}`}
+            >
+              <div className={placeStyles.seasonHeader}>
+                <span className={placeStyles.seasonTitle}>
+                  Seasonal Context
+                </span>
+                <span
+                  className={`${placeStyles.seasonStatus} ${
+                    seasonality.currentSeason === "peak"
+                      ? placeStyles.seasonStatusPeak
+                      : seasonality.currentSeason === "approaching_peak"
+                        ? placeStyles.seasonStatusApproaching
+                        : seasonality.currentSeason === "off_season"
+                          ? placeStyles.seasonStatusOff
+                          : placeStyles.seasonStatusNeutral
+                  }`}
+                >
+                  {seasonality.currentSeason.replace(/_/g, " ")}
+                </span>
+              </div>
+              <p className={placeStyles.seasonWindow}>
+                Peak: {seasonality.peakBookingWindow}
+              </p>
+              <p className={placeStyles.seasonRec}>
+                {seasonality.recommendation}
+              </p>
+            </section>
+          )}
+        </section>
 
         {/* LOCATION CARD */}
         {lead.distanceMiles !== null &&
@@ -626,27 +839,6 @@ export default function PlacePageClient({
                 </span>
               ))}
             </div>
-          </section>
-        )}
-
-        {/* HOURS */}
-        {preview?.hours && preview.hours.length > 0 && (
-          <section className={detailStyles.section}>
-            <h2 className={detailStyles.sectionTitle}>Hours</h2>
-            <ul className={previewStyles.hoursList}>
-              {preview.hours.map((h, i) => (
-                <li
-                  key={i}
-                  className={
-                    i === todayHoursIndex
-                      ? previewStyles.hoursItemToday
-                      : previewStyles.hoursItem
-                  }
-                >
-                  {h}
-                </li>
-              ))}
-            </ul>
           </section>
         )}
 
@@ -801,6 +993,74 @@ export default function PlacePageClient({
               >
                 Retry
               </button>
+            </div>
+          )}
+        </section>
+
+        {/* APOLLO VERIFIED CONTACTS */}
+        <section className={detailStyles.section}>
+          <div className={detailStyles.sectionHeader}>
+            <h2 className={detailStyles.sectionTitle}>Verified Contacts</h2>
+          </div>
+          {!lead.apolloEnrichment ||
+          (lead.apolloEnrichment.enabled === false &&
+            lead.apolloEnrichment.reason.includes("pending enrollment")) ? (
+            <div className={placeStyles.apolloPending}>
+              <span className={placeStyles.apolloIcon}>🔒</span>
+              <p className={placeStyles.apolloTitle}>
+                Verified emails coming soon
+              </p>
+              <p className={placeStyles.apolloDesc}>
+                Apollo integration is scaffolded. Once enrolled, this section
+                will display verified email addresses for{" "}
+                {lead.decisionMaker?.primary?.title ?? "the decision-maker"} and
+                related titles at this business — with one-click mailto links.
+              </p>
+            </div>
+          ) : lead.apolloEnrichment.enabled === false ? (
+            <div className={placeStyles.apolloPending}>
+              <p className={placeStyles.apolloDesc}>
+                {lead.apolloEnrichment.reason}
+              </p>
+            </div>
+          ) : lead.apolloEnrichment.persons.length === 0 ? (
+            <div className={detailStyles.emptyBlock}>
+              <p className={detailStyles.emptyDesc}>
+                No verified contacts found at this business for the target
+                titles.
+              </p>
+            </div>
+          ) : (
+            <div className={placeStyles.apolloPersonsList}>
+              {lead.apolloEnrichment.persons.map((person) => (
+                <div
+                  key={person.email ?? person.name}
+                  className={placeStyles.apolloPersonCard}
+                >
+                  <p className={placeStyles.apolloPersonName}>{person.name}</p>
+                  <p className={placeStyles.apolloPersonTitle}>
+                    {person.title}
+                  </p>
+                  {person.email && (
+                    <a
+                      href={`mailto:${person.email}`}
+                      className={placeStyles.apolloPersonEmail}
+                    >
+                      {person.email} ↗
+                    </a>
+                  )}
+                  {person.linkedinUrl && (
+                    <a
+                      href={person.linkedinUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className={placeStyles.apolloPersonLink}
+                    >
+                      LinkedIn ↗
+                    </a>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </section>
