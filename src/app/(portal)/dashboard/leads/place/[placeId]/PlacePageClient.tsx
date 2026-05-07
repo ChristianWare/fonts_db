@@ -1004,7 +1004,8 @@ export default function PlacePageClient({
           </div>
           {!lead.apolloEnrichment ||
           (lead.apolloEnrichment.enabled === false &&
-            lead.apolloEnrichment.reason.includes("pending enrollment")) ? (
+            (lead.apolloEnrichment.reason.includes("pending enrollment") ||
+              lead.apolloEnrichment.reason.includes("Save this lead"))) ? (
             <div className={placeStyles.apolloPending}>
               <span className={placeStyles.apolloIcon}>🔒</span>
               <p className={placeStyles.apolloTitle}>
