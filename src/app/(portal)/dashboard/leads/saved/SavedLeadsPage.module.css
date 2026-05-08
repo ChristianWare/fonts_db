@@ -584,3 +584,93 @@
 .cardPriorityRow {
   margin-bottom: 1rem;
 }
+
+.deleteBtn {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background-color: transparent;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  align-self: flex-start;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background-color: #c0392b;
+  color: var(--white);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deleteModalTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.4rem;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.deleteModalDesc {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 2.5rem;
+}
+
+.deleteModalDesc strong {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.deleteModalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.deleteModalCancel {
+  padding: 1rem 2rem;
+  background-color: transparent;
+  color: var(--text);
+  border: 1px solid var(--grayii);
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.deleteModalCancel:hover {
+  background-color: var(--lightGray);
+}
+
+.deleteModalConfirm {
+  padding: 1rem 2rem;
+  background-color: #c0392b;
+  color: var(--white);
+  border: 1px solid #c0392b;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.deleteModalConfirm:hover {
+  background-color: #a93226;
+  border-color: #a93226;
+}
+
+.deleteModalContent {
+  padding: 2.5rem;
+  max-width: 50rem;
+}

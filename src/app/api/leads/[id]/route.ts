@@ -133,7 +133,9 @@ export async function PATCH(
 }
 
 /**
- * DELETE — removes a lead and cascades to scripts, brief, activities.
+ * DELETE — removes a lead atomically along with all its child records
+ * (outreach scripts, activities). Wrapped in a transaction so a partial
+ * failure never leaves orphaned data behind.
  */
 export async function DELETE(
   _req: NextRequest,
@@ -156,13 +158,20 @@ export async function DELETE(
 
   const lead = await db.savedLead.findUnique({
     where: { id },
-    select: { id: true, clientProfileId: true },
+    select: { id: true, clientProfileId: true, businessName: true },
   });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  await db.savedLead.delete({ where: { id } });
+  await db.$transaction([
+    db.outreachScript.deleteMany({ where: { savedLeadId: id } }),
+    db.leadActivity.deleteMany({ where: { savedLeadId: id } }),
+    db.savedLead.delete({ where: { id } }),
+  ]);
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    success: true,
+    deleted: lead.businessName ?? "lead",
+  });
 }

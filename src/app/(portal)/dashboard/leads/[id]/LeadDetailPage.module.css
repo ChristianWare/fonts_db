@@ -633,3 +633,31 @@
     font-size: 3rem;
   }
 }
+
+.sidebarDangerZone {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--grayii);
+}
+
+.sidebarBtnDanger {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background-color: transparent;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sidebarBtnDanger:hover {
+  background-color: #c0392b;
+  color: var(--white);
+}
+
+.sidebarBtnDanger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -15,6 +15,8 @@ import type { NextMoveSuggestion } from "@/lib/leadNextMove";
 import PriorityBadge from "../../[id]/_components/PriorityBadge";
 import type { LeadPriorityResult } from "@/lib/leadPriority";
 import type { SeasonalGuidance } from "@/lib/leadSeasonality";
+import Modal from "@/components/shared/Modal/Modal";
+
 
 type LeadStatus =
   | "NEW"
@@ -286,6 +288,9 @@ export default function PlacePageClient({
   );
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
   // Guard against double-firing across StrictMode + re-renders
   const aiKickedOff = useRef(false);
 
@@ -484,6 +489,27 @@ export default function PlacePageClient({
     }
   }
 
+  function requestDelete() {
+    setShowDeleteModal(true);
+  }
+
+  async function confirmDelete() {
+    setShowDeleteModal(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/leads/${lead.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        console.error("Delete failed", await res.text());
+        window.alert("Failed to delete. Try again.");
+        return;
+      }
+      router.push("/dashboard/leads/saved");
+    } finally {
+      setSaving(false);
+    }
+  }
   async function copyToClipboard(text: string, scriptId: string) {
     try {
       await navigator.clipboard.writeText(text);
@@ -896,7 +922,9 @@ export default function PlacePageClient({
             {lead.reviewIntelligence && !generatingReviews && (
               <button
                 type='button'
-                onClick={() => generateAi("review-intelligence", "reviews", true)}
+                onClick={() =>
+                  generateAi("review-intelligence", "reviews", true)
+                }
                 className={detailStyles.regenerateBtn}
               >
                 Regenerate
@@ -922,7 +950,9 @@ export default function PlacePageClient({
               </p>
               <button
                 type='button'
-                onClick={() => generateAi("review-intelligence", "reviews", true)}
+                onClick={() =>
+                  generateAi("review-intelligence", "reviews", true)
+                }
                 className={detailStyles.generateBtn}
               >
                 Retry
@@ -1089,7 +1119,9 @@ export default function PlacePageClient({
               !generatingScripts && (
                 <button
                   type='button'
-                  onClick={() => generateAi("generate-scripts", "scripts", true)}
+                  onClick={() =>
+                    generateAi("generate-scripts", "scripts", true)
+                  }
                   className={detailStyles.regenerateBtn}
                 >
                   Regenerate
@@ -1284,10 +1316,46 @@ export default function PlacePageClient({
                   {new Date(lead.lastContactedAt).toLocaleDateString()}
                 </p>
               )}
+              <div className={detailStyles.sidebarDangerZone}>
+                <button
+                  type='button'
+                  onClick={requestDelete}
+                  disabled={saving}
+                  className={detailStyles.sidebarBtnDanger}
+                >
+                  Delete lead
+                </button>
+              </div>
             </>
           )}
         </div>
       </aside>
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <div className={placeStyles.deleteModalContent}>
+          <p className={placeStyles.deleteModalTitle}>Delete this lead?</p>
+          <p className={placeStyles.deleteModalDesc}>
+            <strong>{lead.businessName ?? "This lead"}</strong> will be
+            permanently removed along with all notes, activities, and outreach
+            scripts. This cannot be undone.
+          </p>
+          <div className={placeStyles.deleteModalActions}>
+            <button
+              type='button'
+              onClick={() => setShowDeleteModal(false)}
+              className={placeStyles.deleteModalCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type='button'
+              onClick={confirmDelete}
+              className={placeStyles.deleteModalConfirm}
+            >
+              Delete permanently
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import styles from "./SavedLeadsPage.module.css";
 import Button from "@/components/shared/Button/Button";
 import PriorityBadge from "../[id]/_components/PriorityBadge";
 import type { LeadPriority } from "@/lib/leadPriority";
+import Modal from "@/components/shared/Modal/Modal";
 
 type LeadStatus =
   | "NEW"
@@ -85,6 +86,10 @@ export default function SavedLeadsView({
   const [updating, setUpdating] = useState<Set<string>>(new Set());
   const [, startTransition] = useTransition();
   const [notesDraft, setNotesDraft] = useState<Record<string, string>>({});
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    businessName: string | null;
+  } | null>(null);
 
   const filtered =
     filter === "all" ? leads : leads.filter((l) => l.status === filter);
@@ -107,6 +112,38 @@ export default function SavedLeadsView({
       startTransition(() => router.refresh());
     } catch (err) {
       console.error("Update failed", err);
+    } finally {
+      setUpdating((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  }
+
+  function requestDelete(id: string, businessName: string | null) {
+    setDeleteTarget({ id, businessName });
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
+
+    setUpdating((prev) => new Set(prev).add(id));
+    try {
+      const res = await fetch(`/api/leads/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        console.error("Delete failed", await res.text());
+        window.alert("Failed to delete. Try again.");
+        return;
+      }
+      startTransition(() => router.refresh());
+    } catch (err) {
+      console.error("Delete failed", err);
+      window.alert("Failed to delete. Try again.");
     } finally {
       setUpdating((prev) => {
         const next = new Set(prev);
@@ -270,6 +307,15 @@ export default function SavedLeadsView({
                       btnType='black'
                       arrow
                     />
+                    <button
+                      type='button'
+                      onClick={() => requestDelete(lead.id, lead.businessName)}
+                      disabled={isUpdating}
+                      className={styles.deleteBtn}
+                      aria-label={`Delete ${lead.businessName ?? "lead"}`}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
@@ -277,6 +323,36 @@ export default function SavedLeadsView({
           })}
         </div>
       )}
+
+      <Modal
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+      >
+        <div className={styles.deleteModalContent}>
+          <p className={styles.deleteModalTitle}>Delete this lead?</p>
+          <p className={styles.deleteModalDesc}>
+            <strong>{deleteTarget?.businessName ?? "This lead"}</strong> will be
+            permanently removed along with all notes, activities, and outreach
+            scripts. This cannot be undone.
+          </p>
+          <div className={styles.deleteModalActions}>
+            <button
+              type='button'
+              onClick={() => setDeleteTarget(null)}
+              className={styles.deleteModalCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type='button'
+              onClick={confirmDelete}
+              className={styles.deleteModalConfirm}
+            >
+              Delete permanently
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
