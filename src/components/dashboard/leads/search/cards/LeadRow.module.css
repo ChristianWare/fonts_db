@@ -7,7 +7,7 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 140px 1fr 130px 170px 130px 120px;
+  grid-template-columns: 60px 140px 1fr 130px 170px 130px 120px;
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
@@ -17,7 +17,7 @@
 
 .headerCell {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -26,7 +26,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 140px 1fr 130px 170px 130px 120px;
+  grid-template-columns: 60px 140px 1fr 130px 170px 130px 120px;
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
@@ -55,7 +55,7 @@
 /* Priority / temperature badge */
 .priorityBadge {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.7rem 1.2rem;
@@ -66,7 +66,7 @@
 }
 
 .priorityEmoji {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
 }
 
 .priorityHigh {
@@ -84,10 +84,18 @@
   color: var(--text);
 }
 
+.colBusiness {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* gap: 1rem; */
+}
+
 /* Business cell */
 .businessName {
   font-family: var(--RobotoFlexii);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   color: var(--black);
   font-variation-settings:
@@ -105,7 +113,7 @@
 
 .businessCategory {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -122,13 +130,13 @@
 
 .metaPrimary {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--black);
 }
 
 .metaSecondary {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   color: var(--text);
   opacity: 0.55;
 }
@@ -136,7 +144,7 @@
 /* Contact cell */
 .contactLink {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--black);
   text-decoration: none;
 }
@@ -148,7 +156,7 @@
 /* Save cell */
 .saveBtn {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.8rem 1.4rem;
@@ -173,7 +181,7 @@
 
 .savedBadge {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.8rem 1.4rem;
@@ -186,7 +194,7 @@
 /* View button */
 .viewBtn {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 1rem 1.6rem;
@@ -208,12 +216,24 @@
 }
 
 .viewArrow {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+}
+
+.colNumber {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Mobile — collapse to stacked card-like rows */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1468px) {
   .tableHeader {
+    display: none;
+  }
+
+  .colNumber {
     display: none;
   }
 
@@ -232,7 +252,7 @@
     display: block;
     width: 100%;
     font-family: var(--GeistMono);
-    font-size: 1rem;
+    font-size: 1.6rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text);

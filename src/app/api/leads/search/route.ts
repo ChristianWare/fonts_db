@@ -9,19 +9,51 @@ type Temperature = "hot" | "warm" | "cold";
 type SortOption = "distance" | "rating" | "reviews" | "name";
 
 type Body = {
-  // New unified params
   categories?: string[];
   temperatures?: Temperature[];
-  // Legacy single-query support (backward compat with existing callers)
-  query?: string;
-  // Filters
+  query?: string; // legacy single-category fallback
   cityOverride?: string;
   stateOverride?: string;
   radiusMilesOverride?: number;
-  pageToken?: string;
   freshOnly?: boolean;
   sortBy?: SortOption;
 };
+
+const MAX_PAGES_PER_CATEGORY = 2;
+const PAGE_TOKEN_DELAY_MS = 2000; // Places requires a brief delay before next_page_token is valid
+
+type Place = Awaited<ReturnType<typeof searchPlaces>>["places"][number];
+
+async function fetchAllPagesForCategory(args: {
+  query: string;
+  lat: number;
+  lng: number;
+  radiusMiles: number;
+  maxPages: number;
+}): Promise<Place[]> {
+  const { query, lat, lng, radiusMiles, maxPages } = args;
+  const allPlaces: Place[] = [];
+  let pageToken: string | undefined = undefined;
+
+  for (let i = 0; i < maxPages; i++) {
+    const result = await searchPlaces({
+      query,
+      lat,
+      lng,
+      radiusMiles,
+      pageSize: 20,
+      pageToken,
+    });
+    allPlaces.push(...result.places);
+    if (!result.nextPageToken) break;
+    pageToken = result.nextPageToken;
+    if (i < maxPages - 1) {
+      await new Promise((resolve) => setTimeout(resolve, PAGE_TOKEN_DELAY_MS));
+    }
+  }
+
+  return allPlaces;
+}
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -44,7 +76,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  // Normalize categories: support both new array and legacy single query
   const categories =
     body.categories?.map((c) => c.trim()).filter(Boolean) ??
     (body.query?.trim() ? [body.query.trim()] : []);
@@ -60,15 +91,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // V1: only "cold" runs a real search. Warm/hot sources coming soon.
   const includeCold = temperatures.includes("cold");
   if (!includeCold) {
     return NextResponse.json({
       results: [],
       center: null,
       radiusMiles: null,
-      nextPageToken: null,
-      multiCategoryDisablesPagination: false,
       message: "Hot and warm leads coming soon. Check Cold to see results.",
     });
   }
@@ -117,53 +145,36 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    type EnrichedPlace = Awaited<
-      ReturnType<typeof searchPlaces>
-    >["places"][number] & { category: string };
+    type EnrichedPlace = Place & { category: string };
 
-    let allPlaces: EnrichedPlace[] = [];
-    let nextPageToken: string | null = null;
-
-    if (categories.length === 1) {
-      // Single category — preserve existing pagination
-      const result = await searchPlaces({
-        query: categories[0],
-        lat,
-        lng,
-        radiusMiles,
-        pageSize: 20,
-        pageToken: body.pageToken,
-      });
-      allPlaces = result.places.map((p) => ({ ...p, category: categories[0] }));
-      nextPageToken = result.nextPageToken;
-    } else {
-      // Multi-category — parallel searches, dedupe by placeId, no pagination in V1
-      const results = await Promise.all(
-        categories.map((cat) =>
-          searchPlaces({
-            query: cat,
-            lat,
-            lng,
-            radiusMiles,
-            pageSize: 20,
-          }).then((r) =>
-            r.places.map((p) => ({ ...p, category: cat })),
-          ),
+    // Fetch all pages for each category in parallel
+    const resultsByCategory = await Promise.all(
+      categories.map((cat) =>
+        fetchAllPagesForCategory({
+          query: cat,
+          lat,
+          lng,
+          radiusMiles,
+          maxPages: MAX_PAGES_PER_CATEGORY,
+        }).then((places) =>
+          places.map((p) => ({ ...p, category: cat }) as EnrichedPlace),
         ),
-      );
-      const seen = new Set<string>();
-      for (const list of results) {
-        for (const p of list) {
-          if (!seen.has(p.placeId)) {
-            seen.add(p.placeId);
-            allPlaces.push(p);
-          }
+      ),
+    );
+
+    // Dedupe by placeId across categories
+    const seen = new Set<string>();
+    const allPlaces: EnrichedPlace[] = [];
+    for (const list of resultsByCategory) {
+      for (const p of list) {
+        if (!seen.has(p.placeId)) {
+          seen.add(p.placeId);
+          allPlaces.push(p);
         }
       }
-      nextPageToken = null;
     }
 
-    // Apply sort
+    // Sort
     const sortBy: SortOption = body.sortBy ?? "distance";
     if (sortBy === "rating") {
       allPlaces.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
@@ -172,7 +183,7 @@ export async function POST(req: NextRequest) {
     } else if (sortBy === "name") {
       allPlaces.sort((a, b) => a.name.localeCompare(b.name));
     }
-    // "distance" preserves Places API default order (already by distance)
+    // "distance" preserves Places API default order
 
     const placeIds = allPlaces.map((r) => r.placeId);
     const matchingSaved = placeIds.length
@@ -208,8 +219,6 @@ export async function POST(req: NextRequest) {
       }),
       center: { lat, lng },
       radiusMiles,
-      nextPageToken,
-      multiCategoryDisablesPagination: categories.length > 1,
     });
   } catch (err) {
     console.error("Search failed", err);

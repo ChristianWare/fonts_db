@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import styles from "./LeadRow.module.css";
-import type { SavedState, SearchResult } from "./types"; 
+import type { SavedState, SearchResult } from "./types";
 
 type Props = {
   result: SearchResult;
   isPending: boolean;
   onSave: () => void;
+  index: number;
 };
 
 function isSaved(state: SavedState): boolean {
@@ -41,7 +42,7 @@ function formatEventDate(iso: string): string {
   });
 }
 
-export default function LeadRow({ result, isPending, onSave }: Props) {
+export default function LeadRow({ result, isPending, onSave, index }: Props) {
   const saved = isSaved(result.savedState);
 
   // Per-temperature display derivations
@@ -107,6 +108,7 @@ export default function LeadRow({ result, isPending, onSave }: Props) {
 
   return (
     <div className={styles.row}>
+      <div className={`${styles.cell} ${styles.colNumber}`}>{index}.</div>
       <div className={`${styles.cell} ${styles.colType}`}>
         <span className={styles.cellLabelMobile}>Lead Type</span>
         <span className={`${styles.priorityBadge} ${priorityClass}`}>

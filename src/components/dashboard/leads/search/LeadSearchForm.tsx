@@ -14,6 +14,8 @@ type Props = {
   defaultRadius: number;
 };
 
+const RESULTS_PER_PAGE = 20;
+
 const CATEGORIES: Array<{ value: string; label: string }> = [
   { value: "wedding venues", label: "Wedding Venues" },
   { value: "hotels", label: "Hotels" },
@@ -43,7 +45,7 @@ const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v3";
+const STORAGE_KEY = "leadSearch:state:v4";
 
 type StoredState = {
   selectedTemperatures: Temperature[];
@@ -55,11 +57,8 @@ type StoredState = {
   freshOnly: boolean;
   searchedTemperatures: Temperature[];
   searchedCategories: string[];
+  results: SearchResult[];
   currentPage: number;
-  pagesData: Record<number, SearchResult[]>;
-  pageTokens: Record<number, string | null>;
-  totalKnown: boolean;
-  multiCategoryNoPaging: boolean;
 };
 
 function loadStored(): StoredState | null {
@@ -107,15 +106,8 @@ export default function LeadSearchForm({
     Temperature[]
   >([]);
   const [searchedCategories, setSearchedCategories] = useState<string[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pagesData, setPagesData] = useState<Record<number, SearchResult[]>>(
-    {},
-  );
-  const [pageTokens, setPageTokens] = useState<Record<number, string | null>>(
-    {},
-  );
-  const [totalKnown, setTotalKnown] = useState(false);
-  const [multiCategoryNoPaging, setMultiCategoryNoPaging] = useState(false);
 
   // UI state
   const [loading, setLoading] = useState(false);
@@ -126,6 +118,7 @@ export default function LeadSearchForm({
   const [hasSearched, setHasSearched] = useState(false);
 
   const hydrated = useRef(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stored = loadStored();
@@ -139,11 +132,8 @@ export default function LeadSearchForm({
       setFreshOnly(stored.freshOnly ?? false);
       setSearchedTemperatures(stored.searchedTemperatures);
       setSearchedCategories(stored.searchedCategories);
-      setCurrentPage(stored.currentPage);
-      setPagesData(stored.pagesData ?? {});
-      setPageTokens(stored.pageTokens ?? {});
-      setTotalKnown(stored.totalKnown ?? false);
-      setMultiCategoryNoPaging(stored.multiCategoryNoPaging ?? false);
+      setResults(stored.results ?? []);
+      setCurrentPage(stored.currentPage ?? 1);
       setHasSearched(true);
     }
     hydrated.current = true;
@@ -162,11 +152,8 @@ export default function LeadSearchForm({
       freshOnly,
       searchedTemperatures,
       searchedCategories,
+      results,
       currentPage,
-      pagesData,
-      pageTokens,
-      totalKnown,
-      multiCategoryNoPaging,
     });
   }, [
     selectedTemperatures,
@@ -178,20 +165,15 @@ export default function LeadSearchForm({
     freshOnly,
     searchedTemperatures,
     searchedCategories,
+    results,
     currentPage,
-    pagesData,
-    pageTokens,
-    totalKnown,
-    multiCategoryNoPaging,
   ]);
 
   // Auto-rerun search when sort or freshOnly change (after first search)
   useEffect(() => {
     if (!hydrated.current) return;
     if (!hasSearched) return;
-    setCurrentPage(1);
-    setTotalKnown(false);
-    executeSearch(1);
+    executeSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
 
@@ -231,22 +213,17 @@ export default function LeadSearchForm({
     savedState: SavedState,
     savedLeadId: string | null,
   ) {
-    setPagesData((prev) => {
-      const next: Record<number, SearchResult[]> = {};
-      for (const key of Object.keys(prev)) {
-        const pageNum = Number(key);
-        next[pageNum] = prev[pageNum].map((r) => {
-          if (r.temperature === "cold" && r.placeId === placeId) {
-            return { ...r, savedState, savedLeadId };
-          }
-          return r;
-        });
-      }
-      return next;
-    });
+    setResults((prev) =>
+      prev.map((r) => {
+        if (r.temperature === "cold" && r.placeId === placeId) {
+          return { ...r, savedState, savedLeadId };
+        }
+        return r;
+      }),
+    );
   }
 
-  async function executeSearch(pageNum: number, pageToken?: string) {
+  async function executeSearch() {
     setLoading(true);
     setError(null);
     try {
@@ -262,19 +239,13 @@ export default function LeadSearchForm({
               ? state.trim().toUpperCase()
               : undefined,
           radiusMilesOverride: radius !== defaultRadius ? radius : undefined,
-          pageToken,
           sortBy,
           freshOnly,
         }),
       });
 
       const text = await res.text();
-      let data: {
-        results?: SearchResult[];
-        error?: string;
-        nextPageToken?: string | null;
-        multiCategoryDisablesPagination?: boolean;
-      } = {};
+      let data: { results?: SearchResult[]; error?: string } = {};
       try {
         data = JSON.parse(text);
       } catch {
@@ -285,20 +256,8 @@ export default function LeadSearchForm({
         throw new Error(data.error ?? "Search failed");
       }
 
-      setPagesData((prev) =>
-        pageNum === 1
-          ? { 1: data.results ?? [] }
-          : { ...prev, [pageNum]: data.results ?? [] },
-      );
-      setPageTokens((prev) =>
-        pageNum === 1
-          ? { 1: data.nextPageToken ?? null }
-          : { ...prev, [pageNum]: data.nextPageToken ?? null },
-      );
-
-      if (!data.nextPageToken) setTotalKnown(true);
-      setMultiCategoryNoPaging(!!data.multiCategoryDisablesPagination);
-      setCurrentPage(pageNum);
+      setResults(data.results ?? []);
+      setCurrentPage(1);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -317,29 +276,30 @@ export default function LeadSearchForm({
       return;
     }
 
-    setPagesData({});
-    setPageTokens({});
-    setCurrentPage(1);
-    setTotalKnown(false);
     setSearchedTemperatures([...selectedTemperatures]);
     setSearchedCategories([...selectedCategories]);
     setHasSearched(true);
-    executeSearch(1);
+    executeSearch();
   }
 
-  function goToPrevPage() {
-    if (currentPage <= 1) return;
-    if (pagesData[currentPage - 1]) setCurrentPage(currentPage - 1);
-  }
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(results.length / RESULTS_PER_PAGE));
+  const startIdx = (currentPage - 1) * RESULTS_PER_PAGE;
+  const endIdx = startIdx + RESULTS_PER_PAGE;
+  const currentPageResults = useMemo(
+    () => results.slice(startIdx, endIdx),
+    [results, startIdx, endIdx],
+  );
 
-  function goToNextPage() {
-    const nextPageNum = currentPage + 1;
-    if (pagesData[nextPageNum]) {
-      setCurrentPage(nextPageNum);
-      return;
+  function goToPage(p: number) {
+    const target = Math.max(1, Math.min(totalPages, p));
+    setCurrentPage(target);
+    if (typeof window !== "undefined") {
+      tableRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
-    const token = pageTokens[currentPage];
-    if (token) executeSearch(nextPageNum, token);
   }
 
   async function saveLead(result: SearchResult) {
@@ -374,21 +334,47 @@ export default function LeadSearchForm({
     }
   }
 
-  const totalFetched = useMemo(
-    () => Object.values(pagesData).reduce((sum, arr) => sum + arr.length, 0),
-    [pagesData],
-  );
-
-  const currentResults = pagesData[currentPage] ?? [];
-  const hasNextPage = !!pageTokens[currentPage] && !multiCategoryNoPaging;
-  const knownTotalPages = totalKnown
-    ? Math.max(...Object.keys(pagesData).map(Number), 1)
-    : null;
-
+  const hasResults = results.length > 0;
   const canSearch =
     selectedCategories.length > 0 && selectedTemperatures.length > 0;
 
-  const hasResults = currentResults.length > 0;
+  // Reusable pagination bar
+  function PaginationBar() {
+    if (totalPages <= 1) return null;
+    return (
+      <div className={styles.paginationBar}>
+        <button
+          type='button'
+          onClick={() => goToPage(currentPage - 1)}
+          disabled={currentPage <= 1 || loading}
+          className={styles.pagerBtn}
+        >
+          ← Previous
+        </button>
+        <select
+          value={currentPage}
+          onChange={(e) => goToPage(Number(e.target.value))}
+          disabled={loading}
+          className={styles.pagerSelect}
+          aria-label='Jump to page'
+        >
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <option key={p} value={p}>
+              Page {p} of {totalPages}
+            </option>
+          ))}
+        </select>
+        <button
+          type='button'
+          onClick={() => goToPage(currentPage + 1)}
+          disabled={currentPage >= totalPages || loading}
+          className={styles.pagerBtn}
+        >
+          Next →
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.body}>
@@ -513,7 +499,7 @@ export default function LeadSearchForm({
             disabled={loading || !canSearch}
             className={styles.searchBtn}
           >
-            {loading && currentPage === 1 ? "Searching..." : "Search"}
+            {loading ? "Searching..." : "Search"}
           </button>
         </div>
 
@@ -525,12 +511,11 @@ export default function LeadSearchForm({
         <div className={styles.filtersBar}>
           <div className={styles.filtersBarLeft}>
             <span className={styles.filtersBarCount}>
-              {totalFetched} result{totalFetched === 1 ? "" : "s"}
-              {!totalKnown && hasNextPage ? "+" : ""}
+              {results.length} result{results.length === 1 ? "" : "s"}
             </span>
-            {knownTotalPages && (
+            {totalPages > 1 && (
               <span className={styles.filtersBarPages}>
-                Page {currentPage} of {knownTotalPages}
+                Page {currentPage} of {totalPages}
               </span>
             )}
           </div>
@@ -574,10 +559,16 @@ export default function LeadSearchForm({
         </div>
       )}
 
+      {/* Top pagination */}
+      {hasResults && <PaginationBar />}
+
       {/* Results table */}
       {hasResults && (
-        <div className={rowStyles.tableWrapper}>
+        <div ref={tableRef} className={rowStyles.tableWrapper}>
           <div className={rowStyles.tableHeader}>
+            <div className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}>
+              #
+            </div>
             <div className={`${rowStyles.headerCell} ${rowStyles.colType}`}>
               Lead Type
             </div>
@@ -598,7 +589,8 @@ export default function LeadSearchForm({
             </div>
           </div>
 
-          {currentResults.map((r) => {
+          {currentPageResults.map((r, i) => {
+            const globalIndex = startIdx + i + 1;
             const isPending =
               r.temperature === "cold" && pendingPlaceIds.has(r.placeId);
             const key =
@@ -611,44 +603,15 @@ export default function LeadSearchForm({
                 result={r}
                 isPending={isPending}
                 onSave={() => saveLead(r)}
+                index={globalIndex}
               />
             );
           })}
         </div>
       )}
 
-      {/* Pagination */}
-      {hasResults && !multiCategoryNoPaging && (
-        <div className={styles.paginationBar}>
-          <button
-            type='button'
-            onClick={goToPrevPage}
-            disabled={currentPage <= 1 || loading}
-            className={styles.pagerBtn}
-          >
-            ← Previous
-          </button>
-          <span className={styles.pagerLabel}>
-            Page {currentPage}
-            {knownTotalPages ? ` of ${knownTotalPages}` : ""}
-          </span>
-          <button
-            type='button'
-            onClick={goToNextPage}
-            disabled={!hasNextPage || loading}
-            className={styles.pagerBtn}
-          >
-            {loading && currentPage > 1 ? "Loading..." : "Next →"}
-          </button>
-        </div>
-      )}
-
-      {hasResults && multiCategoryNoPaging && (
-        <p className={styles.multiCatNote}>
-          Pagination is disabled when searching multiple categories. Showing all
-          unique results from this search.
-        </p>
-      )}
+      {/* Bottom pagination */}
+      {hasResults && <PaginationBar />}
 
       {/* Empty state */}
       {!loading && !error && !hasResults && hasSearched && (

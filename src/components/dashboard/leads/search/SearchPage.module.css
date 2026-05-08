@@ -45,7 +45,6 @@
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  max-width: 1400px;
 }
 
 /* Search card */
@@ -89,7 +88,7 @@
 
 .helperText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: var(--text);
   opacity: 0.55;
 }
@@ -102,7 +101,7 @@
 
 .linkBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -120,7 +119,7 @@
 .linkSep {
   color: var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 
 .input {
@@ -146,7 +145,7 @@
 
 .pill {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1.2rem 2rem;
@@ -185,7 +184,7 @@
 }
 
 .pillBadge {
-  font-size: 1rem;
+  font-size: 1.6rem;
   padding: 0.2rem 0.6rem;
   background-color: var(--lightGray);
   color: var(--text);
@@ -252,7 +251,7 @@
 
 .filtersBarCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -260,7 +259,7 @@
 
 .filtersBarPages {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -282,7 +281,7 @@
 
 .filterControlLabel {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -291,7 +290,7 @@
 
 .filterControlSelect {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 0.8rem 1.2rem;
@@ -313,7 +312,7 @@
 
 .filterControlToggle {
   font-family: var(--GeistMono);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.8rem 1.2rem;
@@ -338,7 +337,7 @@
 }
 
 .soonBadge {
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   padding: 0.15rem 0.4rem;
   background-color: var(--lightGray);
   color: var(--text);
@@ -389,14 +388,34 @@
   text-align: center;
 }
 
-.multiCatNote {
-  font-family: var(--Roboto);
-  font-size: 1.4rem;
-  color: var(--text);
-  opacity: 0.6;
+.pagerSelect {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1.5rem 3rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  min-width: 16rem;
   text-align: center;
-  font-style: italic;
-  padding: 2rem 0;
+  text-align-last: center;
+  transition: all 0.15s ease;
+}
+
+.pagerSelect:hover:not(:disabled) {
+  border-color: var(--black);
+}
+
+.pagerSelect:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+.pagerSelect:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* States */
@@ -460,7 +479,7 @@
 
 .warningCta {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
