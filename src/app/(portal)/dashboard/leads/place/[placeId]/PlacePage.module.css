@@ -115,6 +115,7 @@
   line-height: 1.4;
 }
 
+
 .priorityVolume {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -273,7 +274,9 @@
 .apolloTitle {
   font-family: var(--RobotoFlexii);
   font-size: 2rem;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   color: var(--black);
   line-height: 1.2;
@@ -304,7 +307,9 @@
 .apolloPersonName {
   font-family: var(--RobotoFlexii);
   font-size: 2rem;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   color: var(--black);
   line-height: 1.2;
@@ -338,7 +343,9 @@
 .deleteModalTitle {
   font-family: var(--RobotoFlexii);
   font-size: 2.4rem;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   color: var(--black);
   line-height: 1.2;

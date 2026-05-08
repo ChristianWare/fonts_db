@@ -578,6 +578,7 @@ export default function PlacePageClient({
           {lead.isDraft && (
             <p className={previewStyles.eyebrow}>Preview · not yet saved</p>
           )}
+          {/* <br /> */}
           <h1 className={previewStyles.heroName}>
             {lead.businessName ?? "Unnamed"}
           </h1>
