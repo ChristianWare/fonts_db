@@ -1,0 +1,219 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 3rem;
+  border: 1px solid var(--black);
+  background-color: var(--white);
+}
+
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Temperature badge */
+.cardTempRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tempBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tempCold {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #1d4ed8;
+  border: 1px solid #3b82f6;
+}
+
+.tempWarm {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+  border: 1px solid #f59e0b;
+}
+
+.tempHot {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border: 1px solid #ef4444;
+}
+
+.cardCategory {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+/* Common fields */
+.cardName {
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cardAddress {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.cardRating {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--black);
+}
+
+.cardReviewCount {
+  color: var(--text);
+  opacity: 0.6;
+  font-size: 1.6rem;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+.cardLink {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.cardLink:hover {
+  color: #1d4ed8;
+}
+
+/* Warm-specific */
+.cardEventMeta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.cardEventDate {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+}
+
+.cardEventCountdown {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 0.8rem;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.cardAttendees {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+  font-style: italic;
+}
+
+.cardOrganizer {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+/* Hot-specific */
+.cardPostText {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  color: var(--black);
+  line-height: 1.5;
+  font-style: italic;
+  padding: 1.5rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-left: 3px solid #ef4444;
+  margin-top: 0.5rem;
+}
+
+/* Action row + buttons */
+.cardActionRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.savedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 2rem;
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  flex: 1;
+  text-align: center;
+}
+
+.saveBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 2rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  flex: 1;
+  transition: all 0.15s ease;
+}
+
+.saveBtn:hover:not(:disabled) {
+  border-color: var(--black);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnContainer {
+  width: 100%;
+}

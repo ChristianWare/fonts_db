@@ -3,12 +3,12 @@ import Link from "next/link";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
-import ColdLeadSearchForm from "./ColdLeadSearchForm";
+import LeadSearchForm from "@/components/dashboard/leads/search/LeadSearchForm";
 import styles from "./SearchPage.module.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function ColdLeadSearchPage() {
+export default async function LeadSearchPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -37,7 +37,10 @@ export default async function ColdLeadSearchPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Cold Lead Search</h1>
+        <h1 className={styles.heading}>Find Leads</h1>
+        <p className={styles.subhead}>
+          Hot, warm, and cold leads across every source — filtered your way.
+        </p>
       </div>
 
       {!hasMarket ? (
@@ -58,7 +61,7 @@ export default async function ColdLeadSearchPage() {
           </div>
         </div>
       ) : (
-        <ColdLeadSearchForm
+        <LeadSearchForm
           defaultCity={settings.primaryCity ?? ""}
           defaultState={settings.primaryState ?? ""}
           defaultRadius={settings.serviceRadiusMiles ?? 50}

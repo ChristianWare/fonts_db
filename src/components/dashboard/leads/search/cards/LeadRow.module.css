@@ -1,0 +1,255 @@
+/* Shared grid template — used by both header and rows */
+.tableWrapper {
+  width: 100%;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 140px 1fr 130px 170px 130px 120px;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--grayii);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.headerCell {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  opacity: 0.55;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px 1fr 130px 170px 130px 120px;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--grayii);
+  transition: background-color 0.1s ease;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  min-width: 0; /* allows truncation in business cell */
+}
+
+.cellLabelMobile {
+  display: none;
+}
+
+/* Priority / temperature badge */
+.priorityBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.7rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.priorityEmoji {
+  font-size: 1.3rem;
+}
+
+.priorityHigh {
+  background-color: var(--accent);
+  color: var(--black);
+}
+
+.priorityMed {
+  background-color: rgba(245, 158, 11, 0.18);
+  color: #92400e;
+}
+
+.priorityLow {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+
+/* Business cell */
+.businessName {
+  font-family: var(--RobotoFlexii);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.businessCategory {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.6;
+  margin-top: 0.4rem;
+}
+
+/* Meta cell (rating / date / time-ago) */
+.metaWrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.metaPrimary {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--black);
+}
+
+.metaSecondary {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  color: var(--text);
+  opacity: 0.55;
+}
+
+/* Contact cell */
+.contactLink {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+/* Save cell */
+.saveBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.8rem 1.4rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+
+.saveBtn:hover:not(:disabled) {
+  border-color: var(--black);
+  background-color: var(--black);
+  color: var(--accent);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.savedBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.8rem 1.4rem;
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  white-space: nowrap;
+}
+
+/* View button */
+.viewBtn {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 1.6rem;
+  background-color: var(--accent);
+  color: var(--black);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  transition: opacity 0.12s ease;
+  width: 100%;
+}
+
+.viewBtn:hover {
+  opacity: 0.85;
+}
+
+.viewArrow {
+  font-size: 1.4rem;
+}
+
+/* Mobile — collapse to stacked card-like rows */
+@media screen and (max-width: 900px) {
+  .tableHeader {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 2rem;
+  }
+
+  .cell {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cellLabelMobile {
+    display: block;
+    width: 100%;
+    font-family: var(--GeistMono);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    opacity: 0.5;
+  }
+
+  .colBusiness .cellLabelMobile {
+    display: none;
+  }
+
+  .colSave,
+  .colView {
+    grid-column: 1;
+  }
+
+  .viewBtn {
+    width: fit-content;
+    padding: 1.2rem 2rem;
+  }
+}

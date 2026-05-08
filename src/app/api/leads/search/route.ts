@@ -5,12 +5,22 @@ import { searchPlaces, geocodeCity } from "@/lib/googlePlaces";
 
 export const runtime = "nodejs";
 
+type Temperature = "hot" | "warm" | "cold";
+type SortOption = "distance" | "rating" | "reviews" | "name";
+
 type Body = {
+  // New unified params
+  categories?: string[];
+  temperatures?: Temperature[];
+  // Legacy single-query support (backward compat with existing callers)
   query?: string;
+  // Filters
   cityOverride?: string;
   stateOverride?: string;
   radiusMilesOverride?: number;
   pageToken?: string;
+  freshOnly?: boolean;
+  sortBy?: SortOption;
 };
 
 export async function POST(req: NextRequest) {
@@ -34,11 +44,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const query = body.query?.trim();
-  if (!query) {
-    return NextResponse.json({ error: "Query is required" }, { status: 400 });
+  // Normalize categories: support both new array and legacy single query
+  const categories =
+    body.categories?.map((c) => c.trim()).filter(Boolean) ??
+    (body.query?.trim() ? [body.query.trim()] : []);
+
+  const temperatures: Temperature[] = body.temperatures?.length
+    ? body.temperatures
+    : ["cold"];
+
+  if (categories.length === 0) {
+    return NextResponse.json(
+      { error: "Select at least one category." },
+      { status: 400 },
+    );
   }
 
+  // V1: only "cold" runs a real search. Warm/hot sources coming soon.
+  const includeCold = temperatures.includes("cold");
+  if (!includeCold) {
+    return NextResponse.json({
+      results: [],
+      center: null,
+      radiusMiles: null,
+      nextPageToken: null,
+      multiCategoryDisablesPagination: false,
+      message: "Hot and warm leads coming soon. Check Cold to see results.",
+    });
+  }
+
+  // Resolve location
   let lat: number;
   let lng: number;
   let radiusMiles: number;
@@ -82,16 +117,64 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await searchPlaces({
-      query,
-      lat,
-      lng,
-      radiusMiles,
-      pageSize: 20,
-      pageToken: body.pageToken,
-    });
+    type EnrichedPlace = Awaited<
+      ReturnType<typeof searchPlaces>
+    >["places"][number] & { category: string };
 
-    const placeIds = result.places.map((r) => r.placeId);
+    let allPlaces: EnrichedPlace[] = [];
+    let nextPageToken: string | null = null;
+
+    if (categories.length === 1) {
+      // Single category — preserve existing pagination
+      const result = await searchPlaces({
+        query: categories[0],
+        lat,
+        lng,
+        radiusMiles,
+        pageSize: 20,
+        pageToken: body.pageToken,
+      });
+      allPlaces = result.places.map((p) => ({ ...p, category: categories[0] }));
+      nextPageToken = result.nextPageToken;
+    } else {
+      // Multi-category — parallel searches, dedupe by placeId, no pagination in V1
+      const results = await Promise.all(
+        categories.map((cat) =>
+          searchPlaces({
+            query: cat,
+            lat,
+            lng,
+            radiusMiles,
+            pageSize: 20,
+          }).then((r) =>
+            r.places.map((p) => ({ ...p, category: cat })),
+          ),
+        ),
+      );
+      const seen = new Set<string>();
+      for (const list of results) {
+        for (const p of list) {
+          if (!seen.has(p.placeId)) {
+            seen.add(p.placeId);
+            allPlaces.push(p);
+          }
+        }
+      }
+      nextPageToken = null;
+    }
+
+    // Apply sort
+    const sortBy: SortOption = body.sortBy ?? "distance";
+    if (sortBy === "rating") {
+      allPlaces.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    } else if (sortBy === "reviews") {
+      allPlaces.sort((a, b) => (b.reviewCount ?? 0) - (a.reviewCount ?? 0));
+    } else if (sortBy === "name") {
+      allPlaces.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // "distance" preserves Places API default order (already by distance)
+
+    const placeIds = allPlaces.map((r) => r.placeId);
     const matchingSaved = placeIds.length
       ? await db.savedLead.findMany({
           where: {
@@ -109,7 +192,7 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({
-      results: result.places.map((r) => {
+      results: allPlaces.map((r) => {
         const saved = savedMap.get(r.placeId);
         const savedState = !saved
           ? "none"
@@ -118,13 +201,15 @@ export async function POST(req: NextRequest) {
             : "pipeline";
         return {
           ...r,
+          temperature: "cold" as const,
           savedState,
           savedLeadId: saved?.id ?? null,
         };
       }),
       center: { lat, lng },
       radiusMiles,
-      nextPageToken: result.nextPageToken,
+      nextPageToken,
+      multiCategoryDisablesPagination: categories.length > 1,
     });
   } catch (err) {
     console.error("Search failed", err);
