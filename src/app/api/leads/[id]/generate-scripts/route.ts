@@ -30,7 +30,7 @@ Output as raw JSON only. No markdown fences, no commentary, just the object:
 }`;
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
@@ -47,10 +47,30 @@ export async function POST(
   }
 
   const { id } = await params;
+  const url = new URL(req.url);
+  const force = url.searchParams.get("force") === "true";
 
   const lead = await db.savedLead.findUnique({ where: { id } });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Idempotent: return existing scripts if any exist and not forcing regeneration
+  if (!force) {
+    const existing = await db.outreachScript.findMany({
+      where: { savedLeadId: lead.id },
+      orderBy: { format: "asc" },
+    });
+    if (existing.length > 0) {
+      return NextResponse.json({
+        success: true,
+        cached: true,
+        scripts: existing.map((s) => ({
+          ...s,
+          generatedAt: s.generatedAt.toISOString(),
+        })),
+      });
+    }
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -100,7 +120,6 @@ Generate outreach scripts for a luxury chauffeur and transportation business app
     );
   }
 
-  // Parse JSON — strip any markdown fences just in case
   let parsed: {
     email?: { subject?: string; body?: string };
     cold_call?: string;

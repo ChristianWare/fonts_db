@@ -21,7 +21,7 @@ Write a 180-220 word strategic memo with these characteristics:
 Use 2-3 short paragraphs, separated by blank lines. Avoid bullet points and headers. Write like a smart consultant briefing a friend over coffee — confident but not arrogant. No markdown formatting, no preamble. Just the brief.`;
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
@@ -38,9 +38,21 @@ export async function POST(
   }
 
   const { id } = await params;
+  const url = new URL(req.url);
+  const force = url.searchParams.get("force") === "true";
+
   const lead = await db.savedLead.findUnique({ where: { id } });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Idempotent: return cached brief unless ?force=true
+  if (lead.strategicBrief && !force) {
+    return NextResponse.json({
+      success: true,
+      brief: lead.strategicBrief,
+      cached: true,
+    });
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {

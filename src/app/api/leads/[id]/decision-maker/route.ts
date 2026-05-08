@@ -28,7 +28,7 @@ Where:
 Be specific to the business category and location. No generic advice.`;
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
@@ -45,9 +45,33 @@ export async function POST(
   }
 
   const { id } = await params;
+  const url = new URL(req.url);
+  const force = url.searchParams.get("force") === "true";
+
   const lead = await db.savedLead.findUnique({ where: { id } });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Idempotent: return cached hypothesis if valid JSON and not forcing
+  if (lead.decisionMakerHypothesis && !force) {
+    try {
+      const parsed = JSON.parse(lead.decisionMakerHypothesis);
+      if (
+        parsed.primary?.title &&
+        parsed.secondary?.title &&
+        parsed.linkedinSearch
+      ) {
+        return NextResponse.json({
+          success: true,
+          hypothesis: parsed,
+          cached: true,
+        });
+      }
+      // Cached value is malformed — fall through and regenerate
+    } catch {
+      // Cached value isn't valid JSON — fall through and regenerate
+    }
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -100,7 +124,6 @@ Identify the right decision-makers to target for a luxury transportation pitch.`
     ) {
       throw new Error("Missing required fields");
     }
-    // Store the cleaned JSON string
     await db.savedLead.update({
       where: { id: lead.id },
       data: { decisionMakerHypothesis: cleaned },

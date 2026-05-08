@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useTransition, useRef } from "react";
@@ -386,6 +385,7 @@ export default function PlacePageClient({
   async function generateAi(
     endpoint: string,
     field: "brief" | "reviews" | "dm" | "scripts" | "competitive" | "apollo",
+    force = false,
   ) {
     const setLoading = {
       brief: setGeneratingBrief,
@@ -397,9 +397,10 @@ export default function PlacePageClient({
     }[field];
     setLoading(true);
     try {
-      const res = await fetch(`/api/leads/${lead.id}/${endpoint}`, {
-        method: "POST",
-      });
+      const res = await fetch(
+        `/api/leads/${lead.id}/${endpoint}${force ? "?force=true" : ""}`,
+        { method: "POST" },
+      );
       if (!res.ok) {
         console.error(`${endpoint} failed`, await res.text());
         setLoading(false); // failure: clear immediately, show retry UI
@@ -415,7 +416,7 @@ export default function PlacePageClient({
   }
 
   useEffect(() => {
-    if (lead.apolloEnrichment && lead.apolloEnrichment.enabled === true) {
+    if (lead.apolloEnrichment) {
       setGeneratingApollo(false);
     }
   }, [lead.apolloEnrichment]);
@@ -442,8 +443,9 @@ export default function PlacePageClient({
       if (ok) {
         // Optimistic local update so sidebar swaps immediately
         setLead((prev) => ({ ...prev, isDraft: false }));
-        // Kick off scripts generation now that we're saved
-        generateAi("generate-scripts", "scripts");
+        // Kick off the gated AI calls now that we're saved
+        generateAi("generate-scripts", "scripts", true);
+        generateAi("apollo-enrich", "apollo");
       }
     } finally {
       setSaving(false);
@@ -849,7 +851,7 @@ export default function PlacePageClient({
             {lead.strategicBrief && !generatingBrief && (
               <button
                 type='button'
-                onClick={() => generateAi("strategic-brief", "brief")}
+                onClick={() => generateAi("strategic-brief", "brief", true)}
                 disabled={generatingBrief}
                 className={detailStyles.regenerateBtn}
               >
@@ -878,7 +880,7 @@ export default function PlacePageClient({
               </p>
               <button
                 type='button'
-                onClick={() => generateAi("strategic-brief", "brief")}
+                onClick={() => generateAi("strategic-brief", "brief", true)}
                 className={detailStyles.generateBtn}
               >
                 Retry
@@ -894,7 +896,7 @@ export default function PlacePageClient({
             {lead.reviewIntelligence && !generatingReviews && (
               <button
                 type='button'
-                onClick={() => generateAi("review-intelligence", "reviews")}
+                onClick={() => generateAi("review-intelligence", "reviews", true)}
                 className={detailStyles.regenerateBtn}
               >
                 Regenerate
@@ -920,7 +922,7 @@ export default function PlacePageClient({
               </p>
               <button
                 type='button'
-                onClick={() => generateAi("review-intelligence", "reviews")}
+                onClick={() => generateAi("review-intelligence", "reviews", true)}
                 className={detailStyles.generateBtn}
               >
                 Retry
@@ -936,7 +938,7 @@ export default function PlacePageClient({
             {lead.decisionMaker && !generatingDM && (
               <button
                 type='button'
-                onClick={() => generateAi("decision-maker", "dm")}
+                onClick={() => generateAi("decision-maker", "dm", true)}
                 className={detailStyles.regenerateBtn}
               >
                 Regenerate
@@ -988,7 +990,7 @@ export default function PlacePageClient({
               </p>
               <button
                 type='button'
-                onClick={() => generateAi("decision-maker", "dm")}
+                onClick={() => generateAi("decision-maker", "dm", true)}
                 className={detailStyles.generateBtn}
               >
                 Retry
@@ -1002,27 +1004,39 @@ export default function PlacePageClient({
           <div className={detailStyles.sectionHeader}>
             <h2 className={detailStyles.sectionTitle}>Verified Contacts</h2>
           </div>
-          {!lead.apolloEnrichment ||
-          (lead.apolloEnrichment.enabled === false &&
-            (lead.apolloEnrichment.reason.includes("pending enrollment") ||
-              lead.apolloEnrichment.reason.includes("Save this lead"))) ? (
+          {lead.isDraft ? (
             <div className={placeStyles.apolloPending}>
               <span className={placeStyles.apolloIcon}>🔒</span>
               <p className={placeStyles.apolloTitle}>
-                Verified emails coming soon
+                Save this lead to unlock verified contacts
               </p>
               <p className={placeStyles.apolloDesc}>
-                Apollo integration is scaffolded. Once enrolled, this section
-                will display verified email addresses for{" "}
+                We&apos;ll look up verified email addresses for{" "}
                 {lead.decisionMaker?.primary?.title ?? "the decision-maker"} and
-                related titles at this business — with one-click mailto links.
+                related titles the moment you save.
               </p>
             </div>
-          ) : lead.apolloEnrichment.enabled === false ? (
-            <div className={placeStyles.apolloPending}>
-              <p className={placeStyles.apolloDesc}>
-                {lead.apolloEnrichment.reason}
+          ) : generatingApollo ? (
+            <div className={detailStyles.emptyBlock}>
+              <p className={detailStyles.emptyDesc}>
+                ✨ Looking up verified contacts…
               </p>
+            </div>
+          ) : !lead.apolloEnrichment ||
+            lead.apolloEnrichment.enabled === false ? (
+            <div className={detailStyles.emptyBlock}>
+              <p className={detailStyles.emptyDesc}>
+                {lead.apolloEnrichment?.enabled === false
+                  ? lead.apolloEnrichment.reason
+                  : "Could not look up verified contacts."}
+              </p>
+              <button
+                type='button'
+                onClick={() => generateAi("apollo-enrich", "apollo", true)}
+                className={detailStyles.generateBtn}
+              >
+                Retry
+              </button>
             </div>
           ) : lead.apolloEnrichment.persons.length === 0 ? (
             <div className={detailStyles.emptyBlock}>
@@ -1075,7 +1089,7 @@ export default function PlacePageClient({
               !generatingScripts && (
                 <button
                   type='button'
-                  onClick={() => generateAi("generate-scripts", "scripts")}
+                  onClick={() => generateAi("generate-scripts", "scripts", true)}
                   className={detailStyles.regenerateBtn}
                 >
                   Regenerate
@@ -1138,7 +1152,7 @@ export default function PlacePageClient({
               </p>
               <button
                 type='button'
-                onClick={() => generateAi("generate-scripts", "scripts")}
+                onClick={() => generateAi("generate-scripts", "scripts", true)}
                 className={detailStyles.generateBtn}
               >
                 Retry

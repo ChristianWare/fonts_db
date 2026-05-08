@@ -19,7 +19,7 @@ Identify:
 Output 2-3 short paragraphs, separated by blank lines. No bullets, no headers, no markdown. Specifically call out anything related to transportation pain points — that's the wedge for the operator's pitch. If reviews are too sparse to draw conclusions, say so honestly.`;
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
@@ -36,9 +36,21 @@ export async function POST(
   }
 
   const { id } = await params;
+  const url = new URL(req.url);
+  const force = url.searchParams.get("force") === "true";
+
   const lead = await db.savedLead.findUnique({ where: { id } });
   if (!lead || lead.clientProfileId !== profile.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Idempotent: return cached analysis unless ?force=true
+  if (lead.reviewIntelligence && !force) {
+    return NextResponse.json({
+      success: true,
+      intelligence: lead.reviewIntelligence,
+      cached: true,
+    });
   }
 
   if (!lead.googlePlaceId) {
