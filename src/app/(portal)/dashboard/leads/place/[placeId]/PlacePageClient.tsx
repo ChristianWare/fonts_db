@@ -670,6 +670,16 @@ export default function PlacePageClient({
             )}
           </div>
           <br />
+          {/* ABOUT (editorial) */}
+          {(preview?.editorialSummary || preview?.generativeSummary) && (
+            <section className={detailStyles.section}>
+              <h2 className={detailStyles.sectionTitle}>About</h2>
+              <p className={previewStyles.editorialBody}>
+                {preview.generativeSummary ?? preview.editorialSummary}
+              </p>
+            </section>
+          )}
+          <br />
           {/* Competitive Landscape */}
           <section className={detailStyles.section}>
             <div className={detailStyles.sectionHeader}>
@@ -846,16 +856,6 @@ export default function PlacePageClient({
           )}
 
         <RecommendedMoveCard suggestion={nextMove} />
-
-        {/* ABOUT (editorial) */}
-        {(preview?.editorialSummary || preview?.generativeSummary) && (
-          <section className={detailStyles.section}>
-            <h2 className={detailStyles.sectionTitle}>About</h2>
-            <p className={previewStyles.editorialBody}>
-              {preview.generativeSummary ?? preview.editorialSummary}
-            </p>
-          </section>
-        )}
 
         {/* AT A GLANCE */}
         {allChips.length > 0 && (
