@@ -5,16 +5,6 @@ export const runtime = "nodejs";
 
 const API_KEY = process.env.GOOGLE_MAPS_SERVER_KEY;
 
-const MAP_STYLES = [
-  "feature:poi|visibility:off",
-  "feature:transit|visibility:off",
-  "feature:landscape|color:0xf5f5f5",
-  "feature:road|color:0xffffff",
-  "feature:road|element:labels|color:0x999999",
-  "feature:water|color:0xe5e5e5",
-  "feature:administrative|element:labels|color:0x666666",
-];
-
 export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -45,7 +35,6 @@ export async function GET(req: NextRequest) {
     ),
     1280,
   );
-  const styled = req.nextUrl.searchParams.get("styled") !== "false";
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
     return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 });
@@ -56,12 +45,7 @@ export async function GET(req: NextRequest) {
   url.searchParams.set("zoom", String(zoom));
   url.searchParams.set("size", `${width}x${height}`);
   url.searchParams.set("scale", "2");
-  url.searchParams.set("markers", `color:0x000000|${lat},${lng}`);
-  if (styled) {
-    for (const style of MAP_STYLES) {
-      url.searchParams.append("style", style);
-    }
-  }
+  url.searchParams.set("markers", `color:red|${lat},${lng}`);
   url.searchParams.set("key", API_KEY);
 
   try {
