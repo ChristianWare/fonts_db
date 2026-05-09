@@ -500,7 +500,7 @@
 
 .sidebarSticky {
   position: sticky;
-  top: 4rem;
+  top: 7rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;

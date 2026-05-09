@@ -3,8 +3,6 @@ import { runActorSync } from "@/lib/apify";
 
 const ACTOR_ID = "santamaria-automations/eventbrite-scraper";
 
-// Flat shape returned by santamaria-automations/eventbrite-scraper.
-// Confirmed via real run on 2026-05-08.
 export interface EventbriteRawEvent {
   id?: string;
   title?: string;
@@ -16,7 +14,7 @@ export interface EventbriteRawEvent {
   image_url?: string;
   is_free?: boolean;
   is_online?: boolean;
-  price?: string; // e.g. "0.0 - 535.38" or "25.00" or "Free"
+  price?: string;
   currency?: string;
   venue_name?: string;
   venue_address?: string;
@@ -152,7 +150,6 @@ export async function scrapeEventbriteForMarket(
       continue;
     }
 
-    // Online-only events aren't useful for ground transport leads
     if (e.is_online) {
       result.skipped++;
       continue;
@@ -181,6 +178,8 @@ export async function scrapeEventbriteForMarket(
       continue;
     }
 
+    const tags = Array.isArray(e.tags) ? e.tags : [];
+
     try {
       await db.eventbriteEvent.upsert({
         where: { eventbriteId: e.id },
@@ -188,6 +187,10 @@ export async function scrapeEventbriteForMarket(
           eventbriteId: e.id,
           eventName: e.title,
           eventDate,
+          description: e.description ?? null,
+          imageUrl: e.image_url ?? null,
+          tags,
+          eventbriteUrl: e.url ?? null,
           venueName: e.venue_name ?? null,
           venueAddress: e.venue_address ?? null,
           venueLat: e.latitude ?? null,
@@ -207,6 +210,10 @@ export async function scrapeEventbriteForMarket(
         update: {
           eventName: e.title,
           eventDate,
+          description: e.description ?? null,
+          imageUrl: e.image_url ?? null,
+          tags,
+          eventbriteUrl: e.url ?? null,
           venueName: e.venue_name ?? null,
           venueAddress: e.venue_address ?? null,
           venueLat: e.latitude ?? null,
@@ -234,14 +241,6 @@ export async function scrapeEventbriteForMarket(
   return result;
 }
 
-/**
- * Parses Eventbrite's price string into min/max numbers.
- * Examples:
- *   "0.0 - 535.38" → { min: 0, max: 535.38 }
- *   "25.00"        → { min: 25, max: 25 }
- *   "Free"         → { min: 0, max: 0 }
- *   undefined      → { min: null, max: null }
- */
 function parsePriceRange(price: string | undefined): {
   min: number | null;
   max: number | null;
@@ -275,15 +274,12 @@ function computeRelevanceScore(
 ): number {
   let score = 0;
 
-  // Has a real venue (not online-only — already filtered above, but score it)
   if (e.venue_name) score += 20;
   if (e.latitude && e.longitude) score += 10;
 
-  // High-value keyword matches (capped to prevent runaway from spammy titles)
   const matched = HIGH_VALUE_KEYWORDS.filter((k) => textLower.includes(k));
   score += Math.min(matched.length * 15, 45);
 
-  // Ticket price signals
   if (priceMin != null) {
     if (priceMin >= 100) score += 15;
     else if (priceMin >= 50) score += 10;
@@ -291,10 +287,8 @@ function computeRelevanceScore(
   }
   if (priceMax != null && priceMax >= 500) score += 10;
 
-  // Has organizer info
   if (e.organizer_name) score += 5;
 
-  // Bonus: recognizable categories
   const cat = (e.category ?? "").toLowerCase();
   if (
     [

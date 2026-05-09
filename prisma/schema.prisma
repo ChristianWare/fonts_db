@@ -865,6 +865,11 @@ model EventbriteEvent {
   eventName    String
   eventDate    DateTime
 
+  description   String?  @db.Text
+  imageUrl      String?
+  tags          String[]
+  eventbriteUrl String?
+
   // Venue
   venueName    String?
   venueAddress String?
