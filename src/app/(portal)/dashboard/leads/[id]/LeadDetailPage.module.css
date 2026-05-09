@@ -28,7 +28,6 @@
   grid-template-columns: 1fr 320px;
   gap: 4rem;
   padding: 4rem 5rem;
-  /* max-width: 1400px; */
 }
 
 .body {
