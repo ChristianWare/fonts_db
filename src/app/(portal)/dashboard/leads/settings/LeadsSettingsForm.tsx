@@ -13,6 +13,13 @@ type Initial = {
   emailEnabled: boolean;
 };
 
+type SaveResponse = {
+  error?: string;
+  success?: boolean;
+  geocoded?: boolean;
+  scrapeQueued?: boolean;
+};
+
 export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
   const router = useRouter();
   const [city, setCity] = useState(initial.primaryCity);
@@ -23,13 +30,13 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
   const [emailEnabled, setEmailEnabled] = useState(initial.emailEnabled);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSaved(false);
+    setSuccessMessage(null);
 
     try {
       const res = await fetch("/api/leads/onboarding", {
@@ -46,7 +53,7 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
       });
 
       const text = await res.text();
-      let data: { error?: string } = {};
+      let data: SaveResponse = {};
       try {
         data = JSON.parse(text);
       } catch {
@@ -57,7 +64,14 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         throw new Error(data.error ?? "Could not save your settings");
       }
 
-      setSaved(true);
+      if (data.scrapeQueued) {
+        setSuccessMessage(
+          "Settings saved. Your market is being prepared — warm leads will appear in a few minutes.",
+        );
+      } else {
+        setSuccessMessage("Settings saved.");
+      }
+
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -155,7 +169,7 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
-      {saved && <p className={styles.success}>Settings saved.</p>}
+      {successMessage && <p className={styles.success}>{successMessage}</p>}
 
       <button type='submit' disabled={loading} className={styles.submit}>
         {loading ? "Saving..." : "Save changes"}

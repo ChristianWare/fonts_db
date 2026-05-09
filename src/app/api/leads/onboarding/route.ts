@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import { geocodeCity } from "@/lib/googlePlaces";
+import { scrapeEventbriteForMarket } from "@/lib/scrapers/eventbrite";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 type Body = {
   primaryCity?: string;
@@ -63,6 +66,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Snapshot existing settings BEFORE upsert so we can detect a city change
+  const previous = await db.leadsSettings.findUnique({
+    where: { clientProfileId: profile.id },
+    select: { primaryCity: true, primaryState: true },
+  });
+
   // Geocode the city → lat/lng. Failure here is non-fatal — we still
   // save the user's settings, just without coordinates. Cold lead search
   // will surface the missing-coords state and prompt a re-save.
@@ -97,8 +106,54 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  // Detect if this is a new market (or first-time setup)
+  const cityChanged =
+    !previous ||
+    previous.primaryCity?.toLowerCase() !== city.toLowerCase() ||
+    previous.primaryState?.toLowerCase() !== state.toLowerCase();
+
+  let scrapeQueued = false;
+
+  if (cityChanged) {
+    // Skip if we already have events for this market (another operator
+    // already scraped it, or the weekly cron has run for it)
+    const eventCount = await db.eventbriteEvent.count({
+      where: {
+        marketCity: { equals: city, mode: "insensitive" },
+        marketState: { equals: state, mode: "insensitive" },
+      },
+    });
+
+    if (eventCount === 0) {
+      scrapeQueued = true;
+
+      // Fire scrape AFTER response is sent — runs in background on Vercel
+      after(async () => {
+        try {
+          console.log(
+            `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id})`,
+          );
+          const result = await scrapeEventbriteForMarket({ city, state });
+          console.log(
+            `[onboarding scrape] ${city}, ${state} complete: ${result.inserted} written / ${result.scraped} scraped / ${result.skipped} skipped / ${result.errors.length} errors`,
+          );
+        } catch (err) {
+          console.error(
+            `[onboarding scrape] FAILED for ${city}, ${state}:`,
+            err,
+          );
+        }
+      });
+    } else {
+      console.log(
+        `[onboarding] ${city}, ${state} already has ${eventCount} events on file — skipping scrape`,
+      );
+    }
+  }
+
   return NextResponse.json({
     success: true,
     geocoded: !!geocoded,
+    scrapeQueued,
   });
 }
