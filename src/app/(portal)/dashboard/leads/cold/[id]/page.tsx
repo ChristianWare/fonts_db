@@ -10,8 +10,8 @@ import {
 } from "@/lib/leadNextMove";
 import { computeLeadPriority } from "@/lib/leadPriority";
 import { getSeasonalGuidance } from "@/lib/leadSeasonality";
-import PlacePageClient from "../../cold/[id]/PlacePageClient";
-import styles from "../../cold/[id]/PlacePage.module.css";
+import PlacePageClient from "./PlacePageClient";
+import styles from "./PlacePage.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -90,7 +90,7 @@ export default async function PlacePage({
   params,
   searchParams,
 }: {
-  params: Promise<{ placeId: string }>;
+  params: Promise<{ id: string }>;
   searchParams: Promise<{ category?: string }>;
 }) {
   const session = await auth();
@@ -108,7 +108,7 @@ export default async function PlacePage({
     redirect("/dashboard/enroll/leads");
   }
 
-  const { placeId } = await params;
+  const { id: placeId } = await params;
   const { category } = await searchParams;
 
   let lead = await db.savedLead.findFirst({
@@ -161,7 +161,6 @@ export default async function PlacePage({
   const outreachAttempts = countOutreachAttempts(lead.activities);
   const lastContactDays = daysSinceLastContact(lead.activities);
 
-  // NEW: priority + seasonality
   const priorityResult = computeLeadPriority({
     category: lead.category,
     rating: lead.rating,

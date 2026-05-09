@@ -16,7 +16,7 @@ function isSaved(state: SavedState): boolean {
 }
 
 function buildColdHref(placeId: string, category: string): string {
-  const path = `/dashboard/leads/place/${encodeURIComponent(placeId)}`;
+  const path = `/dashboard/leads/cold/${encodeURIComponent(placeId)}`;
   const slug = category.toLowerCase().replace(/\s+/g, "_");
   return `${path}?category=${encodeURIComponent(slug)}`;
 }
@@ -86,7 +86,7 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       : result.organizerEmail
         ? `mailto:${result.organizerEmail}`
         : null;
-    viewHref = `/dashboard/leads/event/${encodeURIComponent(result.externalId)}`;
+    viewHref = `/dashboard/leads/warm/${encodeURIComponent(result.externalId)}`;
     viewExternal = false;
   } else {
     priorityClass = styles.priorityHigh;
@@ -102,8 +102,8 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       : result.email
         ? `mailto:${result.email}`
         : null;
-    viewHref = result.url;
-    viewExternal = true;
+    viewHref = `/dashboard/leads/hot/${encodeURIComponent(result.externalId)}`;
+    viewExternal = false;
   }
 
   return (

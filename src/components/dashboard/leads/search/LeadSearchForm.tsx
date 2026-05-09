@@ -412,46 +412,48 @@ export default function LeadSearchForm({
           </div>
         </div>
 
-        {/* Categories */}
-        <div className={styles.field}>
-          <div className={styles.labelRow}>
-            <label className={styles.label}>Categories</label>
-            <div className={styles.linkRow}>
-              <button
-                type='button'
-                onClick={selectAllCategories}
-                className={styles.linkBtn}
-              >
-                Select all
-              </button>
-              <span className={styles.linkSep}>·</span>
-              <button
-                type='button'
-                onClick={clearCategories}
-                className={styles.linkBtn}
-              >
-                Clear
-              </button>
+        {/* Categories — only relevant for cold leads */}
+        {selectedTemperatures.includes("cold") && (
+          <div className={styles.field}>
+            <div className={styles.labelRow}>
+              <label className={styles.label}>Categories</label>
+              <div className={styles.linkRow}>
+                <button
+                  type='button'
+                  onClick={selectAllCategories}
+                  className={styles.linkBtn}
+                >
+                  Select all
+                </button>
+                <span className={styles.linkSep}>·</span>
+                <button
+                  type='button'
+                  onClick={clearCategories}
+                  className={styles.linkBtn}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div className={styles.pillRow}>
+              {CATEGORIES.map((c) => {
+                const selected = selectedCategories.includes(c.value);
+                return (
+                  <button
+                    key={c.value}
+                    type='button'
+                    onClick={() => toggleCategory(c.value)}
+                    className={`${styles.pill} ${
+                      selected ? styles.pillActive : ""
+                    }`}
+                  >
+                    {c.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
-          <div className={styles.pillRow}>
-            {CATEGORIES.map((c) => {
-              const selected = selectedCategories.includes(c.value);
-              return (
-                <button
-                  key={c.value}
-                  type='button'
-                  onClick={() => toggleCategory(c.value)}
-                  className={`${styles.pill} ${
-                    selected ? styles.pillActive : ""
-                  }`}
-                >
-                  {c.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        )}
 
         {/* Location */}
         <div className={styles.fieldRow}>
