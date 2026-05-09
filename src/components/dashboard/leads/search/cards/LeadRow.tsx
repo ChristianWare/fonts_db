@@ -86,8 +86,8 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       : result.organizerEmail
         ? `mailto:${result.organizerEmail}`
         : null;
-    viewHref = result.url;
-    viewExternal = true;
+    viewHref = `/dashboard/leads/event/${encodeURIComponent(result.externalId)}`;
+    viewExternal = false;
   } else {
     priorityClass = styles.priorityHigh;
     typeLabel = "Hot";

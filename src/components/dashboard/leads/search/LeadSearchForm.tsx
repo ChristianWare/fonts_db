@@ -34,7 +34,7 @@ const TEMPERATURES: Array<{
   enabled: boolean;
 }> = [
   { value: "hot", label: "Hot", emoji: "🔥", enabled: false },
-  { value: "warm", label: "Warm", emoji: "🌡️", enabled: false },
+  { value: "warm", label: "Warm", emoji: "🌡️", enabled: true },
   { value: "cold", label: "Cold", emoji: "🧊", enabled: true },
 ];
 
@@ -267,12 +267,15 @@ export default function LeadSearchForm({
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (selectedCategories.length === 0) {
-      setError("Pick at least one category.");
-      return;
-    }
     if (selectedTemperatures.length === 0) {
       setError("Pick at least one lead type.");
+      return;
+    }
+    if (
+      selectedTemperatures.includes("cold") &&
+      selectedCategories.length === 0
+    ) {
+      setError("Pick at least one category for cold leads.");
       return;
     }
 
@@ -335,8 +338,9 @@ export default function LeadSearchForm({
   }
 
   const hasResults = results.length > 0;
-  const canSearch =
-    selectedCategories.length > 0 && selectedTemperatures.length > 0;
+ const canSearch =
+   selectedTemperatures.length > 0 &&
+   (!selectedTemperatures.includes("cold") || selectedCategories.length > 0);
 
   // Reusable pagination bar
   function PaginationBar() {
