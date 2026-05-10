@@ -317,8 +317,9 @@ model ClientProfile {
   questionnaireSkipped Boolean @default(false)
   assetsSkipped        Boolean @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  monitoredHotLeadSources MonitoredHotLeadSource[]
 
   @@index([onboardingStage])
 }
@@ -896,6 +897,67 @@ model EventbriteEvent {
 
   @@index([marketCity, marketState])
   @@index([eventDate])
+}
+
+model HotLead {
+  id         String @id @default(cuid())
+  externalId String // Reddit post ID, FB post ID, etc.
+  source     String // "reddit" | "facebook_group"
+
+  // Post content
+  postTitle   String?
+  postBody    String   @db.Text
+  postUrl     String
+  postedAtIso DateTime
+
+  // Author
+  authorName       String?
+  authorProfileUrl String?
+
+  // Source context
+  sourceCommunity    String? // "r/phoenix", "Phoenix Local Moms", etc.
+  sourceCommunityUrl String?
+
+  // Geographic targeting
+  marketCity  String?
+  marketState String?
+
+  // Extracted data — captured opportunistically when present
+  extractedPhone String?
+  extractedEmail String?
+  extractedDate  DateTime?
+
+  // AI classification (JSON)
+  classification Json? // { tripType, urgency, groupSize, qualitySignals[], redFlags[] }
+
+  // Scoring
+  aiScore Int @default(0)
+
+  // Lifecycle
+  detectedAt DateTime @default(now())
+  expiresAt  DateTime // detectedAt + 14 days, used for cleanup cron
+
+  // Notification state
+  emailSent Boolean @default(false)
+
+  @@unique([source, externalId])
+  @@index([marketCity, marketState, detectedAt])
+  @@index([expiresAt])
+  @@index([aiScore, detectedAt])
+}
+
+model MonitoredHotLeadSource {
+  id              String   @id @default(cuid())
+  clientProfileId String
+  source          String // "facebook_group" — extensible for future sources
+  sourceUrl       String // The actual URL of the FB group
+  sourceLabel     String // Display name like "Phoenix Wedding Vendors"
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  clientProfile ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  @@index([clientProfileId, active])
 }
 
 model NewBusiness {
