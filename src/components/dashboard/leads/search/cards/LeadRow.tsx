@@ -21,20 +21,9 @@ function buildColdHref(placeId: string, category: string): string {
   return `${path}?category=${encodeURIComponent(slug)}`;
 }
 
-function timeAgo(iso: string): string {
+function formatEventDate(iso: string): string | null {
   const date = new Date(iso);
-  const diffMs = Date.now() - date.getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
-function formatEventDate(iso: string): string {
-  const date = new Date(iso);
+  if (isNaN(date.getTime())) return null;
   return date.toLocaleDateString(undefined, {
     weekday: "short",
     month: "short",
@@ -42,21 +31,44 @@ function formatEventDate(iso: string): string {
   });
 }
 
+function daysUntilEvent(iso: string): number | null {
+  const date = new Date(iso);
+  if (isNaN(date.getTime())) return null;
+  // Midnight-to-midnight comparison — avoids time-of-day skew
+  const now = new Date();
+  const eventDay = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffMs = eventDay.getTime() - today.getTime();
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
+function formatDaysLeft(days: number): string {
+  if (days < 0) return "Past";
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `${days} days`;
+}
+
 export default function LeadRow({ result, isPending, onSave, index }: Props) {
   const saved = isSaved(result.savedState);
 
-  // Per-temperature display derivations
   let priorityClass: string;
   let typeLabel: string;
   let typeEmoji: string;
   let businessName: string;
   let businessSub: string;
+  let metaLabel: string;
   let metaPrimary: string | null;
   let metaSecondary: string | null;
+  let contactLabel: string;
   let contactDisplay: string | null;
   let contactHref: string | null;
+  let contactClass: string;
   let viewHref: string;
-  let viewExternal: boolean;
 
   if (result.temperature === "cold") {
     priorityClass = styles.priorityLow;
@@ -64,46 +76,57 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
     typeEmoji = "🧊";
     businessName = result.name;
     businessSub = result.category;
+    metaLabel = "Rating";
     metaPrimary =
       result.rating !== null ? `★ ${result.rating.toFixed(1)}` : null;
     metaSecondary =
       result.reviewCount !== null ? `(${result.reviewCount})` : null;
+    contactLabel = "Phone";
     contactDisplay = result.phone;
     contactHref = result.phone ? `tel:${result.phone}` : null;
+    contactClass = "";
     viewHref = buildColdHref(result.placeId, result.category);
-    viewExternal = false;
   } else if (result.temperature === "warm") {
     priorityClass = styles.priorityMed;
     typeLabel = "Warm";
     typeEmoji = "🌡️";
     businessName = result.eventName;
     businessSub = result.category;
+    metaLabel = "Date";
     metaPrimary = formatEventDate(result.eventDateIso);
     metaSecondary = null;
-    contactDisplay = result.organizerPhone || result.organizerEmail;
-    contactHref = result.organizerPhone
-      ? `tel:${result.organizerPhone}`
-      : result.organizerEmail
-        ? `mailto:${result.organizerEmail}`
-        : null;
+    contactLabel = "Venue";
+    contactDisplay = result.venue;
+    contactHref = null;
+    contactClass = "";
     viewHref = `/dashboard/leads/warm/${encodeURIComponent(result.externalId)}`;
-    viewExternal = false;
   } else {
+    // hot — Eventbrite event ≤14 days out
     priorityClass = styles.priorityHigh;
     typeLabel = "Hot";
     typeEmoji = "🔥";
-    businessName = result.posterName;
-    businessSub = result.groupName ?? result.source;
-    metaPrimary = timeAgo(result.postedAtIso);
+    businessName = result.eventName;
+    businessSub = result.category;
+    metaLabel = "Date";
+    metaPrimary = formatEventDate(result.eventDateIso);
     metaSecondary = null;
-    contactDisplay = result.phone || result.email;
-    contactHref = result.phone
-      ? `tel:${result.phone}`
-      : result.email
-        ? `mailto:${result.email}`
-        : null;
+    contactLabel = "Time left";
+
+    const days = daysUntilEvent(result.eventDateIso);
+    if (days === null) {
+      contactDisplay = null;
+      contactClass = "";
+    } else {
+      contactDisplay = formatDaysLeft(days);
+      contactClass =
+        days <= 3
+          ? styles.urgencyHigh
+          : days <= 7
+            ? styles.urgencyMed
+            : styles.urgencyLow;
+    }
+    contactHref = null;
     viewHref = `/dashboard/leads/hot/${encodeURIComponent(result.externalId)}`;
-    viewExternal = false;
   }
 
   return (
@@ -123,7 +146,7 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       </div>
 
       <div className={`${styles.cell} ${styles.colMeta}`}>
-        <span className={styles.cellLabelMobile}>Rating</span>
+        <span className={styles.cellLabelMobile}>{metaLabel}</span>
         {metaPrimary ? (
           <span className={styles.metaWrap}>
             <span className={styles.metaPrimary}>{metaPrimary}</span>
@@ -137,14 +160,16 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       </div>
 
       <div className={`${styles.cell} ${styles.colContact}`}>
-        <span className={styles.cellLabelMobile}>Phone</span>
+        <span className={styles.cellLabelMobile}>{contactLabel}</span>
         {contactDisplay ? (
           contactHref ? (
             <a href={contactHref} className={styles.contactLink}>
               {contactDisplay}
             </a>
           ) : (
-            <span>{contactDisplay}</span>
+            <span className={contactClass || styles.contactText}>
+              {contactDisplay}
+            </span>
           )
         ) : (
           <span className={styles.metaSecondary}>—</span>
@@ -167,20 +192,9 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       </div>
 
       <div className={`${styles.cell} ${styles.colView}`}>
-        {viewExternal ? (
-          <a
-            href={viewHref}
-            target='_blank'
-            rel='noopener noreferrer'
-            className={styles.viewBtn}
-          >
-            View <span className={styles.viewArrow}>↗</span>
-          </a>
-        ) : (
-          <Link href={viewHref} className={styles.viewBtn}>
-            View <span className={styles.viewArrow}>↗</span>
-          </Link>
-        )}
+        <Link href={viewHref} className={styles.viewBtn}>
+          View <span className={styles.viewArrow}>↗</span>
+        </Link>
       </div>
     </div>
   );

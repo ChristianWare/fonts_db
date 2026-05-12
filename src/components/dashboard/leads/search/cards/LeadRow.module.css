@@ -227,6 +227,33 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Hot lead urgency colors for the "Time left" cell */
+.urgencyHigh {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.urgencyMed {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: #d97706;
+}
+
+.urgencyLow {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
+/* Plain contact text fallback (e.g. venue name for warm) */
+.contactText {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+}
+
 /* Mobile — collapse to stacked card-like rows */
 @media screen and (max-width: 1468px) {
   .tableHeader {

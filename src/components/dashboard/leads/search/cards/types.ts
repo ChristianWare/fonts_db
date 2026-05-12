@@ -17,7 +17,7 @@ export type ColdLeadResult = {
   category: string;
 };
 
-// V2 — Eventbrite events 15-90 days out
+// Eventbrite events 15-90 days out
 export type WarmLeadResult = {
   temperature: "warm";
   source: "eventbrite";
@@ -35,17 +35,18 @@ export type WarmLeadResult = {
   savedLeadId: string | null;
 };
 
-// V2 — FB groups, Reddit, time-sensitive Eventbrite (<14 days)
+// Eventbrite events 0-14 days out (same shape as warm, just closer in time)
 export type HotLeadResult = {
   temperature: "hot";
-  source: "facebook" | "reddit" | "eventbrite";
+  source: "eventbrite";
   externalId: string;
-  posterName: string;
-  postedAtIso: string;
-  postText: string;
-  groupName: string | null;
-  phone: string | null;
-  email: string | null;
+  eventName: string;
+  eventDateIso: string;
+  venue: string | null;
+  attendeeCount: number | null;
+  organizerName: string | null;
+  organizerEmail: string | null;
+  organizerPhone: string | null;
   url: string;
   category: string;
   savedState: SavedState;

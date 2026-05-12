@@ -35,7 +35,7 @@ const PAGE_TOKEN_DELAY_MS = 2000;
 const HOT_DAYS_OUT_MAX = 14;
 const WARM_DAYS_OUT_MIN = 15;
 const WARM_DAYS_OUT_MAX = 90;
-const CONCURRENT_JOB_LOOKBACK_MIN = 10; // how recent a "still running" job needs to be
+const CONCURRENT_JOB_LOOKBACK_MIN = 10;
 
 type Place = Awaited<ReturnType<typeof searchPlaces>>["places"][number];
 
@@ -220,11 +220,22 @@ export async function POST(req: NextRequest) {
       });
 
       if (existingJob) {
+        // Include quota fields so the client UI stays in sync when joining
+        // an existing scrape (e.g. another tab kicked it off)
+        const quota = await checkScrapeQuota(
+          profile.id,
+          marketKey,
+          primaryMarketKey,
+        );
         return NextResponse.json({
           status: "scraping",
           jobId: existingJob.id,
           stage: existingJob.stage,
           progressPct: existingJob.progressPct,
+          dailyUsed: quota.dailyUsed,
+          monthlyUsed: quota.monthlyUsed,
+          dailyLimit: DAILY_MARKET_LIMIT,
+          monthlyLimit: MONTHLY_MARKET_LIMIT,
         });
       }
 
@@ -257,7 +268,10 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await recordScrapeUsage(profile.id, marketKey);
+      // Primary market scrapes are free and don't count toward quota
+      if (marketKey !== primaryMarketKey) {
+        await recordScrapeUsage(profile.id, marketKey);
+      }
 
       // Fire-and-forget — runs after response is sent
       after(async () => {

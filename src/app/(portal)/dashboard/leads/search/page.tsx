@@ -4,6 +4,7 @@ import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
 import LeadSearchForm from "@/components/dashboard/leads/search/LeadSearchForm";
+import QuotaIndicator from "@/components/dashboard/leads/search/QuotaIndicator/QuotaIndicator";
 import styles from "./SearchPage.module.css";
 
 export const dynamic = "force-dynamic";
@@ -28,8 +29,6 @@ export default async function LeadSearchPage() {
     where: { clientProfileId: profile.id },
   });
 
-  // Block search if onboarding never happened or geocoding failed.
-  // Either way, send them to settings to fix it.
   const hasMarket =
     !!settings?.primaryLat && !!settings?.primaryLng && !!settings?.primaryCity;
 
@@ -37,11 +36,32 @@ export default async function LeadSearchPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Find Leads</h1>
-        <p className={styles.subhead}>
-          Hot, warm, and cold leads across every source — filtered your way.
-        </p>
+        {hasMarket ? (
+          <div className={styles.introWithQuota}>
+            <h1 className={styles.heading}>
+              Find Leads in {settings!.primaryCity}, {settings!.primaryState}
+            </h1>
+            <p className={styles.subhead}>
+              Hot, warm, and cold leads in your market.{" "}
+            </p>
+              <Link
+                href='/dashboard/leads/settings'
+                className={styles.subheadLink}
+              >
+                Change market →
+              </Link>
+            {hasMarket && <QuotaIndicator />}
+          </div>
+        ) : (
+          <>
+            <h1 className={styles.heading}>Find Leads</h1>
+            <p className={styles.subhead}>
+              Set your market to start searching.
+            </p>
+          </>
+        )}
       </div>
+
 
       {!hasMarket ? (
         <div className={styles.body}>
@@ -61,11 +81,7 @@ export default async function LeadSearchPage() {
           </div>
         </div>
       ) : (
-        <LeadSearchForm
-          defaultCity={settings.primaryCity ?? ""}
-          defaultState={settings.primaryState ?? ""}
-          defaultRadius={settings.serviceRadiusMiles ?? 50}
-        />
+        <LeadSearchForm />
       )}
     </div>
   );

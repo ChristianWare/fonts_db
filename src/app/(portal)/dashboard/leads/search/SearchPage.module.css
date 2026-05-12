@@ -18,6 +18,14 @@
   margin-bottom: 1rem;
 }
 
+.introWithQuota {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
 .heading {
   font-family: var(--RobotoFlexii);
   font-size: 4rem;
@@ -35,7 +43,6 @@
   font-family: var(--Roboto);
   font-size: 1.6rem;
   color: var(--text);
-  margin-top: 1rem;
   max-width: 60ch;
   line-height: 1.4;
 }
@@ -402,6 +409,86 @@
   padding: 4rem;
   border: 1px dashed var(--lightGray);
   text-align: center;
+}
+
+/* === Subhead link (chunk 8.3) === */
+.subheadLink {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  text-decoration: underline;
+  /* margin-left: 1rem; */
+  transition: color 0.15s ease;
+}
+
+.subheadLink:hover {
+  color: var(--black);
+}
+
+/* === Quota pill (chunk 8.3) === */
+.quotaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 2rem 3rem;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+  border-left: 6px solid var(--lightGray);
+  align-self: flex-start;
+}
+
+.quotaPillLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  opacity: 0.65;
+}
+
+.quotaPillValue {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.quotaPillValue strong {
+  color: var(--black);
+  font-weight: normal;
+}
+
+.quotaPillDivider {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--lightGray);
+}
+
+.quotaPillWarning {
+  border-left-color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.04);
+}
+
+.quotaPillWarning .quotaPillValue strong {
+  color: #b45309;
+}
+
+.quotaPillDanger {
+  border-left-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.quotaPillDanger .quotaPillLabel {
+  color: #b91c1c;
+  opacity: 1;
+}
+
+.quotaPillDanger .quotaPillValue strong {
+  color: #b91c1c;
 }
 
 @media screen and (max-width: 768px) {

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
-// import { Geist } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 import SessionProviderWrap from "@/components/shared/Providers/SessionProvider/SessionProvider";
 import Footer from "@/components/HomePage/Footer/Footer";
 import PlausibleProvider from "next-plausible";
@@ -50,8 +50,6 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // this will render:
-  // <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -77,6 +75,37 @@ export default function RootLayout({
           <SessionProviderWrap>
             {children}
             <Footer />
+            <Toaster
+              position='top-right'
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  fontFamily: "var(--GeistMono)",
+                  fontSize: "1.6rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  padding: "2rem",
+                  borderRadius: "0",
+                  background: "#0a0a0a",
+                  color: "#fff",
+                  border: "1px solid #1a1a1a",
+                  maxWidth: "50rem",
+                },
+                success: {
+                  iconTheme: {
+                    primary: "#fbbf24",
+                    secondary: "#000",
+                  },
+                },
+                error: {
+                  duration: 6000,
+                  iconTheme: {
+                    primary: "#ef4444",
+                    secondary: "#fff",
+                  },
+                },
+              }}
+            />
           </SessionProviderWrap>
         </PlausibleProvider>
       </body>

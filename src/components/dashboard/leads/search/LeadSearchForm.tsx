@@ -1,18 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import toast from "react-hot-toast";
 import styles from "./SearchPage.module.css";
 import rowStyles from "./cards/LeadRow.module.css";
 import LeadRow from "./cards/LeadRow";
 import type { Temperature, SavedState, SearchResult } from "./cards/types";
+// import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 
 type SortOption = "distance" | "rating" | "reviews" | "name";
-
-type Props = {
-  defaultCity: string;
-  defaultState: string;
-  defaultRadius: number;
-};
 
 type ScrapePhase = {
   jobId: string;
@@ -31,19 +28,15 @@ type QuotaError = {
   monthlyLimit: number;
 };
 
+type QuotaInfo = {
+  dailyUsed: number;
+  dailyLimit: number;
+  monthlyUsed: number;
+  monthlyLimit: number;
+};
+
 const RESULTS_PER_PAGE = 20;
 const POLL_INTERVAL_MS = 3000;
-
-const CATEGORIES: Array<{ value: string; label: string }> = [
-  { value: "wedding venues", label: "Wedding Venues" },
-  { value: "hotels", label: "Hotels" },
-  { value: "law firms", label: "Law Firms" },
-  { value: "country clubs", label: "Country Clubs" },
-  { value: "funeral homes", label: "Funeral Homes" },
-  { value: "resort spas", label: "Resort Spas" },
-  { value: "event venues", label: "Event Venues" },
-  { value: "corporate offices", label: "Corporate Offices" },
-];
 
 const TEMPERATURES: Array<{
   value: Temperature;
@@ -54,6 +47,17 @@ const TEMPERATURES: Array<{
   { value: "hot", label: "Hot", emoji: "🔥", enabled: true },
   { value: "warm", label: "Warm", emoji: "🌡️", enabled: true },
   { value: "cold", label: "Cold", emoji: "🧊", enabled: true },
+];
+
+const CATEGORIES: Array<{ value: string; label: string }> = [
+  { value: "wedding venues", label: "Wedding Venues" },
+  { value: "hotels", label: "Hotels" },
+  { value: "law firms", label: "Law Firms" },
+  { value: "country clubs", label: "Country Clubs" },
+  { value: "funeral homes", label: "Funeral Homes" },
+  { value: "resort spas", label: "Resort Spas" },
+  { value: "event venues", label: "Event Venues" },
+  { value: "corporate offices", label: "Corporate Offices" },
 ];
 
 const LEAD_TYPE_COPY: Record<Temperature, string[]> = {
@@ -78,14 +82,11 @@ const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v6";
+const STORAGE_KEY = "leadSearch:state:v7";
 
 type StoredState = {
   selectedTemperature: Temperature | null;
   selectedCategories: string[];
-  city: string;
-  state: string;
-  radius: number;
   sortBy: SortOption;
   freshOnly: boolean;
   searchedTemperature: Temperature | null;
@@ -126,17 +127,22 @@ function formatElapsed(startedAtMs: number): string {
   return `${min}m ${rem}s`;
 }
 
-export default function LeadSearchForm({
-  defaultCity,
-  defaultState,
-  defaultRadius,
-}: Props) {
+function quotaPillClass(
+  styles: Record<string, string>,
+  quota: QuotaInfo,
+): string {
+  const dailyRatio = quota.dailyUsed / quota.dailyLimit;
+  const monthlyRatio = quota.monthlyUsed / quota.monthlyLimit;
+  const worst = Math.max(dailyRatio, monthlyRatio);
+  if (worst >= 1) return `${styles.quotaPill} ${styles.quotaPillDanger}`;
+  if (worst >= 0.8) return `${styles.quotaPill} ${styles.quotaPillWarning}`;
+  return styles.quotaPill;
+}
+
+export default function LeadSearchForm() {
   const [selectedTemperature, setSelectedTemperature] =
     useState<Temperature | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [city, setCity] = useState(defaultCity);
-  const [state, setState] = useState(defaultState);
-  const [radius, setRadius] = useState(defaultRadius);
   const [sortBy, setSortBy] = useState<SortOption>("distance");
   const [freshOnly, setFreshOnly] = useState(false);
 
@@ -153,25 +159,30 @@ export default function LeadSearchForm({
   );
   const [hasSearched, setHasSearched] = useState(false);
 
-  // === Chunk 8.2: scrape progress + quota state ===
   const [scrapePhase, setScrapePhase] = useState<ScrapePhase | null>(null);
   const [quotaError, setQuotaError] = useState<QuotaError | null>(null);
-  // Tick state to force re-renders for elapsed-time display
+  const [quota, setQuota] = useState<QuotaInfo | null>(null);
   const [, setElapsedTick] = useState(0);
 
   const hydrated = useRef(false);
   const tableRef = useRef<HTMLDivElement>(null);
-  // Ref for polling effect to call latest executeSearch
   const executeSearchRef = useRef<() => Promise<void>>(async () => {});
+
+  // Fetch quota on mount
+  useEffect(() => {
+    fetch("/api/leads/quota")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) setQuota(data);
+      })
+      .catch((err) => console.error("Quota fetch failed", err));
+  }, []);
 
   useEffect(() => {
     const stored = loadStored();
     if (stored && stored.searchedTemperature) {
       setSelectedTemperature(stored.selectedTemperature);
       setSelectedCategories(stored.selectedCategories);
-      setCity(stored.city);
-      setState(stored.state);
-      setRadius(stored.radius);
       setSortBy(stored.sortBy ?? "distance");
       setFreshOnly(stored.freshOnly ?? false);
       setSearchedTemperature(stored.searchedTemperature);
@@ -189,9 +200,6 @@ export default function LeadSearchForm({
     saveStored({
       selectedTemperature,
       selectedCategories,
-      city,
-      state,
-      radius,
       sortBy,
       freshOnly,
       searchedTemperature,
@@ -202,9 +210,6 @@ export default function LeadSearchForm({
   }, [
     selectedTemperature,
     selectedCategories,
-    city,
-    state,
-    radius,
     sortBy,
     freshOnly,
     searchedTemperature,
@@ -221,17 +226,17 @@ export default function LeadSearchForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
 
-  // === Elapsed-time tick (chunk 8.2) ===
   useEffect(() => {
     if (!scrapePhase) return;
     const id = setInterval(() => setElapsedTick((t) => t + 1), 1000);
     return () => clearInterval(id);
   }, [scrapePhase]);
 
-  // === Polling effect (chunk 8.2) ===
   useEffect(() => {
     if (!scrapePhase?.jobId) return;
     const jobId = scrapePhase.jobId;
+    const marketCity = scrapePhase.marketCity;
+    const marketState = scrapePhase.marketState;
 
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -244,7 +249,6 @@ export default function LeadSearchForm({
         if (!res.ok) throw new Error(`Status check failed (${res.status})`);
         const data = await res.json();
 
-        // Update progress on the same job
         setScrapePhase((prev) =>
           prev && prev.jobId === jobId
             ? {
@@ -257,37 +261,40 @@ export default function LeadSearchForm({
 
         if (data.status === "COMPLETE") {
           setScrapePhase(null);
-          // Re-fire search — cache should now hit
+          toast.success(
+            `${data.eventCount ?? 0} events ready for ${marketCity}, ${marketState}`,
+          );
+          // Refresh quota since we just used one slot
+          fetch("/api/leads/quota")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((q) => q && setQuota(q));
           executeSearchRef.current();
           return;
         }
 
         if (data.status === "FAILED") {
-          setError(
-            `Scrape failed: ${data.error ?? "Try again in a few seconds."}`,
-          );
+          const msg = data.error ?? "Try again in a few seconds.";
+          setError(`Scrape failed: ${msg}`);
+          toast.error(`Scrape failed for ${marketCity}, ${marketState}`);
           setScrapePhase(null);
           return;
         }
 
-        // Still running — schedule next poll
         timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
       } catch (err) {
         if (cancelled) return;
         console.error("Poll error", err);
-        // Retry after interval
         timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
       }
     };
 
-    // Initial poll after 1s (give the job a moment to start)
     timeoutId = setTimeout(poll, 1000);
 
     return () => {
       cancelled = true;
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [scrapePhase?.jobId]);
+  }, [scrapePhase?.jobId, scrapePhase?.marketCity, scrapePhase?.marketState]);
 
   function pickTemperature(t: Temperature | null) {
     if (t === null) {
@@ -367,12 +374,6 @@ export default function LeadSearchForm({
         body: JSON.stringify({
           categories: selectedCategories,
           temperatures: [selectedTemperature],
-          cityOverride: city.trim() !== defaultCity ? city.trim() : undefined,
-          stateOverride:
-            state.trim() !== defaultState
-              ? state.trim().toUpperCase()
-              : undefined,
-          radiusMilesOverride: radius !== defaultRadius ? radius : undefined,
           sortBy,
           freshOnly,
         }),
@@ -402,17 +403,31 @@ export default function LeadSearchForm({
         throw new Error(data.error ?? "Search failed");
       }
 
-      // === Handle the three new response shapes (chunk 8.1) ===
       if (data.status === "scraping" && data.jobId) {
+        // Update quota pill from the scrape response
+        if (
+          data.dailyUsed != null &&
+          data.monthlyUsed != null &&
+          data.dailyLimit != null &&
+          data.monthlyLimit != null
+        ) {
+          setQuota({
+            dailyUsed: data.dailyUsed,
+            dailyLimit: data.dailyLimit,
+            monthlyUsed: data.monthlyUsed,
+            monthlyLimit: data.monthlyLimit,
+          });
+        }
         setScrapePhase({
           jobId: data.jobId,
           stage: data.stage ?? "Starting up",
           progressPct: data.progressPct ?? 0,
-          marketCity: city,
-          marketState: state,
+          // Pull market name from response if you ever return it; otherwise
+          // these will be filled at the search trigger site. For now leave blank.
+          marketCity: "",
+          marketState: "",
           startedAt: Date.now(),
         });
-        // Clear stale results so the UI focuses on the scrape progress
         setResults([]);
         return;
       }
@@ -425,22 +440,29 @@ export default function LeadSearchForm({
           dailyLimit: data.dailyLimit ?? 5,
           monthlyLimit: data.monthlyLimit ?? 15,
         });
+        // Also sync the persistent quota state
+        setQuota({
+          dailyUsed: data.dailyUsed ?? 0,
+          monthlyUsed: data.monthlyUsed ?? 0,
+          dailyLimit: data.dailyLimit ?? 5,
+          monthlyLimit: data.monthlyLimit ?? 15,
+        });
         setResults([]);
         return;
       }
 
-      // status === "ok" — normal results
       setResults(data.results ?? []);
       setCurrentPage(1);
       setScrapePhase(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
   }
 
-  // Keep the ref pointing at the latest executeSearch so polling can re-fire
   executeSearchRef.current = executeSearch;
 
   function handleSearch(e: React.FormEvent) {
@@ -502,9 +524,13 @@ export default function LeadSearchForm({
       if (res.ok) {
         const data = await res.json();
         updateResultState(result.placeId, "saved", data.id);
+        toast.success(`Saved ${result.name} to pipeline`);
+      } else {
+        toast.error("Save failed — try again");
       }
     } catch (err) {
       console.error("Save failed", err);
+      toast.error("Save failed — try again");
     } finally {
       setPending(result.placeId, false);
     }
@@ -565,7 +591,18 @@ export default function LeadSearchForm({
   return (
     <div className={styles.body}>
       <form onSubmit={handleSearch} className={styles.searchCard}>
-        {/* Lead Type */}
+        {/* {quota && (
+          <div className={quotaPillClass(styles, quota)}>
+            <SectionIntro
+              text={`Markets scraped today: ${quota.dailyUsed}/${quota.dailyLimit}`}
+            />
+            <br />
+            <SectionIntro
+              text={`Markets scraped this month: ${quota.monthlyUsed}/${quota.monthlyLimit}`}
+            />
+          </div>
+        )} */}
+
         <div className={styles.field}>
           <div className={styles.labelRow}>
             <label className={styles.label}>Select your lead type</label>
@@ -690,51 +727,6 @@ export default function LeadSearchForm({
           </div>
         )}
 
-        <div className={styles.fieldRow}>
-          <div className={styles.field}>
-            <label htmlFor='city' className={styles.label}>
-              City
-            </label>
-            <input
-              id='city'
-              type='text'
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              disabled={isScraping}
-              className={styles.input}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor='state' className={styles.label}>
-              State
-            </label>
-            <input
-              id='state'
-              type='text'
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              maxLength={2}
-              disabled={isScraping}
-              className={styles.input}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor='radius' className={styles.label}>
-              Radius (mi)
-            </label>
-            <input
-              id='radius'
-              type='number'
-              value={radius}
-              onChange={(e) => setRadius(parseInt(e.target.value, 10) || 50)}
-              min={10}
-              max={150}
-              disabled={isScraping}
-              className={styles.input}
-            />
-          </div>
-        </div>
-
         <div className={styles.submitRow}>
           <button
             type='submit'
@@ -748,14 +740,12 @@ export default function LeadSearchForm({
         {error && <p className={styles.error}>{error}</p>}
       </form>
 
-      {/* === Scrape progress card (chunk 8.2) === */}
       {scrapePhase && (
         <div className={styles.scrapeProgressCard}>
           <div className={styles.scrapeProgressHeader}>
             <p className={styles.scrapeProgressEyebrow}>On-demand scrape</p>
             <h2 className={styles.scrapeProgressTitle}>
-              Pulling fresh data for {scrapePhase.marketCity},{" "}
-              {scrapePhase.marketState}
+              Pulling fresh data for your market
             </h2>
             <p className={styles.scrapeProgressDesc}>
               We don&apos;t have cached data for this market yet, so we&apos;re
@@ -784,7 +774,6 @@ export default function LeadSearchForm({
         </div>
       )}
 
-      {/* === Quota error card (chunk 8.2) === */}
       {quotaError && (
         <div className={styles.quotaErrorCard}>
           <p className={styles.quotaErrorEyebrow}>Limit reached</p>
@@ -809,9 +798,48 @@ export default function LeadSearchForm({
         </div>
       )}
 
-      {/* === Results table === */}
       {showResultsSection && (
         <>
+          <div
+            className={`${styles.resultsHeader} ${
+              styles[`resultsHeader_${searchedTemperature}`]
+            }`}
+          >
+            <div className={styles.resultsHeaderType}>
+              <span className={styles.resultsHeaderEmoji}>
+                {searchedTemperature === "hot"
+                  ? "🔥"
+                  : searchedTemperature === "warm"
+                    ? "🌡️"
+                    : "🧊"}
+              </span>
+              <h2 className={styles.resultsHeaderLabel}>
+                {searchedTemperature === "hot"
+                  ? "Hot leads"
+                  : searchedTemperature === "warm"
+                    ? "Warm leads"
+                    : "Cold leads"}
+              </h2>
+            </div>
+            <div className={styles.resultsHeaderMeta}>
+              <span className={styles.resultsHeaderCount}>
+                {results.length} {results.length === 1 ? "result" : "results"}
+              </span>
+              {searchedTemperature === "cold" &&
+                searchedCategories.length > 0 && (
+                  <>
+                    <span className={styles.resultsHeaderDivider}>·</span>
+                    <span>
+                      {searchedCategories.length}{" "}
+                      {searchedCategories.length === 1
+                        ? "category"
+                        : "categories"}
+                    </span>
+                  </>
+                )}
+            </div>
+          </div>
+
           <div className={styles.filtersBar}>
             <div className={styles.filtersBarLeft}>
               <span className={styles.filtersBarCount}>
@@ -875,15 +903,19 @@ export default function LeadSearchForm({
               <div
                 className={`${rowStyles.headerCell} ${rowStyles.colBusiness}`}
               >
-                Business
+                {searchedTemperature === "cold" ? "Business" : "Event"}
               </div>
               <div className={`${rowStyles.headerCell} ${rowStyles.colMeta}`}>
-                Rating
+                {searchedTemperature === "cold" ? "Rating" : "Date"}
               </div>
               <div
                 className={`${rowStyles.headerCell} ${rowStyles.colContact}`}
               >
-                Phone
+                {searchedTemperature === "cold"
+                  ? "Phone"
+                  : searchedTemperature === "warm"
+                    ? "Venue"
+                    : "Time left"}
               </div>
               <div className={`${rowStyles.headerCell} ${rowStyles.colSave}`}>
                 Save
