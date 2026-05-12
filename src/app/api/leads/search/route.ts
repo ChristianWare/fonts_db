@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import { searchPlaces, geocodeCity } from "@/lib/googlePlaces";
+import {
+  normalizeMarketKey,
+  checkScrapeQuota,
+  recordScrapeUsage,
+  CACHE_TTL_HOURS,
+  DAILY_MARKET_LIMIT,
+  MONTHLY_MARKET_LIMIT,
+} from "@/lib/leads/scrapeQuota";
+import { runOnDemandScrape } from "@/lib/leads/onDemandScrape";
 
 export const runtime = "nodejs";
+export const maxDuration = 300; // Vercel Pro — needed for after() background work
 
 type Temperature = "hot" | "warm" | "cold";
 type SortOption = "distance" | "rating" | "reviews" | "name";
@@ -24,6 +35,7 @@ const PAGE_TOKEN_DELAY_MS = 2000;
 const HOT_DAYS_OUT_MAX = 14;
 const WARM_DAYS_OUT_MIN = 15;
 const WARM_DAYS_OUT_MAX = 90;
+const CONCURRENT_JOB_LOOKBACK_MIN = 10; // how recent a "still running" job needs to be
 
 type Place = Awaited<ReturnType<typeof searchPlaces>>["places"][number];
 
@@ -93,9 +105,8 @@ export async function POST(req: NextRequest) {
 
   if (!includeHot && !includeWarm && !includeCold) {
     return NextResponse.json({
+      status: "ok",
       results: [],
-      center: null,
-      radiusMiles: null,
       message: "Pick at least one lead type.",
     });
   }
@@ -108,6 +119,17 @@ export async function POST(req: NextRequest) {
   }
 
   // Resolve location
+  const settings = await db.leadsSettings.findUnique({
+    where: { clientProfileId: profile.id },
+    select: {
+      primaryCity: true,
+      primaryState: true,
+      primaryLat: true,
+      primaryLng: true,
+      serviceRadiusMiles: true,
+    },
+  });
+
   let searchCity: string | null = null;
   let searchState: string | null = null;
   let lat: number | null = null;
@@ -138,16 +160,6 @@ export async function POST(req: NextRequest) {
     }
     radiusMiles = body.radiusMilesOverride ?? 50;
   } else {
-    const settings = await db.leadsSettings.findUnique({
-      where: { clientProfileId: profile.id },
-      select: {
-        primaryCity: true,
-        primaryState: true,
-        primaryLat: true,
-        primaryLng: true,
-        serviceRadiusMiles: true,
-      },
-    });
     if (!settings) {
       return NextResponse.json(
         { error: "No primary market set. Configure your settings first." },
@@ -172,8 +184,102 @@ export async function POST(req: NextRequest) {
     radiusMiles = body.radiusMilesOverride ?? settings.serviceRadiusMiles ?? 50;
   }
 
-  // ===== HOT SEARCH (chunk 6) =====
-  // Events 0-14 days out from operator's market.
+  // === ON-DEMAND SCRAPE LOGIC (chunk 8.1) ===
+  // For warm/hot searches, check cache freshness. If stale, trigger background scrape.
+  // Cold searches hit Google Places live so they skip this entire block.
+  if ((includeWarm || includeHot) && searchCity && searchState) {
+    const marketKey = normalizeMarketKey(searchCity, searchState);
+    const primaryMarketKey =
+      settings?.primaryCity && settings?.primaryState
+        ? normalizeMarketKey(settings.primaryCity, settings.primaryState)
+        : null;
+
+    // Step 1 — check cache freshness
+    const cacheCutoff = new Date(Date.now() - CACHE_TTL_HOURS * 60 * 60 * 1000);
+    const cacheHit = await db.eventbriteEvent.findFirst({
+      where: {
+        marketCity: { equals: searchCity, mode: "insensitive" },
+        marketState: { equals: searchState, mode: "insensitive" },
+        fetchedAt: { gte: cacheCutoff },
+      },
+      select: { id: true },
+    });
+
+    if (!cacheHit) {
+      // Step 2 — check for an in-flight scrape for this market
+      const recentJobCutoff = new Date(
+        Date.now() - CONCURRENT_JOB_LOOKBACK_MIN * 60 * 1000,
+      );
+      const existingJob = await db.scrapeJob.findFirst({
+        where: {
+          marketKey,
+          status: { in: ["PENDING", "SCRAPING", "ENRICHING"] },
+          startedAt: { gte: recentJobCutoff },
+        },
+        orderBy: { startedAt: "desc" },
+      });
+
+      if (existingJob) {
+        return NextResponse.json({
+          status: "scraping",
+          jobId: existingJob.id,
+          stage: existingJob.stage,
+          progressPct: existingJob.progressPct,
+        });
+      }
+
+      // Step 3 — quota check
+      const quota = await checkScrapeQuota(
+        profile.id,
+        marketKey,
+        primaryMarketKey,
+      );
+      if (!quota.allowed) {
+        return NextResponse.json({
+          status: "quota_exceeded",
+          reason: quota.reason,
+          dailyUsed: quota.dailyUsed,
+          monthlyUsed: quota.monthlyUsed,
+          dailyLimit: DAILY_MARKET_LIMIT,
+          monthlyLimit: MONTHLY_MARKET_LIMIT,
+        });
+      }
+
+      // Step 4 — create job, record usage, kick off background scrape
+      const job = await db.scrapeJob.create({
+        data: {
+          clientProfileId: profile.id,
+          marketCity: searchCity,
+          marketState: searchState,
+          marketKey,
+          status: "PENDING",
+          stage: "Starting up",
+        },
+      });
+
+      await recordScrapeUsage(profile.id, marketKey);
+
+      // Fire-and-forget — runs after response is sent
+      after(async () => {
+        await runOnDemandScrape(job.id, searchCity!, searchState!);
+      });
+
+      return NextResponse.json({
+        status: "scraping",
+        jobId: job.id,
+        stage: "Starting up",
+        progressPct: 0,
+        dailyUsed: quota.dailyUsed + (quota.isAlreadyScrapedToday ? 0 : 1),
+        monthlyUsed:
+          quota.monthlyUsed + (quota.isAlreadyScrapedThisMonth ? 0 : 1),
+        dailyLimit: DAILY_MARKET_LIMIT,
+        monthlyLimit: MONTHLY_MARKET_LIMIT,
+      });
+    }
+    // Cache hit — fall through to normal search logic below
+  }
+
+  // === HOT SEARCH ===
   let hotResults: unknown[] = [];
 
   if (includeHot && searchCity && searchState) {
@@ -250,7 +356,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ===== WARM SEARCH =====
+  // === WARM SEARCH ===
   let warmResults: unknown[] = [];
 
   if (includeWarm && searchCity && searchState) {
@@ -330,7 +436,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ===== COLD SEARCH =====
+  // === COLD SEARCH ===
   let coldResults: unknown[] = [];
 
   if (includeCold && lat != null && lng != null) {
@@ -407,10 +513,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Hot first, then warm, then cold
   const results = [...hotResults, ...warmResults, ...coldResults];
 
   return NextResponse.json({
+    status: "ok",
     results,
     center: lat != null && lng != null ? { lat, lng } : null,
     radiusMiles,

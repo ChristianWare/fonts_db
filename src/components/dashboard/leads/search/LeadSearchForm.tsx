@@ -14,7 +14,25 @@ type Props = {
   defaultRadius: number;
 };
 
+type ScrapePhase = {
+  jobId: string;
+  stage: string;
+  progressPct: number;
+  marketCity: string;
+  marketState: string;
+  startedAt: number;
+};
+
+type QuotaError = {
+  reason: "DAILY_LIMIT" | "MONTHLY_LIMIT";
+  dailyUsed: number;
+  monthlyUsed: number;
+  dailyLimit: number;
+  monthlyLimit: number;
+};
+
 const RESULTS_PER_PAGE = 20;
+const POLL_INTERVAL_MS = 3000;
 
 const CATEGORIES: Array<{ value: string; label: string }> = [
   { value: "wedding venues", label: "Wedding Venues" },
@@ -60,7 +78,6 @@ const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-// Bumped to v6 because state shape changed (Temperature → Temperature | null)
 const STORAGE_KEY = "leadSearch:state:v6";
 
 type StoredState = {
@@ -101,12 +118,19 @@ function isSaved(state: SavedState): boolean {
   return state !== "none";
 }
 
+function formatElapsed(startedAtMs: number): string {
+  const seconds = Math.floor((Date.now() - startedAtMs) / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const min = Math.floor(seconds / 60);
+  const rem = seconds % 60;
+  return `${min}m ${rem}s`;
+}
+
 export default function LeadSearchForm({
   defaultCity,
   defaultState,
   defaultRadius,
 }: Props) {
-  // Default to null — nothing selected
   const [selectedTemperature, setSelectedTemperature] =
     useState<Temperature | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -129,8 +153,16 @@ export default function LeadSearchForm({
   );
   const [hasSearched, setHasSearched] = useState(false);
 
+  // === Chunk 8.2: scrape progress + quota state ===
+  const [scrapePhase, setScrapePhase] = useState<ScrapePhase | null>(null);
+  const [quotaError, setQuotaError] = useState<QuotaError | null>(null);
+  // Tick state to force re-renders for elapsed-time display
+  const [, setElapsedTick] = useState(0);
+
   const hydrated = useRef(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  // Ref for polling effect to call latest executeSearch
+  const executeSearchRef = useRef<() => Promise<void>>(async () => {});
 
   useEffect(() => {
     const stored = loadStored();
@@ -189,6 +221,74 @@ export default function LeadSearchForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
 
+  // === Elapsed-time tick (chunk 8.2) ===
+  useEffect(() => {
+    if (!scrapePhase) return;
+    const id = setInterval(() => setElapsedTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, [scrapePhase]);
+
+  // === Polling effect (chunk 8.2) ===
+  useEffect(() => {
+    if (!scrapePhase?.jobId) return;
+    const jobId = scrapePhase.jobId;
+
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const poll = async () => {
+      if (cancelled) return;
+      try {
+        const res = await fetch(`/api/leads/search/status?jobId=${jobId}`);
+        if (cancelled) return;
+        if (!res.ok) throw new Error(`Status check failed (${res.status})`);
+        const data = await res.json();
+
+        // Update progress on the same job
+        setScrapePhase((prev) =>
+          prev && prev.jobId === jobId
+            ? {
+                ...prev,
+                stage: data.stage ?? prev.stage,
+                progressPct: data.progressPct ?? prev.progressPct,
+              }
+            : prev,
+        );
+
+        if (data.status === "COMPLETE") {
+          setScrapePhase(null);
+          // Re-fire search — cache should now hit
+          executeSearchRef.current();
+          return;
+        }
+
+        if (data.status === "FAILED") {
+          setError(
+            `Scrape failed: ${data.error ?? "Try again in a few seconds."}`,
+          );
+          setScrapePhase(null);
+          return;
+        }
+
+        // Still running — schedule next poll
+        timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
+      } catch (err) {
+        if (cancelled) return;
+        console.error("Poll error", err);
+        // Retry after interval
+        timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
+      }
+    };
+
+    // Initial poll after 1s (give the job a moment to start)
+    timeoutId = setTimeout(poll, 1000);
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [scrapePhase?.jobId]);
+
   function pickTemperature(t: Temperature | null) {
     if (t === null) {
       setSelectedTemperature(null);
@@ -197,7 +297,6 @@ export default function LeadSearchForm({
     }
     const def = TEMPERATURES.find((x) => x.value === t);
     if (!def?.enabled) return;
-    // Click selected pill again to deselect (desktop only — mobile uses placeholder option)
     if (selectedTemperature === t) {
       setSelectedTemperature(null);
       setSelectedCategories([]);
@@ -260,6 +359,7 @@ export default function LeadSearchForm({
     if (!selectedTemperature) return;
     setLoading(true);
     setError(null);
+    setQuotaError(null);
     try {
       const res = await fetch("/api/leads/search", {
         method: "POST",
@@ -279,7 +379,19 @@ export default function LeadSearchForm({
       });
 
       const text = await res.text();
-      let data: { results?: SearchResult[]; error?: string } = {};
+      let data: {
+        status?: string;
+        results?: SearchResult[];
+        error?: string;
+        jobId?: string;
+        stage?: string;
+        progressPct?: number;
+        reason?: "DAILY_LIMIT" | "MONTHLY_LIMIT";
+        dailyUsed?: number;
+        monthlyUsed?: number;
+        dailyLimit?: number;
+        monthlyLimit?: number;
+      } = {};
       try {
         data = JSON.parse(text);
       } catch {
@@ -290,14 +402,46 @@ export default function LeadSearchForm({
         throw new Error(data.error ?? "Search failed");
       }
 
+      // === Handle the three new response shapes (chunk 8.1) ===
+      if (data.status === "scraping" && data.jobId) {
+        setScrapePhase({
+          jobId: data.jobId,
+          stage: data.stage ?? "Starting up",
+          progressPct: data.progressPct ?? 0,
+          marketCity: city,
+          marketState: state,
+          startedAt: Date.now(),
+        });
+        // Clear stale results so the UI focuses on the scrape progress
+        setResults([]);
+        return;
+      }
+
+      if (data.status === "quota_exceeded") {
+        setQuotaError({
+          reason: data.reason ?? "DAILY_LIMIT",
+          dailyUsed: data.dailyUsed ?? 0,
+          monthlyUsed: data.monthlyUsed ?? 0,
+          dailyLimit: data.dailyLimit ?? 5,
+          monthlyLimit: data.monthlyLimit ?? 15,
+        });
+        setResults([]);
+        return;
+      }
+
+      // status === "ok" — normal results
       setResults(data.results ?? []);
       setCurrentPage(1);
+      setScrapePhase(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
   }
+
+  // Keep the ref pointing at the latest executeSearch so polling can re-fire
+  executeSearchRef.current = executeSearch;
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -309,7 +453,6 @@ export default function LeadSearchForm({
       setError("Pick at least one category for cold leads.");
       return;
     }
-
     setSearchedTemperature(selectedTemperature);
     setSearchedCategories([...selectedCategories]);
     setHasSearched(true);
@@ -371,6 +514,16 @@ export default function LeadSearchForm({
   const canSearch =
     selectedTemperature !== null &&
     (selectedTemperature !== "cold" || selectedCategories.length > 0);
+  const isScraping = scrapePhase !== null;
+  const showResultsSection = hasResults && !isScraping && !quotaError;
+  const showEmptyState =
+    !loading &&
+    !error &&
+    !isScraping &&
+    !quotaError &&
+    !hasResults &&
+    hasSearched;
+  const showInitialState = !hasSearched && !isScraping && !quotaError;
 
   function PaginationBar() {
     if (totalPages <= 1) return null;
@@ -412,13 +565,12 @@ export default function LeadSearchForm({
   return (
     <div className={styles.body}>
       <form onSubmit={handleSearch} className={styles.searchCard}>
-        {/* Lead Type — single-select, no default */}
+        {/* Lead Type */}
         <div className={styles.field}>
           <div className={styles.labelRow}>
             <label className={styles.label}>Select your lead type</label>
           </div>
 
-          {/* Desktop: pill row */}
           <div className={styles.pillRow}>
             {TEMPERATURES.map((t) => {
               const selected = selectedTemperature === t.value;
@@ -427,7 +579,7 @@ export default function LeadSearchForm({
                   key={t.value}
                   type='button'
                   onClick={() => pickTemperature(t.value)}
-                  disabled={!t.enabled}
+                  disabled={!t.enabled || isScraping}
                   className={`${styles.pill} ${
                     selected ? styles.pillActive : ""
                   } ${!t.enabled ? styles.pillDisabled : ""}`}
@@ -441,13 +593,13 @@ export default function LeadSearchForm({
             })}
           </div>
 
-          {/* Mobile (≤568px): native dropdown */}
           <select
             value={selectedTemperature ?? ""}
             onChange={(e) => {
               const v = e.target.value;
               pickTemperature(v === "" ? null : (v as Temperature));
             }}
+            disabled={isScraping}
             className={styles.mobileSelect}
             aria-label='Lead type'
           >
@@ -460,7 +612,6 @@ export default function LeadSearchForm({
             ))}
           </select>
 
-          {/* Color-coded explanation box */}
           {selectedTemperature && (
             <div
               className={`${styles.leadTypeExplanation} ${
@@ -476,7 +627,6 @@ export default function LeadSearchForm({
           )}
         </div>
 
-        {/* Categories — only relevant for cold leads */}
         {selectedTemperature === "cold" && (
           <div className={styles.field}>
             <div className={styles.labelRow}>
@@ -508,6 +658,7 @@ export default function LeadSearchForm({
                     key={c.value}
                     type='button'
                     onClick={() => toggleCategory(c.value)}
+                    disabled={isScraping}
                     className={`${styles.pill} ${
                       selected ? styles.pillActive : ""
                     }`}
@@ -522,6 +673,7 @@ export default function LeadSearchForm({
               multiple
               value={selectedCategories}
               onChange={handleMobileCategoriesChange}
+              disabled={isScraping}
               className={styles.mobileMultiSelect}
               aria-label='Categories'
               size={CATEGORIES.length}
@@ -538,7 +690,6 @@ export default function LeadSearchForm({
           </div>
         )}
 
-        {/* Location */}
         <div className={styles.fieldRow}>
           <div className={styles.field}>
             <label htmlFor='city' className={styles.label}>
@@ -549,6 +700,7 @@ export default function LeadSearchForm({
               type='text'
               value={city}
               onChange={(e) => setCity(e.target.value)}
+              disabled={isScraping}
               className={styles.input}
             />
           </div>
@@ -562,6 +714,7 @@ export default function LeadSearchForm({
               value={state}
               onChange={(e) => setState(e.target.value)}
               maxLength={2}
+              disabled={isScraping}
               className={styles.input}
             />
           </div>
@@ -576,134 +729,195 @@ export default function LeadSearchForm({
               onChange={(e) => setRadius(parseInt(e.target.value, 10) || 50)}
               min={10}
               max={150}
+              disabled={isScraping}
               className={styles.input}
             />
           </div>
         </div>
 
-        {/* Submit */}
         <div className={styles.submitRow}>
           <button
             type='submit'
-            disabled={loading || !canSearch}
+            disabled={loading || !canSearch || isScraping}
             className={styles.searchBtn}
           >
-            {loading ? "Searching..." : "Search"}
+            {loading ? "Searching..." : isScraping ? "Scraping..." : "Search"}
           </button>
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
       </form>
 
-      {/* Filters bar */}
-      {hasResults && (
-        <div className={styles.filtersBar}>
-          <div className={styles.filtersBarLeft}>
-            <span className={styles.filtersBarCount}>
-              {results.length} result{results.length === 1 ? "" : "s"}
+      {/* === Scrape progress card (chunk 8.2) === */}
+      {scrapePhase && (
+        <div className={styles.scrapeProgressCard}>
+          <div className={styles.scrapeProgressHeader}>
+            <p className={styles.scrapeProgressEyebrow}>On-demand scrape</p>
+            <h2 className={styles.scrapeProgressTitle}>
+              Pulling fresh data for {scrapePhase.marketCity},{" "}
+              {scrapePhase.marketState}
+            </h2>
+            <p className={styles.scrapeProgressDesc}>
+              We don&apos;t have cached data for this market yet, so we&apos;re
+              pulling events from Eventbrite, categorizing them with AI, and
+              enriching with venue + organizer contacts. Usually takes 60-120
+              seconds.
+            </p>
+          </div>
+
+          <div className={styles.scrapeProgressBarWrap}>
+            <div
+              className={styles.scrapeProgressBarFill}
+              style={{ width: `${scrapePhase.progressPct}%` }}
+            />
+          </div>
+
+          <div className={styles.scrapeProgressMeta}>
+            <span className={styles.scrapeProgressStage}>
+              {scrapePhase.stage}
             </span>
-            {totalPages > 1 && (
-              <span className={styles.filtersBarPages}>
-                Page {currentPage} of {totalPages}
+            <span className={styles.scrapeProgressPct}>
+              {scrapePhase.progressPct}% ·{" "}
+              {formatElapsed(scrapePhase.startedAt)}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* === Quota error card (chunk 8.2) === */}
+      {quotaError && (
+        <div className={styles.quotaErrorCard}>
+          <p className={styles.quotaErrorEyebrow}>Limit reached</p>
+          <h2 className={styles.quotaErrorTitle}>
+            {quotaError.reason === "DAILY_LIMIT"
+              ? "Daily market limit reached"
+              : "Monthly market limit reached"}
+          </h2>
+          <p className={styles.quotaErrorDesc}>
+            You&apos;ve scraped {quotaError.dailyUsed} of{" "}
+            {quotaError.dailyLimit} new markets today and{" "}
+            {quotaError.monthlyUsed} of {quotaError.monthlyLimit} this month.
+            {quotaError.reason === "DAILY_LIMIT"
+              ? " Your daily limit resets at midnight."
+              : " Your monthly limit resets on the 1st of next month."}
+          </p>
+          <p className={styles.quotaErrorHint}>
+            Markets you&apos;ve already scraped keep working with no extra cost
+            — only NEW markets count against your limit. Try one of those
+            instead, or wait for your limit to reset.
+          </p>
+        </div>
+      )}
+
+      {/* === Results table === */}
+      {showResultsSection && (
+        <>
+          <div className={styles.filtersBar}>
+            <div className={styles.filtersBarLeft}>
+              <span className={styles.filtersBarCount}>
+                {results.length} result{results.length === 1 ? "" : "s"}
               </span>
-            )}
-          </div>
-
-          <div className={styles.filtersBarRight}>
-            <div className={styles.filterControl}>
-              <label htmlFor='sortBy' className={styles.filterControlLabel}>
-                Sort
-              </label>
-              <select
-                id='sortBy'
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className={styles.filterControlSelect}
-                disabled={loading}
-              >
-                {SORT_OPTIONS.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
+              {totalPages > 1 && (
+                <span className={styles.filtersBarPages}>
+                  Page {currentPage} of {totalPages}
+                </span>
+              )}
             </div>
 
-            <div className={styles.filterControl}>
-              <label className={styles.filterControlLabel}>Fresh only</label>
-              <button
-                type='button'
-                onClick={() => setFreshOnly(!freshOnly)}
-                disabled
-                className={`${styles.filterControlToggle} ${
-                  freshOnly ? styles.filterControlToggleOn : ""
-                }`}
-                title='Coming soon'
-              >
-                {freshOnly ? "On" : "Off"}{" "}
-                <span className={styles.soonBadge}>Soon</span>
-              </button>
+            <div className={styles.filtersBarRight}>
+              <div className={styles.filterControl}>
+                <label htmlFor='sortBy' className={styles.filterControlLabel}>
+                  Sort
+                </label>
+                <select
+                  id='sortBy'
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className={styles.filterControlSelect}
+                  disabled={loading}
+                >
+                  {SORT_OPTIONS.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.filterControl}>
+                <label className={styles.filterControlLabel}>Fresh only</label>
+                <button
+                  type='button'
+                  onClick={() => setFreshOnly(!freshOnly)}
+                  disabled
+                  className={`${styles.filterControlToggle} ${
+                    freshOnly ? styles.filterControlToggleOn : ""
+                  }`}
+                  title='Coming soon'
+                >
+                  {freshOnly ? "On" : "Off"}{" "}
+                  <span className={styles.soonBadge}>Soon</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+
+          <PaginationBar />
+
+          <div ref={tableRef} className={rowStyles.tableWrapper}>
+            <div className={rowStyles.tableHeader}>
+              <div className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}>
+                #
+              </div>
+              <div className={`${rowStyles.headerCell} ${rowStyles.colType}`}>
+                Lead Type
+              </div>
+              <div
+                className={`${rowStyles.headerCell} ${rowStyles.colBusiness}`}
+              >
+                Business
+              </div>
+              <div className={`${rowStyles.headerCell} ${rowStyles.colMeta}`}>
+                Rating
+              </div>
+              <div
+                className={`${rowStyles.headerCell} ${rowStyles.colContact}`}
+              >
+                Phone
+              </div>
+              <div className={`${rowStyles.headerCell} ${rowStyles.colSave}`}>
+                Save
+              </div>
+              <div className={`${rowStyles.headerCell} ${rowStyles.colView}`}>
+                View
+              </div>
+            </div>
+
+            {currentPageResults.map((r, i) => {
+              const globalIndex = startIdx + i + 1;
+              const isPending =
+                r.temperature === "cold" && pendingPlaceIds.has(r.placeId);
+              const key =
+                r.temperature === "cold"
+                  ? `cold-${r.placeId}`
+                  : `${r.temperature}-${r.externalId}`;
+              return (
+                <LeadRow
+                  key={key}
+                  result={r}
+                  isPending={isPending}
+                  onSave={() => saveLead(r)}
+                  index={globalIndex}
+                />
+              );
+            })}
+          </div>
+
+          <PaginationBar />
+        </>
       )}
 
-      {/* Top pagination */}
-      {hasResults && <PaginationBar />}
-
-      {/* Results table */}
-      {hasResults && (
-        <div ref={tableRef} className={rowStyles.tableWrapper}>
-          <div className={rowStyles.tableHeader}>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}>
-              #
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colType}`}>
-              Lead Type
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colBusiness}`}>
-              Business
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colMeta}`}>
-              Rating
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colContact}`}>
-              Phone
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colSave}`}>
-              Save
-            </div>
-            <div className={`${rowStyles.headerCell} ${rowStyles.colView}`}>
-              View
-            </div>
-          </div>
-
-          {currentPageResults.map((r, i) => {
-            const globalIndex = startIdx + i + 1;
-            const isPending =
-              r.temperature === "cold" && pendingPlaceIds.has(r.placeId);
-            const key =
-              r.temperature === "cold"
-                ? `cold-${r.placeId}`
-                : `${r.temperature}-${r.externalId}`;
-            return (
-              <LeadRow
-                key={key}
-                result={r}
-                isPending={isPending}
-                onSave={() => saveLead(r)}
-                index={globalIndex}
-              />
-            );
-          })}
-        </div>
-      )}
-
-      {/* Bottom pagination */}
-      {hasResults && <PaginationBar />}
-
-      {/* Empty state */}
-      {!loading && !error && !hasResults && hasSearched && (
+      {showEmptyState && (
         <div className={styles.emptyState}>
           <p className={styles.emptyTitle}>No leads match your filters.</p>
           <p className={styles.emptyHint}>
@@ -713,8 +927,7 @@ export default function LeadSearchForm({
         </div>
       )}
 
-      {/* Initial state */}
-      {!hasSearched && (
+      {showInitialState && (
         <div className={styles.initialHint}>
           <p>
             Pick your filters above and hit Search to find leads in your

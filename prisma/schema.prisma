@@ -108,6 +108,14 @@ enum LeadType {
   COLD
 }
 
+enum ScrapeJobStatus {
+  PENDING
+  SCRAPING
+  ENRICHING
+  COMPLETE
+  FAILED
+}
+
 enum LeadStatus {
   NEW
   CONTACTED
@@ -320,6 +328,8 @@ model ClientProfile {
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   monitoredHotLeadSources MonitoredHotLeadSource[]
+  scrapeJobs              ScrapeJob[]
+  marketScrapeUsage       MarketScrapeUsage[]
 
   @@index([onboardingStage])
 }
@@ -1001,4 +1011,47 @@ model NewBusiness {
 
   @@index([marketCity, marketState])
   @@index([firstDetectedAt])
+}
+
+// =========================
+// LEADS — On-demand scrape infrastructure
+// =========================
+
+model ScrapeJob {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  // Market being scraped
+  marketCity  String
+  marketState String
+  marketKey   String // normalized "city,st" — used for dedup of concurrent jobs
+
+  status      ScrapeJobStatus @default(PENDING)
+  stage       String? // human-readable: "Fetching from Eventbrite"
+  progressPct Int             @default(0)
+
+  eventCount Int? // populated on completion
+  error      String? @db.Text
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([clientProfileId])
+  @@index([marketKey, status]) // for detecting concurrent scrapes
+  @@index([startedAt]) // for cleanup
+}
+
+// Tracks scraped markets per operator for quota enforcement.
+// One row per scrape (not per market) — we count distinct markets in time windows.
+model MarketScrapeUsage {
+  id              String        @id @default(cuid())
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  marketKey String // "atlanta,ga"
+  scrapedAt DateTime @default(now())
+
+  @@index([clientProfileId, scrapedAt])
+  @@index([clientProfileId, marketKey])
 }
