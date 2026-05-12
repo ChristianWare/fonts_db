@@ -214,4 +214,45 @@ export async function fetchPlaceReviews(
   }
 }
 
+/**
+ * Find a single place by text query (typically a business name).
+ * Returns the top match or null. Used by Eventbrite enrichment to look up
+ * venues and organizer businesses.
+ */
+export async function findSinglePlace(opts: {
+  query: string;
+  lat: number;
+  lng: number;
+  radiusMiles?: number;
+}): Promise<PlaceSearchResult | null> {
+  try {
+    const result = await searchPlaces({
+      query: opts.query,
+      lat: opts.lat,
+      lng: opts.lng,
+      radiusMiles: opts.radiusMiles ?? 30,
+      pageSize: 1,
+    });
+    return result.places[0] ?? null;
+  } catch (err) {
+    console.error("[googlePlaces] findSinglePlace failed:", err);
+    return null;
+  }
+}
+
+/**
+ * Extract clean domain from a website URL.
+ * "https://www.example.com/path" → "example.com"
+ */
+export function extractDomain(websiteUrl: string | null): string | null {
+  if (!websiteUrl) return null;
+  try {
+    const url = new URL(websiteUrl);
+    const host = url.hostname.replace(/^www\./, "").toLowerCase();
+    return host.length > 0 ? host : null;
+  } catch {
+    return null;
+  }
+}
+
 export { MILES_TO_METERS };

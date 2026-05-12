@@ -33,10 +33,25 @@ const TEMPERATURES: Array<{
   emoji: string;
   enabled: boolean;
 }> = [
-  { value: "hot", label: "Hot", emoji: "🔥", enabled: false },
+  { value: "hot", label: "Hot", emoji: "🔥", enabled: true },
   { value: "warm", label: "Warm", emoji: "🌡️", enabled: true },
   { value: "cold", label: "Cold", emoji: "🧊", enabled: true },
 ];
+
+const LEAD_TYPE_COPY: Record<Temperature, string[]> = {
+  cold: [
+    "Cold leads are businesses in your service area that fit your ideal customer profile — wedding venues, hotels, corporate offices, country clubs, funeral homes. No specific event signal yet, but they're the right type of organization to be pitching.",
+    "Best for long-term pipeline building. Strategy: introduce yourself, drop a useful resource (rate sheet, hotel-pickup logistics guide), follow up quarterly. These won't convert quickly, but they compound over time as your name becomes familiar.",
+  ],
+  warm: [
+    "Warm leads are events happening 15-90 days out in your market — corporate conferences, weddings, fundraisers, and professional gatherings. Pulled from Eventbrite and enriched with venue contacts, organizer info, and an AI-generated strategic brief.",
+    "The organizer is actively coordinating logistics this month. Transportation is on their mind but no decision has been finalized. Strategy: reference the specific event in your outreach, pitch as the missing piece of guest experience, aim for a 24-48 hour response.",
+  ],
+  hot: [
+    "Hot leads are events happening in the next 14 days. Pulled from Eventbrite and fully enriched — venue contact, organizer profile, decision-maker hypothesis, and outreach scripts ready to send.",
+    "The organizer is finalizing every detail right now — including ground transportation. Speed is everything; first responder usually wins. Strategy: skip the long pitch, send three sentences today, be ready to quote within hours, not days.",
+  ],
+};
 
 const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "distance", label: "Distance" },
@@ -45,17 +60,18 @@ const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v4";
+// Bumped to v6 because state shape changed (Temperature → Temperature | null)
+const STORAGE_KEY = "leadSearch:state:v6";
 
 type StoredState = {
-  selectedTemperatures: Temperature[];
+  selectedTemperature: Temperature | null;
   selectedCategories: string[];
   city: string;
   state: string;
   radius: number;
   sortBy: SortOption;
   freshOnly: boolean;
-  searchedTemperatures: Temperature[];
+  searchedTemperature: Temperature | null;
   searchedCategories: string[];
   results: SearchResult[];
   currentPage: number;
@@ -90,10 +106,9 @@ export default function LeadSearchForm({
   defaultState,
   defaultRadius,
 }: Props) {
-  // Filter state
-  const [selectedTemperatures, setSelectedTemperatures] = useState<
-    Temperature[]
-  >(["cold"]);
+  // Default to null — nothing selected
+  const [selectedTemperature, setSelectedTemperature] =
+    useState<Temperature | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [city, setCity] = useState(defaultCity);
   const [state, setState] = useState(defaultState);
@@ -101,15 +116,12 @@ export default function LeadSearchForm({
   const [sortBy, setSortBy] = useState<SortOption>("distance");
   const [freshOnly, setFreshOnly] = useState(false);
 
-  // Search state
-  const [searchedTemperatures, setSearchedTemperatures] = useState<
-    Temperature[]
-  >([]);
+  const [searchedTemperature, setSearchedTemperature] =
+    useState<Temperature | null>(null);
   const [searchedCategories, setSearchedCategories] = useState<string[]>([]);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingPlaceIds, setPendingPlaceIds] = useState<Set<string>>(
@@ -122,15 +134,15 @@ export default function LeadSearchForm({
 
   useEffect(() => {
     const stored = loadStored();
-    if (stored && stored.searchedCategories.length > 0) {
-      setSelectedTemperatures(stored.selectedTemperatures);
+    if (stored && stored.searchedTemperature) {
+      setSelectedTemperature(stored.selectedTemperature);
       setSelectedCategories(stored.selectedCategories);
       setCity(stored.city);
       setState(stored.state);
       setRadius(stored.radius);
       setSortBy(stored.sortBy ?? "distance");
       setFreshOnly(stored.freshOnly ?? false);
-      setSearchedTemperatures(stored.searchedTemperatures);
+      setSearchedTemperature(stored.searchedTemperature);
       setSearchedCategories(stored.searchedCategories);
       setResults(stored.results ?? []);
       setCurrentPage(stored.currentPage ?? 1);
@@ -141,35 +153,35 @@ export default function LeadSearchForm({
 
   useEffect(() => {
     if (!hydrated.current) return;
-    if (searchedCategories.length === 0) return;
+    if (!hasSearched) return;
     saveStored({
-      selectedTemperatures,
+      selectedTemperature,
       selectedCategories,
       city,
       state,
       radius,
       sortBy,
       freshOnly,
-      searchedTemperatures,
+      searchedTemperature,
       searchedCategories,
       results,
       currentPage,
     });
   }, [
-    selectedTemperatures,
+    selectedTemperature,
     selectedCategories,
     city,
     state,
     radius,
     sortBy,
     freshOnly,
-    searchedTemperatures,
+    searchedTemperature,
     searchedCategories,
     results,
     currentPage,
+    hasSearched,
   ]);
 
-  // Auto-rerun search when sort or freshOnly change (after first search)
   useEffect(() => {
     if (!hydrated.current) return;
     if (!hasSearched) return;
@@ -177,12 +189,24 @@ export default function LeadSearchForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
 
-  function toggleTemperature(t: Temperature) {
+  function pickTemperature(t: Temperature | null) {
+    if (t === null) {
+      setSelectedTemperature(null);
+      setSelectedCategories([]);
+      return;
+    }
     const def = TEMPERATURES.find((x) => x.value === t);
     if (!def?.enabled) return;
-    setSelectedTemperatures((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
-    );
+    // Click selected pill again to deselect (desktop only — mobile uses placeholder option)
+    if (selectedTemperature === t) {
+      setSelectedTemperature(null);
+      setSelectedCategories([]);
+      return;
+    }
+    setSelectedTemperature(t);
+    if (t !== "cold") {
+      setSelectedCategories([]);
+    }
   }
 
   function toggleCategory(c: string) {
@@ -197,6 +221,15 @@ export default function LeadSearchForm({
 
   function clearCategories() {
     setSelectedCategories([]);
+  }
+
+  function handleMobileCategoriesChange(
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) {
+    const selected = Array.from(e.target.selectedOptions).map(
+      (opt) => opt.value,
+    );
+    setSelectedCategories(selected);
   }
 
   function setPending(placeId: string, pending: boolean) {
@@ -224,6 +257,7 @@ export default function LeadSearchForm({
   }
 
   async function executeSearch() {
+    if (!selectedTemperature) return;
     setLoading(true);
     setError(null);
     try {
@@ -232,7 +266,7 @@ export default function LeadSearchForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           categories: selectedCategories,
-          temperatures: selectedTemperatures,
+          temperatures: [selectedTemperature],
           cityOverride: city.trim() !== defaultCity ? city.trim() : undefined,
           stateOverride:
             state.trim() !== defaultState
@@ -267,25 +301,21 @@ export default function LeadSearchForm({
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (selectedTemperatures.length === 0) {
-      setError("Pick at least one lead type.");
+    if (!selectedTemperature) {
+      setError("Pick a lead type to search.");
       return;
     }
-    if (
-      selectedTemperatures.includes("cold") &&
-      selectedCategories.length === 0
-    ) {
+    if (selectedTemperature === "cold" && selectedCategories.length === 0) {
       setError("Pick at least one category for cold leads.");
       return;
     }
 
-    setSearchedTemperatures([...selectedTemperatures]);
+    setSearchedTemperature(selectedTemperature);
     setSearchedCategories([...selectedCategories]);
     setHasSearched(true);
     executeSearch();
   }
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(results.length / RESULTS_PER_PAGE));
   const startIdx = (currentPage - 1) * RESULTS_PER_PAGE;
   const endIdx = startIdx + RESULTS_PER_PAGE;
@@ -338,11 +368,10 @@ export default function LeadSearchForm({
   }
 
   const hasResults = results.length > 0;
- const canSearch =
-   selectedTemperatures.length > 0 &&
-   (!selectedTemperatures.includes("cold") || selectedCategories.length > 0);
+  const canSearch =
+    selectedTemperature !== null &&
+    (selectedTemperature !== "cold" || selectedCategories.length > 0);
 
-  // Reusable pagination bar
   function PaginationBar() {
     if (totalPages <= 1) return null;
     return (
@@ -383,20 +412,21 @@ export default function LeadSearchForm({
   return (
     <div className={styles.body}>
       <form onSubmit={handleSearch} className={styles.searchCard}>
-        {/* Lead Type / Temperature */}
+        {/* Lead Type — single-select, no default */}
         <div className={styles.field}>
           <div className={styles.labelRow}>
-            <label className={styles.label}>Lead Type</label>
-            <span className={styles.helperText}>Pick one or more</span>
+            <label className={styles.label}>Select your lead type</label>
           </div>
+
+          {/* Desktop: pill row */}
           <div className={styles.pillRow}>
             {TEMPERATURES.map((t) => {
-              const selected = selectedTemperatures.includes(t.value);
+              const selected = selectedTemperature === t.value;
               return (
                 <button
                   key={t.value}
                   type='button'
-                  onClick={() => toggleTemperature(t.value)}
+                  onClick={() => pickTemperature(t.value)}
                   disabled={!t.enabled}
                   className={`${styles.pill} ${
                     selected ? styles.pillActive : ""
@@ -410,10 +440,44 @@ export default function LeadSearchForm({
               );
             })}
           </div>
+
+          {/* Mobile (≤568px): native dropdown */}
+          <select
+            value={selectedTemperature ?? ""}
+            onChange={(e) => {
+              const v = e.target.value;
+              pickTemperature(v === "" ? null : (v as Temperature));
+            }}
+            className={styles.mobileSelect}
+            aria-label='Lead type'
+          >
+            <option value=''>— Select your lead type —</option>
+            {TEMPERATURES.map((t) => (
+              <option key={t.value} value={t.value} disabled={!t.enabled}>
+                {t.emoji} {t.label}
+                {!t.enabled ? " (Soon)" : ""}
+              </option>
+            ))}
+          </select>
+
+          {/* Color-coded explanation box */}
+          {selectedTemperature && (
+            <div
+              className={`${styles.leadTypeExplanation} ${
+                styles[`leadTypeExplanation_${selectedTemperature}`]
+              }`}
+            >
+              {LEAD_TYPE_COPY[selectedTemperature].map((para, i) => (
+                <p key={i} className={styles.leadTypeExplanationParagraph}>
+                  {para}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Categories — only relevant for cold leads */}
-        {selectedTemperatures.includes("cold") && (
+        {selectedTemperature === "cold" && (
           <div className={styles.field}>
             <div className={styles.labelRow}>
               <label className={styles.label}>Categories</label>
@@ -435,6 +499,7 @@ export default function LeadSearchForm({
                 </button>
               </div>
             </div>
+
             <div className={styles.pillRow}>
               {CATEGORIES.map((c) => {
                 const selected = selectedCategories.includes(c.value);
@@ -452,6 +517,24 @@ export default function LeadSearchForm({
                 );
               })}
             </div>
+
+            <select
+              multiple
+              value={selectedCategories}
+              onChange={handleMobileCategoriesChange}
+              className={styles.mobileMultiSelect}
+              aria-label='Categories'
+              size={CATEGORIES.length}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+            <p className={styles.mobileHint}>
+              Tap to select. Hold to select multiple.
+            </p>
           </div>
         )}
 
@@ -512,7 +595,7 @@ export default function LeadSearchForm({
         {error && <p className={styles.error}>{error}</p>}
       </form>
 
-      {/* Filters bar — only when there are results */}
+      {/* Filters bar */}
       {hasResults && (
         <div className={styles.filtersBar}>
           <div className={styles.filtersBarLeft}>

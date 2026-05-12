@@ -77,6 +77,15 @@ type SerializedEvent = {
   category: string | null;
   aiScore: number | null;
   url: string;
+  // === Enrichment fields (chunk 4) ===
+  isCorporate: boolean;
+  aiCategory: string | null;
+  venuePhone: string | null;
+  venueWebsite: string | null;
+  venueRating: number | null;
+  venueReviewCount: number | null;
+  organizerWebsite: string | null;
+  organizerDomain: string | null;
 };
 
 type RecurringEvent = {
@@ -89,6 +98,8 @@ type SerializedLead = {
   leadId: string;
   leadType: "WARM";
   isDraft: boolean;
+  isHot: boolean;
+  daysUntilEvent: number;
   status: LeadStatus;
   notes: string | null;
   snoozeUntil: string | null;
@@ -131,6 +142,16 @@ const FORMAT_LABELS: Record<ScriptFormat, string> = {
   CALL: "Cold call opener",
   LINKEDIN: "LinkedIn DM",
   SMS: "SMS",
+};
+
+const AI_CATEGORY_LABELS: Record<string, string> = {
+  corporate: "Corporate",
+  wedding: "Wedding",
+  fundraiser: "Fundraiser",
+  social: "Social",
+  professional: "Professional",
+  performing_arts: "Performing Arts",
+  other: "Other",
 };
 
 const DESCRIPTION_TRUNCATE_THRESHOLD = 500;
@@ -186,6 +207,51 @@ function formatDriveTime(seconds: number): string {
   return remainder > 0 ? `${hours}h ${remainder}m` : `${hours}h`;
 }
 
+function urgencyMessage(days: number): {
+  headline: string;
+  subtext: string;
+  intensity: "today" | "critical" | "urgent" | "hot";
+} {
+  if (days === 0) {
+    return {
+      headline: "Event is TODAY",
+      subtext:
+        "If you haven't pitched, call the venue or organizer directly. They may still need last-minute VIP rides or late-night returns.",
+      intensity: "today",
+    };
+  }
+  if (days <= 3) {
+    return {
+      headline: `${days} day${days === 1 ? "" : "s"} away — respond immediately`,
+      subtext:
+        "Most organizers finalize last-minute logistics within 72 hours. Speed wins this lead — be the first they hear from today.",
+      intensity: "critical",
+    };
+  }
+  if (days <= 7) {
+    return {
+      headline: `${days} days away — urgent`,
+      subtext:
+        "The organizer is finalizing transport this week. First responder typically wins this kind of deal.",
+      intensity: "urgent",
+    };
+  }
+  return {
+    headline: `${days} days away — hot lead`,
+    subtext:
+      "Many event organizers book ground transportation 7-14 days out. Reach out today for the best response rate.",
+    intensity: "hot",
+  };
+}
+
+function formatPhoneForTel(phone: string): string {
+  return phone.replace(/[^\d+]/g, "");
+}
+
+function cleanUrlForDisplay(url: string): string {
+  return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+}
+
 export default function EventDetailClient({
   lead: initialLead,
   outreachAttempts,
@@ -199,7 +265,7 @@ export default function EventDetailClient({
     setLead(initialLead);
   }, [initialLead]);
 
-  // AI generation flags — start true for missing content so skeletons render
+  // AI generation flags
   const [generatingBrief, setGeneratingBrief] = useState(!lead.strategicBrief);
   const [generatingDM, setGeneratingDM] = useState(!lead.decisionMaker);
   const [generatingScripts, setGeneratingScripts] = useState(false);
@@ -217,7 +283,6 @@ export default function EventDetailClient({
   const [driveTime, setDriveTime] = useState<{ seconds: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Guard against double-firing AI generation
   const aiKickedOff = useRef(false);
 
   const event = lead.event;
@@ -234,6 +299,15 @@ export default function EventDetailClient({
     : showFullDescription || !descriptionTruncated
       ? event.description
       : `${event.description.slice(0, DESCRIPTION_TRUNCATE_THRESHOLD).trimEnd()}…`;
+
+  // Whether to render the venue contact card
+  const hasVenueContact =
+    event.venuePhone ||
+    event.venueWebsite ||
+    event.venueRating != null;
+
+  // Whether to render the organizer business card
+  const hasOrganizerBusiness = event.organizerWebsite || event.organizerDomain;
 
   // Drive time fetch
   useEffect(() => {
@@ -265,14 +339,13 @@ export default function EventDetailClient({
     };
   }, [lead.primaryLat, lead.primaryLng, event.venueLat, event.venueLng]);
 
-  // Auto-fire AI generation on mount for missing sections
+  // Auto-fire AI generation on mount
   useEffect(() => {
     if (aiKickedOff.current) return;
     aiKickedOff.current = true;
 
     if (!lead.strategicBrief) generateAi("strategic-brief", "brief");
     if (!lead.decisionMaker) generateAi("decision-maker", "dm");
-    // Apollo + scripts only run on saved leads
     if (
       !lead.isDraft &&
       (!lead.apolloEnrichment || lead.apolloEnrichment.enabled === false)
@@ -285,7 +358,7 @@ export default function EventDetailClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Watch effects to clear loading flags once content arrives
+  // Watch effects to clear loading flags
   useEffect(() => {
     if (lead.strategicBrief) setGeneratingBrief(false);
   }, [lead.strategicBrief]);
@@ -356,7 +429,6 @@ export default function EventDetailClient({
       const ok = await patchLead({ isDraft: false });
       if (ok) {
         setLead((prev) => ({ ...prev, isDraft: false }));
-        // Kick off gated AI calls now that we're saved
         generateAi("generate-scripts", "scripts", true);
         generateAi("apollo-enrich", "apollo");
       }
@@ -413,9 +485,36 @@ export default function EventDetailClient({
     ? `mailto:?subject=${encodeURIComponent(emailScript.subject ?? "")}&body=${encodeURIComponent(emailScript.body)}`
     : null;
 
+  const urgency = lead.isHot ? urgencyMessage(lead.daysUntilEvent) : null;
+
   return (
     <div className={detailStyles.layout}>
       <div className={detailStyles.body}>
+        {/* === HOT URGENT BANNER (chunk 5) === */}
+        {urgency && (
+          <div
+            className={`${styles.urgentBanner} ${styles[`urgent_${urgency.intensity}`]}`}
+          >
+            <div className={styles.urgentBannerLeft}>
+              <span className={styles.urgentBannerIcon}>🔥</span>
+              <div>
+                <p className={styles.urgentBannerHeadline}>
+                  {urgency.headline}
+                </p>
+                <p className={styles.urgentBannerSubtext}>{urgency.subtext}</p>
+              </div>
+            </div>
+            <a
+              href={event.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.urgentBannerCta}
+            >
+              View on Eventbrite ↗
+            </a>
+          </div>
+        )}
+
         <LeadSourceBar
           leadType='WARM'
           category={event.category ?? "Event"}
@@ -427,18 +526,27 @@ export default function EventDetailClient({
 
         {/* HERO */}
         <section className={styles.hero}>
-          {!lead.isDraft && (
-            <p className={styles.eyebrow}>
+          <div className={styles.eyebrowRow}>
+            {!lead.isDraft && (
               <span
                 className={`${detailStyles.statusBadge} ${detailStyles[`status_${lead.status}`]}`}
               >
                 {lead.status}
               </span>
-            </p>
-          )}
-          {lead.isDraft && (
-            <p className={styles.eyebrow}>Preview · not yet saved</p>
-          )}
+            )}
+            {lead.isDraft && (
+              <span className={styles.eyebrowDraft}>
+                Preview · not yet saved
+              </span>
+            )}
+            {event.aiCategory && (
+              <span
+                className={`${styles.aiCategoryChip} ${event.isCorporate ? styles.aiCategoryChipCorporate : ""}`}
+              >
+                {AI_CATEGORY_LABELS[event.aiCategory] ?? event.aiCategory}
+              </span>
+            )}
+          </div>
 
           {event.imageUrl && (
             <div className={styles.heroImageWrap}>
@@ -461,7 +569,9 @@ export default function EventDetailClient({
             <span className={styles.heroDateTime}>
               · {formatTime(event.eventDateIso)}
             </span>
-            <span className={styles.heroCountdown}>
+            <span
+              className={`${styles.heroCountdown} ${lead.isHot ? styles.heroCountdownHot : ""}`}
+            >
               {days === 0
                 ? "Today"
                 : days === 1
@@ -670,7 +780,11 @@ export default function EventDetailClient({
             </div>
             <div className={styles.factCell}>
               <p className={styles.factLabel}>Category</p>
-              <p className={styles.factValue}>{event.category ?? "Event"}</p>
+              <p className={styles.factValue}>
+                {event.aiCategory
+                  ? (AI_CATEGORY_LABELS[event.aiCategory] ?? event.aiCategory)
+                  : (event.category ?? "Event")}
+              </p>
             </div>
             {event.aiScore != null && (
               <div className={styles.factCell}>
@@ -680,6 +794,55 @@ export default function EventDetailClient({
             )}
           </div>
         </section>
+
+        {/* === VENUE CONTACT CARD (chunk 5) === */}
+        {hasVenueContact && (
+          <section className={styles.enrichmentCard}>
+            <div className={styles.enrichmentHeader}>
+              <h2 className={styles.enrichmentTitle}>Venue contact</h2>
+              <span className={styles.enrichmentBadge}>via Google Places</span>
+            </div>
+            {event.venueName && (
+              <p className={styles.enrichmentSubject}>{event.venueName}</p>
+            )}
+            {event.venueRating != null && (
+              <p className={styles.enrichmentRating}>
+                <span className={styles.enrichmentStars}>★</span>
+                {event.venueRating.toFixed(1)}
+                {event.venueReviewCount != null && (
+                  <span className={styles.enrichmentReviews}>
+                    {" "}({event.venueReviewCount.toLocaleString()} reviews)
+                  </span>
+                )}
+              </p>
+            )}
+            <div className={styles.enrichmentLinks}>
+              {event.venuePhone && (
+                <a
+                  href={`tel:${formatPhoneForTel(event.venuePhone)}`}
+                  className={styles.enrichmentLink}
+                >
+                  📞 {event.venuePhone}
+                </a>
+              )}
+              {event.venueWebsite && (
+                <a
+                  href={event.venueWebsite}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={styles.enrichmentLink}
+                >
+                  🌐 {cleanUrlForDisplay(event.venueWebsite)}
+                </a>
+              )}
+            </div>
+            <p className={styles.enrichmentTip}>
+              💡 You can pitch the venue&apos;s event coordinator directly — they
+              often have their own transport-partner relationships separate
+              from the organizer.
+            </p>
+          </section>
+        )}
 
         {/* WHO TO CONTACT */}
         <section className={detailStyles.section}>
@@ -835,6 +998,44 @@ export default function EventDetailClient({
             </div>
           )}
         </section>
+
+        {/* === ORGANIZER BUSINESS CARD (chunk 5) === */}
+        {hasOrganizerBusiness && (
+          <section className={styles.enrichmentCard}>
+            <div className={styles.enrichmentHeader}>
+              <h2 className={styles.enrichmentTitle}>
+                Organizer business profile
+              </h2>
+              <span className={styles.enrichmentBadge}>via Google Places</span>
+            </div>
+            {event.organizerName && (
+              <p className={styles.enrichmentSubject}>{event.organizerName}</p>
+            )}
+            <p className={styles.enrichmentDesc}>
+              This organizer has a verified business profile. Use it to
+              research them before reaching out.
+            </p>
+            <div className={styles.enrichmentLinks}>
+              {event.organizerWebsite && (
+                <a
+                  href={event.organizerWebsite}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={styles.enrichmentLink}
+                >
+                  🌐 {cleanUrlForDisplay(event.organizerWebsite)}
+                </a>
+              )}
+              {event.organizerDomain &&
+                event.organizerDomain !==
+                  cleanUrlForDisplay(event.organizerWebsite ?? "") && (
+                  <span className={styles.enrichmentLinkPlain}>
+                    Domain: <strong>{event.organizerDomain}</strong>
+                  </span>
+                )}
+            </div>
+          </section>
+        )}
 
         {/* RECURRING ORGANIZER */}
         {lead.recurringEvents.length > 0 && (

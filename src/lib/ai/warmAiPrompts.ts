@@ -9,6 +9,14 @@ export type WarmEventSignalData = {
   expectedAttendance: number | null;
   organizerName: string | null;
   category: string | null;
+  // === New enrichment fields (chunk 4) ===
+  isCorporate?: boolean;
+  aiCategory?: string | null;
+  venuePhone?: string | null;
+  venueWebsite?: string | null;
+  venueRating?: number | null;
+  organizerWebsite?: string | null;
+  organizerDomain?: string | null;
 };
 
 export function parseWarmSignalData(json: unknown): WarmEventSignalData | null {
@@ -35,6 +43,21 @@ export function parseWarmSignalData(json: unknown): WarmEventSignalData | null {
     organizerName:
       typeof obj.organizerName === "string" ? obj.organizerName : null,
     category: typeof obj.category === "string" ? obj.category : null,
+    // New fields (all optional — older saved leads won't have these)
+    isCorporate:
+      typeof obj.isCorporate === "boolean" ? obj.isCorporate : undefined,
+    aiCategory: typeof obj.aiCategory === "string" ? obj.aiCategory : undefined,
+    venuePhone: typeof obj.venuePhone === "string" ? obj.venuePhone : undefined,
+    venueWebsite:
+      typeof obj.venueWebsite === "string" ? obj.venueWebsite : undefined,
+    venueRating:
+      typeof obj.venueRating === "number" ? obj.venueRating : undefined,
+    organizerWebsite:
+      typeof obj.organizerWebsite === "string"
+        ? obj.organizerWebsite
+        : undefined,
+    organizerDomain:
+      typeof obj.organizerDomain === "string" ? obj.organizerDomain : undefined,
   };
 }
 
@@ -78,7 +101,7 @@ export function buildEventContextBlock(event: WarmEventSignalData): string {
         ? "today"
         : `${days} days from today`;
 
-  return [
+  const lines: string[] = [
     `Event: ${event.eventName}`,
     `Date: ${eventDateLong} (${daysStr})`,
     `Venue: ${event.venueName ?? "Unknown"}`,
@@ -87,7 +110,27 @@ export function buildEventContextBlock(event: WarmEventSignalData): string {
     `Category: ${event.category ?? "Event"}`,
     `Ticket price: ${formatPriceRange(event.ticketPriceMin, event.ticketPriceMax)}`,
     `Expected attendance: ${event.expectedAttendance ?? "Unknown"}`,
-  ].join("\n");
+  ];
+
+  // Enrichment fields (only included when present)
+  if (event.aiCategory) {
+    lines.push(
+      `AI category: ${event.aiCategory}${event.isCorporate ? " (CORPORATE)" : ""}`,
+    );
+  }
+  if (event.venuePhone) lines.push(`Venue phone: ${event.venuePhone}`);
+  if (event.venueWebsite) lines.push(`Venue website: ${event.venueWebsite}`);
+  if (event.venueRating != null) {
+    lines.push(`Venue rating: ${event.venueRating}★`);
+  }
+  if (event.organizerWebsite) {
+    lines.push(`Organizer website: ${event.organizerWebsite}`);
+  }
+  if (event.organizerDomain) {
+    lines.push(`Organizer domain: ${event.organizerDomain}`);
+  }
+
+  return lines.join("\n");
 }
 
 // =============================================================================
@@ -104,11 +147,15 @@ Write a 180-220 word strategic memo on how to approach this event. The memo shou
 - Note timing — galas/conferences typically book transport 30-90 days out, smaller corporate events 14-45 days out
 - Flag whether the operator should pitch the organizer directly or the venue, given the event characteristics
 
+TONE: If the AI category indicates this is a CORPORATE event, use a B2B operational tone — talk about priority dispatch, monthly invoicing, dedicated account management, executive-level service. If wedding/social/fundraiser, use a warmer event-experience tone — talk about guest experience, VIP feel, on-time guarantees. The signal block tells you which.
+
 Use 2-3 short paragraphs, separated by blank lines. Avoid bullet points and headers. Write like a smart consultant briefing a friend over coffee — confident but not arrogant. No markdown formatting, no preamble. Just the brief.`;
 
 export const DECISION_MAKER_SYSTEM = `You are a B2B sales strategist. Given an upcoming event and its organizer, identify the right people to contact when pitching luxury chauffeur and corporate transportation services.
 
 For events, the right contact is almost always within the ORGANIZER's organization — not the venue. Common titles depending on org size and event scale: Events Manager, Director of Events, Sponsorship Manager, Operations Manager, Chief of Staff, Logistics Coordinator, Event Production Manager, Conference Director, Director of Programming.
+
+IF the event is flagged CORPORATE in the data block (B2B summit, conference, corporate awards, networking), the primary contact may instead be Executive Assistant, Office Manager, or Travel Manager — the people who book ongoing corporate transport, not just event-day services.
 
 Output a JSON object with this exact shape — no markdown, no preamble, just the object:
 
@@ -158,6 +205,8 @@ Each script must:
 - Be brief and conversational — sound like the operator wrote it themselves, not a corporate template
 - Include a clear call to action
 - Be professional but warm — these are humans booking transport, not buyers
+
+TONE RULE: If the event is flagged CORPORATE in the data block (B2B summit, conference, networking event), shift tone to operational B2B — mention priority dispatch, monthly invoicing, account management, executive terminal pickup. Less "your event will be amazing", more "we'll solve your logistics problem." For weddings/fundraisers/social, keep the warmer event-experience tone.
 
 Specific format requirements:
 - email.subject: under 60 characters, intriguing not spammy

@@ -895,6 +895,28 @@ model EventbriteEvent {
   aiScore   Int?
   fetchedAt DateTime @default(now())
 
+  // === ENRICHMENT FIELDS (chunk 4) ===
+
+  // Venue enrichment (Google Places)
+  venuePhone         String?
+  venueWebsite       String?
+  venueGooglePlaceId String?
+  venueRating        Float?
+  venueReviewCount   Int?
+
+  // Organizer enrichment (Google Places)
+  organizerWebsite       String?
+  organizerDomain        String?
+  organizerGooglePlaceId String?
+
+  // AI categorization
+  isCorporate Boolean @default(false)
+  aiCategory  String? // "corporate" | "wedding" | "fundraiser" | "social" | "professional" | "performing_arts" | "other"
+
+  // Enrichment lifecycle
+  enrichedAt        DateTime?
+  enrichmentVersion Int       @default(1)
+
   @@index([marketCity, marketState])
   @@index([eventDate])
 }

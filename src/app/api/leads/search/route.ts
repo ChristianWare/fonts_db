@@ -21,6 +21,7 @@ type Body = {
 
 const MAX_PAGES_PER_CATEGORY = 2;
 const PAGE_TOKEN_DELAY_MS = 2000;
+const HOT_DAYS_OUT_MAX = 14;
 const WARM_DAYS_OUT_MIN = 15;
 const WARM_DAYS_OUT_MAX = 90;
 
@@ -86,15 +87,16 @@ export async function POST(req: NextRequest) {
     ? body.temperatures
     : ["cold"];
 
-  const includeCold = temperatures.includes("cold");
+  const includeHot = temperatures.includes("hot");
   const includeWarm = temperatures.includes("warm");
+  const includeCold = temperatures.includes("cold");
 
-  if (!includeCold && !includeWarm) {
+  if (!includeHot && !includeWarm && !includeCold) {
     return NextResponse.json({
       results: [],
       center: null,
       radiusMiles: null,
-      message: "Hot leads coming soon. Pick Warm or Cold to see results.",
+      message: "Pick at least one lead type.",
     });
   }
 
@@ -105,7 +107,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Resolve location (city/state strings + lat/lng for cold)
+  // Resolve location
   let searchCity: string | null = null;
   let searchState: string | null = null;
   let lat: number | null = null;
@@ -168,6 +170,164 @@ export async function POST(req: NextRequest) {
       lng = settings.primaryLng;
     }
     radiusMiles = body.radiusMilesOverride ?? settings.serviceRadiusMiles ?? 50;
+  }
+
+  // ===== HOT SEARCH (chunk 6) =====
+  // Events 0-14 days out from operator's market.
+  let hotResults: unknown[] = [];
+
+  if (includeHot && searchCity && searchState) {
+    try {
+      const today = new Date();
+      const endOfHotWindow = new Date(
+        today.getTime() + HOT_DAYS_OUT_MAX * 86_400_000,
+      );
+
+      const events = await db.eventbriteEvent.findMany({
+        where: {
+          marketCity: { equals: searchCity, mode: "insensitive" },
+          marketState: {
+            equals: searchState.toUpperCase(),
+            mode: "insensitive",
+          },
+          eventDate: { gte: today, lte: endOfHotWindow },
+        },
+        orderBy: [{ aiScore: "desc" }, { eventDate: "asc" }],
+      });
+
+      const eventUrls = events.map(
+        (e) => `https://www.eventbrite.com/e/${e.eventbriteId}`,
+      );
+
+      const matchingSavedHot = eventUrls.length
+        ? await db.savedLead.findMany({
+            where: {
+              clientProfileId: profile.id,
+              source: "eventbrite",
+              sourceUrl: { in: eventUrls },
+              isDraft: false,
+            },
+            select: { id: true, sourceUrl: true, isFavorite: true },
+          })
+        : [];
+
+      const savedHotMap = new Map(
+        matchingSavedHot.map((s) => [
+          s.sourceUrl ?? "",
+          { id: s.id, isFavorite: s.isFavorite },
+        ]),
+      );
+
+      hotResults = events.map((e) => {
+        const url = `https://www.eventbrite.com/e/${e.eventbriteId}`;
+        const saved = savedHotMap.get(url);
+        const savedState = !saved
+          ? "none"
+          : saved.isFavorite
+            ? "favorite"
+            : "pipeline";
+        return {
+          temperature: "hot" as const,
+          source: "eventbrite" as const,
+          externalId: e.eventbriteId,
+          eventName: e.eventName,
+          eventDateIso: e.eventDate.toISOString(),
+          venue: e.venueName,
+          attendeeCount: e.expectedAttendance,
+          organizerName: e.organizerName,
+          organizerEmail: e.organizerEmail,
+          organizerPhone: e.organizerPhone,
+          url,
+          category: e.category ?? "Event",
+          isCorporate: e.isCorporate,
+          aiCategory: e.aiCategory,
+          savedState,
+          savedLeadId: saved?.id ?? null,
+        };
+      });
+    } catch (err) {
+      console.error("Hot search failed", err);
+    }
+  }
+
+  // ===== WARM SEARCH =====
+  let warmResults: unknown[] = [];
+
+  if (includeWarm && searchCity && searchState) {
+    try {
+      const today = new Date();
+      const startOfWindow = new Date(
+        today.getTime() + WARM_DAYS_OUT_MIN * 86_400_000,
+      );
+      const endOfWindow = new Date(
+        today.getTime() + WARM_DAYS_OUT_MAX * 86_400_000,
+      );
+
+      const events = await db.eventbriteEvent.findMany({
+        where: {
+          marketCity: { equals: searchCity, mode: "insensitive" },
+          marketState: {
+            equals: searchState.toUpperCase(),
+            mode: "insensitive",
+          },
+          eventDate: { gte: startOfWindow, lte: endOfWindow },
+        },
+        orderBy: [{ aiScore: "desc" }, { eventDate: "asc" }],
+      });
+
+      const eventUrls = events.map(
+        (e) => `https://www.eventbrite.com/e/${e.eventbriteId}`,
+      );
+
+      const matchingSavedWarm = eventUrls.length
+        ? await db.savedLead.findMany({
+            where: {
+              clientProfileId: profile.id,
+              source: "eventbrite",
+              sourceUrl: { in: eventUrls },
+              isDraft: false,
+            },
+            select: { id: true, sourceUrl: true, isFavorite: true },
+          })
+        : [];
+
+      const savedWarmMap = new Map(
+        matchingSavedWarm.map((s) => [
+          s.sourceUrl ?? "",
+          { id: s.id, isFavorite: s.isFavorite },
+        ]),
+      );
+
+      warmResults = events.map((e) => {
+        const url = `https://www.eventbrite.com/e/${e.eventbriteId}`;
+        const saved = savedWarmMap.get(url);
+        const savedState = !saved
+          ? "none"
+          : saved.isFavorite
+            ? "favorite"
+            : "pipeline";
+        return {
+          temperature: "warm" as const,
+          source: "eventbrite" as const,
+          externalId: e.eventbriteId,
+          eventName: e.eventName,
+          eventDateIso: e.eventDate.toISOString(),
+          venue: e.venueName,
+          attendeeCount: e.expectedAttendance,
+          organizerName: e.organizerName,
+          organizerEmail: e.organizerEmail,
+          organizerPhone: e.organizerPhone,
+          url,
+          category: e.category ?? "Event",
+          isCorporate: e.isCorporate,
+          aiCategory: e.aiCategory,
+          savedState,
+          savedLeadId: saved?.id ?? null,
+        };
+      });
+    } catch (err) {
+      console.error("Warm search failed", err);
+    }
   }
 
   // ===== COLD SEARCH =====
@@ -247,86 +407,8 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ===== WARM SEARCH =====
-  let warmResults: unknown[] = [];
-
-  if (includeWarm && searchCity && searchState) {
-    try {
-      const today = new Date();
-      const startOfWindow = new Date(
-        today.getTime() + WARM_DAYS_OUT_MIN * 86_400_000,
-      );
-      const endOfWindow = new Date(
-        today.getTime() + WARM_DAYS_OUT_MAX * 86_400_000,
-      );
-
-      const events = await db.eventbriteEvent.findMany({
-        where: {
-          marketCity: { equals: searchCity, mode: "insensitive" },
-          marketState: {
-            equals: searchState.toUpperCase(),
-            mode: "insensitive",
-          },
-          eventDate: { gte: startOfWindow, lte: endOfWindow },
-        },
-        orderBy: [{ aiScore: "desc" }, { eventDate: "asc" }],
-      });
-
-      const eventUrls = events.map(
-        (e) => `https://www.eventbrite.com/e/${e.eventbriteId}`,
-      );
-
-      const matchingSavedWarm = eventUrls.length
-        ? await db.savedLead.findMany({
-            where: {
-              clientProfileId: profile.id,
-              source: "eventbrite",
-              sourceUrl: { in: eventUrls },
-              isDraft: false,
-            },
-            select: { id: true, sourceUrl: true, isFavorite: true },
-          })
-        : [];
-
-      const savedWarmMap = new Map(
-        matchingSavedWarm.map((s) => [
-          s.sourceUrl ?? "",
-          { id: s.id, isFavorite: s.isFavorite },
-        ]),
-      );
-
-      warmResults = events.map((e) => {
-        const url = `https://www.eventbrite.com/e/${e.eventbriteId}`;
-        const saved = savedWarmMap.get(url);
-        const savedState = !saved
-          ? "none"
-          : saved.isFavorite
-            ? "favorite"
-            : "pipeline";
-        return {
-          temperature: "warm" as const,
-          source: "eventbrite" as const,
-          externalId: e.eventbriteId,
-          eventName: e.eventName,
-          eventDateIso: e.eventDate.toISOString(),
-          venue: e.venueName,
-          attendeeCount: e.expectedAttendance,
-          organizerName: e.organizerName,
-          organizerEmail: e.organizerEmail,
-          organizerPhone: e.organizerPhone,
-          url,
-          category: e.category ?? "Event",
-          savedState,
-          savedLeadId: saved?.id ?? null,
-        };
-      });
-    } catch (err) {
-      console.error("Warm search failed", err);
-    }
-  }
-
-  // Warm first (sorted by aiScore desc), then cold (sorted by user's choice)
-  const results = [...warmResults, ...coldResults];
+  // Hot first, then warm, then cold
+  const results = [...hotResults, ...warmResults, ...coldResults];
 
   return NextResponse.json({
     results,

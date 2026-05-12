@@ -9,6 +9,8 @@ import styles from "./LeadsPage.module.css";
 
 export const dynamic = "force-dynamic";
 
+const HOT_THRESHOLD_DAYS = 14;
+
 export default async function LeadsPage({
   searchParams,
 }: {
@@ -29,7 +31,6 @@ export default async function LeadsPage({
     redirect("/dashboard/enroll/leads");
   }
 
-  // Date boundaries (server time)
   const now = new Date();
   const endOfToday = new Date(
     now.getFullYear(),
@@ -42,19 +43,24 @@ export default async function LeadsPage({
   );
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const fourteenDaysOut = new Date(
+    now.getTime() + HOT_THRESHOLD_DAYS * 24 * 60 * 60 * 1000,
+  );
+
+  // Need settings first to query market-scoped hot events
+  const settings = await db.leadsSettings.findUnique({
+    where: { clientProfileId: profile.id },
+  });
 
   const [
-    settings,
     snoozesDueToday,
     nextActionsDueToday,
     staleNewLeads,
     newThisWeek,
     pipelineGroups,
     wonThisMonth,
+    hotMarketEvents,
   ] = await Promise.all([
-    db.leadsSettings.findUnique({
-      where: { clientProfileId: profile.id },
-    }),
     db.savedLead.findMany({
       where: {
         clientProfileId: profile.id,
@@ -126,9 +132,38 @@ export default async function LeadsPage({
         wonAt: { gte: startOfMonth },
       },
     }),
+    // === HOT IN MARKET (chunk 6) ===
+    // Eventbrite events ≤14 days out, scoped to operator's market.
+    // Shown as urgent opportunities on the daily home.
+    settings?.primaryCity && settings?.primaryState
+      ? db.eventbriteEvent.findMany({
+          where: {
+            marketCity: {
+              equals: settings.primaryCity,
+              mode: "insensitive",
+            },
+            marketState: {
+              equals: settings.primaryState,
+              mode: "insensitive",
+            },
+            eventDate: { gte: now, lte: fourteenDaysOut },
+          },
+          orderBy: [{ aiScore: "desc" }, { eventDate: "asc" }],
+          take: 5,
+          select: {
+            eventbriteId: true,
+            eventName: true,
+            eventDate: true,
+            venueName: true,
+            aiScore: true,
+            isCorporate: true,
+            aiCategory: true,
+            expectedAttendance: true,
+          },
+        })
+      : Promise.resolve([]),
   ]);
 
-  // Only show leads that have a googlePlaceId — the detail route needs it.
   const validSnoozes = snoozesDueToday.filter((l) => l.googlePlaceId);
   const validNextActions = nextActionsDueToday.filter((l) => l.googlePlaceId);
   const validStaleLeads = staleNewLeads.filter((l) => l.googlePlaceId);
@@ -136,7 +171,6 @@ export default async function LeadsPage({
   const onboardingComplete = !!settings?.onboardingCompletedAt;
   const { welcome } = await searchParams;
 
-  // Total saved leads from groupBy (saves a query)
   const savedCount = pipelineGroups.reduce((sum, g) => sum + g._count._all, 0);
 
   const countByStatus = (status: LeadStatus) =>
@@ -147,6 +181,12 @@ export default async function LeadsPage({
 
   const daysSince = (d: Date) =>
     Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+
+  const daysUntil = (d: Date) =>
+    Math.max(
+      0,
+      Math.floor((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+    );
 
   return (
     <div className={styles.page}>
@@ -159,7 +199,6 @@ export default async function LeadsPage({
 
       {onboardingComplete && (
         <div className={styles.body}>
-          {/* Market info bar — unchanged */}
           <section className={styles.marketCard}>
             <div>
               <p className={styles.marketLabel}>Your market</p>
@@ -175,9 +214,60 @@ export default async function LeadsPage({
             </Link>
           </section>
 
+          {/* === HOT IN MARKET (chunk 6) === */}
+          {hotMarketEvents.length > 0 && (
+            <section className={styles.attentionCard}>
+              <div className={styles.sectionHeader}>
+                <p className={styles.sectionEyebrow}>🔥 Hot in your market</p>
+                <h2 className={styles.sectionTitle}>
+                  Events happening in the next 14 days
+                </h2>
+                <span className={styles.attentionCount}>
+                  {hotMarketEvents.length}
+                </span>
+              </div>
+              <div className={styles.attentionLists}>
+                <div className={styles.attentionGroup}>
+                  <p className={styles.attentionGroupLabel}>
+                    Respond now — organizers are finalizing logistics
+                  </p>
+                  <ul className={styles.attentionList}>
+                    {hotMarketEvents.map((e) => {
+                      const days = daysUntil(e.eventDate);
+                      const meta = [
+                        days === 0
+                          ? "Today"
+                          : days === 1
+                            ? "Tomorrow"
+                            : `${days} days away`,
+                        e.venueName,
+                        e.isCorporate ? "Corporate" : null,
+                        e.aiScore != null ? `score ${e.aiScore}` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ");
+                      return (
+                        <li key={e.eventbriteId}>
+                          <Link
+                            href={`/dashboard/leads/hot/${e.eventbriteId}`}
+                            className={styles.attentionItem}
+                          >
+                            <span className={styles.attentionName}>
+                              {e.eventName}
+                            </span>
+                            <span className={styles.attentionMeta}>{meta}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </section>
+          )}
+
           {savedCount > 0 ? (
             <>
-              {/* NEEDS YOUR ATTENTION */}
               <section className={styles.attentionCard}>
                 <div className={styles.sectionHeader}>
                   <p className={styles.sectionEyebrow}>Today</p>
@@ -271,7 +361,6 @@ export default async function LeadsPage({
                 )}
               </section>
 
-              {/* PIPELINE BREAKDOWN */}
               <section className={styles.pipelineCard}>
                 <div className={styles.sectionHeader}>
                   <p className={styles.sectionEyebrow}>Pipeline</p>
@@ -335,7 +424,7 @@ export default async function LeadsPage({
                 </div>
               </section>
 
-              {/* EXPLORE — compact tertiary tiles */}
+              {/* === EXPLORE (chunk 6: Hot + Warm now LIVE) === */}
               <section className={styles.exploreSection}>
                 <div className={styles.sectionHeader}>
                   <p className={styles.sectionEyebrow}>Find more</p>
@@ -347,73 +436,82 @@ export default async function LeadsPage({
                     className={styles.exploreTile}
                   >
                     <span className={styles.exploreBadgeLive}>Live</span>
-                    <h3 className={styles.exploreTitle}>Cold Leads</h3>
-                    <p className={styles.exploreDesc}>
-                      Search businesses that match your ICP.
-                    </p>
-                  </Link>
-                  <div
-                    className={`${styles.exploreTile} ${styles.exploreTileSoon}`}
-                  >
-                    <span className={styles.exploreBadgeSoon}>Soon</span>
                     <h3 className={styles.exploreTitle}>Hot Leads</h3>
                     <p className={styles.exploreDesc}>
-                      Real-time scrapes from FB, Nextdoor, Eventbrite.
+                      Events in your market in the next 14 days. Respond now to
+                      win the booking.
                     </p>
-                  </div>
-                  <div
-                    className={`${styles.exploreTile} ${styles.exploreTileSoon}`}
+                  </Link>
+                  <Link
+                    href='/dashboard/leads/search'
+                    className={styles.exploreTile}
                   >
-                    <span className={styles.exploreBadgeSoon}>Soon</span>
+                    <span className={styles.exploreBadgeLive}>Live</span>
                     <h3 className={styles.exploreTitle}>Warm Leads</h3>
                     <p className={styles.exploreDesc}>
-                      Signal-based opportunities in your market.
+                      Events 2-12 weeks out — organizers still finalizing
+                      transportation.
                     </p>
-                  </div>
+                  </Link>
+                  <Link
+                    href='/dashboard/leads/search'
+                    className={styles.exploreTile}
+                  >
+                    <span className={styles.exploreBadgeLive}>Live</span>
+                    <h3 className={styles.exploreTitle}>Cold Leads</h3>
+                    <p className={styles.exploreDesc}>
+                      Venues, hotels, corporate offices that match your ICP.
+                    </p>
+                  </Link>
                 </div>
               </section>
             </>
           ) : (
             <>
-              {/* First-time empty state — original explainer cards */}
+              {/* First-time empty state — explainer cards. Updated copy. */}
+              <section className={styles.feedCard}>
+                <div className={styles.feedHeader}>
+                  <span className={styles.statusBadgeLive}>Live</span>
+                  <h2 className={styles.feedTitle}>Hot Leads</h2>
+                </div>
+                <p className={styles.feedDesc}>
+                  Events happening in the next 14 days in your market —
+                  organizers are finalizing transportation right now. Respond
+                  today to beat competitors.
+                </p>
+                <Link href='/dashboard/leads/search' className={styles.feedCta}>
+                  See hot leads →
+                </Link>
+              </section>
+
+              <section className={styles.feedCard}>
+                <div className={styles.feedHeader}>
+                  <span className={styles.statusBadgeLive}>Live</span>
+                  <h2 className={styles.feedTitle}>Warm Leads</h2>
+                </div>
+                <p className={styles.feedDesc}>
+                  Events 15-90 days out in your market — pitch organizers before
+                  they finalize transport vendors. Includes full enrichment with
+                  venue and organizer contacts.
+                </p>
+                <Link href='/dashboard/leads/search' className={styles.feedCta}>
+                  See warm leads →
+                </Link>
+              </section>
+
               <section className={styles.feedCard}>
                 <div className={styles.feedHeader}>
                   <span className={styles.statusBadgeLive}>Live</span>
                   <h2 className={styles.feedTitle}>Cold Leads</h2>
                 </div>
                 <p className={styles.feedDesc}>
-                  Search for businesses that match your ideal customer profile —
-                  wedding venues, hotels, law firms, country clubs. Find them by
-                  category and radius, save the ones you want to pursue, and
-                  we&apos;ll generate AI outreach scripts for each.
+                  Search businesses that match your ideal customer profile —
+                  wedding venues, hotels, law firms, country clubs, corporate
+                  offices.
                 </p>
                 <Link href='/dashboard/leads/search' className={styles.feedCta}>
                   Search for leads →
                 </Link>
-              </section>
-
-              <section className={`${styles.feedCard} ${styles.feedCardSoon}`}>
-                <div className={styles.feedHeader}>
-                  <span className={styles.statusBadgeSoon}>Coming soon</span>
-                  <h2 className={styles.feedTitle}>Hot Leads</h2>
-                </div>
-                <p className={styles.feedDesc}>
-                  Real-time leads scraped from Facebook groups, Nextdoor, and
-                  Eventbrite — people in your market actively asking for the
-                  services you provide. SMS alerts the moment one drops.
-                </p>
-              </section>
-
-              <section className={`${styles.feedCard} ${styles.feedCardSoon}`}>
-                <div className={styles.feedHeader}>
-                  <span className={styles.statusBadgeSoon}>Coming soon</span>
-                  <h2 className={styles.feedTitle}>Warm Leads</h2>
-                </div>
-                <p className={styles.feedDesc}>
-                  Signal-based opportunities — new hotels opening in your area,
-                  corporate events being scheduled, venues hiring transportation
-                  coordinators. Surfaced before your competitors notice.
-                </p>
               </section>
             </>
           )}

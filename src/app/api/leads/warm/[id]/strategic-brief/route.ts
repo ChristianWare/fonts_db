@@ -39,9 +39,9 @@ export async function POST(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (lead.leadType !== "WARM") {
+  if (lead.leadType !== "WARM" && lead.leadType !== "HOT") {
     return NextResponse.json(
-      { error: "This route is for warm leads only" },
+      { error: "This route is for event-based leads only" },
       { status: 400 },
     );
   }

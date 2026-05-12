@@ -8,8 +8,8 @@ import {
   daysSinceLastContact,
 } from "@/lib/leadNextMove";
 import { computeOutreachWindow } from "@/lib/warmLeadIntelligence";
-import EventDetailClient from "./EventDetailClient";
-import styles from "./EventDetailPage.module.css";
+import EventDetailClient from "../../warm/[id]/EventDetailClient";
+import styles from "../../warm/[id]/EventDetailPage.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +32,7 @@ function distanceMiles(
   return EARTH_RADIUS_MILES * c;
 }
 
-export default async function WarmLeadPage({
+export default async function HotLeadPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -60,6 +60,24 @@ export default async function WarmLeadPage({
   });
   if (!event) notFound();
 
+  // === Validate hot window (chunk 7) ===
+  const outreachWindow = computeOutreachWindow(
+    event.eventDate.toISOString(),
+    event.category,
+    event.eventName,
+  );
+  const daysUntilEvent = outreachWindow.daysUntilEvent;
+
+  // If event already passed, 404.
+  if (daysUntilEvent < 0) notFound();
+
+  // If event is outside the hot window, redirect to /warm/[id] —
+  // this lead is technically still warm, not urgent. Avoids accidental
+  // visits to the hot route inflating leadType=HOT in the DB for non-urgent events.
+  if (daysUntilEvent > HOT_THRESHOLD_DAYS) {
+    redirect(`/dashboard/leads/warm/${eventbriteId}`);
+  }
+
   let lead = await db.savedLead.findFirst({
     where: {
       clientProfileId: profile.id,
@@ -76,7 +94,11 @@ export default async function WarmLeadPage({
     lead = await db.savedLead.create({
       data: {
         clientProfileId: profile.id,
-        leadType: "WARM",
+        // === Stored as HOT (chunk 7) ===
+        // Existing leads keep whatever leadType they were saved as
+        // (findFirst above doesn't filter on leadType, so warm leads
+        // saved earlier still load here when they enter the hot window).
+        leadType: "HOT",
         source: "eventbrite",
         category: event.category ?? "Event",
         businessName: event.organizerName,
@@ -96,7 +118,6 @@ export default async function WarmLeadPage({
           expectedAttendance: event.expectedAttendance,
           organizerName: event.organizerName,
           category: event.category,
-          // === Enrichment fields (chunk 4) ===
           isCorporate: event.isCorporate,
           aiCategory: event.aiCategory,
           venuePhone: event.venuePhone,
@@ -161,18 +182,7 @@ export default async function WarmLeadPage({
     }));
   }
 
-  const outreachWindow = computeOutreachWindow(
-    event.eventDate.toISOString(),
-    event.category,
-    event.eventName,
-  );
-
-  // === Hot mode detection (chunk 5) ===
-  // === Hot mode detection (chunk 5) ===
-  const daysUntilEvent = outreachWindow.daysUntilEvent;
-  const isHot = daysUntilEvent >= 0 && daysUntilEvent <= HOT_THRESHOLD_DAYS;
-
-  // Parse decision-maker JSON if present
+  // Parse decision-maker JSON
   let decisionMaker: {
     primary: { title: string; why: string };
     secondary: { title: string; why: string };
@@ -188,9 +198,9 @@ export default async function WarmLeadPage({
 
   const serialized = {
     leadId: lead.id,
-    leadType: "WARM" as const,
+    leadType: "WARM" as const, // EventDetailClient expects WARM (shape is identical)
     isDraft: lead.isDraft,
-    isHot,
+    isHot: true, // ALWAYS true on /hot/[id]
     daysUntilEvent,
     status: lead.status,
     notes: lead.notes,
@@ -205,8 +215,6 @@ export default async function WarmLeadPage({
       description: a.description,
       createdAt: a.createdAt.toISOString(),
     })),
-
-    // AI-generated fields
     strategicBrief: lead.strategicBrief,
     decisionMaker,
     apolloEnrichment: lead.apolloEnrichment as
@@ -231,7 +239,6 @@ export default async function WarmLeadPage({
       body: s.body,
       generatedAt: s.generatedAt.toISOString(),
     })),
-
     event: {
       eventbriteId: event.eventbriteId,
       eventName: event.eventName,
@@ -252,7 +259,6 @@ export default async function WarmLeadPage({
       category: event.category,
       aiScore: event.aiScore,
       url: event.eventbriteUrl ?? eventUrl,
-      // === Enrichment fields (chunk 4) ===
       isCorporate: event.isCorporate,
       aiCategory: event.aiCategory,
       venuePhone: event.venuePhone,
