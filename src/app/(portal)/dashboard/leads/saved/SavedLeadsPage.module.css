@@ -38,7 +38,7 @@
   gap: 3rem;
 }
 
-/* ============== NEW: Toolbar ============== */
+/* ============== Toolbar ============== */
 .toolbar {
   display: flex;
   align-items: center;
@@ -98,7 +98,53 @@
   color: var(--accent);
 }
 
-/* ============== NEW: Per-view empty state ============== */
+/* Temperature-tinted active states for the Type filter tabs */
+.toolbarBtnHot,
+.toolbarBtnHot:hover {
+  background-color: #ef4444;
+  color: var(--white);
+}
+
+.toolbarBtnWarm,
+.toolbarBtnWarm:hover {
+  background-color: #f97316;
+  color: var(--white);
+}
+
+.toolbarBtnCold,
+.toolbarBtnCold:hover {
+  background-color: #3b82f6;
+  color: var(--white);
+}
+
+/* Mobile-only native select used in place of toolbarBtnRow */
+.mobileToolbarSelect {
+  display: none;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2rem;
+  border: 1px solid var(--lightGray);
+  background-color: var(--white);
+  color: var(--black);
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 2rem center;
+  background-size: 1.6rem;
+  padding-right: 5rem;
+}
+
+.mobileToolbarSelect:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+/* ============== Per-view empty state ============== */
 .viewEmpty {
   padding: 6rem 4rem;
   border: 1px dashed var(--lightGray);
@@ -395,21 +441,6 @@
   text-decoration: none;
 }
 
-@media screen and (max-width: 768px) {
-  .header,
-  .body {
-    padding: 3rem 2rem;
-  }
-
-  .heading {
-    font-size: 3rem;
-  }
-
-  .card {
-    padding: 3rem 2rem;
-  }
-}
-
 /* Outreach scripts */
 .cardScripts {
   display: flex;
@@ -672,4 +703,41 @@
 .deleteModalContent {
   padding: 2.5rem;
   max-width: 50rem;
+}
+
+@media screen and (max-width: 768px) {
+  .header,
+  .body {
+    padding: 3rem 2rem;
+  }
+
+  .heading {
+    font-size: 3rem;
+  }
+
+  .card {
+    padding: 3rem 2rem;
+  }
+
+  /* Toolbar collapses to stacked dropdowns */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+  }
+
+  .toolbarGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .toolbarBtnRow {
+    display: none;
+  }
+
+  .mobileToolbarSelect {
+    display: block;
+  }
 }

@@ -221,7 +221,7 @@
 }
 
 .dragCell {
-  text-align: center;
+  text-align: right;
   width: 4rem;
   user-select: none;
 }

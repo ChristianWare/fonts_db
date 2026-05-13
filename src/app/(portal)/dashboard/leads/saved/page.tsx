@@ -9,26 +9,6 @@ import styles from "./SavedLeadsPage.module.css";
 
 export const dynamic = "force-dynamic";
 
-type LeadStatus =
-  | "NEW"
-  | "CONTACTED"
-  | "NURTURING"
-  | "SNOOZED"
-  | "WON"
-  | "DEAD";
-
-function buildCounts(leads: { status: LeadStatus }[]) {
-  return {
-    all: leads.length,
-    NEW: leads.filter((l) => l.status === "NEW").length,
-    CONTACTED: leads.filter((l) => l.status === "CONTACTED").length,
-    NURTURING: leads.filter((l) => l.status === "NURTURING").length,
-    SNOOZED: leads.filter((l) => l.status === "SNOOZED").length,
-    WON: leads.filter((l) => l.status === "WON").length,
-    DEAD: leads.filter((l) => l.status === "DEAD").length,
-  };
-}
-
 export default async function SavedLeadsPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -83,8 +63,6 @@ export default async function SavedLeadsPage() {
     };
   });
 
-  const counts = buildCounts(leads);
-
   return (
     <div className={styles.page}>
       <div className={styles.header}>
@@ -105,7 +83,7 @@ export default async function SavedLeadsPage() {
             </Link>
           </div>
         ) : (
-          <SavedLeadsHub leads={leads} counts={counts} />
+          <SavedLeadsHub leads={leads} />
         )}
       </div>
     </div>
