@@ -82,7 +82,7 @@ export default function NotesActivityFeed({ leadId, activities }: Props) {
 
   return (
     <section className={styles.feedSection}>
-      <h2 className={styles.feedTitle}>Activity & Notes</h2>
+      {/* <h2 className={styles.feedTitle}>Activity & Notes</h2> */}
 
       <div className={styles.noteComposer}>
         <textarea

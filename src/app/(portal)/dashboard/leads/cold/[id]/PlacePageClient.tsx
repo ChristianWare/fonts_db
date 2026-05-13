@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
-// import Link from "next/link";
 import previewStyles from "../../preview/[placeId]/PreviewPage.module.css";
 import detailStyles from "../../[id]/LeadDetailPage.module.css";
 import placeStyles from "./PlacePage.module.css";
@@ -241,6 +241,52 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+// === Accordion section wrapper — matches the FAQ pattern ===
+type AccordionSectionProps = {
+  sectionKey: string;
+  title: string;
+  isOpen: boolean;
+  onToggle: (key: string) => void;
+  children: React.ReactNode;
+};
+
+function AccordionSection({
+  sectionKey,
+  title,
+  isOpen,
+  onToggle,
+  children,
+}: AccordionSectionProps) {
+  return (
+    <div className={placeStyles.accordionSection}>
+      <div
+        className={placeStyles.accordionHeader}
+        onClick={() => onToggle(sectionKey)}
+        role='button'
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onToggle(sectionKey);
+          }
+        }}
+      >
+        <h2 className={placeStyles.accordionTitle}>{title}</h2>
+        <div className={placeStyles.accordionArrow}>
+          <Arrow className={isOpen ? placeStyles.iconFlip : placeStyles.icon} />
+        </div>
+      </div>
+      <div
+        className={`${placeStyles.accordionBody} ${
+          isOpen ? placeStyles.accordionBodyOpen : ""
+        }`}
+      >
+        <div className={placeStyles.accordionBodyInner}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function PlacePageClient({
   lead: initialLead,
   nextMove,
@@ -267,18 +313,16 @@ export default function PlacePageClient({
     staticSeconds: number | null;
   } | null>(null);
 
-  // AI generation flags — initialize true for missing content so skeletons show immediately
+  // AI generation flags
   const [generatingBrief, setGeneratingBrief] = useState(!lead.strategicBrief);
   const [generatingReviews, setGeneratingReviews] = useState(
     !lead.reviewIntelligence,
   );
   const [generatingDM, setGeneratingDM] = useState(!lead.decisionMaker);
   const [generatingScripts, setGeneratingScripts] = useState(false);
-
   const [generatingCompetitive, setGeneratingCompetitive] = useState(
     !lead.competitiveAnalysis,
   );
-
   const [generatingApollo, setGeneratingApollo] = useState(
     !lead.apolloEnrichment || lead.apolloEnrichment.enabled === false,
   );
@@ -294,10 +338,15 @@ export default function PlacePageClient({
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Guard against double-firing across StrictMode + re-renders
+  // Accordion state — only one section open at a time, all closed by default
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  function toggleSection(key: string) {
+    setOpenSection((prev) => (prev === key ? null : key));
+  }
+
   const aiKickedOff = useRef(false);
 
-  // Fetch Google Places preview (photos, hours, reviews)
   useEffect(() => {
     if (!lead.googlePlaceId) return;
     let cancelled = false;
@@ -318,7 +367,6 @@ export default function PlacePageClient({
     };
   }, [lead.googlePlaceId]);
 
-  // Fetch drive time
   useEffect(() => {
     if (
       lead.primaryLat == null ||
@@ -351,7 +399,6 @@ export default function PlacePageClient({
     };
   }, [lead.primaryLat, lead.primaryLng, lead.businessLat, lead.businessLng]);
 
-  // Auto-fire AI generation for missing sections
   useEffect(() => {
     if (aiKickedOff.current) return;
     aiKickedOff.current = true;
@@ -369,7 +416,7 @@ export default function PlacePageClient({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // Clear loading flags once content arrives via router.refresh()
+
   useEffect(() => {
     if (lead.strategicBrief) setGeneratingBrief(false);
   }, [lead.strategicBrief]);
@@ -411,22 +458,18 @@ export default function PlacePageClient({
       );
       if (!res.ok) {
         console.error(`${endpoint} failed`, await res.text());
-        setLoading(false); // failure: clear immediately, show retry UI
+        setLoading(false);
         return;
       }
-      // Success: trigger refresh, but DON'T clear loading yet.
-      // The watcher effects below clear it once content actually arrives in props.
       startTransition(() => router.refresh());
     } catch (err) {
-      setLoading(false); // network error: clear immediately
+      setLoading(false);
       console.error(`${endpoint} threw`, err);
     }
   }
 
   useEffect(() => {
-    if (lead.apolloEnrichment) {
-      setGeneratingApollo(false);
-    }
+    if (lead.apolloEnrichment) setGeneratingApollo(false);
   }, [lead.apolloEnrichment]);
 
   async function patchLead(patch: Record<string, unknown>) {
@@ -449,9 +492,7 @@ export default function PlacePageClient({
     try {
       const ok = await patchLead({ isDraft: false });
       if (ok) {
-        // Optimistic local update so sidebar swaps immediately
         setLead((prev) => ({ ...prev, isDraft: false }));
-        // Kick off the gated AI calls now that we're saved
         generateAi("generate-scripts", "scripts", true);
         generateAi("apollo-enrich", "apollo");
       }
@@ -513,6 +554,7 @@ export default function PlacePageClient({
       setSaving(false);
     }
   }
+
   async function copyToClipboard(text: string, scriptId: string) {
     try {
       await navigator.clipboard.writeText(text);
@@ -566,17 +608,14 @@ export default function PlacePageClient({
 
   useEffect(() => {
     if (!lightboxOpen) return;
-
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeLightbox();
       else if (e.key === "ArrowLeft") prevPhoto();
       else if (e.key === "ArrowRight") nextPhoto();
     };
-
     window.addEventListener("keydown", handleKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
     return () => {
       window.removeEventListener("keydown", handleKey);
       document.body.style.overflow = prevOverflow;
@@ -595,6 +634,9 @@ export default function PlacePageClient({
           outreachAttempts={outreachAttempts}
           daysSinceLastContact={lastContactDays}
         />
+        <h1 className={previewStyles.heroName}>
+          {lead.businessName ?? "Unnamed"}
+        </h1>
 
         <div className={placeStyles.priorityRow}>
           <PriorityBadge priority={priorityResult.priority} />
@@ -606,10 +648,6 @@ export default function PlacePageClient({
               ≈ {priorityResult.estimatedAnnualVolume}
             </span>
           )}
-        </div>
-
-        {/* HERO */}
-        <section className={previewStyles.hero}>
           {!lead.isDraft && (
             <p className={previewStyles.eyebrow}>
               <span
@@ -622,28 +660,47 @@ export default function PlacePageClient({
           {lead.isDraft && (
             <p className={previewStyles.eyebrow}>Preview · not yet saved</p>
           )}
-          {/* <br /> */}
-          <h1 className={previewStyles.heroName}>
-            {lead.businessName ?? "Unnamed"}
-          </h1>
-          {lead.businessAddress && (
-            <p className={previewStyles.heroAddress}>{lead.businessAddress}</p>
+          {lead.aiScore != null && (
+            <div className={placeStyles.scoreReasoningCard}>
+              <div className={placeStyles.scoreReasoningHeader}>
+                <div className={placeStyles.scoreReasoningHeaderLeft}>
+                  <p className={placeStyles.scoreReasoningLabel}>Lead score</p>
+                  <p className={placeStyles.scoreReasoningScore}>
+                    {lead.aiScore}
+                    <span className={placeStyles.scoreReasoningOutOf}>
+                      /100
+                    </span>
+                  </p>
+                </div>
+              </div>
+              {lead.aiScoreReasoning && (
+                <p className={placeStyles.scoreReasoningBody}>
+                  {lead.aiScoreReasoning}
+                </p>
+              )}
+            </div>
           )}
+        </div>
 
-          <div className={previewStyles.heroDetails}>
-            {lead.rating !== null && (
-              <span className={previewStyles.heroRating}>
-                ★ {lead.rating.toFixed(1)} ({lead.reviewCount ?? 0} reviews)
-              </span>
-            )}
-            {preview?.openNow === true && (
-              <span className={previewStyles.openBadge}>● Open now</span>
-            )}
-            {preview?.openNow === false && (
-              <span className={previewStyles.closedBadge}>● Closed</span>
-            )}
-          </div>
-          {/* PHOTOS */}
+        <div className={previewStyles.heroDetails}>
+          {lead.rating !== null && (
+            <span className={previewStyles.heroRating}>
+              ★ {lead.rating.toFixed(1)} ({lead.reviewCount ?? 0} reviews)
+            </span>
+          )}
+          {preview?.openNow === true && (
+            <span className={previewStyles.openBadge}>● Open now</span>
+          )}
+          {preview?.openNow === false && (
+            <span className={previewStyles.closedBadge}>● Closed</span>
+          )}
+        </div>
+        {lead.businessAddress && (
+          <p className={previewStyles.heroAddress}>{lead.businessAddress}</p>
+        )}
+
+        {/* HERO — photos, hours, links, location only. Everything below is accordionized. */}
+        <section className={previewStyles.hero}>
           {displayedPhotos.length > 0 && (
             <section className={previewStyles.photosSection}>
               <div className={previewStyles.photosRow}>
@@ -674,7 +731,6 @@ export default function PlacePageClient({
             </section>
           )}
           <br />
-          {/* HOURS */}
           {preview?.hours && preview.hours.length > 0 && (
             <section className={detailStyles.section}>
               <h2 className={detailStyles.sectionTitle}>Hours</h2>
@@ -725,26 +781,135 @@ export default function PlacePageClient({
               </a>
             )}
           </div>
+          {/* ABOUT */}
           <br />
-          {/* ABOUT (editorial) */}
           {(preview?.editorialSummary || preview?.generativeSummary) && (
-            <section className={detailStyles.section}>
+          
+            <>
               <h2 className={detailStyles.sectionTitle}>About</h2>
               <p className={previewStyles.editorialBody}>
                 {preview.generativeSummary ?? preview.editorialSummary}
               </p>
-            </section>
+            </>
           )}
           <br />
-          {/* Competitive Landscape */}
-          <section className={detailStyles.section}>
-            <div className={detailStyles.sectionHeader}>
-              <h2 className={detailStyles.sectionTitle}>
-                Competitive Landscape
-              </h2>
-              {lead.competitiveAnalysis &&
-                lead.competitiveAnalysis.analyzed === true &&
-                !generatingCompetitive && (
+
+          {lead.distanceMiles !== null &&
+            lead.primaryMarket &&
+            lead.businessLat &&
+            lead.businessLng && (
+              <section
+                className={`${previewStyles.locationCard} ${mapFailed ? previewStyles.locationCardNoMap : ""}`}
+              >
+                {!mapFailed && (
+                  <div className={previewStyles.locationMap}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/api/leads/static-map?lat=${lead.businessLat}&lng=${lead.businessLng}&zoom=14&width=600&height=300`}
+                      alt={`Map of ${lead.businessName}`}
+                      className={previewStyles.mapImage}
+                      onError={() => setMapFailed(true)}
+                    />
+                  </div>
+                )}
+                <div className={previewStyles.locationStats}>
+                  <div className={previewStyles.locationStatRow}>
+                    <div className={previewStyles.locationStat}>
+                      <p className={previewStyles.locationStatValue}>
+                        {lead.distanceMiles.toFixed(1)} mi
+                      </p>
+                      <p className={previewStyles.locationStatLabel}>
+                        distance
+                      </p>
+                    </div>
+                    {driveTime && (
+                      <div className={previewStyles.locationStat}>
+                        <p className={previewStyles.locationStatValue}>
+                          {formatDriveTime(driveTime.seconds)}
+                        </p>
+                        <p className={previewStyles.locationStatLabel}>
+                          drive time
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <p className={previewStyles.locationDesc}>
+                    from your base in {lead.primaryMarket}
+                    {lead.serviceRadiusMiles &&
+                    lead.distanceMiles > lead.serviceRadiusMiles
+                      ? ` — outside your ${lead.serviceRadiusMiles}-mile service radius`
+                      : lead.serviceRadiusMiles
+                        ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
+                        : ""}
+                  </p>
+                </div>
+              </section>
+            )}
+        </section>
+
+        {/* === ACCORDION GROUP — About through Notes & Activity === */}
+        <div className={placeStyles.accordionGroup}>
+          {/* STRATEGIC BRIEF */}
+          <AccordionSection
+            sectionKey='strategicBrief'
+            title='Strategic Brief'
+            isOpen={openSection === "strategicBrief"}
+            onToggle={toggleSection}
+          >
+            {lead.strategicBrief && !generatingBrief && (
+              <div className={placeStyles.accordionBodyActions}>
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  disabled={generatingBrief}
+                  className={detailStyles.regenerateBtn}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingBrief ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Generating strategic brief…
+                </p>
+              </div>
+            ) : lead.strategicBrief ? (
+              <div className={detailStyles.briefBody}>
+                {lead.strategicBrief.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Brief generation failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </AccordionSection>
+
+          {/* COMPETITIVE LANDSCAPE */}
+          <AccordionSection
+            sectionKey='competitive'
+            title='Competitive Landscape'
+            isOpen={openSection === "competitive"}
+            onToggle={toggleSection}
+          >
+            {lead.competitiveAnalysis &&
+              lead.competitiveAnalysis.analyzed === true &&
+              !generatingCompetitive && (
+                <div className={placeStyles.accordionBodyActions}>
                   <button
                     type='button'
                     onClick={() =>
@@ -754,8 +919,9 @@ export default function PlacePageClient({
                   >
                     Regenerate
                   </button>
-                )}
-            </div>
+                </div>
+              )}
+
             {generatingCompetitive ? (
               <div className={detailStyles.emptyBlock}>
                 <p className={detailStyles.emptyDesc}>
@@ -763,6 +929,7 @@ export default function PlacePageClient({
                 </p>
               </div>
             ) : !lead.competitiveAnalysis ? (
+              /* ...rest unchanged... */
               <div className={detailStyles.emptyBlock}>
                 <p className={detailStyles.emptyDesc}>
                   Competitive analysis failed. Try again.
@@ -826,16 +993,17 @@ export default function PlacePageClient({
                 </p>
               </div>
             )}
-          </section>
-          <br />
+          </AccordionSection>
+
+          {/* SEASONAL CONTEXT */}
           {seasonality.applicable && (
-            <section
-              className={`${placeStyles.seasonCard} ${seasonality.currentSeason === "off_season" ? placeStyles.seasonCardOff : ""}`}
+            <AccordionSection
+              sectionKey='seasonality'
+              title='Seasonal Context'
+              isOpen={openSection === "seasonality"}
+              onToggle={toggleSection}
             >
-              <div className={placeStyles.seasonHeader}>
-                <span className={placeStyles.seasonTitle}>
-                  Seasonal Context
-                </span>
+              <div className={placeStyles.accordionBodyActions}>
                 <span
                   className={`${placeStyles.seasonStatus} ${
                     seasonality.currentSeason === "peak"
@@ -856,454 +1024,364 @@ export default function PlacePageClient({
               <p className={placeStyles.seasonRec}>
                 {seasonality.recommendation}
               </p>
-            </section>
-          )}
-        </section>
-
-        {/* === SCORE REASONING CARD === */}
-        {lead.aiScore != null && (
-          <section className={placeStyles.scoreReasoningCard}>
-            <div className={placeStyles.scoreReasoningHeader}>
-              <div className={placeStyles.scoreReasoningHeaderLeft}>
-                <p className={placeStyles.scoreReasoningLabel}>Lead score</p>
-                <p className={placeStyles.scoreReasoningScore}>
-                  {lead.aiScore}
-                  <span className={placeStyles.scoreReasoningOutOf}>/100</span>
-                </p>
-              </div>
-            </div>
-            {lead.aiScoreReasoning && (
-              <p className={placeStyles.scoreReasoningBody}>
-                {lead.aiScoreReasoning}
-              </p>
-            )}
-          </section>
-        )}
-
-        {/* LOCATION CARD */}
-        {lead.distanceMiles !== null &&
-          lead.primaryMarket &&
-          lead.businessLat &&
-          lead.businessLng && (
-            <section
-              className={`${previewStyles.locationCard} ${mapFailed ? previewStyles.locationCardNoMap : ""}`}
-            >
-              {!mapFailed && (
-                <div className={previewStyles.locationMap}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/api/leads/static-map?lat=${lead.businessLat}&lng=${lead.businessLng}&zoom=14&width=600&height=300`}
-                    alt={`Map of ${lead.businessName}`}
-                    className={previewStyles.mapImage}
-                    onError={() => setMapFailed(true)}
-                  />
-                </div>
-              )}
-              <div className={previewStyles.locationStats}>
-                <div className={previewStyles.locationStatRow}>
-                  <div className={previewStyles.locationStat}>
-                    <p className={previewStyles.locationStatValue}>
-                      {lead.distanceMiles.toFixed(1)} mi
-                    </p>
-                    <p className={previewStyles.locationStatLabel}>distance</p>
-                  </div>
-                  {driveTime && (
-                    <div className={previewStyles.locationStat}>
-                      <p className={previewStyles.locationStatValue}>
-                        {formatDriveTime(driveTime.seconds)}
-                      </p>
-                      <p className={previewStyles.locationStatLabel}>
-                        drive time
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <p className={previewStyles.locationDesc}>
-                  from your base in {lead.primaryMarket}
-                  {lead.serviceRadiusMiles &&
-                  lead.distanceMiles > lead.serviceRadiusMiles
-                    ? ` — outside your ${lead.serviceRadiusMiles}-mile service radius`
-                    : lead.serviceRadiusMiles
-                      ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
-                      : ""}
-                </p>
-              </div>
-            </section>
+            </AccordionSection>
           )}
 
-        <RecommendedMoveCard suggestion={nextMove} />
+          {/* RECOMMENDED MOVE */}
+          <AccordionSection
+            sectionKey='recommendedMove'
+            title='Recommended Move'
+            isOpen={openSection === "recommendedMove"}
+            onToggle={toggleSection}
+          >
+            <RecommendedMoveCard suggestion={nextMove} />
+          </AccordionSection>
 
-        {/* AT A GLANCE */}
-        {allChips.length > 0 && (
-          <section className={detailStyles.section}>
-            <h2 className={detailStyles.sectionTitle}>At a glance</h2>
-            <div className={previewStyles.chipsRow}>
-              {allChips.map((label) => (
-                <span key={label} className={previewStyles.atmosphereChip}>
-                  {label}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* STRATEGIC BRIEF */}
-        <section className={detailStyles.section}>
-          <div className={detailStyles.sectionHeader}>
-            <h2 className={detailStyles.sectionTitle}>Strategic Brief</h2>
-            {lead.strategicBrief && !generatingBrief && (
-              <button
-                type='button'
-                onClick={() => generateAi("strategic-brief", "brief", true)}
-                disabled={generatingBrief}
-                className={detailStyles.regenerateBtn}
-              >
-                Regenerate
-              </button>
-            )}
-          </div>
-          {generatingBrief ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                ✨ Generating strategic brief…
-              </p>
-            </div>
-          ) : lead.strategicBrief ? (
-            <div className={detailStyles.briefBody}>
-              {lead.strategicBrief.split("\n\n").map((para, i) => (
-                <p key={i} className={detailStyles.briefParagraph}>
-                  {para}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                Brief generation failed. Try again.
-              </p>
-              <button
-                type='button'
-                onClick={() => generateAi("strategic-brief", "brief", true)}
-                className={detailStyles.generateBtn}
-              >
-                Retry
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* REVIEW INTELLIGENCE */}
-        <section className={detailStyles.section}>
-          <div className={detailStyles.sectionHeader}>
-            <h2 className={detailStyles.sectionTitle}>Review Intelligence</h2>
+          {/* REVIEW INTELLIGENCE */}
+          <AccordionSection
+            sectionKey='reviewIntel'
+            title='Review Intelligence'
+            isOpen={openSection === "reviewIntel"}
+            onToggle={toggleSection}
+          >
             {lead.reviewIntelligence && !generatingReviews && (
-              <button
-                type='button'
-                onClick={() =>
-                  generateAi("review-intelligence", "reviews", true)
-                }
-                className={detailStyles.regenerateBtn}
-              >
-                Regenerate
-              </button>
-            )}
-          </div>
-          {generatingReviews ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
-            </div>
-          ) : lead.reviewIntelligence ? (
-            <div className={detailStyles.reviewBody}>
-              {lead.reviewIntelligence.split("\n\n").map((para, i) => (
-                <p key={i} className={detailStyles.briefParagraph}>
-                  {para}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                Review analysis failed. Try again.
-              </p>
-              <button
-                type='button'
-                onClick={() =>
-                  generateAi("review-intelligence", "reviews", true)
-                }
-                className={detailStyles.generateBtn}
-              >
-                Retry
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* WHO TO CONTACT */}
-        <section className={detailStyles.section}>
-          <div className={detailStyles.sectionHeader}>
-            <h2 className={detailStyles.sectionTitle}>Who to Contact</h2>
-            {lead.decisionMaker && !generatingDM && (
-              <button
-                type='button'
-                onClick={() => generateAi("decision-maker", "dm", true)}
-                className={detailStyles.regenerateBtn}
-              >
-                Regenerate
-              </button>
-            )}
-          </div>
-          {generatingDM ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                ✨ Identifying decision-makers…
-              </p>
-            </div>
-          ) : lead.decisionMaker ? (
-            <div className={detailStyles.dmBody}>
-              <div className={detailStyles.dmRow}>
-                <p className={detailStyles.dmLabel}>Primary target</p>
-                <p className={detailStyles.dmTitle}>
-                  {lead.decisionMaker.primary.title}
-                </p>
-                <p className={detailStyles.dmWhy}>
-                  {lead.decisionMaker.primary.why}
-                </p>
-              </div>
-              <div className={detailStyles.dmRow}>
-                <p className={detailStyles.dmLabel}>Fallback contact</p>
-                <p className={detailStyles.dmTitle}>
-                  {lead.decisionMaker.secondary.title}
-                </p>
-                <p className={detailStyles.dmWhy}>
-                  {lead.decisionMaker.secondary.why}
-                </p>
-              </div>
-              <div className={detailStyles.dmRow}>
-                <p className={detailStyles.dmLabel}>LinkedIn search</p>
-                <a
-                  href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(lead.decisionMaker.linkedinSearch)}`}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className={detailStyles.dmLink}
-                >
-                  Search: {lead.decisionMaker.linkedinSearch} ↗
-                </a>
-              </div>
-            </div>
-          ) : (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                Decision-maker analysis failed. Try again.
-              </p>
-              <button
-                type='button'
-                onClick={() => generateAi("decision-maker", "dm", true)}
-                className={detailStyles.generateBtn}
-              >
-                Retry
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* APOLLO VERIFIED CONTACTS */}
-        <section className={detailStyles.section}>
-          <div className={detailStyles.sectionHeader}>
-            <h2 className={detailStyles.sectionTitle}>Verified Contacts</h2>
-          </div>
-          {lead.isDraft ? (
-            <div className={placeStyles.apolloPending}>
-              <span className={placeStyles.apolloIcon}>🔒</span>
-              <p className={placeStyles.apolloTitle}>
-                Save this lead to unlock verified contacts
-              </p>
-              <p className={placeStyles.apolloDesc}>
-                We&apos;ll look up verified email addresses for{" "}
-                {lead.decisionMaker?.primary?.title ?? "the decision-maker"} and
-                related titles the moment you save.
-              </p>
-            </div>
-          ) : generatingApollo ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                ✨ Looking up verified contacts…
-              </p>
-            </div>
-          ) : !lead.apolloEnrichment ||
-            lead.apolloEnrichment.enabled === false ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                {lead.apolloEnrichment?.enabled === false
-                  ? lead.apolloEnrichment.reason
-                  : "Could not look up verified contacts."}
-              </p>
-              <button
-                type='button'
-                onClick={() => generateAi("apollo-enrich", "apollo", true)}
-                className={detailStyles.generateBtn}
-              >
-                Retry
-              </button>
-            </div>
-          ) : lead.apolloEnrichment.persons.length === 0 ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                No verified contacts found at this business for the target
-                titles.
-              </p>
-            </div>
-          ) : (
-            <div className={placeStyles.apolloPersonsList}>
-              {lead.apolloEnrichment.persons.map((person) => (
-                <div
-                  key={person.email ?? person.name}
-                  className={placeStyles.apolloPersonCard}
-                >
-                  <p className={placeStyles.apolloPersonName}>{person.name}</p>
-                  <p className={placeStyles.apolloPersonTitle}>
-                    {person.title}
-                  </p>
-                  {person.email && (
-                    <a
-                      href={`mailto:${person.email}`}
-                      className={placeStyles.apolloPersonEmail}
-                    >
-                      {person.email} ↗
-                    </a>
-                  )}
-                  {person.linkedinUrl && (
-                    <a
-                      href={person.linkedinUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className={placeStyles.apolloPersonLink}
-                    >
-                      LinkedIn ↗
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* OUTREACH SCRIPTS — gated on isDraft */}
-        <section className={detailStyles.section}>
-          <div className={detailStyles.sectionHeader}>
-            <h2 className={detailStyles.sectionTitle}>Outreach Scripts</h2>
-            {!lead.isDraft &&
-              lead.outreachScripts.length > 0 &&
-              !generatingScripts && (
+              <div className={placeStyles.accordionBodyActions}>
                 <button
                   type='button'
                   onClick={() =>
-                    generateAi("generate-scripts", "scripts", true)
+                    generateAi("review-intelligence", "reviews", true)
                   }
                   className={detailStyles.regenerateBtn}
                 >
                   Regenerate
                 </button>
-              )}
-          </div>
-          {lead.isDraft ? (
-            <div className={placeStyles.scriptsGated}>
-              <p className={placeStyles.scriptsGatedTitle}>
-                🔒 Save this lead to unlock outreach scripts
-              </p>
-              <p className={placeStyles.scriptsGatedDesc}>
-                We&apos;ll generate personalized email, cold call, LinkedIn, and
-                SMS scripts the moment you save. The other AI sections above are
-                free to browse.
-              </p>
-            </div>
-          ) : generatingScripts ? (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                ✨ Writing personalized outreach scripts…
-              </p>
-            </div>
-          ) : lead.outreachScripts.length > 0 ? (
-            <div className={detailStyles.scriptsList}>
-              {lead.outreachScripts.map((script) => (
-                <div key={script.id} className={detailStyles.scriptCard}>
-                  <div className={detailStyles.scriptHeader}>
-                    <span className={detailStyles.scriptFormat}>
-                      {FORMAT_LABELS[script.format]}
-                    </span>
-                    <button
-                      type='button'
-                      onClick={() =>
-                        copyToClipboard(
-                          script.subject
-                            ? `Subject: ${script.subject}\n\n${script.body}`
-                            : script.body,
-                          script.id,
-                        )
-                      }
-                      className={detailStyles.copyBtn}
-                    >
-                      {copiedId === script.id ? "Copied ✓" : "Copy"}
-                    </button>
-                  </div>
-                  {script.subject && (
-                    <p className={detailStyles.scriptSubject}>
-                      <strong>Subject:</strong> {script.subject}
-                    </p>
-                  )}
-                  <p className={detailStyles.scriptBody}>{script.body}</p>
+              </div>
+            )}
+
+            {generatingReviews ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
+              </div>
+            ) : lead.reviewIntelligence ? (
+              <div className={detailStyles.reviewBody}>
+                {lead.reviewIntelligence.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Review analysis failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("review-intelligence", "reviews", true)
+                  }
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </AccordionSection>
+
+          {/* WHO TO CONTACT */}
+          <AccordionSection
+            sectionKey='whoToContact'
+            title='Who to Contact'
+            isOpen={openSection === "whoToContact"}
+            onToggle={toggleSection}
+          >
+            {lead.decisionMaker && !generatingDM && (
+              <div className={placeStyles.accordionBodyActions}>
+                <button
+                  type='button'
+                  onClick={() => generateAi("decision-maker", "dm", true)}
+                  className={detailStyles.regenerateBtn}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingDM ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Identifying decision-makers…
+                </p>
+              </div>
+            ) : lead.decisionMaker ? (
+              <div className={detailStyles.dmBody}>
+                <div className={detailStyles.dmRow}>
+                  <p className={detailStyles.dmLabel}>Primary target</p>
+                  <p className={detailStyles.dmTitle}>
+                    {lead.decisionMaker.primary.title}
+                  </p>
+                  <p className={detailStyles.dmWhy}>
+                    {lead.decisionMaker.primary.why}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className={detailStyles.emptyBlock}>
-              <p className={detailStyles.emptyDesc}>
-                Script generation failed. Try again.
-              </p>
-              <button
-                type='button'
-                onClick={() => generateAi("generate-scripts", "scripts", true)}
-                className={detailStyles.generateBtn}
-              >
-                Retry
-              </button>
-            </div>
+                <div className={detailStyles.dmRow}>
+                  <p className={detailStyles.dmLabel}>Fallback contact</p>
+                  <p className={detailStyles.dmTitle}>
+                    {lead.decisionMaker.secondary.title}
+                  </p>
+                  <p className={detailStyles.dmWhy}>
+                    {lead.decisionMaker.secondary.why}
+                  </p>
+                </div>
+                <div className={detailStyles.dmRow}>
+                  <p className={detailStyles.dmLabel}>LinkedIn search</p>
+                  <a
+                    href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(lead.decisionMaker.linkedinSearch)}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className={detailStyles.dmLink}
+                  >
+                    Search: {lead.decisionMaker.linkedinSearch} ↗
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Decision-maker analysis failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("decision-maker", "dm", true)}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </AccordionSection>
+
+          {/* VERIFIED CONTACTS */}
+          <AccordionSection
+            sectionKey='verifiedContacts'
+            title='Verified Contacts'
+            isOpen={openSection === "verifiedContacts"}
+            onToggle={toggleSection}
+          >
+            {lead.isDraft ? (
+              <div className={placeStyles.apolloPending}>
+                <span className={placeStyles.apolloIcon}>🔒</span>
+                <p className={placeStyles.apolloTitle}>
+                  Save this lead to unlock verified contacts
+                </p>
+                <p className={placeStyles.apolloDesc}>
+                  We&apos;ll look up verified email addresses for{" "}
+                  {lead.decisionMaker?.primary?.title ?? "the decision-maker"}{" "}
+                  and related titles the moment you save.
+                </p>
+              </div>
+            ) : generatingApollo ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Looking up verified contacts…
+                </p>
+              </div>
+            ) : !lead.apolloEnrichment ||
+              lead.apolloEnrichment.enabled === false ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  {lead.apolloEnrichment?.enabled === false
+                    ? lead.apolloEnrichment.reason
+                    : "Could not look up verified contacts."}
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("apollo-enrich", "apollo", true)}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            ) : lead.apolloEnrichment.persons.length === 0 ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  No verified contacts found at this business for the target
+                  titles.
+                </p>
+              </div>
+            ) : (
+              <div className={placeStyles.apolloPersonsList}>
+                {lead.apolloEnrichment.persons.map((person) => (
+                  <div
+                    key={person.email ?? person.name}
+                    className={placeStyles.apolloPersonCard}
+                  >
+                    <p className={placeStyles.apolloPersonName}>
+                      {person.name}
+                    </p>
+                    <p className={placeStyles.apolloPersonTitle}>
+                      {person.title}
+                    </p>
+                    {person.email && (
+                      <a
+                        href={`mailto:${person.email}`}
+                        className={placeStyles.apolloPersonEmail}
+                      >
+                        {person.email} ↗
+                      </a>
+                    )}
+                    {person.linkedinUrl && (
+                      <a
+                        href={person.linkedinUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={placeStyles.apolloPersonLink}
+                      >
+                        LinkedIn ↗
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </AccordionSection>
+
+          {/* OUTREACH SCRIPTS */}
+          <AccordionSection
+            sectionKey='outreachScripts'
+            title='Outreach Scripts'
+            isOpen={openSection === "outreachScripts"}
+            onToggle={toggleSection}
+          >
+            {!lead.isDraft &&
+              lead.outreachScripts.length > 0 &&
+              !generatingScripts && (
+                <div className={placeStyles.accordionBodyActions}>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      generateAi("generate-scripts", "scripts", true)
+                    }
+                    className={detailStyles.regenerateBtn}
+                  >
+                    Regenerate
+                  </button>
+                </div>
+              )}
+
+            {lead.isDraft ? (
+              <div className={placeStyles.scriptsGated}>
+                <p className={placeStyles.scriptsGatedTitle}>
+                  🔒 Save this lead to unlock outreach scripts
+                </p>
+                <p className={placeStyles.scriptsGatedDesc}>
+                  We&apos;ll generate personalized email, cold call, LinkedIn,
+                  and SMS scripts the moment you save. The other AI sections
+                  above are free to browse.
+                </p>
+              </div>
+            ) : generatingScripts ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Writing personalized outreach scripts…
+                </p>
+              </div>
+            ) : lead.outreachScripts.length > 0 ? (
+              <div className={detailStyles.scriptsList}>
+                {lead.outreachScripts.map((script) => (
+                  <div key={script.id} className={detailStyles.scriptCard}>
+                    <div className={detailStyles.scriptHeader}>
+                      <span className={detailStyles.scriptFormat}>
+                        {FORMAT_LABELS[script.format]}
+                      </span>
+                      <button
+                        type='button'
+                        onClick={() =>
+                          copyToClipboard(
+                            script.subject
+                              ? `Subject: ${script.subject}\n\n${script.body}`
+                              : script.body,
+                            script.id,
+                          )
+                        }
+                        className={detailStyles.copyBtn}
+                      >
+                        {copiedId === script.id ? "Copied ✓" : "Copy"}
+                      </button>
+                    </div>
+                    {script.subject && (
+                      <p className={detailStyles.scriptSubject}>
+                        <strong>Subject:</strong> {script.subject}
+                      </p>
+                    )}
+                    <p className={detailStyles.scriptBody}>{script.body}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Script generation failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("generate-scripts", "scripts", true)
+                  }
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </AccordionSection>
+
+          {/* RECENT REVIEWS */}
+          {sortedReviews && sortedReviews.length > 0 && (
+            <AccordionSection
+              sectionKey='recentReviews'
+              title='Recent Reviews'
+              isOpen={openSection === "recentReviews"}
+              onToggle={toggleSection}
+            >
+              <div className={previewStyles.reviewsList}>
+                {sortedReviews.slice(0, 2).map((r) => (
+                  <article key={r.name} className={previewStyles.reviewCard}>
+                    <header className={previewStyles.reviewHeader}>
+                      <span className={previewStyles.reviewAuthor}>
+                        {r.authorName ?? "Anonymous"}
+                      </span>
+                      <span className={previewStyles.reviewMeta}>
+                        <StarRating rating={r.rating} />
+                        {r.relativeTime && (
+                          <span className={previewStyles.reviewTime}>
+                            · {r.relativeTime}
+                          </span>
+                        )}
+                      </span>
+                    </header>
+                    {r.text && (
+                      <p className={previewStyles.reviewText}>{r.text}</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </AccordionSection>
           )}
-        </section>
 
-        {/* RECENT REVIEWS */}
-        {sortedReviews && sortedReviews.length > 0 && (
-          <section className={detailStyles.section}>
-            <h2 className={detailStyles.sectionTitle}>Recent reviews</h2>
-            <div className={previewStyles.reviewsList}>
-              {sortedReviews.slice(0, 2).map((r) => (
-                <article key={r.name} className={previewStyles.reviewCard}>
-                  <header className={previewStyles.reviewHeader}>
-                    <span className={previewStyles.reviewAuthor}>
-                      {r.authorName ?? "Anonymous"}
-                    </span>
-                    <span className={previewStyles.reviewMeta}>
-                      <StarRating rating={r.rating} />
-                      {r.relativeTime && (
-                        <span className={previewStyles.reviewTime}>
-                          · {r.relativeTime}
-                        </span>
-                      )}
-                    </span>
-                  </header>
-                  {r.text && (
-                    <p className={previewStyles.reviewText}>{r.text}</p>
-                  )}
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* NOTES & ACTIVITY (always shown — drafts can have notes too) */}
-        <NotesActivityFeed leadId={lead.id} activities={lead.activities} />
+          {/* NOTES & ACTIVITY */}
+          <AccordionSection
+            sectionKey='notesActivity'
+            title='Notes & Activity'
+            isOpen={openSection === "notesActivity"}
+            onToggle={toggleSection}
+          >
+            <NotesActivityFeed leadId={lead.id} activities={lead.activities} />
+          </AccordionSection>
+        </div>
       </div>
 
-      {/* SIDEBAR — conditional */}
+      {/* SIDEBAR — unchanged */}
       <aside className={detailStyles.sidebar}>
         <div className={detailStyles.sidebarSticky}>
           {lead.isDraft ? (
@@ -1407,6 +1485,7 @@ export default function PlacePageClient({
           )}
         </div>
       </aside>
+
       {lightboxOpen && displayedPhotos[lightboxIndex] && (
         <div
           className={previewStyles.lightboxOverlay}
@@ -1462,6 +1541,7 @@ export default function PlacePageClient({
           </button>
         </div>
       )}
+
       <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
         <div className={placeStyles.deleteModalContent}>
           <p className={placeStyles.deleteModalTitle}>Delete this lead?</p>

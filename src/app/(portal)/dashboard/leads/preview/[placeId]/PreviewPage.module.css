@@ -94,7 +94,6 @@
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 4rem;
-  border-bottom: 1px solid var(--grayii);
 }
 
 .eyebrow {
@@ -116,7 +115,6 @@
     "wdth" 81;
   letter-spacing: -0.03em;
   line-height: 1;
-  margin-top: 1rem;
 }
 
 .heroAddress {
@@ -131,7 +129,6 @@
   align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
 }
 
 .heroRating {
@@ -210,7 +207,7 @@
 
 .photosRow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1rem;
 }
 
@@ -262,8 +259,6 @@
   gap: 2rem;
   padding: 3rem;
   justify-content: center;
-  
-  
 }
 
 .locationStatRow {
@@ -276,7 +271,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-
 }
 
 .locationStatValue {
@@ -771,4 +765,10 @@
   opacity: 0.5;
   letter-spacing: 0.04em;
   margin-top: -1rem;
+}
+
+@media screen and (max-width: 568px) {
+  .photosRow {
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  }
 }
