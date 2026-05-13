@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -7,7 +6,6 @@ import styles from "./SearchPage.module.css";
 import rowStyles from "./cards/LeadRow.module.css";
 import LeadRow from "./cards/LeadRow";
 import type { Temperature, SavedState, SearchResult } from "./cards/types";
-// import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 
 type SortOption = "distance" | "rating" | "reviews" | "name";
 
@@ -25,13 +23,6 @@ type QuotaError = {
   dailyUsed: number;
   monthlyUsed: number;
   dailyLimit: number;
-  monthlyLimit: number;
-};
-
-type QuotaInfo = {
-  dailyUsed: number;
-  dailyLimit: number;
-  monthlyUsed: number;
   monthlyLimit: number;
 };
 
@@ -82,13 +73,24 @@ const SORT_OPTIONS: Array<{ value: SortOption; label: string }> = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v7";
+const MIN_SCORE_OPTIONS: Array<{ value: number; label: string }> = [
+  { value: 0, label: "Any" },
+  { value: 25, label: "25+" },
+  { value: 50, label: "50+" },
+  { value: 75, label: "75+" },
+  { value: 85, label: "85+ (top)" },
+];
+
+const STORAGE_KEY = "leadSearch:state:v9";
+const DEFAULT_MIN_SCORE = 50;
 
 type StoredState = {
   selectedTemperature: Temperature | null;
   selectedCategories: string[];
   sortBy: SortOption;
   freshOnly: boolean;
+  contactReadyOnly: boolean;
+  minScore: number;
   searchedTemperature: Temperature | null;
   searchedCategories: string[];
   results: SearchResult[];
@@ -127,16 +129,11 @@ function formatElapsed(startedAtMs: number): string {
   return `${min}m ${rem}s`;
 }
 
-function quotaPillClass(
-  styles: Record<string, string>,
-  quota: QuotaInfo,
-): string {
-  const dailyRatio = quota.dailyUsed / quota.dailyLimit;
-  const monthlyRatio = quota.monthlyUsed / quota.monthlyLimit;
-  const worst = Math.max(dailyRatio, monthlyRatio);
-  if (worst >= 1) return `${styles.quotaPill} ${styles.quotaPillDanger}`;
-  if (worst >= 0.8) return `${styles.quotaPill} ${styles.quotaPillWarning}`;
-  return styles.quotaPill;
+function resultPassesScoreFilter(r: SearchResult, minScore: number): boolean {
+  if (r.temperature === "cold") return true;
+  if (minScore <= 0) return true;
+  const score = r.aiScore ?? 0;
+  return score >= minScore;
 }
 
 export default function LeadSearchForm() {
@@ -145,6 +142,8 @@ export default function LeadSearchForm() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>("distance");
   const [freshOnly, setFreshOnly] = useState(false);
+  const [contactReadyOnly, setContactReadyOnly] = useState(false);
+  const [minScore, setMinScore] = useState<number>(DEFAULT_MIN_SCORE);
 
   const [searchedTemperature, setSearchedTemperature] =
     useState<Temperature | null>(null);
@@ -161,22 +160,11 @@ export default function LeadSearchForm() {
 
   const [scrapePhase, setScrapePhase] = useState<ScrapePhase | null>(null);
   const [quotaError, setQuotaError] = useState<QuotaError | null>(null);
-  const [quota, setQuota] = useState<QuotaInfo | null>(null);
   const [, setElapsedTick] = useState(0);
 
   const hydrated = useRef(false);
   const tableRef = useRef<HTMLDivElement>(null);
   const executeSearchRef = useRef<() => Promise<void>>(async () => {});
-
-  // Fetch quota on mount
-  useEffect(() => {
-    fetch("/api/leads/quota")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data) setQuota(data);
-      })
-      .catch((err) => console.error("Quota fetch failed", err));
-  }, []);
 
   useEffect(() => {
     const stored = loadStored();
@@ -185,6 +173,8 @@ export default function LeadSearchForm() {
       setSelectedCategories(stored.selectedCategories);
       setSortBy(stored.sortBy ?? "distance");
       setFreshOnly(stored.freshOnly ?? false);
+      setContactReadyOnly(stored.contactReadyOnly ?? false);
+      setMinScore(stored.minScore ?? DEFAULT_MIN_SCORE);
       setSearchedTemperature(stored.searchedTemperature);
       setSearchedCategories(stored.searchedCategories);
       setResults(stored.results ?? []);
@@ -202,6 +192,8 @@ export default function LeadSearchForm() {
       selectedCategories,
       sortBy,
       freshOnly,
+      contactReadyOnly,
+      minScore,
       searchedTemperature,
       searchedCategories,
       results,
@@ -212,6 +204,8 @@ export default function LeadSearchForm() {
     selectedCategories,
     sortBy,
     freshOnly,
+    contactReadyOnly,
+    minScore,
     searchedTemperature,
     searchedCategories,
     results,
@@ -225,6 +219,12 @@ export default function LeadSearchForm() {
     executeSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
+
+  // Reset to page 1 when any client-side filter changes
+  useEffect(() => {
+    if (!hydrated.current) return;
+    setCurrentPage(1);
+  }, [contactReadyOnly, minScore]);
 
   useEffect(() => {
     if (!scrapePhase) return;
@@ -264,10 +264,7 @@ export default function LeadSearchForm() {
           toast.success(
             `${data.eventCount ?? 0} events ready for ${marketCity}, ${marketState}`,
           );
-          // Refresh quota since we just used one slot
-          fetch("/api/leads/quota")
-            .then((r) => (r.ok ? r.json() : null))
-            .then((q) => q && setQuota(q));
+          window.dispatchEvent(new Event("leads:quota-changed"));
           executeSearchRef.current();
           return;
         }
@@ -404,26 +401,27 @@ export default function LeadSearchForm() {
       }
 
       if (data.status === "scraping" && data.jobId) {
-        // Update quota pill from the scrape response
         if (
           data.dailyUsed != null &&
           data.monthlyUsed != null &&
           data.dailyLimit != null &&
           data.monthlyLimit != null
         ) {
-          setQuota({
-            dailyUsed: data.dailyUsed,
-            dailyLimit: data.dailyLimit,
-            monthlyUsed: data.monthlyUsed,
-            monthlyLimit: data.monthlyLimit,
-          });
+          window.dispatchEvent(
+            new CustomEvent("leads:quota-changed", {
+              detail: {
+                dailyUsed: data.dailyUsed,
+                dailyLimit: data.dailyLimit,
+                monthlyUsed: data.monthlyUsed,
+                monthlyLimit: data.monthlyLimit,
+              },
+            }),
+          );
         }
         setScrapePhase({
           jobId: data.jobId,
           stage: data.stage ?? "Starting up",
           progressPct: data.progressPct ?? 0,
-          // Pull market name from response if you ever return it; otherwise
-          // these will be filled at the search trigger site. For now leave blank.
           marketCity: "",
           marketState: "",
           startedAt: Date.now(),
@@ -440,13 +438,16 @@ export default function LeadSearchForm() {
           dailyLimit: data.dailyLimit ?? 5,
           monthlyLimit: data.monthlyLimit ?? 15,
         });
-        // Also sync the persistent quota state
-        setQuota({
-          dailyUsed: data.dailyUsed ?? 0,
-          monthlyUsed: data.monthlyUsed ?? 0,
-          dailyLimit: data.dailyLimit ?? 5,
-          monthlyLimit: data.monthlyLimit ?? 15,
-        });
+        window.dispatchEvent(
+          new CustomEvent("leads:quota-changed", {
+            detail: {
+              dailyUsed: data.dailyUsed ?? 0,
+              dailyLimit: data.dailyLimit ?? 5,
+              monthlyUsed: data.monthlyUsed ?? 0,
+              monthlyLimit: data.monthlyLimit ?? 15,
+            },
+          }),
+        );
         setResults([]);
         return;
       }
@@ -481,12 +482,41 @@ export default function LeadSearchForm() {
     executeSearch();
   }
 
-  const totalPages = Math.max(1, Math.ceil(results.length / RESULTS_PER_PAGE));
+  // ============= Display pipeline =============
+  // 1. Sort: contact-ready leads first, preserve API order otherwise
+  // 2. Apply Ready Only filter (warm/hot only)
+  // 3. Apply Min Score filter (warm/hot only)
+  const displayResults = useMemo(() => {
+    const ready = results.filter((r) => r.contactReady);
+    const notReady = results.filter((r) => !r.contactReady);
+    let sorted = [...ready, ...notReady];
+
+    const filtersApply = searchedTemperature !== "cold";
+    if (filtersApply && contactReadyOnly) {
+      sorted = sorted.filter((r) => r.contactReady);
+    }
+    if (filtersApply) {
+      sorted = sorted.filter((r) => resultPassesScoreFilter(r, minScore));
+    }
+    return sorted;
+  }, [results, contactReadyOnly, minScore, searchedTemperature]);
+
+  const readyCount = useMemo(
+    () => results.filter((r) => r.contactReady).length,
+    [results],
+  );
+
+  const hiddenByFilters = results.length - displayResults.length;
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(displayResults.length / RESULTS_PER_PAGE),
+  );
   const startIdx = (currentPage - 1) * RESULTS_PER_PAGE;
   const endIdx = startIdx + RESULTS_PER_PAGE;
   const currentPageResults = useMemo(
-    () => results.slice(startIdx, endIdx),
-    [results, startIdx, endIdx],
+    () => displayResults.slice(startIdx, endIdx),
+    [displayResults, startIdx, endIdx],
   );
 
   function goToPage(p: number) {
@@ -537,11 +567,19 @@ export default function LeadSearchForm() {
   }
 
   const hasResults = results.length > 0;
+  const hasDisplayResults = displayResults.length > 0;
   const canSearch =
     selectedTemperature !== null &&
     (selectedTemperature !== "cold" || selectedCategories.length > 0);
   const isScraping = scrapePhase !== null;
-  const showResultsSection = hasResults && !isScraping && !quotaError;
+  const showResultsSection = hasDisplayResults && !isScraping && !quotaError;
+  const showFilteredEmpty =
+    !loading &&
+    !error &&
+    !isScraping &&
+    !quotaError &&
+    hasResults &&
+    !hasDisplayResults;
   const showEmptyState =
     !loading &&
     !error &&
@@ -591,18 +629,6 @@ export default function LeadSearchForm() {
   return (
     <div className={styles.body}>
       <form onSubmit={handleSearch} className={styles.searchCard}>
-        {/* {quota && (
-          <div className={quotaPillClass(styles, quota)}>
-            <SectionIntro
-              text={`Markets scraped today: ${quota.dailyUsed}/${quota.dailyLimit}`}
-            />
-            <br />
-            <SectionIntro
-              text={`Markets scraped this month: ${quota.monthlyUsed}/${quota.monthlyLimit}`}
-            />
-          </div>
-        )} */}
-
         <div className={styles.field}>
           <div className={styles.labelRow}>
             <label className={styles.label}>Select your lead type</label>
@@ -750,8 +776,8 @@ export default function LeadSearchForm() {
             <p className={styles.scrapeProgressDesc}>
               We don&apos;t have cached data for this market yet, so we&apos;re
               pulling events from Eventbrite, categorizing them with AI, and
-              enriching with venue + organizer contacts. Usually takes 60-120
-              seconds.
+              enriching with venue + organizer contacts. Usually takes 1 - 3
+              minutes.
             </p>
           </div>
 
@@ -823,8 +849,23 @@ export default function LeadSearchForm() {
             </div>
             <div className={styles.resultsHeaderMeta}>
               <span className={styles.resultsHeaderCount}>
-                {results.length} {results.length === 1 ? "result" : "results"}
+                {displayResults.length}{" "}
+                {displayResults.length === 1 ? "result" : "results"}
               </span>
+              {hiddenByFilters > 0 && (
+                <>
+                  <span className={styles.resultsHeaderDivider}>·</span>
+                  <span>{hiddenByFilters} hidden by filters</span>
+                </>
+              )}
+              {hiddenByFilters === 0 &&
+                readyCount > 0 &&
+                searchedTemperature !== "cold" && (
+                  <>
+                    <span className={styles.resultsHeaderDivider}>·</span>
+                    <span>{readyCount} contact ready</span>
+                  </>
+                )}
               {searchedTemperature === "cold" &&
                 searchedCategories.length > 0 && (
                   <>
@@ -843,7 +884,8 @@ export default function LeadSearchForm() {
           <div className={styles.filtersBar}>
             <div className={styles.filtersBarLeft}>
               <span className={styles.filtersBarCount}>
-                {results.length} result{results.length === 1 ? "" : "s"}
+                {displayResults.length}{" "}
+                {displayResults.length === 1 ? "result" : "results"}
               </span>
               {totalPages > 1 && (
                 <span className={styles.filtersBarPages}>
@@ -853,6 +895,47 @@ export default function LeadSearchForm() {
             </div>
 
             <div className={styles.filtersBarRight}>
+              {searchedTemperature !== "cold" && (
+                <div className={styles.filterControl}>
+                  <label
+                    htmlFor='minScore'
+                    className={styles.filterControlLabel}
+                  >
+                    Min score
+                  </label>
+                  <select
+                    id='minScore'
+                    value={minScore}
+                    onChange={(e) => setMinScore(Number(e.target.value))}
+                    className={styles.filterControlSelect}
+                    disabled={loading}
+                  >
+                    {MIN_SCORE_OPTIONS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {searchedTemperature !== "cold" && (
+                <div className={styles.filterControl}>
+                  <label className={styles.filterControlLabel}>
+                    Ready only
+                  </label>
+                  <button
+                    type='button'
+                    onClick={() => setContactReadyOnly(!contactReadyOnly)}
+                    className={`${styles.filterControlToggle} ${
+                      contactReadyOnly ? styles.filterControlToggleOn : ""
+                    }`}
+                  >
+                    {contactReadyOnly ? "On" : "Off"}
+                  </button>
+                </div>
+              )}
+
               <div className={styles.filterControl}>
                 <label htmlFor='sortBy' className={styles.filterControlLabel}>
                   Sort
@@ -947,6 +1030,17 @@ export default function LeadSearchForm() {
 
           <PaginationBar />
         </>
+      )}
+
+      {showFilteredEmpty && (
+        <div className={styles.emptyState}>
+          <p className={styles.emptyTitle}>No leads match your filters</p>
+          <p className={styles.emptyHint}>
+            Found {results.length} {results.length === 1 ? "lead" : "leads"},
+            but all are hidden by your active filters. Try lowering the minimum
+            score or turning off &quot;Ready only.&quot;
+          </p>
+        </div>
       )}
 
       {showEmptyState && (

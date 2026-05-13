@@ -15,9 +15,9 @@ export type ColdLeadResult = {
   savedState: SavedState;
   savedLeadId: string | null;
   category: string;
+  contactReady: boolean;
 };
 
-// Eventbrite events 15-90 days out
 export type WarmLeadResult = {
   temperature: "warm";
   source: "eventbrite";
@@ -31,11 +31,12 @@ export type WarmLeadResult = {
   organizerPhone: string | null;
   url: string;
   category: string;
+  aiScore: number | null;
   savedState: SavedState;
   savedLeadId: string | null;
+  contactReady: boolean;
 };
 
-// Eventbrite events 0-14 days out (same shape as warm, just closer in time)
 export type HotLeadResult = {
   temperature: "hot";
   source: "eventbrite";
@@ -49,8 +50,10 @@ export type HotLeadResult = {
   organizerPhone: string | null;
   url: string;
   category: string;
+  aiScore: number | null;
   savedState: SavedState;
   savedLeadId: string | null;
+  contactReady: boolean;
 };
 
 export type SearchResult = ColdLeadResult | WarmLeadResult | HotLeadResult;

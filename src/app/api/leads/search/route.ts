@@ -359,10 +359,12 @@ export async function POST(req: NextRequest) {
           organizerPhone: e.organizerPhone,
           url,
           category: e.category ?? "Event",
+          aiScore: e.aiScore,
           isCorporate: e.isCorporate,
           aiCategory: e.aiCategory,
           savedState,
           savedLeadId: saved?.id ?? null,
+          contactReady: !!(e.organizerEmail || e.organizerPhone),
         };
       });
     } catch (err) {
@@ -439,10 +441,12 @@ export async function POST(req: NextRequest) {
           organizerPhone: e.organizerPhone,
           url,
           category: e.category ?? "Event",
+          aiScore: e.aiScore,
           isCorporate: e.isCorporate,
           aiCategory: e.aiCategory,
           savedState,
           savedLeadId: saved?.id ?? null,
+          contactReady: !!(e.organizerEmail || e.organizerPhone),
         };
       });
     } catch (err) {
@@ -520,6 +524,7 @@ export async function POST(req: NextRequest) {
           temperature: "cold" as const,
           savedState,
           savedLeadId: saved?.id ?? null,
+          contactReady: false,
         };
       });
     } catch (err) {

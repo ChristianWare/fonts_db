@@ -63,6 +63,7 @@
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+  width: 100%;
 }
 
 .priorityEmoji {
@@ -252,6 +253,71 @@
   font-family: var(--GeistMono);
   font-size: 1.6rem;
   color: var(--text);
+}
+
+/* Contact Ready badge — shown on leads where the operator can pitch immediately */
+.contactReadyBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1rem;
+  background-color: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  border: 1px solid #16a34a;
+  align-self: flex-start;
+  margin-top: 1rem;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+/* Stack priority badge + score badge vertically in the type cell */
+.priorityStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+/* Numeric AI score — neutral, smaller than priority badge */
+.scoreBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.8rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  white-space: nowrap;
+  width: fit-content;
+}
+
+/* Wrapper to keep Contact Ready and Top Match flowing nicely */
+.businessBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* Reset margin since wrapper handles spacing now */
+.businessBadges .contactReadyBadge {
+  margin-top: 0;
+}
+
+/* Top Match — gold accent for high-score leads */
+.topMatchBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 1rem;
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #ca8a04;
+  border: 1px solid #ca8a04;
+  white-space: nowrap;
+  width: fit-content;
 }
 
 /* Mobile — collapse to stacked card-like rows */

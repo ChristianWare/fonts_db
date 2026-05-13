@@ -134,15 +134,31 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       <div className={`${styles.cell} ${styles.colNumber}`}>{index}.</div>
       <div className={`${styles.cell} ${styles.colType}`}>
         <span className={styles.cellLabelMobile}>Lead Type</span>
-        <span className={`${styles.priorityBadge} ${priorityClass}`}>
-          <span className={styles.priorityEmoji}>{typeEmoji}</span>
-          {typeLabel}
-        </span>
+        <div className={styles.priorityStack}>
+          <span className={`${styles.priorityBadge} ${priorityClass}`}>
+            <span className={styles.priorityEmoji}>{typeEmoji}</span>
+            {typeLabel}
+          </span>
+          {result.temperature !== "cold" &&
+            typeof result.aiScore === "number" && (
+              <span className={styles.scoreBadge}>Score {result.aiScore}</span>
+            )}
+        </div>
       </div>
 
       <div className={`${styles.cell} ${styles.colBusiness}`}>
         <p className={styles.businessName}>{businessName}</p>
         <p className={styles.businessCategory}>{businessSub}</p>
+        <div className={styles.businessBadges}>
+          {result.contactReady && (
+            <span className={styles.contactReadyBadge}>✓ Contact Ready</span>
+          )}
+          {result.temperature !== "cold" &&
+            typeof result.aiScore === "number" &&
+            result.aiScore >= 85 && (
+              <span className={styles.topMatchBadge}>⭐ Top Match</span>
+            )}
+        </div>
       </div>
 
       <div className={`${styles.cell} ${styles.colMeta}`}>
