@@ -24,10 +24,10 @@ function buildColdHref(placeId: string, category: string): string {
 function formatEventDate(iso: string): string | null {
   const date = new Date(iso);
   if (isNaN(date.getTime())) return null;
-  return date.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
+  return date.toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
   });
 }
 
