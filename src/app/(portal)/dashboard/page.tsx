@@ -1,13 +1,12 @@
 import { getClientProfile } from "@/actions/client/getClientProfile";
+import { getProductAccess } from "@/lib/subscriptions";
 import { auth } from "../../../../auth";
 import styles from "./DashboardPage.module.css";
 import Link from "next/link";
 
-// ── Mock subscription state — replace with real data later ──
-// Same as the layout for now. Eventually pull from getClientProfile.
+// ── Mock subscription state — website still needs wiring ──
 const MOCK_SUBSCRIPTIONS = {
   hasWebsite: true,
-  hasLeads: false,
 };
 
 export default async function DashboardPage() {
@@ -17,6 +16,11 @@ export default async function DashboardPage() {
   const firstName = session?.user?.name?.split(" ")[0] ?? "there";
   const isLive = profile?.onboardingStage === "SITE_LIVE";
   const liveUrl = profile?.liveUrl ?? null;
+
+  // Real leads access — admins always see it as enrolled
+  const isAdmin = session?.user?.roles?.includes("ADMIN") ?? false;
+  const access = profile ? await getProductAccess(profile.id) : null;
+  const hasLeads = (access?.hasLeads ?? false) || isAdmin;
 
   return (
     <div className={styles.page}>
@@ -82,7 +86,6 @@ export default async function DashboardPage() {
                   href={liveUrl}
                   target='_blank'
                   rel='noopener noreferrer'
-                  // onClick={(e) => e.stopPropagation()}
                   className={styles.productSecondaryCta}
                 >
                   Visit Site ↗
@@ -135,7 +138,7 @@ export default async function DashboardPage() {
         )}
 
         {/* LEADS CARD */}
-        {MOCK_SUBSCRIPTIONS.hasLeads ? (
+        {hasLeads ? (
           <Link href='/dashboard/leads' className={styles.productCard}>
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>

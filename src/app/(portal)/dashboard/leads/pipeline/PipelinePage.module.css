@@ -61,10 +61,6 @@
     box-shadow 0.15s ease;
 }
 
-/* .section:last-child {
-  border-bottom: none;
-} */
-
 .sectionDragOver {
   background-color: rgba(252, 211, 77, 0.08);
   box-shadow: inset 0 0 0 2px var(--accent);
@@ -75,10 +71,8 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  /* margin-bottom: 2rem; */
   padding: 2rem 3rem;
   background-color: rgba(0, 0, 0, 0.03);
-  border: none;
   border-bottom: 1px solid var(--grayii);
   cursor: pointer;
   width: 100%;
@@ -92,12 +86,19 @@
   background-color: rgba(0, 0, 0, 0.06);
 }
 
+/* Smoothly rotating collapse arrow */
 .collapseIcon {
   font-size: 1.6rem;
   color: var(--text);
   opacity: 0.6;
   width: 1.5rem;
   display: inline-block;
+  transition: transform 0.3s ease;
+  transform: rotate(0deg);
+}
+
+.collapseIconClosed {
+  transform: rotate(-90deg);
 }
 
 .statusLabel {
@@ -113,27 +114,22 @@
   background-color: var(--accent);
   color: var(--black);
 }
-
 .status_CONTACTED {
   background-color: #3b82f6;
   color: var(--white);
 }
-
 .status_NURTURING {
   background-color: #f59e0b;
   color: var(--white);
 }
-
 .status_SNOOZED {
   background-color: var(--lightGray);
   color: var(--white);
 }
-
 .status_WON {
   background-color: #16a34a;
   color: var(--white);
 }
-
 .status_DEAD {
   background-color: #ef4444;
   color: var(--white);
@@ -146,10 +142,21 @@
   opacity: 0.7;
 }
 
-/* Section body */
+/* Section body — grid trick gives smooth open/close at any height */
 .sectionBody {
-  padding: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease-in-out;
   background-color: var(--white);
+}
+
+.sectionBodyOpen {
+  grid-template-rows: 1fr;
+}
+
+.sectionBodyInner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .emptyRow {
@@ -182,6 +189,32 @@
   text-align: left;
   padding: 1.5rem 2rem;
   font-weight: normal;
+}
+
+/* Sortable column header */
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.sortableHeader:hover {
+  color: var(--black);
+  opacity: 1;
+}
+
+.sortableHeaderActive {
+  color: var(--black);
+  opacity: 1;
+}
+
+.sortIndicator {
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-size: 1.2rem;
+  min-width: 1rem;
 }
 
 .dragHeaderCell {
@@ -239,6 +272,27 @@
   opacity: 0.9;
 }
 
+/* Lead score cell */
+.scoreCell {
+  white-space: nowrap;
+  font-family: var(--GeistMono);
+}
+
+.leadScore {
+  font-family: var(--GeistMono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.leadScoreOutOf {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text);
+  opacity: 0.6;
+  margin-left: 0.2rem;
+}
+
 .nameCell {
   min-width: 25rem;
 }
@@ -288,7 +342,6 @@
 
 .actionCell {
   text-align: right;
-  /* width: 12rem; */
 }
 
 .viewLink {
@@ -311,7 +364,7 @@
   border-color: var(--black);
 }
 
-/* Stack everything vertically on narrow screens — no columns hidden */
+/* Stack everything vertically on narrow screens */
 @media screen and (max-width: 1268px) {
   .table thead {
     display: none;
@@ -362,7 +415,8 @@
 
   .ratingCell,
   .phoneCell,
-  .savedCell {
+  .savedCell,
+  .scoreCell {
     padding: 0.4rem 0;
   }
 
@@ -379,9 +433,9 @@
   }
 
   .btnContainer {
-  display: grid;
-  width: 50%;
-}
+    display: grid;
+    width: 50%;
+  }
 }
 
 @media screen and (max-width: 768px) {

@@ -29,9 +29,16 @@ type SerializedLead = {
   status: LeadStatus;
   notes: string | null;
   priority: LeadPriority;
+  aiScore: number | null;
   createdAt: string;
   hasScripts: boolean;
   hasBrief: boolean;
+  eventbriteId: string | null;
+  eventName: string | null;
+  eventDate: string | null;
+  venueName: string | null;
+  expectedAttendance: number | null;
+  organizerName: string | null;
 };
 
 type Counts = {
@@ -45,7 +52,7 @@ type Counts = {
 };
 
 type ViewMode = "spreadsheet" | "cards";
-type TypeFilter = "all" | "hot" | "warm" | "cold";
+type TypeFilter = "hot" | "warm" | "cold";
 
 type Props = {
   leads: SerializedLead[];
@@ -53,23 +60,27 @@ type Props = {
 
 export default function SavedLeadsHub({ leads }: Props) {
   const [view, setView] = useState<ViewMode>("spreadsheet");
-  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
 
-  // Total per-temperature counts across all statuses — used in tab labels
   const typeCounts = {
-    all: leads.length,
     hot: leads.filter((l) => l.leadType === "HOT").length,
     warm: leads.filter((l) => l.leadType === "WARM").length,
     cold: leads.filter((l) => l.leadType === "COLD").length,
   };
 
-  // Filter leads based on selected temperature tab
-  const filteredLeads =
-    typeFilter === "all"
-      ? leads
-      : leads.filter((l) => l.leadType === typeFilter.toUpperCase());
+  // Smart default: pick the temperature that has the most leads,
+  // falling back through hot → warm → cold
+  const defaultFilter: TypeFilter = (() => {
+    if (typeCounts.hot > 0) return "hot";
+    if (typeCounts.warm > 0) return "warm";
+    return "cold";
+  })();
 
-  // Re-derive status counts for the filtered subset so cards-view badges match
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>(defaultFilter);
+
+  const filteredLeads = leads.filter(
+    (l) => l.leadType === typeFilter.toUpperCase(),
+  );
+
   const filteredCounts: Counts = {
     all: filteredLeads.length,
     NEW: filteredLeads.filter((l) => l.status === "NEW").length,
@@ -93,9 +104,7 @@ export default function SavedLeadsHub({ leads }: Props) {
         ? styles.toolbarBtnHot
         : filter === "warm"
           ? styles.toolbarBtnWarm
-          : filter === "cold"
-            ? styles.toolbarBtnCold
-            : "";
+          : styles.toolbarBtnCold;
     return `${styles.toolbarBtn} ${styles.toolbarBtnActive} ${tinted}`.trim();
   }
 
@@ -105,7 +114,6 @@ export default function SavedLeadsHub({ leads }: Props) {
         <div className={styles.toolbarGroup}>
           <span className={styles.toolbarLabel}>View</span>
 
-          {/* Desktop: button row */}
           <div className={styles.toolbarBtnRow}>
             <button
               type='button'
@@ -123,7 +131,6 @@ export default function SavedLeadsHub({ leads }: Props) {
             </button>
           </div>
 
-          {/* Mobile: dropdown */}
           <select
             value={view}
             onChange={(e) => setView(e.target.value as ViewMode)}
@@ -138,15 +145,7 @@ export default function SavedLeadsHub({ leads }: Props) {
         <div className={styles.toolbarGroup}>
           <span className={styles.toolbarLabel}>Type</span>
 
-          {/* Desktop: button row */}
           <div className={styles.toolbarBtnRow}>
-            <button
-              type='button'
-              onClick={() => setTypeFilter("all")}
-              className={typeBtnClass("all")}
-            >
-              All ({typeCounts.all})
-            </button>
             <button
               type='button'
               onClick={() => setTypeFilter("hot")}
@@ -170,14 +169,12 @@ export default function SavedLeadsHub({ leads }: Props) {
             </button>
           </div>
 
-          {/* Mobile: dropdown */}
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
             className={styles.mobileToolbarSelect}
             aria-label='Type'
           >
-            <option value='all'>All ({typeCounts.all})</option>
             <option value='hot'>🔥 Hot ({typeCounts.hot})</option>
             <option value='warm'>🌡️ Warm ({typeCounts.warm})</option>
             <option value='cold'>🧊 Cold ({typeCounts.cold})</option>
@@ -203,17 +200,25 @@ export default function SavedLeadsHub({ leads }: Props) {
       ) : view === "spreadsheet" ? (
         <PipelineBoard
           key={typeFilter}
+          typeFilter={typeFilter}
           initialLeads={filteredLeads.map((l) => ({
             id: l.id,
+            leadType: l.leadType,
             googlePlaceId: l.googlePlaceId,
+            eventbriteId: l.eventbriteId,
             status: l.status,
             category: l.category,
             businessName: l.businessName,
             rating: l.rating,
             reviewCount: l.reviewCount,
             businessPhone: l.businessPhone,
-            priority: l.priority,
+            aiScore: l.aiScore,
             createdAt: l.createdAt,
+            eventName: l.eventName,
+            eventDate: l.eventDate,
+            venueName: l.venueName,
+            expectedAttendance: l.expectedAttendance,
+            organizerName: l.organizerName,
           }))}
         />
       ) : (
