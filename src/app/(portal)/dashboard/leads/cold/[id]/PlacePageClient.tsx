@@ -16,7 +16,7 @@ import PriorityBadge from "../../[id]/_components/PriorityBadge";
 import type { LeadPriorityResult } from "@/lib/leadPriority";
 import type { SeasonalGuidance } from "@/lib/leadSeasonality";
 import Modal from "@/components/shared/Modal/Modal";
-
+import Arrow from "@/components/shared/icons/Arrow/Arrow";
 
 type LeadStatus =
   | "NEW"
@@ -291,7 +291,8 @@ export default function PlacePageClient({
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Guard against double-firing across StrictMode + re-renders
   const aiKickedOff = useRef(false);
@@ -522,6 +523,25 @@ export default function PlacePageClient({
     }
   }
 
+  function openLightbox(idx: number) {
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+  }
+
+  function closeLightbox() {
+    setLightboxOpen(false);
+  }
+
+  function prevPhoto() {
+    setLightboxIndex((prev) =>
+      prev === 0 ? displayedPhotos.length - 1 : prev - 1,
+    );
+  }
+
+  function nextPhoto() {
+    setLightboxIndex((prev) => (prev + 1) % displayedPhotos.length);
+  }
+
   const todayName = DAY_NAMES[new Date().getDay()];
   const todayHoursIndex =
     preview?.hours?.findIndex((h) => h.startsWith(todayName)) ?? -1;
@@ -541,6 +561,28 @@ export default function PlacePageClient({
   const mailtoUrl = emailScript
     ? `mailto:?subject=${encodeURIComponent(emailScript.subject ?? "")}&body=${encodeURIComponent(emailScript.body)}`
     : null;
+
+  const displayedPhotos = preview?.photos?.slice(0, 6) ?? [];
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") prevPhoto();
+      else if (e.key === "ArrowRight") nextPhoto();
+    };
+
+    window.addEventListener("keydown", handleKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = prevOverflow;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightboxOpen, displayedPhotos.length]);
 
   return (
     <div className={detailStyles.layout}>
@@ -602,11 +644,23 @@ export default function PlacePageClient({
             )}
           </div>
           {/* PHOTOS */}
-          {preview?.photos && preview.photos.length > 0 && (
+          {displayedPhotos.length > 0 && (
             <section className={previewStyles.photosSection}>
               <div className={previewStyles.photosRow}>
-                {preview.photos.slice(0, 6).map((photo, i) => (
-                  <div key={photo.name} className={previewStyles.photoWrap}>
+                {displayedPhotos.map((photo, i) => (
+                  <div
+                    key={photo.name}
+                    className={previewStyles.photoWrap}
+                    onClick={() => openLightbox(i)}
+                    role='button'
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openLightbox(i);
+                      }
+                    }}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`/api/leads/place-photo?name=${encodeURIComponent(photo.name)}&maxWidth=600`}
@@ -1353,6 +1407,61 @@ export default function PlacePageClient({
           )}
         </div>
       </aside>
+      {lightboxOpen && displayedPhotos[lightboxIndex] && (
+        <div
+          className={previewStyles.lightboxOverlay}
+          onClick={closeLightbox}
+          role='dialog'
+          aria-modal='true'
+        >
+          <button
+            type='button'
+            onClick={(e) => {
+              e.stopPropagation();
+              closeLightbox();
+            }}
+            className={previewStyles.lightboxClose}
+            aria-label='Close'
+          >
+            ×
+          </button>
+          <button
+            type='button'
+            onClick={(e) => {
+              e.stopPropagation();
+              prevPhoto();
+            }}
+            className={previewStyles.lightboxPrev}
+            aria-label='Previous photo'
+          >
+            <Arrow style={{ transform: "rotate(-90deg)" }} />
+          </button>
+          <div
+            className={previewStyles.lightboxImageWrap}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/api/leads/place-photo?name=${encodeURIComponent(
+                displayedPhotos[lightboxIndex].name,
+              )}&maxWidth=1600`}
+              alt={`${lead.businessName ?? "Place"} photo ${lightboxIndex + 1}`}
+              className={previewStyles.lightboxImage}
+            />
+          </div>
+          <button
+            type='button'
+            onClick={(e) => {
+              e.stopPropagation();
+              nextPhoto();
+            }}
+            className={previewStyles.lightboxNext}
+            aria-label='Next photo'
+          >
+            <Arrow style={{ transform: "rotate(90deg)" }} />
+          </button>
+        </div>
+      )}
       <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
         <div className={placeStyles.deleteModalContent}>
           <p className={placeStyles.deleteModalTitle}>Delete this lead?</p>

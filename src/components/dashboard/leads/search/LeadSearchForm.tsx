@@ -84,7 +84,7 @@ const MIN_SCORE_OPTIONS: Array<{ value: number; label: string }> = [
   { value: 85, label: "85+ (top)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v11";
+const STORAGE_KEY = "leadSearch:state:v12";
 const DEFAULT_MIN_SCORE = 50;
 
 type StoredState = {
@@ -184,8 +184,10 @@ export default function LeadSearchForm() {
   const [freshOnly, setFreshOnly] = useState(false);
   const [contactReadyOnly, setContactReadyOnly] = useState(false);
   const [minScore, setMinScore] = useState<number>(DEFAULT_MIN_SCORE);
-  const [headerSort, setHeaderSort] = useState<HeaderSortState | null>(null);
-
+  const [headerSort, setHeaderSort] = useState<HeaderSortState | null>({
+    field: "score",
+    direction: "desc",
+  });
   const [searchedTemperature, setSearchedTemperature] =
     useState<Temperature | null>(null);
   const [searchedCategories, setSearchedCategories] = useState<string[]>([]);
