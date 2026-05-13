@@ -445,12 +445,13 @@
 }
 
 .scoreReasoningScore {
-  font-family: var(--GeistMono);
-  font-size: 5rem;
-  color: var(--accent);
-  margin: 0;
-  font-weight: 700;
-  line-height: 1.1;
+  font-family: var(--RobotoFlexii);
+    color: var(--accent);
+    letter-spacing: -1.5px;
+    font-variation-settings: "wght" 700;
+    -webkit-font-smoothing: antialiased;
+    font-size: 6rem;
+    line-height: .9;
 }
 
 .scoreReasoningOutOf {

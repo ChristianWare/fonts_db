@@ -275,7 +275,10 @@
   background-color: var(--white);
   color: var(--black);
   width: 100%;
+  height: fit-content;
   cursor: pointer;
+  /* display: grid; */
+  padding-bottom: 8rem;
 }
 
 .mobileMultiSelect:focus {
@@ -289,6 +292,7 @@
   font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin-bottom: 1rem;
 }
 
 .mobileMultiSelect option:checked {

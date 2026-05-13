@@ -600,14 +600,14 @@
 .apolloPersonEmail {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
-  color: var(--accent);
+  color: var(--blue);
   text-decoration: underline;
 }
 
 .apolloPersonLink {
   font-family: var(--Roboto);
   font-size: 1.6rem;
-  color: var(--text);
+  color: var(--blue);
   text-decoration: underline;
 }
 
@@ -668,7 +668,7 @@
   letter-spacing: 0.08em;
   padding: 2rem;
   background-color: var(--black);
-  color: var(--accent);
+  color: var(--blue);
   text-decoration: none;
   transition: opacity 0.15s ease;
 }

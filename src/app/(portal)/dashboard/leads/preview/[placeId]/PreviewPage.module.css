@@ -771,4 +771,24 @@
   .photosRow {
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   }
+
+  .lightboxImage,
+  .lightboxImageWrap {
+    max-height: 70vh;
+  }
+
+  .lightboxPrev,
+  .lightboxNext {
+    top: auto;
+    bottom: 2rem;
+    transform: none;
+  }
+
+  .lightboxPrev {
+    left: 2rem;
+  }
+
+  .lightboxNext {
+    right: 2rem;
+  }
 }
