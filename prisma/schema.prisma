@@ -902,8 +902,9 @@ model EventbriteEvent {
   marketCity  String
   marketState String?
 
-  aiScore   Int?
-  fetchedAt DateTime @default(now())
+  aiScore          Int?
+  aiScoreReasoning String?  @db.Text // ADD
+  fetchedAt        DateTime @default(now())
 
   // === ENRICHMENT FIELDS (chunk 4) ===
 

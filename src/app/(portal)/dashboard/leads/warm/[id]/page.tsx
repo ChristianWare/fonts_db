@@ -251,6 +251,7 @@ export default async function WarmLeadPage({
       organizerPhone: event.organizerPhone,
       category: event.category,
       aiScore: event.aiScore,
+      aiScoreReasoning: event.aiScoreReasoning,
       url: event.eventbriteUrl ?? eventUrl,
       // === Enrichment fields (chunk 4) ===
       isCorporate: event.isCorporate,

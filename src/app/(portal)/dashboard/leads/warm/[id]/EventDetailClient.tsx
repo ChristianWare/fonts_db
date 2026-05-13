@@ -76,6 +76,7 @@ type SerializedEvent = {
   organizerPhone: string | null;
   category: string | null;
   aiScore: number | null;
+  aiScoreReasoning: string | null;
   url: string;
   // === Enrichment fields (chunk 4) ===
   isCorporate: boolean;
@@ -272,6 +273,9 @@ export default function EventDetailClient({
   const [generatingApollo, setGeneratingApollo] = useState(
     !lead.apolloEnrichment || lead.apolloEnrichment.enabled === false,
   );
+  const [generatingScoreReasoning, setGeneratingScoreReasoning] = useState(
+    lead.event.aiScore != null && !lead.event.aiScoreReasoning,
+  );
 
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -302,9 +306,7 @@ export default function EventDetailClient({
 
   // Whether to render the venue contact card
   const hasVenueContact =
-    event.venuePhone ||
-    event.venueWebsite ||
-    event.venueRating != null;
+    event.venuePhone || event.venueWebsite || event.venueRating != null;
 
   // Whether to render the organizer business card
   const hasOrganizerBusiness = event.organizerWebsite || event.organizerDomain;
@@ -355,6 +357,9 @@ export default function EventDetailClient({
     if (!lead.isDraft && lead.outreachScripts.length === 0) {
       generateAi("generate-scripts", "scripts");
     }
+    if (lead.event.aiScore != null && !lead.event.aiScoreReasoning) {
+      generateAi("score-reasoning", "scoreReasoning");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -375,13 +380,18 @@ export default function EventDetailClient({
     if (lead.apolloEnrichment) setGeneratingApollo(false);
   }, [lead.apolloEnrichment]);
 
+  useEffect(() => {
+    if (lead.event.aiScoreReasoning) setGeneratingScoreReasoning(false);
+  }, [lead.event.aiScoreReasoning]);
+
   async function generateAi(
     endpoint:
       | "strategic-brief"
       | "decision-maker"
       | "apollo-enrich"
-      | "generate-scripts",
-    field: "brief" | "dm" | "apollo" | "scripts",
+      | "generate-scripts"
+      | "score-reasoning",
+    field: "brief" | "dm" | "apollo" | "scripts" | "scoreReasoning",
     force = false,
   ) {
     const setLoading = {
@@ -389,6 +399,7 @@ export default function EventDetailClient({
       dm: setGeneratingDM,
       apollo: setGeneratingApollo,
       scripts: setGeneratingScripts,
+      scoreReasoning: setGeneratingScoreReasoning,
     }[field];
     setLoading(true);
     try {
@@ -431,6 +442,9 @@ export default function EventDetailClient({
         setLead((prev) => ({ ...prev, isDraft: false }));
         generateAi("generate-scripts", "scripts", true);
         generateAi("apollo-enrich", "apollo");
+        if (lead.event.aiScore != null && !lead.event.aiScoreReasoning) {
+          generateAi("score-reasoning", "scoreReasoning");
+        }
       }
     } finally {
       setSaving(false);
@@ -786,14 +800,59 @@ export default function EventDetailClient({
                   : (event.category ?? "Event")}
               </p>
             </div>
-            {event.aiScore != null && (
-              <div className={styles.factCell}>
-                <p className={styles.factLabel}>Lead score</p>
-                <p className={styles.factValue}>{event.aiScore}/100</p>
-              </div>
-            )}
           </div>
         </section>
+
+        {/* === SCORE REASONING CARD === */}
+        {event.aiScore != null && (
+          <section className={styles.scoreReasoningCard}>
+            <div className={styles.scoreReasoningHeader}>
+              <div className={styles.scoreReasoningHeaderLeft}>
+                <p className={styles.scoreReasoningLabel}>Lead score</p>
+                <p className={styles.scoreReasoningScore}>
+                  {event.aiScore}
+                  <span className={styles.scoreReasoningOutOf}>/100</span>
+                </p>
+              </div>
+              {event.aiScoreReasoning && !generatingScoreReasoning && (
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("score-reasoning", "scoreReasoning", true)
+                  }
+                  className={detailStyles.regenerateBtn}
+                >
+                  Regenerate
+                </button>
+              )}
+            </div>
+
+            {generatingScoreReasoning ? (
+              <p className={styles.scoreReasoningEmpty}>
+                ✨ Analyzing what drove this score…
+              </p>
+            ) : event.aiScoreReasoning ? (
+              <p className={styles.scoreReasoningBody}>
+                {event.aiScoreReasoning}
+              </p>
+            ) : (
+              <div>
+                <p className={styles.scoreReasoningEmpty}>
+                  Reasoning generation failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("score-reasoning", "scoreReasoning", true)
+                  }
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* === VENUE CONTACT CARD (chunk 5) === */}
         {hasVenueContact && (
@@ -811,7 +870,8 @@ export default function EventDetailClient({
                 {event.venueRating.toFixed(1)}
                 {event.venueReviewCount != null && (
                   <span className={styles.enrichmentReviews}>
-                    {" "}({event.venueReviewCount.toLocaleString()} reviews)
+                    {" "}
+                    ({event.venueReviewCount.toLocaleString()} reviews)
                   </span>
                 )}
               </p>
@@ -837,8 +897,8 @@ export default function EventDetailClient({
               )}
             </div>
             <p className={styles.enrichmentTip}>
-              💡 You can pitch the venue&apos;s event coordinator directly — they
-              often have their own transport-partner relationships separate
+              💡 You can pitch the venue&apos;s event coordinator directly —
+              they often have their own transport-partner relationships separate
               from the organizer.
             </p>
           </section>
@@ -1012,8 +1072,8 @@ export default function EventDetailClient({
               <p className={styles.enrichmentSubject}>{event.organizerName}</p>
             )}
             <p className={styles.enrichmentDesc}>
-              This organizer has a verified business profile. Use it to
-              research them before reaching out.
+              This organizer has a verified business profile. Use it to research
+              them before reaching out.
             </p>
             <div className={styles.enrichmentLinks}>
               {event.organizerWebsite && (
@@ -1078,8 +1138,8 @@ export default function EventDetailClient({
           <ul className={styles.pitchList}>
             <li className={styles.pitchItem}>
               <strong>VIP / sponsor pickup</strong> — donors and headliners
-              expect car service to and from the venue. Often comp&apos;d by
-              the host as part of the donor experience.
+              expect car service to and from the venue. Often comp&apos;d by the
+              host as part of the donor experience.
             </li>
             <li className={styles.pitchItem}>
               <strong>Hotel-to-venue shuttle</strong> — out-of-town attendees
@@ -1087,14 +1147,14 @@ export default function EventDetailClient({
               fee, predictable revenue.
             </li>
             <li className={styles.pitchItem}>
-              <strong>Late-night safe rides home</strong> — alcohol service
-              plus an older guest list = liability concerns. Cars on standby
-              from 10pm–midnight is an easy add-on.
+              <strong>Late-night safe rides home</strong> — alcohol service plus
+              an older guest list = liability concerns. Cars on standby from
+              10pm–midnight is an easy add-on.
             </li>
             <li className={styles.pitchItem}>
-              <strong>Keynote / honoree transport</strong> — speakers and
-              award recipients get cars. Single-trip or round-trip from
-              airport / hotel.
+              <strong>Keynote / honoree transport</strong> — speakers and award
+              recipients get cars. Single-trip or round-trip from airport /
+              hotel.
             </li>
           </ul>
         </section>
@@ -1123,9 +1183,8 @@ export default function EventDetailClient({
                 🔒 Save this lead to unlock outreach scripts
               </p>
               <p className={styles.scriptsGatedDesc}>
-                We&apos;ll generate personalized email, cold call, LinkedIn,
-                and SMS scripts referencing this specific event the moment you
-                save.
+                We&apos;ll generate personalized email, cold call, LinkedIn, and
+                SMS scripts referencing this specific event the moment you save.
               </p>
             </div>
           ) : generatingScripts ? (
