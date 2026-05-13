@@ -34,7 +34,6 @@ function formatEventDate(iso: string): string | null {
 function daysUntilEvent(iso: string): number | null {
   const date = new Date(iso);
   if (isNaN(date.getTime())) return null;
-  // Midnight-to-midnight comparison — avoids time-of-day skew
   const now = new Date();
   const eventDay = new Date(
     date.getFullYear(),
@@ -56,109 +55,87 @@ function formatDaysLeft(days: number): string {
 export default function LeadRow({ result, isPending, onSave, index }: Props) {
   const saved = isSaved(result.savedState);
 
-  let priorityClass: string;
-  let typeLabel: string;
-  let typeEmoji: string;
   let businessName: string;
   let businessSub: string;
   let metaLabel: string;
   let metaPrimary: string | null;
   let metaSecondary: string | null;
-  let contactLabel: string;
-  let contactDisplay: string | null;
-  let contactHref: string | null;
-  let contactClass: string;
   let viewHref: string;
 
+  // Hot leads surface time-left as a badge in the business cell so the urgency
+  // signal isn't lost when we drop the contact column
+  let timeLeftBadge: { text: string; urgencyClass: string } | null = null;
+
   if (result.temperature === "cold") {
-    priorityClass = styles.priorityLow;
-    typeLabel = "Cold";
-    typeEmoji = "🧊";
     businessName = result.name;
-    businessSub = result.category;
-    metaLabel = "Rating";
+    businessSub = "";
+    metaLabel = "Google rating";
     metaPrimary =
       result.rating !== null ? `★ ${result.rating.toFixed(1)}` : null;
     metaSecondary =
       result.reviewCount !== null ? `(${result.reviewCount})` : null;
-    contactLabel = "Phone";
-    contactDisplay = result.phone;
-    contactHref = result.phone ? `tel:${result.phone}` : null;
-    contactClass = "";
     viewHref = buildColdHref(result.placeId, result.category);
   } else if (result.temperature === "warm") {
-    priorityClass = styles.priorityMed;
-    typeLabel = "Warm";
-    typeEmoji = "🌡️";
     businessName = result.eventName;
-    businessSub = result.category;
+    // Keep venue visible under the event name — category gets its own column
+    businessSub = result.venue ?? "";
     metaLabel = "Date";
     metaPrimary = formatEventDate(result.eventDateIso);
     metaSecondary = null;
-    contactLabel = "Venue";
-    contactDisplay = result.venue;
-    contactHref = null;
-    contactClass = "";
     viewHref = `/dashboard/leads/warm/${encodeURIComponent(result.externalId)}`;
   } else {
-    // hot — Eventbrite event ≤14 days out
-    priorityClass = styles.priorityHigh;
-    typeLabel = "Hot";
-    typeEmoji = "🔥";
+    // hot
     businessName = result.eventName;
-    businessSub = result.category;
+    businessSub = "";
     metaLabel = "Date";
     metaPrimary = formatEventDate(result.eventDateIso);
     metaSecondary = null;
-    contactLabel = "Time left";
 
     const days = daysUntilEvent(result.eventDateIso);
-    if (days === null) {
-      contactDisplay = null;
-      contactClass = "";
-    } else {
-      contactDisplay = formatDaysLeft(days);
-      contactClass =
-        days <= 3
-          ? styles.urgencyHigh
-          : days <= 7
-            ? styles.urgencyMed
-            : styles.urgencyLow;
+    if (days !== null) {
+      timeLeftBadge = {
+        text: formatDaysLeft(days),
+        urgencyClass:
+          days <= 3
+            ? styles.urgencyHigh
+            : days <= 7
+              ? styles.urgencyMed
+              : styles.urgencyLow,
+      };
     }
-    contactHref = null;
+
     viewHref = `/dashboard/leads/hot/${encodeURIComponent(result.externalId)}`;
   }
 
   return (
     <div className={styles.row}>
       <div className={`${styles.cell} ${styles.colNumber}`}>{index}.</div>
-      <div className={`${styles.cell} ${styles.colType}`}>
-        <span className={styles.cellLabelMobile}>Lead Type</span>
-        <div className={styles.priorityStack}>
-          <span className={`${styles.priorityBadge} ${priorityClass}`}>
-            <span className={styles.priorityEmoji}>{typeEmoji}</span>
-            {typeLabel}
-          </span>
-          {result.temperature !== "cold" &&
-            typeof result.aiScore === "number" && (
-              <span className={styles.scoreBadge}>Score {result.aiScore}</span>
-            )}
-        </div>
-      </div>
 
       <div className={`${styles.cell} ${styles.colBusiness}`}>
         <p className={styles.businessName}>{businessName}</p>
-        <p className={styles.businessCategory}>{businessSub}</p>
+        {businessSub && (
+          <p className={styles.businessCategory}>{businessSub}</p>
+        )}
         <div className={styles.businessBadges}>
           {result.contactReady && (
             <span className={styles.contactReadyBadge}>✓ Contact Ready</span>
           )}
-          {result.temperature !== "cold" &&
-            typeof result.aiScore === "number" &&
-            result.aiScore >= 85 && (
-              <span className={styles.topMatchBadge}>⭐ Top Match</span>
-            )}
+          {typeof result.aiScore === "number" && result.aiScore >= 85 && (
+            <span className={styles.topMatchBadge}>⭐ Top Match</span>
+          )}
+          {timeLeftBadge && (
+            <span
+              className={`${styles.scoreBadge} ${timeLeftBadge.urgencyClass}`}
+            >
+              ⏰ {timeLeftBadge.text}
+            </span>
+          )}
         </div>
+      </div>
+
+      <div className={`${styles.cell} ${styles.colCategory}`}>
+        <span className={styles.cellLabelMobile}>Category</span>
+        <span className={styles.metaPrimary}>{result.category}</span>
       </div>
 
       <div className={`${styles.cell} ${styles.colMeta}`}>
@@ -176,17 +153,12 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
       </div>
 
       <div className={`${styles.cell} ${styles.colContact}`}>
-        <span className={styles.cellLabelMobile}>{contactLabel}</span>
-        {contactDisplay ? (
-          contactHref ? (
-            <a href={contactHref} className={styles.contactLink}>
-              {contactDisplay}
-            </a>
-          ) : (
-            <span className={contactClass || styles.contactText}>
-              {contactDisplay}
-            </span>
-          )
+        <span className={styles.cellLabelMobile}>Lead score</span>
+        {typeof result.aiScore === "number" ? (
+          <span className={styles.metaWrap}>
+            <span className={styles.metaPrimary}>{result.aiScore}</span>
+            <span className={styles.metaSecondary}>/100</span>
+          </span>
         ) : (
           <span className={styles.metaSecondary}>—</span>
         )}

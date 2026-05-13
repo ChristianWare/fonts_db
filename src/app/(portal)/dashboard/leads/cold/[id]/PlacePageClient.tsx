@@ -92,6 +92,8 @@ type SerializedLead = {
   isDraft: boolean;
   strategicBrief: string | null;
   reviewIntelligence: string | null;
+  aiScore: number | null;
+  aiScoreReasoning: string | null;
   decisionMaker: DecisionMaker | null;
   competitiveAnalysis: CompetitiveAnalysis | null;
   apolloEnrichment: ApolloEnrichment | null;
@@ -803,6 +805,26 @@ export default function PlacePageClient({
             </section>
           )}
         </section>
+
+        {/* === SCORE REASONING CARD === */}
+        {lead.aiScore != null && (
+          <section className={placeStyles.scoreReasoningCard}>
+            <div className={placeStyles.scoreReasoningHeader}>
+              <div className={placeStyles.scoreReasoningHeaderLeft}>
+                <p className={placeStyles.scoreReasoningLabel}>Lead score</p>
+                <p className={placeStyles.scoreReasoningScore}>
+                  {lead.aiScore}
+                  <span className={placeStyles.scoreReasoningOutOf}>/100</span>
+                </p>
+              </div>
+            </div>
+            {lead.aiScoreReasoning && (
+              <p className={placeStyles.scoreReasoningBody}>
+                {lead.aiScoreReasoning}
+              </p>
+            )}
+          </section>
+        )}
 
         {/* LOCATION CARD */}
         {lead.distanceMiles !== null &&

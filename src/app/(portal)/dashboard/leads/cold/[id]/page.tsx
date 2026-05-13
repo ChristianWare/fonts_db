@@ -10,6 +10,8 @@ import {
 } from "@/lib/leadNextMove";
 import { computeLeadPriority } from "@/lib/leadPriority";
 import { getSeasonalGuidance } from "@/lib/leadSeasonality";
+import { computeColdScore } from "@/lib/leads/coldScore";
+import { generateColdScoreReasoning } from "@/lib/leads/coldScoreReasoning";
 import PlacePageClient from "./PlacePageClient";
 import styles from "./PlacePage.module.css";
 
@@ -183,6 +185,23 @@ export default async function PlacePage({
     );
   }
 
+  // Cold lead score — deterministic, recomputed every page load
+  const scoreBreakdown = computeColdScore({
+    rating: lead.rating,
+    reviewCount: lead.reviewCount,
+    phone: lead.businessPhone,
+    website: lead.businessWebsite,
+    address: lead.businessAddress,
+    name: lead.businessName,
+    businessLat: lead.businessLat,
+    businessLng: lead.businessLng,
+    primaryLat: settings?.primaryLat ?? null,
+    primaryLng: settings?.primaryLng ?? null,
+    serviceRadiusMiles: settings?.serviceRadiusMiles ?? null,
+  });
+
+  const aiScoreReasoning = generateColdScoreReasoning(scoreBreakdown);
+
   let decisionMaker: {
     primary: { title: string; why: string };
     secondary: { title: string; why: string };
@@ -215,6 +234,8 @@ export default async function PlacePage({
     isDraft: lead.isDraft,
     strategicBrief: lead.strategicBrief,
     reviewIntelligence: lead.reviewIntelligence,
+    aiScore: scoreBreakdown.total,
+    aiScoreReasoning,
     decisionMaker,
     competitiveAnalysis: lead.competitiveAnalysis as
       | {

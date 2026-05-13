@@ -12,6 +12,8 @@ import {
   MONTHLY_MARKET_LIMIT,
 } from "@/lib/leads/scrapeQuota";
 import { runOnDemandScrape } from "@/lib/leads/onDemandScrape";
+import { computeColdScore } from "@/lib/leads/coldScore";
+import { generateColdScoreReasoning } from "@/lib/leads/coldScoreReasoning";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel Pro — needed for after() background work
@@ -519,12 +521,30 @@ export async function POST(req: NextRequest) {
           : saved.isFavorite
             ? "favorite"
             : "pipeline";
+
+        // Deterministic scoring from Google Places signals + search center
+        const scoreBreakdown = computeColdScore({
+          rating: r.rating,
+          reviewCount: r.reviewCount,
+          phone: r.phone,
+          website: r.website,
+          address: r.address,
+          name: r.name,
+          businessLat: r.coordinates.lat,
+          businessLng: r.coordinates.lng,
+          primaryLat: lat,
+          primaryLng: lng,
+          serviceRadiusMiles: radiusMiles,
+        });
+
         return {
           ...r,
           temperature: "cold" as const,
           savedState,
           savedLeadId: saved?.id ?? null,
           contactReady: false,
+          aiScore: scoreBreakdown.total,
+          aiScoreReasoning: generateColdScoreReasoning(scoreBreakdown),
         };
       });
     } catch (err) {

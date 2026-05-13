@@ -9,6 +9,9 @@ import type { Temperature, SavedState, SearchResult } from "./cards/types";
 
 type SortOption = "distance" | "rating" | "reviews" | "name";
 
+type HeaderSortField = "business" | "category" | "meta" | "score";
+type HeaderSortState = { field: HeaderSortField; direction: "asc" | "desc" };
+
 type ScrapePhase = {
   jobId: string;
   stage: string;
@@ -81,7 +84,7 @@ const MIN_SCORE_OPTIONS: Array<{ value: number; label: string }> = [
   { value: 85, label: "85+ (top)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v9";
+const STORAGE_KEY = "leadSearch:state:v11";
 const DEFAULT_MIN_SCORE = 50;
 
 type StoredState = {
@@ -91,6 +94,7 @@ type StoredState = {
   freshOnly: boolean;
   contactReadyOnly: boolean;
   minScore: number;
+  headerSort: HeaderSortState | null;
   searchedTemperature: Temperature | null;
   searchedCategories: string[];
   results: SearchResult[];
@@ -130,10 +134,46 @@ function formatElapsed(startedAtMs: number): string {
 }
 
 function resultPassesScoreFilter(r: SearchResult, minScore: number): boolean {
-  if (r.temperature === "cold") return true;
   if (minScore <= 0) return true;
   const score = r.aiScore ?? 0;
   return score >= minScore;
+}
+
+// --- Header-click sort helpers ---
+function getBusinessSortValue(r: SearchResult): string {
+  return (r.temperature === "cold" ? r.name : r.eventName).toLowerCase();
+}
+
+function getCategorySortValue(r: SearchResult): string {
+  return (r.category ?? "").toLowerCase();
+}
+
+function getMetaSortValue(r: SearchResult): number {
+  if (r.temperature === "cold") return r.rating ?? 0;
+  const t = new Date(r.eventDateIso).getTime();
+  return isNaN(t) ? 0 : t;
+}
+
+function applyHeaderSort(
+  rows: SearchResult[],
+  sort: HeaderSortState,
+): SearchResult[] {
+  const copy = [...rows];
+  copy.sort((a, b) => {
+    let diff = 0;
+    if (sort.field === "business") {
+      diff = getBusinessSortValue(a).localeCompare(getBusinessSortValue(b));
+    } else if (sort.field === "category") {
+      diff = getCategorySortValue(a).localeCompare(getCategorySortValue(b));
+    } else if (sort.field === "meta") {
+      diff = getMetaSortValue(a) - getMetaSortValue(b);
+    } else {
+      // score
+      diff = (a.aiScore ?? 0) - (b.aiScore ?? 0);
+    }
+    return sort.direction === "asc" ? diff : -diff;
+  });
+  return copy;
 }
 
 export default function LeadSearchForm() {
@@ -144,6 +184,7 @@ export default function LeadSearchForm() {
   const [freshOnly, setFreshOnly] = useState(false);
   const [contactReadyOnly, setContactReadyOnly] = useState(false);
   const [minScore, setMinScore] = useState<number>(DEFAULT_MIN_SCORE);
+  const [headerSort, setHeaderSort] = useState<HeaderSortState | null>(null);
 
   const [searchedTemperature, setSearchedTemperature] =
     useState<Temperature | null>(null);
@@ -175,6 +216,7 @@ export default function LeadSearchForm() {
       setFreshOnly(stored.freshOnly ?? false);
       setContactReadyOnly(stored.contactReadyOnly ?? false);
       setMinScore(stored.minScore ?? DEFAULT_MIN_SCORE);
+      setHeaderSort(stored.headerSort ?? null);
       setSearchedTemperature(stored.searchedTemperature);
       setSearchedCategories(stored.searchedCategories);
       setResults(stored.results ?? []);
@@ -194,6 +236,7 @@ export default function LeadSearchForm() {
       freshOnly,
       contactReadyOnly,
       minScore,
+      headerSort,
       searchedTemperature,
       searchedCategories,
       results,
@@ -206,6 +249,7 @@ export default function LeadSearchForm() {
     freshOnly,
     contactReadyOnly,
     minScore,
+    headerSort,
     searchedTemperature,
     searchedCategories,
     results,
@@ -220,11 +264,10 @@ export default function LeadSearchForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, freshOnly]);
 
-  // Reset to page 1 when any client-side filter changes
   useEffect(() => {
     if (!hydrated.current) return;
     setCurrentPage(1);
-  }, [contactReadyOnly, minScore]);
+  }, [contactReadyOnly, minScore, headerSort]);
 
   useEffect(() => {
     if (!scrapePhase) return;
@@ -359,6 +402,15 @@ export default function LeadSearchForm() {
     );
   }
 
+  function handleHeaderClick(field: HeaderSortField) {
+    setHeaderSort((prev) => {
+      if (prev?.field === field) {
+        return { field, direction: prev.direction === "asc" ? "desc" : "asc" };
+      }
+      return { field, direction: "asc" };
+    });
+  }
+
   async function executeSearch() {
     if (!selectedTemperature) return;
     setLoading(true);
@@ -482,24 +534,23 @@ export default function LeadSearchForm() {
     executeSearch();
   }
 
-  // ============= Display pipeline =============
-  // 1. Sort: contact-ready leads first, preserve API order otherwise
-  // 2. Apply Ready Only filter (warm/hot only)
-  // 3. Apply Min Score filter (warm/hot only)
   const displayResults = useMemo(() => {
     const ready = results.filter((r) => r.contactReady);
     const notReady = results.filter((r) => !r.contactReady);
     let sorted = [...ready, ...notReady];
 
-    const filtersApply = searchedTemperature !== "cold";
-    if (filtersApply && contactReadyOnly) {
+    if (contactReadyOnly && searchedTemperature !== "cold") {
       sorted = sorted.filter((r) => r.contactReady);
     }
-    if (filtersApply) {
-      sorted = sorted.filter((r) => resultPassesScoreFilter(r, minScore));
+
+    sorted = sorted.filter((r) => resultPassesScoreFilter(r, minScore));
+
+    if (headerSort) {
+      sorted = applyHeaderSort(sorted, headerSort);
     }
+
     return sorted;
-  }, [results, contactReadyOnly, minScore, searchedTemperature]);
+  }, [results, contactReadyOnly, minScore, searchedTemperature, headerSort]);
 
   const readyCount = useMemo(
     () => results.filter((r) => r.contactReady).length,
@@ -625,6 +676,43 @@ export default function LeadSearchForm() {
       </div>
     );
   }
+
+  function SortableHeader({
+    field,
+    label,
+    colClass,
+  }: {
+    field: HeaderSortField;
+    label: string;
+    colClass: string;
+  }) {
+    const active = headerSort?.field === field;
+    const arrow = !active ? "" : headerSort?.direction === "asc" ? " ↑" : " ↓";
+    return (
+      <div
+        role='button'
+        tabIndex={0}
+        onClick={() => handleHeaderClick(field)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleHeaderClick(field);
+          }
+        }}
+        style={{ cursor: "pointer", userSelect: "none" }}
+        aria-label={`Sort by ${label}`}
+        className={`${rowStyles.headerCell} ${colClass}`}
+      >
+        {label}
+        {arrow}
+      </div>
+    );
+  }
+
+  const metaHeaderLabel =
+    searchedTemperature === "cold" ? "Google rating" : "Date";
+  const businessHeaderLabel =
+    searchedTemperature === "cold" ? "Business" : "Event";
 
   return (
     <div className={styles.body}>
@@ -895,29 +983,24 @@ export default function LeadSearchForm() {
             </div>
 
             <div className={styles.filtersBarRight}>
-              {searchedTemperature !== "cold" && (
-                <div className={styles.filterControl}>
-                  <label
-                    htmlFor='minScore'
-                    className={styles.filterControlLabel}
-                  >
-                    Min score
-                  </label>
-                  <select
-                    id='minScore'
-                    value={minScore}
-                    onChange={(e) => setMinScore(Number(e.target.value))}
-                    className={styles.filterControlSelect}
-                    disabled={loading}
-                  >
-                    {MIN_SCORE_OPTIONS.map((s) => (
-                      <option key={s.value} value={s.value}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div className={styles.filterControl}>
+                <label htmlFor='minScore' className={styles.filterControlLabel}>
+                  Min score
+                </label>
+                <select
+                  id='minScore'
+                  value={minScore}
+                  onChange={(e) => setMinScore(Number(e.target.value))}
+                  className={styles.filterControlSelect}
+                  disabled={loading}
+                >
+                  {MIN_SCORE_OPTIONS.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               {searchedTemperature !== "cold" && (
                 <div className={styles.filterControl}>
@@ -943,7 +1026,10 @@ export default function LeadSearchForm() {
                 <select
                   id='sortBy'
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  onChange={(e) => {
+                    setSortBy(e.target.value as SortOption);
+                    setHeaderSort(null);
+                  }}
                   className={styles.filterControlSelect}
                   disabled={loading}
                 >
@@ -980,26 +1066,26 @@ export default function LeadSearchForm() {
               <div className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}>
                 #
               </div>
-              <div className={`${rowStyles.headerCell} ${rowStyles.colType}`}>
-                Lead Type
-              </div>
-              <div
-                className={`${rowStyles.headerCell} ${rowStyles.colBusiness}`}
-              >
-                {searchedTemperature === "cold" ? "Business" : "Event"}
-              </div>
-              <div className={`${rowStyles.headerCell} ${rowStyles.colMeta}`}>
-                {searchedTemperature === "cold" ? "Rating" : "Date"}
-              </div>
-              <div
-                className={`${rowStyles.headerCell} ${rowStyles.colContact}`}
-              >
-                {searchedTemperature === "cold"
-                  ? "Phone"
-                  : searchedTemperature === "warm"
-                    ? "Venue"
-                    : "Time left"}
-              </div>
+              <SortableHeader
+                field='business'
+                label={businessHeaderLabel}
+                colClass={rowStyles.colBusiness}
+              />
+              <SortableHeader
+                field='category'
+                label='Category'
+                colClass={rowStyles.colCategory}
+              />
+              <SortableHeader
+                field='meta'
+                label={metaHeaderLabel}
+                colClass={rowStyles.colMeta}
+              />
+              <SortableHeader
+                field='score'
+                label='Lead score'
+                colClass={rowStyles.colContact}
+              />
               <div className={`${rowStyles.headerCell} ${rowStyles.colSave}`}>
                 Save
               </div>

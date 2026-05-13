@@ -1,4 +1,3 @@
-/* Shared grid template — used by both header and rows */
 .tableWrapper {
   width: 100%;
   border: 1px solid var(--lightGray);
@@ -7,7 +6,7 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 60px 140px 1fr 130px 170px 130px 120px;
+  grid-template-columns: 60px 1fr 180px 140px 110px 130px 120px;
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
@@ -24,9 +23,20 @@
   opacity: 0.55;
 }
 
+.headerCell[role="button"] {
+  transition:
+    opacity 0.12s ease,
+    color 0.12s ease;
+}
+
+.headerCell[role="button"]:hover {
+  opacity: 1;
+  color: var(--black);
+}
+
 .row {
   display: grid;
-  grid-template-columns: 60px 140px 1fr 130px 170px 130px 120px;
+  grid-template-columns: 60px 1fr 180px 140px 110px 130px 120px;
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
@@ -45,44 +55,19 @@
 .cell {
   display: flex;
   align-items: center;
-  min-width: 0; /* allows truncation in business cell */
+  min-width: 0;
 }
 
 .cellLabelMobile {
   display: none;
 }
 
-/* Priority / temperature badge */
-.priorityBadge {
+.colNumber {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.7rem 1.2rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.priorityEmoji {
-  font-size: 1.6rem;
-}
-
-.priorityHigh {
-  background-color: var(--accent);
-  color: var(--black);
-}
-
-.priorityMed {
-  background-color: rgba(245, 158, 11, 0.18);
-  color: #92400e;
-}
-
-.priorityLow {
-  background-color: rgba(0, 0, 0, 0.05);
   color: var(--text);
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
 }
 
 .colBusiness {
@@ -90,10 +75,8 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  /* gap: 1rem; */
 }
 
-/* Business cell */
 .businessName {
   font-family: var(--RobotoFlexii);
   font-size: 1.6rem;
@@ -122,7 +105,15 @@
   margin-top: 0.4rem;
 }
 
-/* Meta cell (rating / date / time-ago) */
+.colCategory .metaPrimary {
+  font-family: var(--GeistMono);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  opacity: 0.85;
+}
+
 .metaWrap {
   display: inline-flex;
   align-items: baseline;
@@ -142,19 +133,6 @@
   opacity: 0.55;
 }
 
-/* Contact cell */
-.contactLink {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: var(--black);
-  text-decoration: none;
-}
-
-.contactLink:hover {
-  text-decoration: underline;
-}
-
-/* Save cell */
 .saveBtn {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -192,7 +170,6 @@
   white-space: nowrap;
 }
 
-/* View button */
 .viewBtn {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -220,42 +197,13 @@
   font-size: 1.6rem;
 }
 
-.colNumber {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: var(--text);
-  opacity: 0.5;
-  font-variant-numeric: tabular-nums;
+.businessBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
 }
 
-/* Hot lead urgency colors for the "Time left" cell */
-.urgencyHigh {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: #ef4444;
-  font-weight: 600;
-}
-
-.urgencyMed {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: #d97706;
-}
-
-.urgencyLow {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: var(--text);
-}
-
-/* Plain contact text fallback (e.g. venue name for warm) */
-.contactText {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  color: var(--text);
-}
-
-/* Contact Ready badge — shown on leads where the operator can pitch immediately */
 .contactReadyBadge {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -265,48 +213,10 @@
   background-color: rgba(22, 163, 74, 0.1);
   color: #16a34a;
   border: 1px solid #16a34a;
-  align-self: flex-start;
-  margin-top: 1rem;
   white-space: nowrap;
   width: fit-content;
 }
 
-/* Stack priority badge + score badge vertically in the type cell */
-.priorityStack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.6rem;
-}
-
-/* Numeric AI score — neutral, smaller than priority badge */
-.scoreBadge {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.3rem 0.8rem;
-  background-color: rgba(0, 0, 0, 0.04);
-  color: var(--black);
-  border: 1px solid var(--lightGray);
-  white-space: nowrap;
-  width: fit-content;
-}
-
-/* Wrapper to keep Contact Ready and Top Match flowing nicely */
-.businessBadges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1rem;
-}
-
-/* Reset margin since wrapper handles spacing now */
-.businessBadges .contactReadyBadge {
-  margin-top: 0;
-}
-
-/* Top Match — gold accent for high-score leads */
 .topMatchBadge {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -320,7 +230,36 @@
   width: fit-content;
 }
 
-/* Mobile — collapse to stacked card-like rows */
+.scoreBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.8rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.urgencyHigh {
+  color: #ef4444;
+  font-weight: 600;
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+.urgencyMed {
+  color: #d97706;
+  border-color: #d97706;
+  background-color: rgba(217, 119, 6, 0.08);
+}
+
+.urgencyLow {
+  color: var(--text);
+}
+
 @media screen and (max-width: 1468px) {
   .tableHeader {
     display: none;
@@ -364,5 +303,10 @@
   .viewBtn {
     width: fit-content;
     padding: 1.2rem 2rem;
+  }
+
+  .colCategory .metaPrimary {
+    font-size: 1.6rem;
+    opacity: 1;
   }
 }

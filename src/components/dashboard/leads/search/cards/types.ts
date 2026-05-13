@@ -16,6 +16,8 @@ export type ColdLeadResult = {
   savedLeadId: string | null;
   category: string;
   contactReady: boolean;
+  aiScore: number | null;
+  aiScoreReasoning: string | null;
 };
 
 export type WarmLeadResult = {
