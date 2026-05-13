@@ -327,7 +327,7 @@
   font-size: 1.6rem;
   line-height: 1.5;
   color: var(--text);
-  max-width: 60ch;
+  max-width: 70ch;
 }
 
 .generateBtn {

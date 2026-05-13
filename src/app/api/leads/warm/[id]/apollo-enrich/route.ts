@@ -190,7 +190,8 @@ export async function POST(
   if (!apolloKey) {
     const result: ApolloResult = {
       enabled: false,
-      reason: "Apollo integration pending enrollment",
+      reason:
+        "Verified contact lookup is temporarily unavailable. Please try again later.",
     };
     return NextResponse.json({ success: true, enrichment: result });
   }
@@ -209,7 +210,8 @@ export async function POST(
   if (!organizerName) {
     const result: ApolloResult = {
       enabled: false,
-      reason: "No organizer name on file — cannot lookup verified contacts",
+      reason:
+        "No organizer name on file — cannot look up verified contacts for this event.",
     };
     await db.savedLead.update({
       where: { id },
@@ -223,7 +225,7 @@ export async function POST(
     const result: ApolloResult = {
       enabled: false,
       reason:
-        "No decision-maker titles available — generate the 'Who to Contact' section first",
+        "No decision-maker titles available yet — generate the 'Who to Contact' section first, then try again.",
     };
     return NextResponse.json({ success: true, enrichment: result });
   }
@@ -232,7 +234,8 @@ export async function POST(
   if (!anthropicKey) {
     const result: ApolloResult = {
       enabled: false,
-      reason: "AI domain guesser unavailable",
+      reason:
+        "Verified contact lookup is temporarily unavailable. Please try again later.",
     };
     return NextResponse.json({ success: true, enrichment: result });
   }
@@ -242,7 +245,7 @@ export async function POST(
   if (candidateDomains.length === 0) {
     const result: ApolloResult = {
       enabled: false,
-      reason: `Could not guess a domain for ${organizerName}. Try adding the organizer's website manually.`,
+      reason: `We couldn't identify a website for ${organizerName}. Try the LinkedIn search in "Who to Contact" above, or reach out through their event listing on Eventbrite.`,
     };
     await db.savedLead.update({
       where: { id },
@@ -270,7 +273,7 @@ export async function POST(
   if (!matchedDomain || searchPersons.length === 0) {
     const result: ApolloResult = {
       enabled: false,
-      reason: `Tried ${candidateDomains.length} candidate domain(s) for ${organizerName} — no matches in Apollo. The organizer may use a different domain or Apollo doesn't have them indexed.`,
+      reason: `We couldn't find verified email addresses for ${organizerName}. This is common for smaller organizations or ones without a strong online presence. Try the LinkedIn search in "Who to Contact" above, or reach out through their event listing on Eventbrite.`,
     };
     await db.savedLead.update({
       where: { id },
