@@ -6,7 +6,11 @@
     },
     {
       "path": "/api/cron/scrape-warm-leads",
-      "schedule": "0 8 * * 1"
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/send-hot-lead-alerts",
+      "schedule": "0 13 * * *"
     }
   ]
 }

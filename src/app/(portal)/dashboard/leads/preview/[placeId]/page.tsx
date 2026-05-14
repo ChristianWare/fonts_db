@@ -17,6 +17,6 @@ export default async function LeadPreviewRedirect({
   const queryString = qs.toString();
 
   redirect(
-    `/dashboard/leads/place/${encodeURIComponent(placeId)}${queryString ? `?${queryString}` : ""}`,
+    `/dashboard/leads/cold/${encodeURIComponent(placeId)}${queryString ? `?${queryString}` : ""}`,
   );
 }

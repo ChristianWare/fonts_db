@@ -317,7 +317,7 @@ export default async function LeadsPage({
                           {validNextActions.map((l) => (
                             <li key={l.id}>
                               <Link
-                                href={`/dashboard/leads/place/${l.googlePlaceId}?category=${l.category}`}
+                                href={`/dashboard/leads/cold/${l.googlePlaceId}?category=${l.category}`}
                                 className={styles.attentionItem}
                               >
                                 <span className={styles.attentionName}>

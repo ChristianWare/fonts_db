@@ -34,9 +34,7 @@ export default async function LeadDetailRedirect({
   }
 
   if (lead.googlePlaceId) {
-    redirect(
-      `/dashboard/leads/place/${encodeURIComponent(lead.googlePlaceId)}`,
-    );
+    redirect(`/dashboard/leads/cold/${encodeURIComponent(lead.googlePlaceId)}`);
   }
 
   // Lead exists but no place ID (future hot/warm leads).

@@ -330,6 +330,7 @@ model ClientProfile {
   monitoredHotLeadSources MonitoredHotLeadSource[]
   scrapeJobs              ScrapeJob[]
   marketScrapeUsage       MarketScrapeUsage[]
+  hotLeadAlerts           HotLeadAlert[]
 
   @@index([onboardingStage])
 }
@@ -926,7 +927,8 @@ model EventbriteEvent {
 
   // Enrichment lifecycle
   enrichedAt        DateTime?
-  enrichmentVersion Int       @default(1)
+  enrichmentVersion Int            @default(1)
+  hotLeadAlerts     HotLeadAlert[]
 
   @@index([marketCity, marketState])
   @@index([eventDate])
@@ -1055,4 +1057,26 @@ model MarketScrapeUsage {
 
   @@index([clientProfileId, scrapedAt])
   @@index([clientProfileId, marketKey])
+}
+
+// =========================
+// LEADS — Hot lead alert dedup
+// One row per (operator, event) that's been emailed.
+// Prevents the same hot event from triggering repeat alerts.
+// =========================
+
+model HotLeadAlert {
+  id String @id @default(cuid())
+
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+
+  eventbriteEventId String
+  eventbriteEvent   EventbriteEvent @relation(fields: [eventbriteEventId], references: [id], onDelete: Cascade)
+
+  sentAt DateTime @default(now())
+
+  @@unique([clientProfileId, eventbriteEventId])
+  @@index([clientProfileId])
+  @@index([sentAt])
 }

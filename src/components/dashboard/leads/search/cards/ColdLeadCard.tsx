@@ -15,7 +15,7 @@ function isSaved(state: SavedState): boolean {
 }
 
 function buildPlaceHref(placeId: string, category: string): string {
-  const path = `/dashboard/leads/place/${encodeURIComponent(placeId)}`;
+  const path = `/dashboard/leads/cold/${encodeURIComponent(placeId)}`;
   const slug = category.toLowerCase().replace(/\s+/g, "_");
   return `${path}?category=${encodeURIComponent(slug)}`;
 }

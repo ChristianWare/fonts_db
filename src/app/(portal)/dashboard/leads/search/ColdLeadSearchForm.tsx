@@ -76,7 +76,7 @@ function isSaved(state: SavedState): boolean {
 }
 
 function buildPlaceHref(placeId: string, searchedQuery: string): string {
-  const path = `/dashboard/leads/place/${encodeURIComponent(placeId)}`;
+  const path = `/dashboard/leads/cold/${encodeURIComponent(placeId)}`;
   if (!searchedQuery) return path;
   const slug = searchedQuery.toLowerCase().replace(/\s+/g, "_");
   return `${path}?category=${encodeURIComponent(slug)}`;
@@ -186,14 +186,12 @@ export default function ColdLeadSearchForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
-          cityOverride:
-            city.trim() !== defaultCity ? city.trim() : undefined,
+          cityOverride: city.trim() !== defaultCity ? city.trim() : undefined,
           stateOverride:
             state.trim() !== defaultState
               ? state.trim().toUpperCase()
               : undefined,
-          radiusMilesOverride:
-            radius !== defaultRadius ? radius : undefined,
+          radiusMilesOverride: radius !== defaultRadius ? radius : undefined,
           pageToken,
         }),
       });
@@ -476,15 +474,12 @@ export default function ColdLeadSearchForm({
         </div>
       )}
 
-      {!loading &&
-        !error &&
-        currentResults.length === 0 &&
-        searchedQuery && (
-          <p className={styles.emptyState}>
-            No results for &ldquo;{searchedQuery}&rdquo;. Try a different
-            category or expand your radius.
-          </p>
-        )}
+      {!loading && !error && currentResults.length === 0 && searchedQuery && (
+        <p className={styles.emptyState}>
+          No results for &ldquo;{searchedQuery}&rdquo;. Try a different category
+          or expand your radius.
+        </p>
+      )}
     </div>
   );
 }

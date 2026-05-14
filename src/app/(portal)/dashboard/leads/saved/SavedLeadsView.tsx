@@ -69,7 +69,7 @@ const STATUS_OPTIONS: LeadStatus[] = [
 
 function leadHref(lead: SerializedLead): string {
   if (lead.googlePlaceId) {
-    return `/dashboard/leads/place/${encodeURIComponent(lead.googlePlaceId)}`;
+    return `/dashboard/leads/cold/${encodeURIComponent(lead.googlePlaceId)}`;
   }
   return `/dashboard/leads/${lead.id}`;
 }

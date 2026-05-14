@@ -416,11 +416,19 @@ export async function sendAuditReportEmail({
   pdfBuffer: Buffer;
 }) {
   const domain = (() => {
-    try { return new URL(url).hostname; } catch { return url; }
+    try {
+      return new URL(url).hostname;
+    } catch {
+      return url;
+    }
   })();
 
-  const failingCount = categories.flatMap(c => c.checks).filter(c => !c.passed).length;
-  const highImpactCount = categories.flatMap(c => c.checks).filter(c => !c.passed && c.impact === "high").length;
+  const failingCount = categories
+    .flatMap((c) => c.checks)
+    .filter((c) => !c.passed).length;
+  const highImpactCount = categories
+    .flatMap((c) => c.checks)
+    .filter((c) => !c.passed && c.impact === "high").length;
 
   // Plain Gmail-style HTML — no marketing wrappers, just clean readable text
   const html = `<!DOCTYPE html>
@@ -530,5 +538,95 @@ export async function sendAuditReportEmail({
         content: pdfBuffer,
       },
     ],
+  });
+}
+
+// ── LEADS EMAILS ───────────────────────────────────────────────────────────
+
+type HotLeadAlertEvent = {
+  eventbriteId: string;
+  eventName: string;
+  eventDate: Date;
+  venueName: string | null;
+  aiScore: number | null;
+  daysUntil: number;
+};
+
+export async function sendHotLeadAlertEmail({
+  to,
+  firstName,
+  marketCity,
+  marketState,
+  events,
+}: {
+  to: string;
+  firstName: string;
+  marketCity: string;
+  marketState: string;
+  events: HotLeadAlertEvent[];
+}) {
+  if (events.length === 0) return;
+
+  const count = events.length;
+  const subject =
+    count === 1
+      ? `🔥 1 hot event in ${marketCity} — respond now`
+      : `🔥 ${count} hot events in ${marketCity} — respond now`;
+
+  const eventBlocks = events
+    .map((e) => {
+      const dateStr = e.eventDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+      const urgency =
+        e.daysUntil === 0
+          ? "Today"
+          : e.daysUntil === 1
+            ? "Tomorrow"
+            : `${e.daysUntil} days away`;
+      const venue = e.venueName ?? "Venue TBD";
+      const score = e.aiScore != null ? ` · score ${e.aiScore}` : "";
+
+      return `
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:12px;">
+          <tr>
+            <td style="padding:16px;background-color:#f9f9f9;border-left:3px solid #ef4444;">
+              <p style="font-family:'Courier New',Courier,monospace;font-size:11px;color:#ef4444;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">
+                ${urgency}${score}
+              </p>
+              <a href="${APP_URL}/dashboard/leads/hot/${e.eventbriteId}" style="display:block;color:#0a0a0a;text-decoration:none;">
+                <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;font-weight:700;color:#0a0a0a;margin:0 0 4px;line-height:1.3;">
+                  ${e.eventName}
+                </p>
+                <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#555555;margin:0;">
+                  ${dateStr} · ${venue}
+                </p>
+              </a>
+            </td>
+          </tr>
+        </table>
+      `;
+    })
+    .join("");
+
+  const intro =
+    count === 1
+      ? `Hi ${firstName}, one event in <strong>${marketCity}, ${marketState}</strong> just hit the 14-day window. Respond before the organizer locks in transportation.`
+      : `Hi ${firstName}, ${count} events in <strong>${marketCity}, ${marketState}</strong> just hit the 14-day window. Respond before the organizers lock in transportation.`;
+
+  await sendEmail({
+    to,
+    subject,
+    html: buildEmailHTML({
+      preheader:
+        count === 1
+          ? `1 event in ${marketCity} needs your attention.`
+          : `${count} events in ${marketCity} need your attention.`,
+      heading: count === 1 ? "🔥 Hot lead alert." : "🔥 Hot lead alerts.",
+      body: bodyText(intro) + eventBlocks,
+      ctaLabel: "See all hot leads →",
+      ctaUrl: `${APP_URL}/dashboard/leads/search`,
+    }),
   });
 }
