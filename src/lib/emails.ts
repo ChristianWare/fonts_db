@@ -630,3 +630,91 @@ export async function sendHotLeadAlertEmail({
     }),
   });
 }
+
+type DailyDigestEvent = {
+  eventbriteId: string;
+  eventName: string;
+  eventDate: Date;
+  venueName: string | null;
+  aiScore: number | null;
+  daysOut: number;
+};
+
+export async function sendDailyDigestEmail({
+  to,
+  firstName,
+  marketCity,
+  marketState,
+  events,
+  totalNewCount,
+}: {
+  to: string;
+  firstName: string;
+  marketCity: string;
+  marketState: string;
+  events: DailyDigestEvent[];
+  totalNewCount: number;
+}) {
+  if (events.length === 0) return;
+
+  const count = totalNewCount;
+  const subject =
+    count === 1
+      ? `1 new warm lead in ${marketCity}`
+      : `${count} new warm leads in ${marketCity}`;
+
+  const eventBlocks = events
+    .map((e) => {
+      const dateStr = e.eventDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+      const venue = e.venueName ?? "Venue TBD";
+      const scoreChip = e.aiScore != null ? `score ${e.aiScore} · ` : "";
+
+      return `
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:12px;">
+          <tr>
+            <td style="padding:16px;background-color:#f9f9f9;border-left:3px solid #f97316;">
+              <p style="font-family:'Courier New',Courier,monospace;font-size:11px;color:#f97316;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px;">
+                ${scoreChip}${e.daysOut} days out
+              </p>
+              <a href="${APP_URL}/dashboard/leads/warm/${e.eventbriteId}" style="display:block;color:#0a0a0a;text-decoration:none;">
+                <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;font-weight:700;color:#0a0a0a;margin:0 0 4px;line-height:1.3;">
+                  ${e.eventName}
+                </p>
+                <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#555555;margin:0;">
+                  ${dateStr} · ${venue}
+                </p>
+              </a>
+            </td>
+          </tr>
+        </table>
+      `;
+    })
+    .join("");
+
+  const intro =
+    count === 1
+      ? `Hi ${firstName}, one new event appeared in <strong>${marketCity}, ${marketState}</strong> overnight. Pitch the organizer before they finalize transportation.`
+      : count <= MAX_DIGEST_EVENTS
+        ? `Hi ${firstName}, ${count} new events appeared in <strong>${marketCity}, ${marketState}</strong> overnight. Pitch the organizers before they finalize transportation.`
+        : `Hi ${firstName}, ${count} new events appeared in <strong>${marketCity}, ${marketState}</strong> overnight. Here are the top ${events.length} by score:`;
+
+  await sendEmail({
+    to,
+    subject,
+    html: buildEmailHTML({
+      preheader:
+        count === 1
+          ? `1 new event in ${marketCity} this morning.`
+          : `${count} new events in ${marketCity} this morning.`,
+      heading: "Your daily lead digest.",
+      body: bodyText(intro) + eventBlocks,
+      ctaLabel: "See all warm leads →",
+      ctaUrl: `${APP_URL}/dashboard/leads/search`,
+    }),
+  });
+}
+
+const MAX_DIGEST_EVENTS = 5;
