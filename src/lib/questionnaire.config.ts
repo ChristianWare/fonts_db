@@ -144,7 +144,7 @@ export const questionnaireSections: QuestionSection[] = [
           "e.g. After 10 years driving for a national company, I wanted to build something local and personal — where clients always knew their driver and trusted the service...",
         required: false,
         helpText:
-          "Even a few sentences helps us write an authentic story for your About page.",
+          "Tell us the one moment or experience that shaped how you run this business. A specific story beats a polished mission statement every time.",
       },
       {
         id: "service_philosophy",
@@ -164,6 +164,16 @@ export const questionnaireSections: QuestionSection[] = [
         required: true,
         helpText:
           "Be specific — this becomes a key selling point on your homepage.",
+      },
+      {
+        id: "customer_feedback",
+        label: "What do customers actually tell you after a great experience?",
+        type: "textarea",
+        placeholder:
+          "e.g. 'Your driver felt like a friend, not just a chauffeur.' 'I've never used a service that actually showed up early.' 'My wife couldn't stop talking about how clean the car was.'",
+        required: false,
+        helpText:
+          "Real quotes or paraphrases. This is often the most authentic positioning because it's how customers describe you, not how you describe yourself.",
       },
       {
         id: "owner_operator",
@@ -197,6 +207,16 @@ export const questionnaireSections: QuestionSection[] = [
         required: false,
         helpText:
           "These build trust and credibility with corporate and high-value clients.",
+      },
+      {
+        id: "awards_press",
+        label: "Have you received any awards, press, or media features?",
+        type: "textarea",
+        placeholder:
+          "e.g. Best of Phoenix 2023 (PHX Magazine), featured in AZ Big Media, guest on 'The Black Car Pulse' podcast, 5-Star Diamond Award from AAHS",
+        required: false,
+        helpText:
+          "Awards, press mentions, podcast appearances, blog features — anything we can showcase as third-party validation.",
       },
       {
         id: "google_rating",
@@ -297,6 +317,17 @@ export const questionnaireSections: QuestionSection[] = [
         placeholder: "e.g. LinkedIn, Google Business, TripAdvisor...",
         required: false,
       },
+      {
+        id: "current_reviews_breakdown",
+        label:
+          "Where do you currently have customer reviews, and roughly how many on each?",
+        type: "textarea",
+        placeholder:
+          "e.g. Google: 180 reviews, 4.9 stars\nYelp: 45 reviews, 4.5 stars\nTripAdvisor: 22 reviews, 5.0 stars\nFacebook: 30 recommendations",
+        required: false,
+        helpText:
+          "We'll feature reviews from multiple platforms to build trust with AI search engines like ChatGPT, which pull from across the web — not just Google.",
+      },
     ],
   },
 
@@ -372,6 +403,36 @@ export const questionnaireSections: QuestionSection[] = [
           "Golf & Resort Guests",
         ],
         required: true,
+      },
+      {
+        id: "customer_search_trigger",
+        label: "What event or feeling makes someone search for your service?",
+        type: "textarea",
+        placeholder:
+          "e.g. They have a 5am flight and don't want rideshare uncertainty. Their daughter's wedding is in two weeks and they need a guaranteed-on-time shuttle. They're hosting executives flying in for a board meeting and want to make a strong impression.",
+        required: true,
+        helpText:
+          "The more specific, the better. This captures real customer intent and feeds the hero copy on your service pages.",
+      },
+      {
+        id: "common_phone_questions",
+        label: "What questions do customers keep asking on the phone?",
+        type: "textarea",
+        placeholder:
+          "e.g. 'Do you have meet & greet at the airport?' 'How far in advance do I need to book?' 'What happens if my flight is delayed?' 'Can you accommodate 12 people?'",
+        required: false,
+        helpText:
+          "These become your FAQ content. If customers ask it, it should be answered on the site.",
+      },
+      {
+        id: "customer_to_refuse",
+        label: "What kind of customer would you politely turn away?",
+        type: "textarea",
+        placeholder:
+          "e.g. We don't do bar crawls or rowdy parties. We don't take last-minute (under 2 hours) bookings because we can't guarantee quality. We don't compete on price.",
+        required: false,
+        helpText:
+          "Defining who you don't serve is often clearer than defining who you do. This helps us position the brand correctly.",
       },
       {
         id: "partnerships",
@@ -631,6 +692,45 @@ export const questionnaireSections: QuestionSection[] = [
         required: false,
       },
       {
+        id: "existing_urls_to_preserve",
+        label:
+          "Are there specific pages on your current site that rank well or are commonly bookmarked?",
+        type: "textarea",
+        placeholder:
+          "e.g. /airport-transfers and /weddings get most of our traffic. /book-now is in our email signatures.",
+        required: false,
+        helpText:
+          "If we're migrating from an existing site, we'll set up 301 redirects so you don't lose existing search rankings or break customer-facing links.",
+      },
+      {
+        id: "existing_traffic_volume",
+        label:
+          "Roughly how much monthly traffic does your current site get? (best guess is fine)",
+        type: "select",
+        options: [
+          "Don't know / no analytics",
+          "Less than 100 visits/month",
+          "100–500 visits/month",
+          "500–2,000 visits/month",
+          "2,000–10,000 visits/month",
+          "10,000+ visits/month",
+        ],
+        required: false,
+        helpText:
+          "This helps us baseline what success looks like after the new site launches.",
+      },
+      {
+        id: "domain_control",
+        label:
+          "Where is your domain registered, and do you have access to manage DNS?",
+        type: "text",
+        placeholder:
+          "e.g. GoDaddy, with full admin access — or — set up by a previous developer, I'll need to recover access",
+        required: false,
+        helpText:
+          "We'll need DNS access to point your domain to the new site at launch. If you don't have it, we'll help you recover it.",
+      },
+      {
         id: "current_booking_platform",
         label: "What booking platform are you currently using?",
         type: "select",
@@ -645,20 +745,70 @@ export const questionnaireSections: QuestionSection[] = [
         ],
         required: true,
       },
+    ],
+  },
+
+  // ── 9. ONLINE PRESENCE ────────────────────────────────────────────
+  {
+    title: "Online Presence",
+    description:
+      "Your Google Business Profile and other listings are critical for local search and AI visibility. Let us know what's already set up so we can connect everything together.",
+    questions: [
       {
-        id: "competitor_sites",
-        label: "Are there any competitor websites you admire?",
-        type: "textarea",
+        id: "gbp_status",
+        label: "Do you have a Google Business Profile?",
+        type: "radio",
+        options: [
+          "Yes — claimed and verified, I have admin access",
+          "Yes — but I'm not sure if I have admin access",
+          "Yes — but it's unclaimed",
+          "No — never set one up",
+        ],
+        required: true,
+        helpText:
+          "Your GBP is the most important asset you have for local search. We'll audit and optimize it during setup.",
+      },
+      {
+        id: "gbp_url",
+        label:
+          "If yes, what's the URL of your Google Maps listing? (or just paste the business name as it appears on Google)",
+        type: "text",
         placeholder:
-          "https://www.example.com — I like their homepage layout and how they show vehicles...",
+          "e.g. https://maps.google.com/?cid=... or 'Elite Black Car Service, Scottsdale'",
+        required: false,
+      },
+      {
+        id: "gbp_primary_category",
+        label: "What is your primary GBP category, if you know it?",
+        type: "text",
+        placeholder: "e.g. Limousine Service, Chauffeur Service, Car Service",
         required: false,
         helpText:
-          "Share URLs and what you like about them. This helps us understand your taste.",
+          "This is the single most important field on your GBP — it determines what searches you show up for. We'll review it during setup.",
+      },
+      {
+        id: "bing_places",
+        label: "Do you have a Bing Places for Business profile?",
+        type: "radio",
+        options: ["Yes", "No", "Not sure"],
+        required: true,
+        helpText:
+          "Bing Places matters because ChatGPT and other AI search tools pull from Bing's index, not Google's. If you don't have one yet, we'll help you set it up.",
+      },
+      {
+        id: "other_directories",
+        label: "Are you listed on any other directories or platforms?",
+        type: "textarea",
+        placeholder:
+          "e.g. Apple Maps, BBB, NLA member directory, local chamber of commerce, hotel concierge lists, AAA approved",
+        required: false,
+        helpText:
+          "We'll make sure your business info (name, address, phone) is consistent across all of these — inconsistencies hurt your local search rankings.",
       },
     ],
   },
 
-  // ── 9. POLICIES ───────────────────────────────────────────────────
+  // ── 10. POLICIES ──────────────────────────────────────────────────
   {
     title: "Policies",
     description:
@@ -724,7 +874,7 @@ export const questionnaireSections: QuestionSection[] = [
     ],
   },
 
-  // ── 10. BRAND & DESIGN ────────────────────────────────────────────
+  // ── 11. BRAND & DESIGN ────────────────────────────────────────────
   {
     title: "Brand & Design",
     description:
@@ -736,6 +886,17 @@ export const questionnaireSections: QuestionSection[] = [
         type: "text",
         placeholder: "Premium, professional, reliable",
         required: true,
+      },
+      {
+        id: "words_to_avoid",
+        label:
+          "Are there any words or phrases you don't want appearing on your site?",
+        type: "textarea",
+        placeholder:
+          "e.g. Never use 'cheap', 'budget', or 'discount' — we're a premium service. Avoid 'limo' since we're black car, not party limos.",
+        required: false,
+        helpText:
+          "Hard constraints are often more useful than soft preferences. These protect the brand voice across every page we write.",
       },
       {
         id: "design_style",
@@ -768,10 +929,79 @@ export const questionnaireSections: QuestionSection[] = [
         ],
         required: true,
       },
+      {
+        id: "competitors_to_beat",
+        label: "Which competitors do you want to outrank or outshine?",
+        type: "textarea",
+        placeholder:
+          "e.g. AZ Limo (azlimo.com), Phoenix Black Car (phoenixblackcar.com), and the rideshare apps generally",
+        required: false,
+        helpText:
+          "We'll audit their sites to identify positioning gaps and ranking opportunities.",
+      },
+      {
+        id: "brands_admired",
+        label:
+          "Three brands from any industry whose voice or design you admire, and why.",
+        type: "textarea",
+        placeholder:
+          "e.g. Aesop — confident, restrained, premium without being stuffy. Equinox — bold, aspirational. JetBlue — friendly but professional.",
+        required: false,
+        helpText:
+          "Tone reference. Cross-industry examples often tell us more about voice than direct adjectives ever do.",
+      },
     ],
   },
 
-  // ── 11. GOALS & TIMELINE ──────────────────────────────────────────
+  // ── 12. ASSETS ────────────────────────────────────────────────────
+  {
+    title: "Assets",
+    description:
+      "Tell us what visual and proof assets you already have so we know what to build around — and what may need to be sourced or created.",
+    questions: [
+      {
+        id: "professional_photos",
+        label:
+          "Do you have professional photos of your fleet, team, or facility?",
+        type: "radio",
+        options: [
+          "Yes — full library of professional photos",
+          "Some, but we'll likely need more",
+          "No — we'll need to commission them or use stock for now",
+        ],
+        required: true,
+        helpText:
+          "Professional photos are essential for premium positioning. If you don't have them, we can recommend photographers in your area.",
+      },
+      {
+        id: "video_content",
+        label: "Do you have video content, or are you open to creating it?",
+        type: "radio",
+        options: [
+          "Yes — we have a YouTube channel and existing videos",
+          "We have some videos but no YouTube channel yet",
+          "No videos yet, but we're open to creating them",
+          "Not interested in video content right now",
+        ],
+        required: true,
+        helpText:
+          "YouTube content is increasingly important for AI search (Gemini in particular, since Google owns YouTube). Even short fleet walkthroughs or chauffeur introductions move the needle.",
+      },
+      {
+        id: "testimonials_with_permission",
+        label:
+          "Share 3–5 specific testimonials we can publish on the site (with customer first name and city if you have permission).",
+        type: "textarea",
+        placeholder:
+          '"Got me to PHX at 5am without a hitch — driver was waiting before I came out of the house." — Marcus T., Scottsdale\n\n"Booked them for our wedding shuttle and our guests still talk about how smooth it was." — Jennifer R., Paradise Valley',
+        required: false,
+        helpText:
+          "Real testimonials with attribution outperform generic 5-star reviews — both for human visitors and for AI search engines. Make sure you have permission to publish names.",
+      },
+    ],
+  },
+
+  // ── 13. GOALS & TIMELINE ──────────────────────────────────────────
   {
     title: "Goals & Timeline",
     description: "Let us know what success looks like for you.",

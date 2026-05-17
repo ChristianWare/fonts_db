@@ -79,6 +79,14 @@ function shouldShowQuestion(questionId: string, answers: Answers): boolean {
   return (dependentAnswer as string) === (rule.showWhen as string);
 }
 
+// Returns true if the answer is non-empty
+function hasAnswer(value: string | string[] | undefined): boolean {
+  if (value === undefined || value === null) return false;
+  if (typeof value === "string") return value.trim() !== "";
+  if (Array.isArray(value)) return value.length > 0;
+  return false;
+}
+
 // Returns the label of the first unanswered required visible question, or null if all good
 function validateSection(
   sectionIndex: number,
@@ -238,27 +246,33 @@ export default function QuestionnaireClient({
 
         <div className={styles.readOnlyList}>
           {questionnaireSections.map((sec) => {
-            const sectionAnswers = sec.questions.filter(
-              (q) =>
-                shouldShowQuestion(q.id, answers) &&
-                answers[q.id] !== undefined &&
-                answers[q.id] !== "",
+            // Show every question whose conditional rules allow it to display,
+            // whether or not it's been answered.
+            const visibleQuestions = sec.questions.filter((q) =>
+              shouldShowQuestion(q.id, answers),
             );
-            if (sectionAnswers.length === 0) return null;
+            if (visibleQuestions.length === 0) return null;
 
             return (
               <div key={sec.title} className={styles.readOnlySection}>
                 <h2 className={styles.readOnlySectionTitle}>{sec.title}</h2>
                 <div className={styles.readOnlyAnswers}>
-                  {sectionAnswers.map((q) => {
+                  {visibleQuestions.map((q) => {
                     const val = answers[q.id];
-                    if (!val || (Array.isArray(val) && val.length === 0))
-                      return null;
+                    const answered = hasAnswer(val);
                     return (
                       <div key={q.id} className={styles.readOnlyRow}>
                         <span className={styles.readOnlyLabel}>{q.label}</span>
-                        <span className={styles.readOnlyValue}>
-                          {Array.isArray(val) ? val.join(", ") : val}
+                        <span
+                          className={`${styles.readOnlyValue} ${
+                            !answered ? styles.unanswered : ""
+                          }`}
+                        >
+                          {answered
+                            ? Array.isArray(val)
+                              ? (val as string[]).join(", ")
+                              : (val as string)
+                            : "Not answered"}
                         </span>
                       </div>
                     );
