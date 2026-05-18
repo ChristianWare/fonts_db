@@ -474,6 +474,11 @@
   line-height: 1.5;
 }
 
+.unanswered {
+  color: #c53030;
+  font-weight: bold;
+}
+
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
   .header {
