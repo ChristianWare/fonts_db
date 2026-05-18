@@ -68,8 +68,11 @@ export default withAuth((req: NextRequest & { auth?: any }) => {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
-  // ADMIN landing on /dashboard → redirect to /admin (unless previewing a client)
-  if (isClientDashboard && hasAnyRole(req, ["ADMIN"])) {
+  // ADMIN landing on the bare /dashboard root → redirect to /admin.
+  // Deep links like /dashboard/leads/saved are respected so admins can
+  // navigate inside the client portal. ?as= still lets you preview the
+  // bare dashboard as a client without being bounced.
+  if (pathname === "/dashboard" && hasAnyRole(req, ["ADMIN"])) {
     const isPreview = nextUrl.searchParams.has("as");
     if (!isPreview) {
       return NextResponse.redirect(new URL("/admin", nextUrl));
