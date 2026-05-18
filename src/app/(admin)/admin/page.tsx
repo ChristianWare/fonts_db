@@ -164,8 +164,9 @@ export default async function AdminPage() {
                 </div>
 
                 <div className={styles.clientRight}>
-                  {client.subscription?.status === "ACTIVE" &&
-                  client.monthlyAmountCents > 0 ? (
+                  {client.subscriptions.some(
+                    (s) => s.productType === "WEBSITE" && s.status === "ACTIVE",
+                  ) && client.monthlyAmountCents > 0 ? (
                     <span className={styles.mrrBadge}>
                       {formatCents(client.monthlyAmountCents)}/mo
                     </span>

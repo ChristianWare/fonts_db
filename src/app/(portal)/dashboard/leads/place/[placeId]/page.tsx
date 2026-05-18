@@ -216,6 +216,8 @@ export default async function PlacePage({
     isDraft: lead.isDraft,
     strategicBrief: lead.strategicBrief,
     reviewIntelligence: lead.reviewIntelligence,
+    aiScore: lead.aiScore,
+    aiScoreReasoning: lead.aiScoreReason,
     decisionMaker,
     competitiveAnalysis: lead.competitiveAnalysis as
       | {

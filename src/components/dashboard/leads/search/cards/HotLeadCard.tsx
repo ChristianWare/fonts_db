@@ -14,22 +14,21 @@ function isSaved(state: SavedState): boolean {
   return state !== "none";
 }
 
-function timeAgo(iso: string): string {
-  const date = new Date(iso);
-  const diffMs = Date.now() - date.getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins} min${mins === 1 ? "" : "s"} ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} day${days === 1 ? "" : "s"} ago`;
+function daysUntil(iso: string): string {
+  const diffMs = new Date(iso).getTime() - Date.now();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (days < 0) return "Passed";
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `${days} days away`;
 }
 
-function sourceLabel(src: HotLeadResult["source"]): string {
-  if (src === "facebook") return "Facebook";
-  if (src === "reddit") return "Reddit";
-  return "Eventbrite";
+function formatEventDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export default function HotLeadCard({ result, isPending, onSave }: Props) {
@@ -43,27 +42,39 @@ export default function HotLeadCard({ result, isPending, onSave }: Props) {
             🔥 Hot
           </span>
           <span className={styles.cardCategory}>
-            {sourceLabel(result.source)} · {timeAgo(result.postedAtIso)}
+            Eventbrite · {daysUntil(result.eventDateIso)}
           </span>
         </div>
 
-        <h3 className={styles.cardName}>{result.posterName}</h3>
+        <h3 className={styles.cardName}>{result.eventName}</h3>
 
-        {result.groupName && (
-          <p className={styles.cardAddress}>posted in {result.groupName}</p>
+        {result.venue && (
+          <p className={styles.cardAddress}>at {result.venue}</p>
         )}
 
-        <p className={styles.cardPostText}>&ldquo;{result.postText}&rdquo;</p>
+        <p className={styles.cardPostText}>
+          {formatEventDate(result.eventDateIso)}
+          {result.organizerName ? ` · ${result.organizerName}` : ""}
+          {result.attendeeCount
+            ? ` · ~${result.attendeeCount.toLocaleString()} attendees`
+            : ""}
+        </p>
 
         <div className={styles.cardMeta}>
-          {result.phone && (
-            <a href={`tel:${result.phone}`} className={styles.cardLink}>
-              {result.phone}
+          {result.organizerPhone && (
+            <a
+              href={`tel:${result.organizerPhone}`}
+              className={styles.cardLink}
+            >
+              {result.organizerPhone}
             </a>
           )}
-          {result.email && (
-            <a href={`mailto:${result.email}`} className={styles.cardLink}>
-              {result.email}
+          {result.organizerEmail && (
+            <a
+              href={`mailto:${result.organizerEmail}`}
+              className={styles.cardLink}
+            >
+              {result.organizerEmail}
             </a>
           )}
         </div>
@@ -87,7 +98,7 @@ export default function HotLeadCard({ result, isPending, onSave }: Props) {
         <div className={styles.btnContainer}>
           <Button
             href={result.url}
-            text='View original post'
+            text='View on Eventbrite'
             btnType='black'
             arrow
           />

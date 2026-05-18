@@ -258,6 +258,7 @@ export default async function HotLeadPage({
       organizerPhone: event.organizerPhone,
       category: event.category,
       aiScore: event.aiScore,
+      aiScoreReasoning: event.aiScoreReasoning,
       url: event.eventbriteUrl ?? eventUrl,
       isCorporate: event.isCorporate,
       aiCategory: event.aiCategory,
