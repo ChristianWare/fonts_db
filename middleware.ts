@@ -72,12 +72,12 @@ export default withAuth((req: NextRequest & { auth?: any }) => {
   // Deep links like /dashboard/leads/saved are respected so admins can
   // navigate inside the client portal. ?as= still lets you preview the
   // bare dashboard as a client without being bounced.
-  if (pathname === "/dashboard" && hasAnyRole(req, ["ADMIN"])) {
-    const isPreview = nextUrl.searchParams.has("as");
-    if (!isPreview) {
-      return NextResponse.redirect(new URL("/admin", nextUrl));
-    }
-  }
+  // if (pathname === "/dashboard" && hasAnyRole(req, ["ADMIN"])) {
+  //   const isPreview = nextUrl.searchParams.has("as");
+  //   if (!isPreview) {
+  //     return NextResponse.redirect(new URL("/admin", nextUrl));
+  //   }
+  // }
 
   return NextResponse.next();
 });
