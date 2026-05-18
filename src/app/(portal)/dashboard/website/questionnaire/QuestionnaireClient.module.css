@@ -408,8 +408,9 @@
 }
 
 .readOnlySection {
-  border-bottom: 1px solid var(--lightGray);
+  /* border-bottom: 1px solid var(--lightGray); */
   padding: 1rem;
+  margin-bottom: 5rem;
 }
 
 .readOnlySection:last-child {
@@ -444,7 +445,7 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 2rem;
-  padding: 1.6rem 5rem;
+  padding: 2rem;
   border-bottom: 1px solid var(--lightGray);
   transition: background-color 0.15s ease;
 }

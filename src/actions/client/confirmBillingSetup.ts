@@ -94,40 +94,50 @@ export async function confirmBillingSetup({
     data: { setupFeePaid: true, stripeSubscriptionId: subscription.id },
   });
 
-  await db.subscription.upsert({
-    where: { clientProfileId: profile.id },
-    create: {
+await db.subscription.upsert({
+  where: {
+    clientProfileId_productType: {
       clientProfileId: profile.id,
-      stripeSubscriptionId: subscription.id,
-      stripePriceId: price.id,
-      stripeCustomerId: customerId,
-      status: "ACTIVE",
-      planAmountCents: profile.monthlyAmountCents,
-      setupFeeAmountCents: profile.setupFeeAmountCents,
-      billingAnchorDate: 1,
-      currentPeriodStart: firstOfNextMonth,
-      currentPeriodEnd: new Date(
-        firstOfNextMonth.getFullYear(),
-        firstOfNextMonth.getMonth() + 1,
-        1,
-      ),
+      productType: "WEBSITE",
     },
-    update: {
-      stripeSubscriptionId: subscription.id,
-      stripePriceId: price.id,
-      stripeCustomerId: customerId,
-      status: "ACTIVE",
-      planAmountCents: profile.monthlyAmountCents,
-      setupFeeAmountCents: profile.setupFeeAmountCents,
-      billingAnchorDate: 1,
-      currentPeriodStart: firstOfNextMonth,
-      currentPeriodEnd: new Date(
-        firstOfNextMonth.getFullYear(),
-        firstOfNextMonth.getMonth() + 1,
-        1,
-      ),
-    },
-  });
+  },
+  create: {
+    clientProfileId: profile.id,
+    productType: "WEBSITE",
+    stripeSubscriptionId: subscription.id,
+    stripePriceId: price.id,
+    stripeCustomerId: customerId,
+    status: "ACTIVE",
+    planAmountCents: profile.monthlyAmountCents,
+    setupFeeAmountCents: profile.setupFeeAmountCents,
+    setupFeePaid: true,
+    monthlyAmountCents: profile.monthlyAmountCents,
+    billingAnchorDate: 1,
+    currentPeriodStart: firstOfNextMonth,
+    currentPeriodEnd: new Date(
+      firstOfNextMonth.getFullYear(),
+      firstOfNextMonth.getMonth() + 1,
+      1,
+    ),
+  },
+  update: {
+    stripeSubscriptionId: subscription.id,
+    stripePriceId: price.id,
+    stripeCustomerId: customerId,
+    status: "ACTIVE",
+    planAmountCents: profile.monthlyAmountCents,
+    setupFeeAmountCents: profile.setupFeeAmountCents,
+    setupFeePaid: true,
+    monthlyAmountCents: profile.monthlyAmountCents,
+    billingAnchorDate: 1,
+    currentPeriodStart: firstOfNextMonth,
+    currentPeriodEnd: new Date(
+      firstOfNextMonth.getFullYear(),
+      firstOfNextMonth.getMonth() + 1,
+      1,
+    ),
+  },
+});
 
   // Billing confirmed email to client
   if (profile.user.email) {

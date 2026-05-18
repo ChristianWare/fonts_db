@@ -160,9 +160,11 @@ export default function ClientDetailClient({
   const serviceAgreementAny = client.documents.find(
     (d) => d.type === "SERVICE_AGREEMENT",
   );
+  const websiteSubscription =
+    client.subscriptions.find((s) => s.productType === "WEBSITE") ?? null;
   const billingActive =
-    (client as any).subscription?.status === "ACTIVE" ||
-    (client as any).subscription?.status === "PAST_DUE";
+    websiteSubscription?.status === "ACTIVE" ||
+    websiteSubscription?.status === "PAST_DUE";
   const questionnaireSubmitted = !!client.questionnaire?.submittedAt;
   const firstAsset =
     client.brandAssets.length > 0
@@ -220,8 +222,8 @@ export default function ClientDetailClient({
         : "Client has not yet enrolled in billing.",
       completed: billingActive,
       completedAt:
-        billingActive && (client as any).subscription?.currentPeriodStart
-          ? new Date((client as any).subscription.currentPeriodStart)
+        billingActive && websiteSubscription?.currentPeriodStart
+          ? new Date(websiteSubscription.currentPeriodStart)
           : null,
     },
     {
@@ -1162,7 +1164,7 @@ export default function ClientDetailClient({
               <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>Status</span>
                 <span className={styles.infoValue}>
-                  {client.subscription?.status ?? "No subscription"}
+                  {websiteSubscription?.status ?? "No subscription"}
                 </span>
               </div>
               <div className={styles.infoRow}>
@@ -1176,22 +1178,22 @@ export default function ClientDetailClient({
                     : "—"}
                 </span>
               </div>
-              {client.subscription?.currentPeriodEnd && (
+              {websiteSubscription?.currentPeriodEnd && (
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Next billing date</span>
                   <span className={styles.infoValue}>
                     {format(
-                      new Date(client.subscription.currentPeriodEnd),
+                      new Date(websiteSubscription.currentPeriodEnd),
                       "MMMM d, yyyy",
                     )}
                   </span>
                 </div>
               )}
-              {client.subscription?.billingAnchorDate && (
+              {websiteSubscription?.billingAnchorDate && (
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Billing day</span>
                   <span className={styles.infoValue}>
-                    Day {client.subscription.billingAnchorDate} of each month
+                    Day {websiteSubscription.billingAnchorDate} of each month
                   </span>
                 </div>
               )}

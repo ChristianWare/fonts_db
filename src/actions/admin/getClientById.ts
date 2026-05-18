@@ -14,7 +14,7 @@ export const getClientById = async (clientProfileId: string) => {
       questionnaire: true,
       documents: { orderBy: { createdAt: "desc" } },
       brandAssets: { orderBy: { createdAt: "desc" } },
-      subscription: true,
+      subscriptions: true,
       invoices: { orderBy: { createdAt: "desc" } },
       changeRequests: { orderBy: { createdAt: "desc" } },
       supportTickets: { orderBy: { createdAt: "desc" } },

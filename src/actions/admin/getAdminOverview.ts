@@ -11,7 +11,7 @@ export const getAdminOverview = async () => {
     db.clientProfile.findMany({
       include: {
         user: { select: { name: true, email: true } },
-        subscription: true,
+        subscriptions: true,
       },
       orderBy: { createdAt: "desc" },
     }),
@@ -19,9 +19,12 @@ export const getAdminOverview = async () => {
     db.changeRequest.count({ where: { status: "PENDING" } }),
   ]);
 
-  // Active clients are those with an ACTIVE subscription
-  const activeClients = clients.filter(
-    (c) => c.subscription?.status === "ACTIVE",
+  // Active clients are those with an ACTIVE WEBSITE subscription.
+  // (A client may also have a LEADS subscription — don't count that here.)
+  const activeClients = clients.filter((c) =>
+    c.subscriptions.some(
+      (s) => s.productType === "WEBSITE" && s.status === "ACTIVE",
+    ),
   );
 
   // MRR uses ClientProfile.monthlyAmountCents — the admin-editable per-client
