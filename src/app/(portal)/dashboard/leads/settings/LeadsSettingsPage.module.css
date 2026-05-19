@@ -57,7 +57,7 @@
 /* Status card */
 .statusCard {
   padding: 3rem;
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--black);
   background-color: var(--white);
 }
 
@@ -113,7 +113,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--black);
   background-color: var(--white);
 }
 
@@ -141,7 +141,7 @@
   font-family: var(--Roboto);
   font-size: 16px;
   padding: 1rem 2rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--black);
   background-color: var(--white);
   color: var(--black);
   transition: border-color 0.15s ease;
@@ -309,7 +309,7 @@
   padding: 2rem 4rem;
   background-color: var(--white);
   color: var(--black);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--black);
   cursor: pointer;
   transition: border-color 0.15s ease;
 }
@@ -321,7 +321,7 @@
 /* Footer */
 .footer {
   padding-top: 2rem;
-  border-top: 1px solid var(--grayii);
+  border-top: 1px solid var(--black);
 }
 
 .backLink {
@@ -336,6 +336,38 @@
 
 .backLink:hover {
   color: var(--black);
+}
+
+.select {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  padding: 1rem 2rem;
+  padding-right: 4.5rem; /* room for the chevron */
+  border: 1px solid var(--black);
+  background-color: var(--white);
+  color: var(--black);
+  transition: border-color 0.15s ease;
+  cursor: pointer;
+
+  /* kill the native OS appearance */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* custom chevron — black, matches the rest of the form */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 6 7 11 1'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 2rem center;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
+/* IE / legacy Edge — hide the built-in arrow */
+.select::-ms-expand {
+  display: none;
 }
 
 @media screen and (max-width: 1268px) {

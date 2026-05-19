@@ -8,8 +8,6 @@ type Initial = {
   primaryCity: string;
   primaryState: string;
   serviceRadiusMiles: number;
-  phoneNumber: string;
-  smsEnabled: boolean;
   emailEnabled: boolean;
 };
 
@@ -20,13 +18,23 @@ type SaveResponse = {
   scrapeQueued?: boolean;
 };
 
+const RADIUS_OPTIONS = [5, 10, 20, 50, 75] as const;
+
 export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
   const router = useRouter();
   const [city, setCity] = useState(initial.primaryCity);
   const [state, setState] = useState(initial.primaryState);
-  const [radius, setRadius] = useState(initial.serviceRadiusMiles);
-  const [phone, setPhone] = useState(initial.phoneNumber);
-  const [smsEnabled, setSmsEnabled] = useState(initial.smsEnabled);
+
+  // Existing users may have a radius value (e.g. 25, 100) that's not in
+  // the new fixed list. Normalize to the closest preset so the select
+  // doesn't render with no option selected.
+  const initialRadius = (RADIUS_OPTIONS as readonly number[]).includes(
+    initial.serviceRadiusMiles,
+  )
+    ? initial.serviceRadiusMiles
+    : 50;
+  const [radius, setRadius] = useState(initialRadius);
+
   const [emailEnabled, setEmailEnabled] = useState(initial.emailEnabled);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,8 +54,6 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
           primaryCity: city.trim(),
           primaryState: state.trim().toUpperCase(),
           serviceRadiusMiles: radius,
-          phoneNumber: phone.trim(),
-          smsEnabled,
           emailEnabled,
         }),
       });
@@ -114,45 +120,20 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
 
       <div className={styles.field}>
         <label htmlFor='radius' className={styles.label}>
-          Service radius (miles)
+          Service radius
         </label>
-        <input
+        <select
           id='radius'
-          type='number'
           value={radius}
-          onChange={(e) => setRadius(parseInt(e.target.value, 10) || 50)}
-          min={10}
-          max={150}
-          required
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.field}>
-        <label htmlFor='phone' className={styles.label}>
-          SMS phone number
-        </label>
-        <input
-          id='phone'
-          type='tel'
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.checkboxRow}>
-        <input
-          id='smsEnabled'
-          type='checkbox'
-          checked={smsEnabled}
-          onChange={(e) => setSmsEnabled(e.target.checked)}
-          className={styles.checkbox}
-        />
-        <label htmlFor='smsEnabled' className={styles.checkboxLabel}>
-          Send me SMS alerts for new hot leads
-        </label>
+          onChange={(e) => setRadius(parseInt(e.target.value, 10))}
+          className={styles.select}
+        >
+          {RADIUS_OPTIONS.map((miles) => (
+            <option key={miles} value={miles}>
+              {miles} miles
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className={styles.checkboxRow}>

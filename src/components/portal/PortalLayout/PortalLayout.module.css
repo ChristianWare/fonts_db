@@ -58,8 +58,8 @@
   letter-spacing: -0.03em;
   font-weight: 400;
   font-variation-settings:
-  "wght" 700,
-  "wdth" 81;
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   white-space: nowrap;
 }
@@ -391,13 +391,6 @@
   display: none;
 }
 
-/* ── Responsive: 768px ── */
-@media screen and (max-width: 768px) {
-  .topbar {
-    padding: 0 2rem 0 calc(var(--sidebar-width) + 2rem);
-  }
-}
-
 /* ── Responsive: 1268px — sidebar becomes a drawer + bigger toggle ── */
 @media screen and (max-width: 1268px) {
   /* Lock grid + CSS var so the topbar always begins right after the 56px strip */
@@ -447,5 +440,28 @@
   .overlayVisible {
     background-color: rgba(0, 0, 0, 0.5);
     pointer-events: auto;
+  }
+}
+
+/* ── Responsive: 768px ── */
+@media screen and (max-width: 768px) {
+  .topbar {
+    padding: 0 2rem 0 calc(var(--sidebar-width) + 2rem);
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .navGroupLabel, .userName, .userEmail {
+    font-size: 14px;
+    
+  }
+  
+  .navLabel {
+    font-size: 16px;
+  }
+
+  .navIcon {
+    width: 2rem;
+    height: 2rem;
   }
 }

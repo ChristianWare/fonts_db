@@ -74,8 +74,6 @@ export default async function LeadsSettingsPage() {
               primaryCity: settings?.primaryCity ?? "",
               primaryState: settings?.primaryState ?? "",
               serviceRadiusMiles: settings?.serviceRadiusMiles ?? 50,
-              phoneNumber: settings?.phoneNumber ?? "",
-              smsEnabled: settings?.smsEnabled ?? true,
               emailEnabled: settings?.emailEnabled ?? true,
             }}
           />
