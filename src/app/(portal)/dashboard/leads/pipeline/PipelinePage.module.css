@@ -10,7 +10,7 @@
 
 .eyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text);
@@ -20,7 +20,7 @@
 
 .heading {
   font-family: var(--RobotoFlexii);
-  font-size: 4rem;
+  font-size: 40px;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--black);
@@ -33,7 +33,7 @@
 
 .subhead {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   margin-top: 1rem;
   max-width: 60ch;
@@ -53,7 +53,7 @@
 }
 
 .section {
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   padding: 1rem;
   transition:
@@ -88,7 +88,7 @@
 
 /* Smoothly rotating collapse arrow */
 .collapseIcon {
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.6;
   width: 1.5rem;
@@ -103,11 +103,11 @@
 
 .statusLabel {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.5rem 1.5rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
 }
 
 .status_NEW {
@@ -137,7 +137,7 @@
 
 .sectionCount {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.7;
 }
@@ -161,7 +161,7 @@
 
 .emptyRow {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
   padding: 2rem 3rem;
@@ -181,7 +181,7 @@
 
 .table th {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -213,7 +213,7 @@
 .sortIndicator {
   display: inline-block;
   margin-left: 0.6rem;
-  font-size: 1.2rem;
+  font-size: 16px;
   min-width: 1rem;
 }
 
@@ -247,7 +247,7 @@
 
 .row td {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--black);
   padding: 1.5rem 2rem;
   vertical-align: middle;
@@ -263,7 +263,7 @@
   display: inline-block;
   color: var(--text);
   opacity: 0.4;
-  font-size: 2rem;
+  font-size: 20px;
   user-select: none;
   cursor: grab;
 }
@@ -280,13 +280,13 @@
 
 .leadScore {
   font-family: var(--GeistMono);
-  font-size: 1.8rem;
+  font-size: 18px;
   font-weight: 700;
   color: var(--black);
 }
 
 .leadScoreOutOf {
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text);
   opacity: 0.6;
@@ -299,7 +299,7 @@
 
 .businessName {
   font-family: var(--RobotoFlexii);
-  font-size: 1.8rem;
+  font-size: 18px;
   text-transform: uppercase;
   color: var(--black);
   font-variation-settings:
@@ -314,7 +314,7 @@
 
 .category {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.6;
   text-transform: uppercase;
@@ -346,13 +346,13 @@
 
 .viewLink {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
   text-decoration: none;
   padding: 1rem 1.5rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   transition: all 0.15s ease;
   white-space: nowrap;
   display: inline-block;
@@ -445,7 +445,7 @@
   }
 
   .heading {
-    font-size: 3rem;
+    font-size: 30px;
   }
 
   .sectionHeader {
@@ -462,7 +462,7 @@
   }
 
   .businessName {
-    font-size: 1.6rem;
+    font-size: 16px;
   }
 }
 

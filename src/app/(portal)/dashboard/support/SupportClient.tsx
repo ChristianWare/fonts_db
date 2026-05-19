@@ -50,6 +50,7 @@ export default function SupportClient({ tickets }: { tickets: Ticket[] }) {
 
   return (
     <div className={styles.page}>
+      {/* Header */}
       <div className={styles.header}>
         <h1 className={`${styles.heading} h2`}>Support</h1>
         <p className={styles.subheading}>
@@ -59,8 +60,10 @@ export default function SupportClient({ tickets }: { tickets: Ticket[] }) {
       </div>
 
       {/* New ticket form */}
-      <div className={styles.formCard}>
-        <h3 className={styles.formHeading}>Send a message</h3>
+      <div className={styles.card}>
+        <h2 className={`${styles.cardHeading} sectionHeading`}>
+          Send a message
+        </h2>
 
         {success && (
           <div className={styles.successBanner}>
@@ -68,32 +71,34 @@ export default function SupportClient({ tickets }: { tickets: Ticket[] }) {
           </div>
         )}
 
-        <div className={styles.field}>
-          <label className={styles.label}>Subject</label>
-          <input
-            type='text'
-            className={styles.input}
-            placeholder='What do you need help with?'
-            value={subject}
-            onChange={(e) => {
-              setSubject(e.target.value);
-              setSuccess(false);
-            }}
-          />
-        </div>
+        <div className={styles.fieldGrid}>
+          <div className={styles.field}>
+            <label className={styles.label}>Subject</label>
+            <input
+              type='text'
+              className={styles.input}
+              placeholder='What do you need help with?'
+              value={subject}
+              onChange={(e) => {
+                setSubject(e.target.value);
+                setSuccess(false);
+              }}
+            />
+          </div>
 
-        <div className={styles.field}>
-          <label className={styles.label}>Message</label>
-          <textarea
-            className={styles.textarea}
-            placeholder='Describe your question or issue in detail...'
-            value={message}
-            rows={5}
-            onChange={(e) => {
-              setMessage(e.target.value);
-              setSuccess(false);
-            }}
-          />
+          <div className={styles.field}>
+            <label className={styles.label}>Message</label>
+            <textarea
+              className={styles.textarea}
+              placeholder='Describe your question or issue in detail...'
+              value={message}
+              rows={5}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                setSuccess(false);
+              }}
+            />
+          </div>
         </div>
 
         {error && <div className={styles.errorBanner}>{error}</div>}
@@ -111,10 +116,10 @@ export default function SupportClient({ tickets }: { tickets: Ticket[] }) {
 
       {/* Ticket history */}
       {tickets.length > 0 && (
-        <div className={styles.ticketSection}>
-          <h3 className={styles.ticketSectionHeading}>
+        <div className={styles.card}>
+          <h2 className={`${styles.cardHeading} sectionHeading`}>
             Previous messages ({tickets.length})
-          </h3>
+          </h2>
           <div className={styles.ticketList}>
             {tickets.map((ticket) => (
               <div key={ticket.id} className={styles.ticketCard}>

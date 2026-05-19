@@ -5,12 +5,12 @@
 
 .header {
   padding: 4rem 5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightBlack);
 }
 
 .eyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text);
@@ -20,7 +20,7 @@
 
 .heading {
   font-family: var(--RobotoFlexii);
-  font-size: 4rem;
+  font-size: 40px;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--black);
@@ -33,7 +33,7 @@
 
 .subhead {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   margin-top: 1rem;
   max-width: 60ch;
@@ -42,7 +42,7 @@
 
 .subheadLink {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -69,7 +69,7 @@
   gap: 3rem;
   padding: 4rem;
   background-color: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightBlack);
 }
 
 .field {
@@ -94,7 +94,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -103,7 +103,7 @@
 
 .helperText {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.55;
 }
@@ -116,7 +116,7 @@
 
 .linkBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -134,21 +134,21 @@
 .linkSep {
   color: var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
 }
 
 .input {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   padding: 2rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 /* Pills (desktop) */
@@ -160,13 +160,13 @@
 
 .pill {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1rem 2rem;
   background-color: var(--white);
   color: var(--text);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -177,7 +177,7 @@
 .pillActive {
   background-color: var(--black);
   color: var(--accent);
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .pillActive:hover {
@@ -190,11 +190,11 @@
 }
 
 .pillEmoji {
-  font-size: 1.6rem;
+  font-size: 16px;
 }
 
 .pillBadge {
-  font-size: 1.6rem;
+  font-size: 16px;
   padding: 1rem;
   background-color: var(--lightGray);
   color: var(--text);
@@ -215,7 +215,7 @@
 
 .leadTypeExplanationParagraph {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   line-height: 1.55;
   color: var(--text);
   max-width: 80ch;
@@ -241,11 +241,11 @@
 .mobileSelect {
   display: none;
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 2rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
   width: 100%;
@@ -261,17 +261,17 @@
 
 .mobileSelect:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .mobileMultiSelect {
   display: none;
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
   width: 100%;
@@ -283,13 +283,13 @@
 
 .mobileMultiSelect:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .mobileMultiSelect option {
   padding: 1rem;
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 1rem;
@@ -303,7 +303,7 @@
 .mobileHint {
   display: none;
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.6;
   margin-top: 1rem;
@@ -319,7 +319,7 @@
 
 .searchBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 2rem 4rem;
@@ -342,7 +342,7 @@
 
 .error {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: #ef4444;
   margin-top: 1rem;
 }
@@ -355,7 +355,7 @@
   gap: 2rem;
   padding: 2rem 3rem;
   background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightBlack);
   flex-wrap: wrap;
 }
 
@@ -368,7 +368,7 @@
 
 .filtersBarCount {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -376,7 +376,7 @@
 
 .filtersBarPages {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -398,7 +398,7 @@
 
 .filterControlLabel {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -407,11 +407,11 @@
 
 .filterControlSelect {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 1rem;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
   cursor: pointer;
@@ -419,7 +419,7 @@
 
 .filterControlSelect:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .filterControlSelect:disabled {
@@ -429,13 +429,13 @@
 
 .filterControlToggle {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1rem;
   background-color: var(--white);
   color: var(--text);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -445,7 +445,7 @@
 .filterControlToggleOn {
   background-color: var(--black);
   color: var(--accent);
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .filterControlToggle:disabled {
@@ -454,7 +454,7 @@
 }
 
 .soonBadge {
-  font-size: 1.6rem;
+  font-size: 16px;
   padding: 0 1rem;
   background-color: var(--lightGray);
   color: var(--text);
@@ -468,24 +468,24 @@
   justify-content: center;
   gap: 3rem;
   padding: 3rem 0;
-  border-top: 1px solid var(--grayii);
+  border-top: 1px solid var(--lightBlack);
 }
 
 .pagerBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 2rem 3rem;
   background-color: var(--white);
   color: var(--black);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .pagerBtn:hover:not(:disabled) {
-  border-color: var(--black);
+  border-color: var(--lightBlack);
   background-color: var(--black);
   color: var(--accent);
 }
@@ -497,7 +497,7 @@
 
 .pagerLabel {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -507,13 +507,13 @@
 
 .pagerSelect {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 2rem 3rem;
   background-color: var(--white);
   color: var(--black);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   cursor: pointer;
   min-width: 16rem;
   text-align: center;
@@ -522,12 +522,12 @@
 }
 
 .pagerSelect:hover:not(:disabled) {
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .pagerSelect:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .pagerSelect:disabled {
@@ -538,7 +538,7 @@
 /* States */
 .emptyState {
   padding: 4rem;
-  border: 1px dashed var(--lightGray);
+  border: 1px dashed var(--lightBlack);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -547,7 +547,7 @@
 
 .emptyTitle {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -555,17 +555,17 @@
 
 .emptyHint {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.7;
 }
 
 .initialHint {
   padding: 4rem;
-  border: 1px dashed var(--lightGray);
+  border: 1px dashed var(--lightBlack);
   text-align: center;
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.7;
 }
@@ -579,7 +579,7 @@
 
 .warningTitle {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -588,7 +588,7 @@
 
 .warningDesc {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   line-height: 1.4;
   margin-bottom: 2rem;
@@ -596,7 +596,7 @@
 
 .warningCta {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -610,7 +610,7 @@
   gap: 3rem;
   padding: 4rem;
   background-color: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightBlack);
   border-left: 6px solid var(--accent);
 }
 
@@ -622,7 +622,7 @@
 
 .scrapeProgressEyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text);
@@ -631,7 +631,7 @@
 
 .scrapeProgressTitle {
   font-family: var(--RobotoFlexii);
-  font-size: 2.4rem;
+  font-size: 24px;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   color: var(--black);
@@ -644,7 +644,7 @@
 
 .scrapeProgressDesc {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text);
   max-width: 70ch;
@@ -674,7 +674,7 @@
 
 .scrapeProgressStage {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -682,7 +682,7 @@
 
 .scrapeProgressPct {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--black);
 }
@@ -694,13 +694,13 @@
   gap: 2rem;
   padding: 4rem;
   background-color: rgba(239, 68, 68, 0.06);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightBlack);
   border-left: 6px solid #ef4444;
 }
 
 .quotaErrorEyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: #b91c1c;
@@ -708,7 +708,7 @@
 
 .quotaErrorTitle {
   font-family: var(--RobotoFlexii);
-  font-size: 2.4rem;
+  font-size: 24px;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   color: var(--black);
@@ -721,7 +721,7 @@
 
 .quotaErrorDesc {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text);
   max-width: 70ch;
@@ -730,7 +730,7 @@
 
 .quotaErrorHint {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text);
   opacity: 0.7;
@@ -746,7 +746,7 @@
   gap: 1rem;
   padding: 3rem;
   background-color: var(--white);
-  border: 1px solid var(--grayii);
+  border: 1px solid var(--lightBlack);
 }
 
 .resultsHeader_cold {
@@ -768,13 +768,13 @@
 }
 
 .resultsHeaderEmoji {
-  font-size: 2.8rem;
+  font-size: 28px;
   line-height: 1;
 }
 
 .resultsHeaderLabel {
   font-family: var(--RobotoFlexii);
-  font-size: 2.4rem;
+  font-size: 24px;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   color: var(--black);
@@ -791,7 +791,7 @@
   gap: 1rem;
   flex-wrap: wrap;
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -812,7 +812,7 @@
   }
 
   .heading {
-    font-size: 3rem;
+    font-size: 30px;
   }
 
   .searchCard {

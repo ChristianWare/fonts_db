@@ -9,14 +9,14 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--grayii);
 }
 
 
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   margin-top: 0.8rem;
@@ -26,11 +26,11 @@
 .stagePill {
   flex-shrink: 0;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--black);
   padding: 0.6rem 1.4rem;
   white-space: nowrap;
   margin-top: 0.6rem;
@@ -42,16 +42,16 @@
   flex-direction: column;
   gap: 2.4rem;
   padding: 3rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--grayii);
 }
 
-.cardHeading {
+/* .cardHeading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--black);
-}
+} */
 
 /* ── Fields ── */
 .fieldGrid {
@@ -63,7 +63,7 @@
 .fieldRow {
   display: grid;
   grid-template-columns: 1fr 10rem;
-  gap: 1.6rem;
+  gap: 16px;
 }
 
 .field {
@@ -74,7 +74,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -82,10 +82,10 @@
 
 .input {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   background-color: var(--white);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   padding: 1.1rem 1.4rem;
   outline: none;
   transition: border-color 0.15s ease;
@@ -94,7 +94,7 @@
 }
 
 .input:focus {
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .inputReadonly {
@@ -105,7 +105,7 @@
 
 .fieldHint {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.5;
@@ -121,8 +121,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.6rem 0;
-  border-bottom: 1px solid var(--lightGray);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--grayii);
 }
 
 .infoRow:first-child {
@@ -136,7 +136,7 @@
 
 .infoLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -144,7 +144,7 @@
 
 .infoValue {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.05em;
   color: var(--black);
   text-transform: uppercase;
@@ -155,17 +155,17 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 1.6rem;
+  gap: 16px;
   position: sticky;
   bottom: 0;
   background-color: var(--white);
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--grayii);
   padding: 2rem 5rem;
 }
 
 .errorText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #dc2626;
@@ -174,7 +174,7 @@
 
 .savedText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
@@ -183,7 +183,7 @@
 
 .saveBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);

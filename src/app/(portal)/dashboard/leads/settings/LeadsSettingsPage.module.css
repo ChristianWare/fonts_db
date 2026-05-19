@@ -18,7 +18,7 @@
   margin-bottom: 1rem;
 }
 
-.heading {
+/* .heading {
   font-family: var(--RobotoFlexii);
   font-size: 4rem;
   letter-spacing: -0.03em;
@@ -29,7 +29,7 @@
     "wdth" 81;
   -webkit-font-smoothing: antialiased;
   line-height: 1;
-}
+} */
 
 .body {
   padding: 4rem 5rem;
@@ -57,7 +57,7 @@
 /* Status card */
 .statusCard {
   padding: 3rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
 }
 
@@ -113,7 +113,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
 }
 
@@ -141,7 +141,7 @@
   font-family: var(--Roboto);
   font-size: 16px;
   padding: 1rem 2rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
   transition: border-color 0.15s ease;
@@ -149,7 +149,7 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .checkboxRow {
@@ -343,7 +343,7 @@
   font-size: 16px;
   padding: 1rem 2rem;
   padding-right: 4.5rem; /* room for the chevron */
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   color: var(--black);
   transition: border-color 0.15s ease;

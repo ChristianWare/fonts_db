@@ -1,6 +1,6 @@
 .tableWrapper {
   width: 100%;
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
 }
 
@@ -10,13 +10,13 @@
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightBlack);
   background-color: rgba(0, 0, 0, 0.03);
 }
 
 .headerCell {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -40,7 +40,7 @@
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem 2.5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightBlack);
   transition: background-color 0.1s ease;
 }
 
@@ -64,7 +64,7 @@
 
 .colNumber {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
   font-variant-numeric: tabular-nums;
@@ -79,7 +79,7 @@
 
 .businessName {
   font-family: var(--RobotoFlexii);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   color: var(--black);
   font-variation-settings:
@@ -97,7 +97,7 @@
 
 .businessCategory {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -107,7 +107,7 @@
 
 .colCategory .metaPrimary {
   font-family: var(--GeistMono);
-  font-size: 1.5rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -122,33 +122,33 @@
 
 .metaPrimary {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--black);
 }
 
 .metaSecondary {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.55;
 }
 
 .saveBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.8rem 1.4rem;
   background-color: var(--white);
   color: var(--black);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   cursor: pointer;
   transition: all 0.12s ease;
   white-space: nowrap;
 }
 
 .saveBtn:hover:not(:disabled) {
-  border-color: var(--black);
+  border-color: var(--lightBlack);
   background-color: var(--black);
   color: var(--accent);
 }
@@ -160,7 +160,7 @@
 
 .savedBadge {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.8rem 1.4rem;
@@ -172,7 +172,7 @@
 
 .viewBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 1rem 1.6rem;
@@ -194,7 +194,7 @@
 }
 
 .viewArrow {
-  font-size: 1.6rem;
+  font-size: 16px;
 }
 
 .businessBadges {
@@ -206,7 +206,7 @@
 
 .contactReadyBadge {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.5rem 1rem;
@@ -219,7 +219,7 @@
 
 .topMatchBadge {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.5rem 1rem;
@@ -232,13 +232,13 @@
 
 .scoreBadge {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 0.3rem 0.8rem;
   background-color: rgba(0, 0, 0, 0.04);
   color: var(--black);
-  border: 1px solid var(--lightGray);
+  border: 1px solid var(--lightBlack);
   white-space: nowrap;
   width: fit-content;
 }
@@ -284,7 +284,7 @@
     display: block;
     width: 100%;
     font-family: var(--GeistMono);
-    font-size: 1.6rem;
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text);
@@ -306,7 +306,7 @@
   }
 
   .colCategory .metaPrimary {
-    font-size: 1.6rem;
+    font-size: 16px;
     opacity: 1;
   }
 }

@@ -9,60 +9,60 @@
   flex-direction: column;
   gap: 0.6rem;
   padding: 4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--grayii);
 }
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
+  margin-top: 0.8rem;
   line-height: 1.6;
-  margin-top: 0.4rem;
 }
 
-/* ── Form block ── */
-.formCard {
+/* ── Cards ── */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  padding: 3rem 5rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+/* ── Fields ── */
+.fieldGrid {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 3rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
-}
-
-.formHeading {
-  font-family: var(--GeistMono);
-  font-size: 2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--black);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--black);
+  color: var(--text);
 }
 
 .input,
 .textarea {
-  width: 100%;
-  padding: 1.3rem 1.4rem;
-  border: 1px solid var(--lightGray);
-  background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
-  transition: border-color 0.15s ease;
+  background-color: var(--white);
+  border: 1px solid var(--lightBlack);
+  padding: 1.1rem 1.4rem;
   outline: none;
+  transition: border-color 0.15s ease;
+  width: 100%;
+  text-transform: none;
   appearance: none;
 }
 
@@ -73,57 +73,59 @@
 
 .input:focus,
 .textarea:focus {
-  border-color: var(--black);
+  border-color: var(--lightBlack);
 }
 
 .textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 12rem;
+  line-height: 1.5;
 }
 
+/* ── Banners ── */
 .successBanner {
-  padding: 1.4rem;
+  padding: 1.4rem 2rem;
   background-color: #f0fdf4;
-  border-top: 1px solid #bbf7d0;
-  border-bottom: 1px solid #bbf7d0;
+  border: 1px solid #bbf7d0;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #16a34a;
   text-transform: none;
   line-height: 1.5;
 }
 
 .errorBanner {
-  padding: 1.4rem;
+  padding: 1.4rem 2rem;
   background-color: #fff5f5;
-  border-top: 1px solid #fed7d7;
-  border-bottom: 1px solid #fed7d7;
+  border: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
 }
 
+/* ── Form footer ── */
 .formFooter {
   display: flex;
   justify-content: flex-end;
 }
 
 .submitBtn {
-  padding: 1.2rem 3rem;
+  padding: 1.2rem 2.8rem;
   background-color: var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);
   cursor: pointer;
   border: none;
   transition: opacity 0.2s ease;
+  white-space: nowrap;
 }
 
-.submitBtn:hover {
+.submitBtn:hover:not(:disabled) {
   opacity: 0.85;
 }
 
@@ -132,22 +134,7 @@
   cursor: not-allowed;
 }
 
-/* ── Ticket section ── */
-.ticketSection {
-  display: flex;
-  flex-direction: column;
-}
-
-.ticketSectionHeading {
-  font-family: var(--GeistMono);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--black);
-  padding: 2.4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
-}
-
+/* ── Tickets ── */
 .ticketList {
   display: flex;
   flex-direction: column;
@@ -157,17 +144,17 @@
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  padding: 2.4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
-  transition: background-color 0.15s ease;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.ticketCard:first-child {
+  padding-top: 0;
 }
 
 .ticketCard:last-child {
   border-bottom: none;
-}
-
-.ticketCard:hover {
-  background-color: var(--lightlightGrayi);
+  padding-bottom: 0;
 }
 
 .ticketTop {
@@ -185,7 +172,7 @@
 
 .ticketSubject {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -193,14 +180,14 @@
 
 .ticketDate {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
 
 .ticketStatus {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.3rem 1rem;
@@ -220,7 +207,7 @@
 
 .ticketMessage {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -245,7 +232,7 @@
 
 .adminReplyLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -253,14 +240,14 @@
 
 .adminReplyDate {
   font-family: var(--Roboto);
-  font-size: 1.3rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
 
 .adminReplyText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   line-height: 1.6;
@@ -271,20 +258,12 @@
   .header {
     padding: 3rem 2rem;
   }
-  .formCard {
+  .card {
     padding: 2.4rem 2rem;
   }
-  .ticketSectionHeading {
-    padding: 2rem 2rem;
-  }
-  .ticketCard {
-    padding: 2rem 2rem;
-  }
-
   .ticketTop {
     flex-direction: column;
   }
-
   .formFooter {
     justify-content: stretch;
   }

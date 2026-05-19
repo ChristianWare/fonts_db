@@ -18,19 +18,6 @@
   margin-bottom: 1rem;
 }
 
-.heading {
-  font-family: var(--RobotoFlexii);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  font-variation-settings:
-    "wght" 700,
-    "wdth" 81;
-  -webkit-font-smoothing: antialiased;
-  line-height: 1;
-}
-
 .body {
   padding: 4rem 5rem;
   display: flex;

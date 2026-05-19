@@ -86,7 +86,9 @@ export default function ProfileClient({
 
       {/* Personal Info */}
       <div className={styles.card}>
-        <h1 className={`${styles.cardHeading} h2`}>Personal Information</h1>
+        <h1 className={`${`${styles.cardHeading} sectionHeading`} h2 sectionHeading`}>
+          Personal Information
+        </h1>
         <div className={styles.fieldGrid}>
           <div className={styles.field}>
             <label className={styles.label}>Full Name</label>
@@ -124,7 +126,7 @@ export default function ProfileClient({
 
       {/* Business Info */}
       <div className={styles.card}>
-        <h2 className={styles.cardHeading}>Business Information</h2>
+        <h2 className={`${styles.cardHeading} sectionHeading`}>Business Information</h2>
         <div className={styles.fieldGrid}>
           <div className={styles.field}>
             <label className={styles.label}>Business Name</label>
@@ -173,7 +175,7 @@ export default function ProfileClient({
 
       {/* Account Info */}
       <div className={styles.card}>
-        <h2 className={styles.cardHeading}>Account Information</h2>
+        <h2 className={`${styles.cardHeading} sectionHeading`}>Account Information</h2>
         <div className={styles.infoGrid}>
           <div className={styles.infoRow}>
             <span className={styles.infoLabel}>Member since</span>

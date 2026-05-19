@@ -38,30 +38,29 @@ export default async function LeadSearchPage() {
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
         {hasMarket ? (
           <div className={styles.introWithQuota}>
-            <h1 className={styles.heading}>
-              Find Leads in {settings!.primaryCity}, {settings!.primaryState}
+            <h1 className={`${styles.heading} h2`}>
+              Find Leads in <br /> {settings!.primaryCity}, {settings!.primaryState}
             </h1>
             <p className={styles.subhead}>
               Hot, warm, and cold leads in your market.{" "}
             </p>
-              <Link
-                href='/dashboard/leads/settings'
-                className={styles.subheadLink}
-              >
-                Change market →
-              </Link>
+            <Link
+              href='/dashboard/leads/settings'
+              className={styles.subheadLink}
+            >
+              Change market →
+            </Link>
             {hasMarket && <QuotaIndicator />}
           </div>
         ) : (
           <>
-            <h1 className={styles.heading}>Find Leads</h1>
+            <h1 className={`${styles.heading} h2`}>Find Leads</h1>
             <p className={styles.subhead}>
               Set your market to start searching.
             </p>
           </>
         )}
       </div>
-
 
       {!hasMarket ? (
         <div className={styles.body}>

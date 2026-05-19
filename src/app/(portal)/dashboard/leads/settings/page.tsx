@@ -41,7 +41,7 @@ export default async function LeadsSettingsPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Lead Settings</h1>
+        <h1 className={`${styles.heading} h2`}>Lead Settings</h1>
       </div>
 
       <div className={styles.body}>

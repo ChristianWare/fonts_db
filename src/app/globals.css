@@ -1,5 +1,6 @@
 :root {
   --black: #0f0f0f;
+  --lightBlack: #8f7f7f;
   --blackii: #b49114;
   --white: #ffffff;
   --gray: #ffffff80;
@@ -342,4 +343,39 @@ textarea:focus {
     font-size: 15px;
     letter-spacing: -0.3px;
   }
+}
+
+.sectionHeading {
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: 100%;
+  padding: 1rem;
+  font-size: 3rem;
+  font-family: var(--RobotoFlexii);
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on;
+  font-variation-settings:
+    "opsz" 98,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-weight: 400;
 }
