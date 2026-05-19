@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "../../../../../auth";
@@ -192,7 +193,7 @@ export default async function LeadsPage({
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={styles.heading}>Lead Feed</h1>
+        <h1 className={`${styles.heading} h2`}>Lead Feed</h1>
       </div>
 
       {!onboardingComplete && <OnboardingModal welcomeFlow={!!welcome} />}
@@ -333,7 +334,7 @@ export default async function LeadsPage({
                       </div>
                     )}
 
-                    {validStaleLeads.length > 0 && (
+                    {/* {validStaleLeads.length > 0 && (
                       <div className={styles.attentionGroup}>
                         <p className={styles.attentionGroupLabel}>
                           Untouched for 7+ days ({validStaleLeads.length})
@@ -356,7 +357,7 @@ export default async function LeadsPage({
                           ))}
                         </ul>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 )}
               </section>

@@ -18,22 +18,11 @@
   margin-bottom: 1rem;
 }
 
-.heading {
-  font-family: var(--RobotoFlexii);
-  font-size: 4rem;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
-  -webkit-font-smoothing: antialiased;
-  line-height: 1;
-}
-
 .body {
   padding: 4rem 5rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 5rem;
   /* max-width: 900px; */
 }
 
@@ -96,7 +85,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 4rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
 }
 
@@ -174,7 +163,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 3rem 4rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   flex-wrap: wrap;
 }
@@ -217,10 +206,15 @@
    ============================ */
 .sectionHeader {
   display: flex;
+  flex-direction: column;
   align-items: baseline;
   gap: 1.5rem;
   flex-wrap: wrap;
   margin-bottom: 2.5rem;
+   padding: 4rem;
+  border: 1px solid var(--lightBlack);
+  background-color: var(--white);
+  border-left: 6px solid var(--accent);
 }
 
 .sectionEyebrow {
@@ -245,12 +239,12 @@
 /* ============================
    Needs your attention
    ============================ */
-.attentionCard {
+/* .attentionCard {
   padding: 4rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   border-left: 6px solid var(--accent);
-}
+} */
 
 .attentionCount {
   font-family: var(--GeistMono);
@@ -334,16 +328,17 @@
 /* ============================
    Pipeline breakdown
    ============================ */
-.pipelineCard {
+/* .pipelineCard {
   padding: 4rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
-}
+} */
 
 .pipelineGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--grayiii);
+  grid-gap: 2rem;
+  /* border: 1px solid var(--grayiii); */
 }
 
 .pipelineStat {
@@ -352,8 +347,8 @@
   gap: 1rem;
   padding: 3rem 2rem;
   text-decoration: none;
-  border-right: 1px solid var(--grayiii);
-  background-color: var(--white);
+  border: 1px solid var(--grayiii);
+  background-color: var(--accent);
   transition: background-color 0.15s ease;
 }
 
@@ -445,7 +440,7 @@
   flex-direction: column;
   gap: 1.2rem;
   padding: 2.5rem;
-  border: 1px solid var(--black);
+  border: 1px solid var(--lightBlack);
   background-color: var(--white);
   text-decoration: none;
   transition: transform 0.15s ease;
@@ -503,10 +498,6 @@
   .header,
   .body {
     padding: 3rem 2rem;
-  }
-
-  .heading {
-    font-size: 3rem;
   }
 
   .marketCard,
