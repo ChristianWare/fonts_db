@@ -137,6 +137,14 @@
   color: var(--black);
 }
 
+.fieldHint {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.4;
+  margin-top: 0.4rem;
+}
+
 .input {
   font-family: var(--Roboto);
   font-size: 16px;
