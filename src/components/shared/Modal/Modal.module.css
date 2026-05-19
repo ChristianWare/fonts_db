@@ -51,12 +51,15 @@
   border: none;
   border-left: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
+  background-color: var(--accent);
   cursor: pointer;
   font-family: var(--GeistMono);
   font-size: 4rem;
-  color: var(--accent);
+  color: var(--black);
   line-height: 1;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   z-index: 1;
 }
 

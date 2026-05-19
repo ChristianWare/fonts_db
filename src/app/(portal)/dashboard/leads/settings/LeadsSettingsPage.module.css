@@ -10,7 +10,7 @@
 
 .eyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text);
@@ -24,7 +24,9 @@
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   line-height: 1;
 }
@@ -45,7 +47,7 @@
 
 .sectionTitle {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -69,7 +71,7 @@
 
 .statusLabel {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -82,7 +84,9 @@
   font-size: 3rem;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -95,7 +99,7 @@
 
 .badge {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1rem 2rem;
@@ -127,7 +131,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -135,7 +139,7 @@
 
 .input {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
@@ -164,14 +168,14 @@
 
 .checkboxLabel {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: var(--black);
   cursor: pointer;
 }
 
 .submit {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
@@ -195,7 +199,7 @@
 
 .error {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: #ff4444;
   padding: 1rem 2rem;
   border: 1px solid #ff4444;
@@ -204,7 +208,7 @@
 
 .success {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   color: #16a34a;
   padding: 1rem 2rem;
   border: 1px solid #16a34a;
@@ -223,14 +227,14 @@
 
 .dangerDesc {
   font-family: var(--Roboto);
-  font-size: 1.6rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--text);
 }
 
 .dangerBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
@@ -239,7 +243,9 @@
   border: 1px solid #ff4444;
   cursor: pointer;
   width: fit-content;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .dangerBtn:hover {
@@ -250,15 +256,21 @@
 .confirmRow {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding: 3rem;
+  /* padding-top: 5rem; */
 }
 
 .confirmText {
-  font-family: var(--GeistMono);
-  font-size: 1.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-family: var(--Roboto);
+  font-size: 2rem;
+  width: 90%;
+  /* text-transform: uppercase; */
+  /* letter-spacing: 0.06em; */
   color: var(--black);
+  padding-top: 5rem;
 }
 
 .confirmActions {
@@ -269,7 +281,7 @@
 
 .dangerBtnConfirm {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
@@ -291,7 +303,7 @@
 
 .cancelConfirmBtn {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
@@ -314,7 +326,7 @@
 
 .backLink {
   font-family: var(--GeistMono);
-  font-size: 1.6rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -324,6 +336,12 @@
 
 .backLink:hover {
   color: var(--black);
+}
+
+@media screen and (max-width: 1268px) {
+  .confirmText {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -338,5 +356,13 @@
 
   .fieldRow2col {
     grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .confirmActions {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
   }
 }

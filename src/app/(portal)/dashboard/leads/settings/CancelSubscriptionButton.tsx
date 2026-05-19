@@ -2,13 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Modal from "@/components/shared/Modal/Modal";
 import styles from "./LeadsSettingsPage.module.css";
 
 export default function CancelSubscriptionButton() {
   const router = useRouter();
-  const [confirming, setConfirming] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function openModal() {
+    setError(null);
+    setModalOpen(true);
+  }
+
+  function closeModal() {
+    if (loading) return; // don't allow dismiss mid-request
+    setModalOpen(false);
+  }
 
   async function handleCancel() {
     setLoading(true);
@@ -28,6 +39,7 @@ export default function CancelSubscriptionButton() {
         throw new Error(data.error ?? "Could not cancel");
       }
 
+      setModalOpen(false);
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
@@ -36,40 +48,39 @@ export default function CancelSubscriptionButton() {
     }
   }
 
-  if (!confirming) {
-    return (
-      <button
-        type='button'
-        onClick={() => setConfirming(true)}
-        className={styles.dangerBtn}
-      >
+  return (
+    <>
+      <button type='button' onClick={openModal} className={styles.dangerBtn}>
         Cancel subscription
       </button>
-    );
-  }
 
-  return (
-    <div className={styles.confirmRow}>
-      <p className={styles.confirmText}>Are you sure? This is immediate.</p>
-      <div className={styles.confirmActions}>
-        <button
-          type='button'
-          onClick={handleCancel}
-          disabled={loading}
-          className={styles.dangerBtnConfirm}
-        >
-          {loading ? "Cancelling..." : "Yes, cancel"}
-        </button>
-        <button
-          type='button'
-          onClick={() => setConfirming(false)}
-          disabled={loading}
-          className={styles.cancelConfirmBtn}
-        >
-          Keep subscription
-        </button>
-      </div>
-      {error && <p className={styles.error}>{error}</p>}
-    </div>
+      <Modal isOpen={modalOpen} onClose={closeModal}>
+        <div className={styles.confirmRow}>
+          <p className={styles.confirmText}>
+            Are you sure you want to cancel? This is immediate — you&apos;ll
+            lose access to the leads tool right away.
+          </p>
+          <div className={styles.confirmActions}>
+            <button
+              type='button'
+              onClick={handleCancel}
+              disabled={loading}
+              className={styles.dangerBtnConfirm}
+            >
+              {loading ? "Cancelling..." : "Yes, cancel"}
+            </button>
+            <button
+              type='button'
+              onClick={closeModal}
+              disabled={loading}
+              className={styles.cancelConfirmBtn}
+            >
+              Keep subscription
+            </button>
+          </div>
+          {error && <p className={styles.error}>{error}</p>}
+        </div>
+      </Modal>
+    </>
   );
 }
