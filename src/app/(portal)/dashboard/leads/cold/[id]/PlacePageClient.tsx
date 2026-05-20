@@ -201,6 +201,35 @@ function formatDriveTime(seconds: number): string {
   return remainder > 0 ? `${hours}h ${remainder}m` : `${hours}h`;
 }
 
+function formatAddressLines(address: string): string[] {
+  const parts = address
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 2) return parts;
+
+  // Standard US format: "street, city, state zip, country"
+  // Index-from-end so suite numbers / multi-part street addresses still work:
+  // "123 Main St, Suite 5, Mesa, AZ 85204, USA" → 5 parts, last 3 are city/state/country.
+  const last = parts[parts.length - 1];
+  const looksLikeCountry = /^(USA|US|United States)$/i.test(last);
+
+  if (looksLikeCountry && parts.length >= 4) {
+    const country = parts[parts.length - 1];
+    const stateZip = parts[parts.length - 2];
+    const city = parts[parts.length - 3];
+    const street = parts.slice(0, -3).join(", ");
+    return [street, `${city}, ${stateZip}`, country];
+  }
+
+  // No country detected — assume last two are city / state-zip
+  const stateZip = parts[parts.length - 1];
+  const city = parts[parts.length - 2];
+  const street = parts.slice(0, -2).join(", ");
+  return [street, `${city}, ${stateZip}`];
+}
+
 function buildAtmosphereChips(p: PlacePreview): string[] {
   const chips: string[] = [];
   if (p.reservable === true) chips.push("Reservable");
@@ -696,8 +725,65 @@ export default function PlacePageClient({
           )}
         </div>
         {lead.businessAddress && (
-          <p className={previewStyles.heroAddress}>{lead.businessAddress}</p>
+          <p className={previewStyles.heroAddress}>
+            {formatAddressLines(lead.businessAddress).map((line, i, arr) => (
+              <span key={i}>
+                {line}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))}
+          </p>
         )}
+
+        {lead.distanceMiles !== null &&
+          lead.primaryMarket &&
+          lead.businessLat &&
+          lead.businessLng && (
+            <section
+              className={`${previewStyles.locationCard} ${mapFailed ? previewStyles.locationCardNoMap : ""}`}
+            >
+              {!mapFailed && (
+                <div className={previewStyles.locationMap}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/api/leads/static-map?lat=${lead.businessLat}&lng=${lead.businessLng}&zoom=14&width=600&height=300`}
+                    alt={`Map of ${lead.businessName}`}
+                    className={previewStyles.mapImage}
+                    onError={() => setMapFailed(true)}
+                  />
+                </div>
+              )}
+              <div className={previewStyles.locationStats}>
+                <div className={previewStyles.locationStatRow}>
+                  <div className={previewStyles.locationStat}>
+                    <p className={previewStyles.locationStatValue}>
+                      {lead.distanceMiles.toFixed(1)} mi
+                    </p>
+                    <p className={previewStyles.locationStatLabel}>distance</p>
+                  </div>
+                  {driveTime && (
+                    <div className={previewStyles.locationStat}>
+                      <p className={previewStyles.locationStatValue}>
+                        {formatDriveTime(driveTime.seconds)}
+                      </p>
+                      <p className={previewStyles.locationStatLabel}>
+                        drive time
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <p className={previewStyles.locationDesc}>
+                  from your base in {lead.primaryMarket}
+                  {lead.serviceRadiusMiles &&
+                  lead.distanceMiles > lead.serviceRadiusMiles
+                    ? ` — outside your ${lead.serviceRadiusMiles}-mile service radius`
+                    : lead.serviceRadiusMiles
+                      ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
+                      : ""}
+                </p>
+              </div>
+            </section>
+          )}
 
         {/* HERO — photos, hours, links, location only. Everything below is accordionized. */}
         <section className={previewStyles.hero}>
@@ -784,7 +870,6 @@ export default function PlacePageClient({
           {/* ABOUT */}
           <br />
           {(preview?.editorialSummary || preview?.generativeSummary) && (
-          
             <>
               <h2 className={detailStyles.sectionTitle}>About</h2>
               <p className={previewStyles.editorialBody}>
@@ -794,128 +879,27 @@ export default function PlacePageClient({
           )}
           <br />
 
-          {lead.distanceMiles !== null &&
-            lead.primaryMarket &&
-            lead.businessLat &&
-            lead.businessLng && (
-              <section
-                className={`${previewStyles.locationCard} ${mapFailed ? previewStyles.locationCardNoMap : ""}`}
-              >
-                {!mapFailed && (
-                  <div className={previewStyles.locationMap}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/api/leads/static-map?lat=${lead.businessLat}&lng=${lead.businessLng}&zoom=14&width=600&height=300`}
-                      alt={`Map of ${lead.businessName}`}
-                      className={previewStyles.mapImage}
-                      onError={() => setMapFailed(true)}
-                    />
-                  </div>
-                )}
-                <div className={previewStyles.locationStats}>
-                  <div className={previewStyles.locationStatRow}>
-                    <div className={previewStyles.locationStat}>
-                      <p className={previewStyles.locationStatValue}>
-                        {lead.distanceMiles.toFixed(1)} mi
-                      </p>
-                      <p className={previewStyles.locationStatLabel}>
-                        distance
-                      </p>
-                    </div>
-                    {driveTime && (
-                      <div className={previewStyles.locationStat}>
-                        <p className={previewStyles.locationStatValue}>
-                          {formatDriveTime(driveTime.seconds)}
-                        </p>
-                        <p className={previewStyles.locationStatLabel}>
-                          drive time
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <p className={previewStyles.locationDesc}>
-                    from your base in {lead.primaryMarket}
-                    {lead.serviceRadiusMiles &&
-                    lead.distanceMiles > lead.serviceRadiusMiles
-                      ? ` — outside your ${lead.serviceRadiusMiles}-mile service radius`
-                      : lead.serviceRadiusMiles
-                        ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
-                        : ""}
-                  </p>
-                </div>
-              </section>
-            )}
-        </section>
-
-        {/* === ACCORDION GROUP — About through Notes & Activity === */}
-        <div className={placeStyles.accordionGroup}>
-          {/* STRATEGIC BRIEF */}
-          <AccordionSection
-            sectionKey='strategicBrief'
-            title='Strategic Brief'
-            isOpen={openSection === "strategicBrief"}
-            onToggle={toggleSection}
-          >
-            {lead.strategicBrief && !generatingBrief && (
-              <div className={placeStyles.accordionBodyActions}>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  disabled={generatingBrief}
-                  className={detailStyles.regenerateBtn}
-                >
-                  Regenerate
-                </button>
-              </div>
-            )}
-
-            {generatingBrief ? (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  ✨ Generating strategic brief…
-                </p>
-              </div>
-            ) : lead.strategicBrief ? (
-              <div className={detailStyles.briefBody}>
-                {lead.strategicBrief.split("\n\n").map((para, i) => (
-                  <p key={i} className={detailStyles.briefParagraph}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  Brief generation failed. Try again.
-                </p>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  className={detailStyles.generateBtn}
-                >
-                  Retry
-                </button>
-              </div>
-            )}
-          </AccordionSection>
-
-          {/* COMPETITIVE LANDSCAPE */}
-          <AccordionSection
-            sectionKey='competitive'
-            title='Competitive Landscape'
-            isOpen={openSection === "competitive"}
-            onToggle={toggleSection}
-          >
+          <div className={previewStyles.competetiveLandscapeSection}>
+            <h2 className={detailStyles.sectionTitle}>Competitive Landscape</h2>
             {lead.competitiveAnalysis &&
               lead.competitiveAnalysis.analyzed === true &&
               !generatingCompetitive && (
-                <div className={placeStyles.accordionBodyActions}>
+                <div
+                  className={placeStyles.accordionBodyActions}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "2rem",
+                  }}
+                >
                   <button
                     type='button'
                     onClick={() =>
                       generateAi("competitive-check", "competitive")
                     }
                     className={detailStyles.regenerateBtn}
+                    style={{ marginTop: "2rem" }}
                   >
                     Regenerate
                   </button>
@@ -993,6 +977,115 @@ export default function PlacePageClient({
                 </p>
               </div>
             )}
+          </div>
+<br />
+<br />
+          <div className={previewStyles.competetiveLandscapeSection}>
+            <h2 className={detailStyles.sectionTitle}>Review Intelligence</h2>
+            {lead.reviewIntelligence && !generatingReviews && (
+              <div
+                className={placeStyles.accordionBodyActions}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "2rem",
+                }}
+              >
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("review-intelligence", "reviews", true)
+                  }
+                  className={detailStyles.regenerateBtn}
+                  style={{ marginTop: "2rem" }}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingReviews ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
+              </div>
+            ) : lead.reviewIntelligence ? (
+              <div className={detailStyles.reviewBody}>
+                {lead.reviewIntelligence.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Review analysis failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("review-intelligence", "reviews", true)
+                  }
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* === ACCORDION GROUP — About through Notes & Activity === */}
+        <div className={placeStyles.accordionGroup}>
+          {/* STRATEGIC BRIEF */}
+          <AccordionSection
+            sectionKey='strategicBrief'
+            title='Strategic Brief'
+            isOpen={openSection === "strategicBrief"}
+            onToggle={toggleSection}
+          >
+            {lead.strategicBrief && !generatingBrief && (
+              <div className={placeStyles.accordionBodyActions}>
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  disabled={generatingBrief}
+                  className={detailStyles.regenerateBtn}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingBrief ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Generating strategic brief…
+                </p>
+              </div>
+            ) : lead.strategicBrief ? (
+              <div className={detailStyles.briefBody}>
+                {lead.strategicBrief.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Brief generation failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
           </AccordionSection>
 
           {/* SEASONAL CONTEXT */}
@@ -1038,55 +1131,14 @@ export default function PlacePageClient({
           </AccordionSection>
 
           {/* REVIEW INTELLIGENCE */}
-          <AccordionSection
+          {/* <AccordionSection
             sectionKey='reviewIntel'
             title='Review Intelligence'
             isOpen={openSection === "reviewIntel"}
             onToggle={toggleSection}
           >
-            {lead.reviewIntelligence && !generatingReviews && (
-              <div className={placeStyles.accordionBodyActions}>
-                <button
-                  type='button'
-                  onClick={() =>
-                    generateAi("review-intelligence", "reviews", true)
-                  }
-                  className={detailStyles.regenerateBtn}
-                >
-                  Regenerate
-                </button>
-              </div>
-            )}
-
-            {generatingReviews ? (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
-              </div>
-            ) : lead.reviewIntelligence ? (
-              <div className={detailStyles.reviewBody}>
-                {lead.reviewIntelligence.split("\n\n").map((para, i) => (
-                  <p key={i} className={detailStyles.briefParagraph}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  Review analysis failed. Try again.
-                </p>
-                <button
-                  type='button'
-                  onClick={() =>
-                    generateAi("review-intelligence", "reviews", true)
-                  }
-                  className={detailStyles.generateBtn}
-                >
-                  Retry
-                </button>
-              </div>
-            )}
-          </AccordionSection>
+          
+          </AccordionSection> */}
 
           {/* WHO TO CONTACT */}
           <AccordionSection

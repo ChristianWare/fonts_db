@@ -202,7 +202,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  background-color: var(--white);
+  background-color: rgba(90, 246, 59, 0.05);
   border: 1px solid var(--grayii);
 }
 
