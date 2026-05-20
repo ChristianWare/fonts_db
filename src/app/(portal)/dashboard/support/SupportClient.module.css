@@ -220,7 +220,7 @@
   gap: 1rem;
   padding: 1.6rem 2rem;
   background-color: var(--lightlightGrayi);
-  border-left: 3px solid var(--accent);
+  border-left: 6px solid var(--accent);
 }
 
 .adminReplyHeader {

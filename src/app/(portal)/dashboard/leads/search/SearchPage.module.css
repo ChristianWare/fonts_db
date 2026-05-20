@@ -39,7 +39,7 @@
   margin-top: 2rem;
   padding: 2rem;
   background-color: rgba(245, 158, 11, 0.1);
-  border-left: 3px solid #f59e0b;
+  border-left: 6px solid #f59e0b;
   font-family: var(--Roboto);
   font-size: 16px;
   color: var(--black);

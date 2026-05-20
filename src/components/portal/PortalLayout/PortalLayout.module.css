@@ -127,7 +127,7 @@
   text-decoration: none;
   position: relative;
   white-space: nowrap;
-  border-left: 3px solid transparent;
+  border-left: 6px solid transparent;
   transition:
     color 0.15s ease,
     border-color 0.15s ease,
@@ -268,7 +268,7 @@
   border: none;
   text-align: left;
   white-space: nowrap;
-  border-left: 3px solid transparent;
+  border-left: 6px solid transparent;
   transition:
     color 0.15s ease,
     background-color 0.15s ease;
@@ -451,11 +451,12 @@
 }
 
 @media screen and (max-width: 568px) {
-  .navGroupLabel, .userName, .userEmail {
+  .navGroupLabel,
+  .userName,
+  .userEmail {
     font-size: 14px;
-    
   }
-  
+
   .navLabel {
     font-size: 16px;
   }

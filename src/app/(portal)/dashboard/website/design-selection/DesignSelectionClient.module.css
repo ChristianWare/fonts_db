@@ -204,7 +204,9 @@
   color: var(--black);
   background: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   white-space: nowrap;
 }
 
@@ -395,7 +397,11 @@
 .previewOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.55) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -440,7 +446,9 @@
   color: var(--text);
   cursor: pointer;
   background: none;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .previewBtn:hover {
@@ -458,7 +466,9 @@
   color: var(--black);
   cursor: pointer;
   background: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .selectBtn:hover {
@@ -601,7 +611,7 @@
   gap: 0.8rem;
   padding: 2.4rem 5rem;
   border-bottom: 1px solid var(--lightGray);
-  border-left: 3px solid var(--accent);
+  border-left: 6px solid var(--accent);
 }
 
 .notesLabel {
@@ -622,27 +632,71 @@
 
 /* ── Responsive ── */
 @media screen and (max-width: 768px) {
-  .header { padding: 3rem 2rem; }
-  .successBanner { padding: 1.4rem 2rem; }
+  .header {
+    padding: 3rem 2rem;
+  }
+  .successBanner {
+    padding: 1.4rem 2rem;
+  }
 
-  .instructions { flex-direction: column; }
-  .instructionStep { padding: 1.2rem 2rem; border-right: none; border-bottom: 1px solid var(--lightGray); }
-  .instructionStep:last-of-type { border-bottom: none; }
-  .instructionDivider { display: none; }
+  .instructions {
+    flex-direction: column;
+  }
+  .instructionStep {
+    padding: 1.2rem 2rem;
+    border-right: none;
+    border-bottom: 1px solid var(--lightGray);
+  }
+  .instructionStep:last-of-type {
+    border-bottom: none;
+  }
+  .instructionDivider {
+    display: none;
+  }
 
-  .optionHeader { padding: 1.4rem 2rem; }
-  .cardFooter { padding: 1.2rem 2rem; }
-  .sourceLink { margin-left: 0; width: 100%; }
+  .optionHeader {
+    padding: 1.4rem 2rem;
+  }
+  .cardFooter {
+    padding: 1.2rem 2rem;
+  }
+  .sourceLink {
+    margin-left: 0;
+    width: 100%;
+  }
 
-  .confirmCard { padding: 2.4rem 2rem; }
-  .confirmBtn { align-self: stretch; text-align: center; }
+  .confirmCard {
+    padding: 2.4rem 2rem;
+  }
+  .confirmBtn {
+    align-self: stretch;
+    text-align: center;
+  }
 
-  .notesCard { padding: 2rem 2rem; }
+  .notesCard {
+    padding: 2rem 2rem;
+  }
 
-  .lightboxOverlay { padding: 0; }
-  .lightboxPanel { margin-top: auto; height: 95vh; }
-  .lightboxHeader { padding: 1.2rem 1.6rem; }
-  .lightboxFooter { flex-direction: column; align-items: stretch; gap: 1rem; padding: 1.2rem 1.6rem; }
-  .lightboxSelectBtn { text-align: center; }
-  .lightboxActions { gap: 0.8rem; }
+  .lightboxOverlay {
+    padding: 0;
+  }
+  .lightboxPanel {
+    margin-top: auto;
+    height: 95vh;
+  }
+  .lightboxHeader {
+    padding: 1.2rem 1.6rem;
+  }
+  .lightboxFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+  }
+  .lightboxSelectBtn {
+    text-align: center;
+  }
+  .lightboxActions {
+    gap: 0.8rem;
+  }
 }

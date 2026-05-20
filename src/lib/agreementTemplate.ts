@@ -159,7 +159,7 @@ export function buildAgreementHTML({
     /* ── HIGHLIGHT BOX ── */
     .highlight {
       background: #f5f5f5;
-      border-left: 3px solid #111;
+      border-left: 6px solid #111;
       padding: 14px 18px;
       border-radius: 0 4px 4px 0;
       margin: 12px 0;
