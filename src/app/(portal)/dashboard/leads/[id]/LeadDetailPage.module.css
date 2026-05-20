@@ -247,6 +247,11 @@
   border-left: 6px solid var(--accent);
 }
 
+.briefBody {
+  background-color: #3b82f60d;
+    border-left-color: #3b82f6;
+}
+
 .reviewBody {
   background-color: rgba(59, 130, 246, 0.05);
   border-left-color: #3b82f6;

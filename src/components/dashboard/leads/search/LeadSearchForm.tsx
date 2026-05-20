@@ -306,10 +306,27 @@ export default function LeadSearchForm() {
 
         if (data.status === "COMPLETE") {
           setScrapePhase(null);
-          toast.success(
-            `${data.eventCount ?? 0} events ready for ${marketCity}, ${marketState}`,
-          );
+          const count = data.eventCount ?? 0;
           window.dispatchEvent(new Event("leads:quota-changed"));
+
+          if (count === 0) {
+            // Scrape completed but found nothing — don't re-search, that
+            // would loop. The server now treats this completed job as a
+            // cache hit, so the empty state below is correct.
+            const where =
+              marketCity && marketState
+                ? `${marketCity}, ${marketState}`
+                : "this market";
+            toast(`No events found for ${where}`);
+            setResults([]);
+            return;
+          }
+
+          const where =
+            marketCity && marketState
+              ? `${marketCity}, ${marketState}`
+              : "your market";
+          toast.success(`${count} events ready for ${where}`);
           executeSearchRef.current();
           return;
         }
@@ -317,7 +334,11 @@ export default function LeadSearchForm() {
         if (data.status === "FAILED") {
           const msg = data.error ?? "Try again in a few seconds.";
           setError(`Scrape failed: ${msg}`);
-          toast.error(`Scrape failed for ${marketCity}, ${marketState}`);
+          const where =
+            marketCity && marketState
+              ? `${marketCity}, ${marketState}`
+              : "this market";
+          toast.error(`Scrape failed for ${where}`);
           setScrapePhase(null);
           return;
         }
@@ -438,6 +459,8 @@ export default function LeadSearchForm() {
         jobId?: string;
         stage?: string;
         progressPct?: number;
+        marketCity?: string;
+        marketState?: string;
         reason?: "DAILY_LIMIT" | "MONTHLY_LIMIT";
         dailyUsed?: number;
         monthlyUsed?: number;
@@ -476,8 +499,8 @@ export default function LeadSearchForm() {
           jobId: data.jobId,
           stage: data.stage ?? "Starting up",
           progressPct: data.progressPct ?? 0,
-          marketCity: "",
-          marketState: "",
+          marketCity: data.marketCity ?? "",
+          marketState: data.marketState ?? "",
           startedAt: Date.now(),
         });
         setResults([]);

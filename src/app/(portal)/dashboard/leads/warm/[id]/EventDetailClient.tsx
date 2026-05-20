@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useTransition, useRef } from "react";
@@ -253,6 +254,35 @@ function cleanUrlForDisplay(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 }
 
+function formatAddressLines(address: string): string[] {
+  const parts = address
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length === 0) return [];
+
+  const lastPart = parts[parts.length - 1];
+  const hasCountry = /^(USA|US|United States)$/i.test(lastPart);
+
+  // No country detected → fall back to 2-line: street / rest
+  if (!hasCountry) {
+    if (parts.length <= 1) return [address];
+    return [parts[0], parts.slice(1).join(", ")];
+  }
+
+  // 3-line format: street(s) / city, state zip / country.
+  // Indexing from the end so suite-numbered streets ("123 Main St, Suite 4")
+  // keep their suite glued onto the street line.
+  const country = parts[parts.length - 1];
+  const stateZip = parts[parts.length - 2];
+  const city = parts[parts.length - 3];
+  const streetParts = parts.slice(0, parts.length - 3);
+  const street = streetParts.join(", ");
+
+  if (!street || !city || !stateZip) return [address];
+
+  return [street, `${city}, ${stateZip}`, country];
+}
 // === Accordion section wrapper — matches the cold page FAQ pattern ===
 type AccordionSectionProps = {
   sectionKey: string;
@@ -588,6 +618,153 @@ export default function EventDetailClient({
 
         <h1 className={styles.heroName}>{event.eventName}</h1>
 
+        <div className={styles.tagRow}>
+          {event.tags.map((tag) => (
+            <span key={tag} className={styles.tagChip}>
+              {tag}
+            </span>
+          ))}
+        </div>
+        {/* DATE ROW */}
+        <div className={styles.heroDateRow}>
+          <span className={styles.heroDateMain}>
+            {formatDateLong(event.eventDateIso)}
+          </span>
+          <span className={styles.heroDateTime}>
+            · {formatTime(event.eventDateIso)}
+          </span>
+          <span
+            className={`${styles.heroCountdown} ${lead.isHot ? styles.heroCountdownHot : ""}`}
+          >
+            {days === 0
+              ? "Today"
+              : days === 1
+                ? "Tomorrow"
+                : `${days} days away`}
+          </span>
+        </div>
+        <div className={styles.addressTicketPriceContainer}>
+          <div>
+            {event.venueName && (
+              <p className={styles.heroVenue}>{event.venueName}</p>
+            )}
+            {event.venueAddress && (
+              <p className={styles.heroAddress}>
+                {formatAddressLines(event.venueAddress).map((line, i, arr) => (
+                  <span key={i}>
+                    {line}
+                    {i < arr.length - 1 && <br />}
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+
+          <div>
+           
+            {event.venueRating != null && (
+              <p className={styles.enrichmentRating}>
+                <span className={styles.enrichmentStars}>★</span>
+                {event.venueRating.toFixed(1)}
+                {event.venueReviewCount != null && (
+                  <span className={styles.enrichmentReviews}>
+                    {" "}
+                    ({event.venueReviewCount.toLocaleString()} reviews)
+                  </span>
+                )}
+              </p>
+            )}
+            <div className={styles.enrichmentLinks}>
+              {event.venuePhone && (
+                <a
+                  href={`tel:${formatPhoneForTel(event.venuePhone)}`}
+                  className={styles.enrichmentLink}
+                >
+                  📞 {event.venuePhone}
+                </a>
+              )}
+              {event.venueWebsite && (
+                <a
+                  href={event.venueWebsite}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className={styles.enrichmentLink}
+                >
+                  🌐 {cleanUrlForDisplay(event.venueWebsite)}
+                </a>
+              )}
+            </div>
+            <p className={styles.enrichmentTip}>
+              💡 You can pitch the venue&apos;s event coordinator directly —
+              they often have their own transport-partner relationships separate
+              from the organizer.
+            </p>
+          </div>
+
+          <div className={styles.factsGrid}>
+            <div className={styles.factCell}>
+              <p className={styles.factLabel}>Ticket price</p>
+              <p className={styles.factValue}>
+                {formatPrice(event.ticketPriceMin, event.ticketPriceMax)}
+              </p>
+            </div>
+            {event.expectedAttendance != null && (
+              <div className={styles.factCell}>
+                <p className={styles.factLabel}>Expected attendance</p>
+                <p className={styles.factValue}>
+                  ~{event.expectedAttendance.toLocaleString()}
+                </p>
+              </div>
+            )}
+            <div className={styles.factCell}>
+              <p className={styles.factLabel}>Organizer</p>
+              <p className={styles.factValue}>
+                {event.organizerName ?? "Unknown"}
+              </p>
+            </div>
+            <div className={styles.factCell}>
+              <p className={styles.factLabel}>Category</p>
+              <p className={styles.factValue}>
+                {event.aiCategory
+                  ? (AI_CATEGORY_LABELS[event.aiCategory] ?? event.aiCategory)
+                  : (event.category ?? "Event")}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className={styles.heroLinks}>
+          <a
+            href={event.url}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={styles.heroLink}
+          >
+            View on Eventbrite ↗
+          </a>
+          {mapsUrl && (
+            <a
+              href={mapsUrl}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={styles.heroLink}
+            >
+              Open in Google Maps ↗
+            </a>
+          )}
+        </div>
+
+        {event.imageUrl && (
+          <div className={styles.heroImageWrap}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={event.imageUrl}
+              alt={event.eventName}
+              className={styles.heroImage}
+              loading='lazy'
+            />
+          </div>
+        )}
+
         {/* PRIORITY ROW — status, AI category, score reasoning card */}
         <div className={styles.priorityRow}>
           <div className={styles.priorityRowChips}>
@@ -652,67 +829,8 @@ export default function EventDetailClient({
           )}
         </div>
 
-        {/* DATE ROW */}
-        <div className={styles.heroDateRow}>
-          <span className={styles.heroDateMain}>
-            {formatDateLong(event.eventDateIso)}
-          </span>
-          <span className={styles.heroDateTime}>
-            · {formatTime(event.eventDateIso)}
-          </span>
-          <span
-            className={`${styles.heroCountdown} ${lead.isHot ? styles.heroCountdownHot : ""}`}
-          >
-            {days === 0
-              ? "Today"
-              : days === 1
-                ? "Tomorrow"
-                : `${days} days away`}
-          </span>
-        </div>
-
-        {event.venueName && (
-          <p className={styles.heroVenue}>{event.venueName}</p>
-        )}
-        {event.venueAddress && (
-          <p className={styles.heroAddress}>{event.venueAddress}</p>
-        )}
-
         {/* HERO — image, links, location card, outreach window */}
         <section className={styles.hero}>
-          {event.imageUrl && (
-            <div className={styles.heroImageWrap}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={event.imageUrl}
-                alt={event.eventName}
-                className={styles.heroImage}
-                loading='lazy'
-              />
-            </div>
-          )}
-
-          <div className={styles.heroLinks}>
-            <a
-              href={event.url}
-              target='_blank'
-              rel='noopener noreferrer'
-              className={styles.heroLink}
-            >
-              View on Eventbrite ↗
-            </a>
-            {mapsUrl && (
-              <a
-                href={mapsUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-                className={styles.heroLink}
-              >
-                Open in Google Maps ↗
-              </a>
-            )}
-          </div>
-
           {/* LOCATION CARD */}
           {lead.distanceMiles !== null &&
             lead.primaryMarket &&
@@ -732,7 +850,7 @@ export default function EventDetailClient({
                     />
                   </div>
                 )}
-                <div className={previewStyles.locationStats}>
+                {/* <div className={previewStyles.locationStats}>
                   <div className={previewStyles.locationStatRow}>
                     <div className={previewStyles.locationStat}>
                       <p className={previewStyles.locationStatValue}>
@@ -762,7 +880,7 @@ export default function EventDetailClient({
                         ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
                         : ""}
                   </p>
-                </div>
+                </div> */}
               </section>
             )}
 
@@ -786,186 +904,52 @@ export default function EventDetailClient({
           </section>
         </section>
 
+        <div className={styles.introDetails}>
+          <h2 className={styles.sectionTitle}>About this event</h2>
+          {lead.strategicBrief && !generatingBrief && (
+            <div className={styles.accordionBodyActions}>
+              <button
+                type='button'
+                onClick={() => generateAi("strategic-brief", "brief", true)}
+                className={detailStyles.regenerateBtn}
+              >
+                Regenerate
+              </button>
+            </div>
+          )}
+
+          {generatingBrief ? (
+            <div className={detailStyles.emptyBlock}>
+              <p className={detailStyles.emptyDesc}>
+                ✨ Generating strategic brief…
+              </p>
+            </div>
+          ) : lead.strategicBrief ? (
+            <div className={detailStyles.briefBody}>
+              {lead.strategicBrief.split("\n\n").map((para, i) => (
+                <p key={i} className={detailStyles.briefParagraph}>
+                  {para}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <div className={detailStyles.emptyBlock}>
+              <p className={detailStyles.emptyDesc}>
+                Brief generation failed. Try again.
+              </p>
+              <button
+                type='button'
+                onClick={() => generateAi("strategic-brief", "brief", true)}
+                className={detailStyles.generateBtn}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* === ACCORDION GROUP === */}
         <div className={styles.accordionGroup}>
-          {/* STRATEGIC BRIEF */}
-          <AccordionSection
-            sectionKey='strategicBrief'
-            title='Strategic Brief'
-            isOpen={openSection === "strategicBrief"}
-            onToggle={toggleSection}
-          >
-            {lead.strategicBrief && !generatingBrief && (
-              <div className={styles.accordionBodyActions}>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  className={detailStyles.regenerateBtn}
-                >
-                  Regenerate
-                </button>
-              </div>
-            )}
-
-            {generatingBrief ? (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  ✨ Generating strategic brief…
-                </p>
-              </div>
-            ) : lead.strategicBrief ? (
-              <div className={detailStyles.briefBody}>
-                {lead.strategicBrief.split("\n\n").map((para, i) => (
-                  <p key={i} className={detailStyles.briefParagraph}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  Brief generation failed. Try again.
-                </p>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  className={detailStyles.generateBtn}
-                >
-                  Retry
-                </button>
-              </div>
-            )}
-          </AccordionSection>
-
-          {/* TAGS */}
-          {event.tags.length > 0 && (
-            <AccordionSection
-              sectionKey='tags'
-              title='Tags'
-              isOpen={openSection === "tags"}
-              onToggle={toggleSection}
-            >
-              <div className={styles.tagRow}>
-                {event.tags.map((tag) => (
-                  <span key={tag} className={styles.tagChip}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </AccordionSection>
-          )}
-
-          {/* DESCRIPTION */}
-          {visibleDescription && (
-            <AccordionSection
-              sectionKey='description'
-              title='About this event'
-              isOpen={openSection === "description"}
-              onToggle={toggleSection}
-            >
-              <p className={styles.description}>{visibleDescription}</p>
-              {descriptionTruncated && (
-                <button
-                  type='button'
-                  onClick={() => setShowFullDescription(!showFullDescription)}
-                  className={styles.descriptionToggle}
-                >
-                  {showFullDescription ? "Show less" : "Show more"}
-                </button>
-              )}
-            </AccordionSection>
-          )}
-
-          {/* EVENT DETAILS */}
-          <AccordionSection
-            sectionKey='eventDetails'
-            title='Event Details'
-            isOpen={openSection === "eventDetails"}
-            onToggle={toggleSection}
-          >
-            <div className={styles.factsGrid}>
-              <div className={styles.factCell}>
-                <p className={styles.factLabel}>Ticket price</p>
-                <p className={styles.factValue}>
-                  {formatPrice(event.ticketPriceMin, event.ticketPriceMax)}
-                </p>
-              </div>
-              {event.expectedAttendance != null && (
-                <div className={styles.factCell}>
-                  <p className={styles.factLabel}>Expected attendance</p>
-                  <p className={styles.factValue}>
-                    ~{event.expectedAttendance.toLocaleString()}
-                  </p>
-                </div>
-              )}
-              <div className={styles.factCell}>
-                <p className={styles.factLabel}>Organizer</p>
-                <p className={styles.factValue}>
-                  {event.organizerName ?? "Unknown"}
-                </p>
-              </div>
-              <div className={styles.factCell}>
-                <p className={styles.factLabel}>Category</p>
-                <p className={styles.factValue}>
-                  {event.aiCategory
-                    ? (AI_CATEGORY_LABELS[event.aiCategory] ?? event.aiCategory)
-                    : (event.category ?? "Event")}
-                </p>
-              </div>
-            </div>
-          </AccordionSection>
-
-          {/* VENUE CONTACT */}
-          {hasVenueContact && (
-            <AccordionSection
-              sectionKey='venueContact'
-              title='Venue Contact'
-              isOpen={openSection === "venueContact"}
-              onToggle={toggleSection}
-            >
-              {event.venueName && (
-                <p className={styles.enrichmentSubject}>{event.venueName}</p>
-              )}
-              {event.venueRating != null && (
-                <p className={styles.enrichmentRating}>
-                  <span className={styles.enrichmentStars}>★</span>
-                  {event.venueRating.toFixed(1)}
-                  {event.venueReviewCount != null && (
-                    <span className={styles.enrichmentReviews}>
-                      {" "}
-                      ({event.venueReviewCount.toLocaleString()} reviews)
-                    </span>
-                  )}
-                </p>
-              )}
-              <div className={styles.enrichmentLinks}>
-                {event.venuePhone && (
-                  <a
-                    href={`tel:${formatPhoneForTel(event.venuePhone)}`}
-                    className={styles.enrichmentLink}
-                  >
-                    📞 {event.venuePhone}
-                  </a>
-                )}
-                {event.venueWebsite && (
-                  <a
-                    href={event.venueWebsite}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className={styles.enrichmentLink}
-                  >
-                    🌐 {cleanUrlForDisplay(event.venueWebsite)}
-                  </a>
-                )}
-              </div>
-              <p className={styles.enrichmentTip}>
-                💡 You can pitch the venue&apos;s event coordinator directly —
-                they often have their own transport-partner relationships
-                separate from the organizer.
-              </p>
-            </AccordionSection>
-          )}
-
           {/* WHO TO CONTACT */}
           <AccordionSection
             sectionKey='whoToContact'

@@ -186,9 +186,9 @@ export async function POST(req: NextRequest) {
     radiusMiles = body.radiusMilesOverride ?? settings.serviceRadiusMiles ?? 50;
   }
 
-  // === ON-DEMAND SCRAPE LOGIC (chunk 8.1) ===
-  // For warm/hot searches, check cache freshness. If stale, trigger background scrape.
-  // Cold searches hit Google Places live so they skip this entire block.
+  // === ON-DEMAND SCRAPE LOGIC ===
+  // For warm/hot searches, check cache freshness. If stale, trigger background
+  // scrape. Cold searches hit Google Places live so they skip this block.
   if ((includeWarm || includeHot) && searchCity && searchState) {
     const marketKey = normalizeMarketKey(searchCity, searchState);
     const primaryMarketKey =
@@ -196,8 +196,12 @@ export async function POST(req: NextRequest) {
         ? normalizeMarketKey(settings.primaryCity, settings.primaryState)
         : null;
 
-    // Step 1 — check cache freshness
     const cacheCutoff = new Date(Date.now() - CACHE_TTL_HOURS * 60 * 60 * 1000);
+
+    // A market is "cached" if EITHER we have fresh events for it OR we
+    // recently completed a scrape attempt (even one that returned zero
+    // events). The second check prevents the infinite-rescrape loop in
+    // markets with no Eventbrite presence.
     const cacheHit = await db.eventbriteEvent.findFirst({
       where: {
         marketCity: { equals: searchCity, mode: "insensitive" },
@@ -207,7 +211,18 @@ export async function POST(req: NextRequest) {
       select: { id: true },
     });
 
-    if (!cacheHit) {
+    const recentCompletedJob = cacheHit
+      ? null
+      : await db.scrapeJob.findFirst({
+          where: {
+            marketKey,
+            status: "COMPLETE",
+            completedAt: { gte: cacheCutoff },
+          },
+          select: { id: true, eventCount: true },
+        });
+
+    if (!cacheHit && !recentCompletedJob) {
       // Step 2 — check for an in-flight scrape for this market
       const recentJobCutoff = new Date(
         Date.now() - CONCURRENT_JOB_LOOKBACK_MIN * 60 * 1000,
@@ -234,6 +249,8 @@ export async function POST(req: NextRequest) {
           jobId: existingJob.id,
           stage: existingJob.stage,
           progressPct: existingJob.progressPct,
+          marketCity: searchCity,
+          marketState: searchState,
           dailyUsed: quota.dailyUsed,
           monthlyUsed: quota.monthlyUsed,
           dailyLimit: DAILY_MARKET_LIMIT,
@@ -285,6 +302,8 @@ export async function POST(req: NextRequest) {
         jobId: job.id,
         stage: "Starting up",
         progressPct: 0,
+        marketCity: searchCity,
+        marketState: searchState,
         dailyUsed: quota.dailyUsed + (quota.isAlreadyScrapedToday ? 0 : 1),
         monthlyUsed:
           quota.monthlyUsed + (quota.isAlreadyScrapedThisMonth ? 0 : 1),
@@ -292,7 +311,9 @@ export async function POST(req: NextRequest) {
         monthlyLimit: MONTHLY_MARKET_LIMIT,
       });
     }
-    // Cache hit — fall through to normal search logic below
+    // Cache hit OR recent completed scrape — fall through to search logic.
+    // If recentCompletedJob has 0 events, the queries below will just return
+    // empty arrays and the user sees the empty state.
   }
 
   // === HOT SEARCH ===
