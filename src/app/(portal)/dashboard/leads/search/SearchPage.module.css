@@ -26,7 +26,6 @@
   gap: 2rem;
 }
 
-
 .subhead {
   font-family: var(--Roboto);
   font-size: 16px;
@@ -485,8 +484,6 @@
     padding: 3rem 2rem;
   }
 
-
-
   .searchCard {
     padding: 3rem 2rem;
   }
@@ -498,5 +495,22 @@
   .paginationBar {
     flex-wrap: wrap;
     gap: 1rem;
+  }
+}
+
+.warningCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  max-width: 700px;
+}
+
+@media screen and (max-width: 568px) {
+  .btnContainer {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
   }
 }

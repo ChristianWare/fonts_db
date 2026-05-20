@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import {
-  normalizeMarketKey,
   DAILY_MARKET_LIMIT,
   MONTHLY_MARKET_LIMIT,
 } from "@/lib/leads/scrapeQuota";
@@ -22,16 +21,6 @@ export async function GET() {
   if (!profile) {
     return NextResponse.json({ error: "No profile" }, { status: 404 });
   }
-
-  const settings = await db.leadsSettings.findUnique({
-    where: { clientProfileId: profile.id },
-    select: { primaryCity: true, primaryState: true },
-  });
-
-  const primaryMarketKey =
-    settings?.primaryCity && settings?.primaryState
-      ? normalizeMarketKey(settings.primaryCity, settings.primaryState)
-      : null;
 
   const now = new Date();
   const startOfToday = new Date(
@@ -60,13 +49,9 @@ export async function GET() {
     }),
   ]);
 
-  // Filter out primary market — it doesn't count
-  const dailyMarkets = new Set(
-    dailyRows.map((r) => r.marketKey).filter((k) => k !== primaryMarketKey),
-  );
-  const monthlyMarkets = new Set(
-    monthlyRows.map((r) => r.marketKey).filter((k) => k !== primaryMarketKey),
-  );
+  // Count every scraped market — primary included.
+  const dailyMarkets = new Set(dailyRows.map((r) => r.marketKey));
+  const monthlyMarkets = new Set(monthlyRows.map((r) => r.marketKey));
 
   return NextResponse.json({
     dailyUsed: dailyMarkets.size,

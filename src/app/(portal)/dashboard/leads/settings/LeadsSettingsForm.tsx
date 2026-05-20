@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./LeadsSettingsPage.module.css";
+import QuotaWarningModal from "./QuotaWarningModal";
 
 type Initial = {
   primaryCity: string;
@@ -12,18 +13,28 @@ type Initial = {
   emailEnabled: boolean;
 };
 
+type QuotaInfo = {
+  dailyUsed: number;
+  dailyLimit: number;
+  monthlyUsed: number;
+  monthlyLimit: number;
+};
+
 type SaveResponse = {
   error?: string;
   success?: boolean;
   geocoded?: boolean;
   scrapeQueued?: boolean;
+  quotaExceeded?: boolean;
+  quota?: QuotaInfo;
 };
 
 const RADIUS_OPTIONS = [5, 10, 20, 50, 75] as const;
 
-// Lazy-load the Google Maps JS API once. Subsequent calls reuse the
-// in-flight or already-loaded script tag — safe to call from multiple
-// components on the same page.
+// Tunables — when to surface the warning modal.
+const DAILY_WARN_REMAINING = 1; // Warn when 1 or fewer daily slots remain
+const MONTHLY_WARN_REMAINING = 3; // Warn when 3 or fewer monthly slots remain
+
 function loadGoogleMaps(browserKey: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     if (typeof window === "undefined") return resolve();
@@ -59,8 +70,9 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
 
   const [city, setCity] = useState(initial.primaryCity);
   const [state, setState] = useState(initial.primaryState);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
 
-  // Existing users may have a radius outside the new fixed list — normalize.
   const initialRadius = (RADIUS_OPTIONS as readonly number[]).includes(
     initial.serviceRadiusMiles,
   )
@@ -78,10 +90,13 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
     null,
   );
 
+  // Quota warning modal state
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [warningQuota, setWarningQuota] = useState<QuotaInfo | null>(null);
+
   const cityInputRef = useRef<HTMLInputElement | null>(null);
   const autocompleteRef = useRef<any>(null);
 
-  // Attach Google Places autocomplete to the city input
   useEffect(() => {
     const browserKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
     if (!browserKey) {
@@ -98,7 +113,7 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         await loadGoogleMaps(browserKey);
         if (cancelled) return;
         if (!cityInputRef.current) return;
-        if (autocompleteRef.current) return; // already attached
+        if (autocompleteRef.current) return;
 
         const google = (window as any).google;
         const ac = new google.maps.places.Autocomplete(cityInputRef.current, {
@@ -111,8 +126,6 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
           const place = ac.getPlace();
           const components: any[] = place.address_components ?? [];
 
-          // "locality" is the standard US city. Fall back through a couple of
-          // less common types for towns / unincorporated areas.
           const cityComp =
             components.find((c) => c.types.includes("locality")) ??
             components.find((c) => c.types.includes("postal_town")) ??
@@ -126,11 +139,20 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
           const nextCity = cityComp?.long_name ?? place.name ?? "";
           const nextState = stateComp?.short_name ?? "";
 
+          const location = place.geometry?.location;
+          const nextLat =
+            typeof location?.lat === "function" ? location.lat() : null;
+          const nextLng =
+            typeof location?.lng === "function" ? location.lng() : null;
+
           setCity(nextCity);
           setState(nextState);
-          // Google's widget writes the full "Phoenix, AZ, USA" string into
-          // the input — rewrite it to just the city for a clean display.
-          if (cityInputRef.current) cityInputRef.current.value = nextCity;
+          setLat(nextLat);
+          setLng(nextLng);
+
+          if (cityInputRef.current) {
+            cityInputRef.current.value = formatCityDisplay(nextCity, nextState);
+          }
           setError(null);
           setSuccessMessage(null);
         });
@@ -163,6 +185,8 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         body: JSON.stringify({
           primaryCity: city.trim(),
           primaryState: state.trim().toUpperCase(),
+          primaryLat: lat,
+          primaryLng: lng,
           serviceRadiusMiles: radius,
           emailEnabled,
         }),
@@ -180,7 +204,11 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         throw new Error(data.error ?? "Could not save your settings");
       }
 
-      if (data.scrapeQueued) {
+      if (data.quotaExceeded) {
+        setSuccessMessage(
+          "Settings saved, but you've reached your market scrape limit. Leads for this market will refresh when your quota resets.",
+        );
+      } else if (data.scrapeQueued) {
         setSuccessMessage(
           "Settings saved. Your market is being prepared — warm leads will appear in a few minutes.",
         );
@@ -188,7 +216,25 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         setSuccessMessage("Settings saved.");
       }
 
+      // Decide whether to pop the warning modal based on returned quota.
+      // We show it whenever the user has crossed the warning threshold —
+      // including the "at limit" case, since quotaExceeded already saved
+      // settings but they should still see the remaining-zero message.
+      if (data.quota) {
+        const dailyRemaining = data.quota.dailyLimit - data.quota.dailyUsed;
+        const monthlyRemaining =
+          data.quota.monthlyLimit - data.quota.monthlyUsed;
+        if (
+          dailyRemaining <= DAILY_WARN_REMAINING ||
+          monthlyRemaining <= MONTHLY_WARN_REMAINING
+        ) {
+          setWarningQuota(data.quota);
+          setWarningOpen(true);
+        }
+      }
+
       router.refresh();
+      window.dispatchEvent(new CustomEvent("leads:quota-changed"));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -196,84 +242,104 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
     }
   }
 
+  function formatCityDisplay(c: string, s: string): string {
+    if (c && s) return `${c}, ${s}, USA`;
+    return c;
+  }
+
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <div className={styles.field}>
-        <label htmlFor='city' className={styles.label}>
-          Primary city
-        </label>
-        <input
-          id='city'
-          ref={cityInputRef}
-          type='text'
-          defaultValue={city}
-          onChange={(e) => {
-            // Manual typing — clear the previously-resolved state so we
-            // don't save a stale "Atlanta with state=AZ" mismatch. The
-            // place_changed handler will repopulate it when the user picks
-            // a suggestion, or the server will geocode on save.
-            setCity(e.target.value);
-            setState("");
-          }}
-          placeholder='Start typing a city...'
-          autoComplete='off'
-          required
-          className={styles.input}
+    <>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.field}>
+          <label htmlFor='city' className={styles.label}>
+            Primary city
+          </label>
+          <input
+            id='city'
+            ref={cityInputRef}
+            type='text'
+            defaultValue={formatCityDisplay(
+              initial.primaryCity,
+              initial.primaryState,
+            )}
+            onChange={(e) => {
+              setCity(e.target.value);
+              setState("");
+              setLat(null);
+              setLng(null);
+            }}
+            placeholder='Start typing a city...'
+            autoComplete='off'
+            required
+            className={styles.input}
+          />
+          {state ? (
+            <span className={styles.fieldHint}>
+              State: <strong>{state}</strong>
+            </span>
+          ) : autocompleteError ? (
+            <span className={styles.fieldHint}>
+              {autocompleteError} Type your city — we&apos;ll resolve it on
+              save.
+            </span>
+          ) : autocompleteReady ? (
+            <span className={styles.fieldHint}>
+              Pick a suggestion to set the state automatically.
+            </span>
+          ) : (
+            <span className={styles.fieldHint}>Loading city suggestions…</span>
+          )}
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor='radius' className={styles.label}>
+            Service radius
+          </label>
+          <select
+            id='radius'
+            value={radius}
+            onChange={(e) => setRadius(parseInt(e.target.value, 10))}
+            className={styles.select}
+          >
+            {RADIUS_OPTIONS.map((miles) => (
+              <option key={miles} value={miles}>
+                {miles} miles
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.checkboxRow}>
+          <input
+            id='emailEnabled'
+            type='checkbox'
+            checked={emailEnabled}
+            onChange={(e) => setEmailEnabled(e.target.checked)}
+            className={styles.checkbox}
+          />
+          <label htmlFor='emailEnabled' className={styles.checkboxLabel}>
+            Send me email digests of new leads
+          </label>
+        </div>
+
+        {error && <p className={styles.error}>{error}</p>}
+        {successMessage && <p className={styles.success}>{successMessage}</p>}
+
+        <button type='submit' disabled={loading} className={styles.submit}>
+          {loading ? "Saving..." : "Save changes"}
+        </button>
+      </form>
+
+      {warningQuota && (
+        <QuotaWarningModal
+          isOpen={warningOpen}
+          onClose={() => setWarningOpen(false)}
+          dailyUsed={warningQuota.dailyUsed}
+          dailyLimit={warningQuota.dailyLimit}
+          monthlyUsed={warningQuota.monthlyUsed}
+          monthlyLimit={warningQuota.monthlyLimit}
         />
-        {state ? (
-          <span className={styles.fieldHint}>
-            State: <strong>{state}</strong>
-          </span>
-        ) : autocompleteError ? (
-          <span className={styles.fieldHint}>
-            {autocompleteError} Type your city — we&apos;ll resolve it on save.
-          </span>
-        ) : autocompleteReady ? (
-          <span className={styles.fieldHint}>
-            Pick a suggestion to set the state automatically.
-          </span>
-        ) : (
-          <span className={styles.fieldHint}>Loading city suggestions…</span>
-        )}
-      </div>
-
-      <div className={styles.field}>
-        <label htmlFor='radius' className={styles.label}>
-          Service radius
-        </label>
-        <select
-          id='radius'
-          value={radius}
-          onChange={(e) => setRadius(parseInt(e.target.value, 10))}
-          className={styles.select}
-        >
-          {RADIUS_OPTIONS.map((miles) => (
-            <option key={miles} value={miles}>
-              {miles} miles
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className={styles.checkboxRow}>
-        <input
-          id='emailEnabled'
-          type='checkbox'
-          checked={emailEnabled}
-          onChange={(e) => setEmailEnabled(e.target.checked)}
-          className={styles.checkbox}
-        />
-        <label htmlFor='emailEnabled' className={styles.checkboxLabel}>
-          Send me email digests of new leads
-        </label>
-      </div>
-
-      {error && <p className={styles.error}>{error}</p>}
-      {successMessage && <p className={styles.success}>{successMessage}</p>}
-
-      <button type='submit' disabled={loading} className={styles.submit}>
-        {loading ? "Saving..." : "Save changes"}
-      </button>
-    </form>
+      )}
+    </>
   );
 }

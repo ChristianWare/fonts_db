@@ -6,6 +6,7 @@ import { getProductAccess } from "@/lib/subscriptions";
 import LeadSearchForm from "@/components/dashboard/leads/search/LeadSearchForm";
 import QuotaIndicator from "@/components/dashboard/leads/search/QuotaIndicator/QuotaIndicator";
 import styles from "./SearchPage.module.css";
+import Button from "@/components/shared/Button/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,8 @@ export default async function LeadSearchPage() {
         {hasMarket ? (
           <div className={styles.introWithQuota}>
             <h1 className={`${styles.heading} h2`}>
-              Find Leads in <br /> {settings!.primaryCity}, {settings!.primaryState}
+              Find Leads in <br /> {settings!.primaryCity},{" "}
+              {settings!.primaryState}
             </h1>
             <p className={styles.subhead}>
               Hot, warm, and cold leads in your market.{" "}
@@ -65,18 +67,23 @@ export default async function LeadSearchPage() {
       {!hasMarket ? (
         <div className={styles.body}>
           <div className={styles.warningCard}>
-            <p className={styles.warningTitle}>Set up your market first</p>
+            <div className={`${styles.warningTitle} sectionHeading`}>
+              Set up your market first
+            </div>
             <p className={styles.warningDesc}>
               We need your primary city and state (with valid coordinates) to
               search for leads in your area. Head to settings and save your
               market info — geocoding runs automatically.
             </p>
-            <Link
-              href='/dashboard/leads/settings'
-              className={styles.warningCta}
-            >
-              Go to settings →
-            </Link>
+
+            <div className={styles.btnContainer}>
+              <Button
+                href='/dashboard/leads/settings'
+                text='Go to settings'
+                btnType='accent'
+                arrow
+              />
+            </div>
           </div>
         </div>
       ) : (

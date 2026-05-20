@@ -139,7 +139,7 @@ export default async function DashboardPage() {
 
         {/* LEADS CARD */}
         {hasLeads ? (
-          <Link href='/dashboard/leads' className={styles.productCard}>
+          <Link href='/dashboard/leads/search' className={styles.productCard}>
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
                 <span className={styles.statusDot} />

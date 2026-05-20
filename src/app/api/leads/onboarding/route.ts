@@ -4,6 +4,11 @@ import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import { geocodeCity } from "@/lib/googlePlaces";
 import { scrapeEventbriteForMarket } from "@/lib/scrapers/eventbrite";
+import {
+  normalizeMarketKey,
+  DAILY_MARKET_LIMIT,
+  MONTHLY_MARKET_LIMIT,
+} from "@/lib/leads/scrapeQuota";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -11,11 +16,13 @@ export const maxDuration = 60;
 type Body = {
   primaryCity?: string;
   primaryState?: string;
+  primaryLat?: number | null;
+  primaryLng?: number | null;
   serviceRadiusMiles?: number;
-  phoneNumber?: string;
-  smsEnabled?: boolean;
   emailEnabled?: boolean;
 };
+
+const ALLOWED_RADII = [5, 10, 20, 50, 75];
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -41,9 +48,7 @@ export async function POST(req: NextRequest) {
   const city = body.primaryCity?.trim();
   const state = body.primaryState?.trim().toUpperCase();
   const radius = body.serviceRadiusMiles;
-  const phone = body.phoneNumber?.trim();
 
-  // Validation
   if (!city) {
     return NextResponse.json({ error: "City is required" }, { status: 400 });
   }
@@ -53,31 +58,40 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  if (!radius || radius < 10 || radius > 150) {
+  if (typeof radius !== "number" || !ALLOWED_RADII.includes(radius)) {
     return NextResponse.json(
-      { error: "Radius must be between 10 and 150 miles" },
-      { status: 400 },
-    );
-  }
-  if (!phone || phone.replace(/\D/g, "").length < 10) {
-    return NextResponse.json(
-      { error: "A valid phone number is required" },
+      { error: `Radius must be one of: ${ALLOWED_RADII.join(", ")} miles` },
       { status: 400 },
     );
   }
 
-  // Snapshot existing settings BEFORE upsert so we can detect a city change
   const previous = await db.leadsSettings.findUnique({
     where: { clientProfileId: profile.id },
     select: { primaryCity: true, primaryState: true },
   });
 
-  // Geocode the city → lat/lng. Failure here is non-fatal — we still
-  // save the user's settings, just without coordinates. Cold lead search
-  // will surface the missing-coords state and prompt a re-save.
-  const geocoded = await geocodeCity(city, state);
-  const lat = geocoded?.coordinates.lat ?? null;
-  const lng = geocoded?.coordinates.lng ?? null;
+  // Coordinate resolution
+  let lat: number | null = null;
+  let lng: number | null = null;
+  let geocoded = false;
+
+  if (
+    typeof body.primaryLat === "number" &&
+    typeof body.primaryLng === "number" &&
+    Number.isFinite(body.primaryLat) &&
+    Number.isFinite(body.primaryLng)
+  ) {
+    lat = body.primaryLat;
+    lng = body.primaryLng;
+    geocoded = true;
+  } else {
+    const result = await geocodeCity(city, state);
+    if (result) {
+      lat = result.coordinates.lat;
+      lng = result.coordinates.lng;
+      geocoded = true;
+    }
+  }
 
   await db.leadsSettings.upsert({
     where: { clientProfileId: profile.id },
@@ -88,8 +102,6 @@ export async function POST(req: NextRequest) {
       primaryLat: lat,
       primaryLng: lng,
       serviceRadiusMiles: radius,
-      phoneNumber: phone,
-      smsEnabled: body.smsEnabled ?? true,
       emailEnabled: body.emailEnabled ?? true,
       onboardingCompletedAt: new Date(),
     },
@@ -99,24 +111,53 @@ export async function POST(req: NextRequest) {
       primaryLat: lat,
       primaryLng: lng,
       serviceRadiusMiles: radius,
-      phoneNumber: phone,
-      smsEnabled: body.smsEnabled ?? true,
       emailEnabled: body.emailEnabled ?? true,
       onboardingCompletedAt: new Date(),
     },
   });
 
-  // Detect if this is a new market (or first-time setup)
+  // Compute current quota usage. Used for the gate check below AND returned
+  // in the response so the client can show a warning modal at thresholds.
+  const now = new Date();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [dailyRows, monthlyRows] = await Promise.all([
+    db.marketScrapeUsage.findMany({
+      where: {
+        clientProfileId: profile.id,
+        scrapedAt: { gte: startOfToday },
+      },
+      select: { marketKey: true },
+      distinct: ["marketKey"],
+    }),
+    db.marketScrapeUsage.findMany({
+      where: {
+        clientProfileId: profile.id,
+        scrapedAt: { gte: startOfMonth },
+      },
+      select: { marketKey: true },
+      distinct: ["marketKey"],
+    }),
+  ]);
+
+  const dailyMarkets = new Set(dailyRows.map((r) => r.marketKey));
+  const monthlyMarkets = new Set(monthlyRows.map((r) => r.marketKey));
+  const marketKey = normalizeMarketKey(city, state);
+
   const cityChanged =
     !previous ||
     previous.primaryCity?.toLowerCase() !== city.toLowerCase() ||
     previous.primaryState?.toLowerCase() !== state.toLowerCase();
 
   let scrapeQueued = false;
+  let quotaExceeded = false;
 
   if (cityChanged) {
-    // Skip if we already have events for this market (another operator
-    // already scraped it, or the weekly cron has run for it)
     const eventCount = await db.eventbriteEvent.count({
       where: {
         marketCity: { equals: city, mode: "insensitive" },
@@ -125,25 +166,54 @@ export async function POST(req: NextRequest) {
     });
 
     if (eventCount === 0) {
-      scrapeQueued = true;
+      // Count markets OTHER than this one — if it's already in usage from a
+      // prior request, don't double-count it on the boundary check.
+      const dailyOthers = dailyMarkets.has(marketKey)
+        ? dailyMarkets.size - 1
+        : dailyMarkets.size;
+      const monthlyOthers = monthlyMarkets.has(marketKey)
+        ? monthlyMarkets.size - 1
+        : monthlyMarkets.size;
 
-      // Fire scrape AFTER response is sent — runs in background on Vercel
-      after(async () => {
-        try {
-          console.log(
-            `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id})`,
-          );
-          const result = await scrapeEventbriteForMarket({ city, state });
-          console.log(
-            `[onboarding scrape] ${city}, ${state} complete: ${result.inserted} written / ${result.scraped} scraped / ${result.skipped} skipped / ${result.errors.length} errors`,
-          );
-        } catch (err) {
-          console.error(
-            `[onboarding scrape] FAILED for ${city}, ${state}:`,
-            err,
-          );
-        }
-      });
+      if (
+        dailyOthers >= DAILY_MARKET_LIMIT ||
+        monthlyOthers >= MONTHLY_MARKET_LIMIT
+      ) {
+        quotaExceeded = true;
+        console.log(
+          `[onboarding] quota exceeded for profile ${profile.id} — daily=${dailyOthers}/${DAILY_MARKET_LIMIT}, monthly=${monthlyOthers}/${MONTHLY_MARKET_LIMIT}`,
+        );
+      } else {
+        scrapeQueued = true;
+
+        // Write usage synchronously so the response numbers reflect reality
+        // and the in-memory sets stay accurate for the response payload.
+        await db.marketScrapeUsage.create({
+          data: {
+            clientProfileId: profile.id,
+            marketKey,
+          },
+        });
+        dailyMarkets.add(marketKey);
+        monthlyMarkets.add(marketKey);
+
+        after(async () => {
+          try {
+            console.log(
+              `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id})`,
+            );
+            const result = await scrapeEventbriteForMarket({ city, state });
+            console.log(
+              `[onboarding scrape] ${city}, ${state} complete: ${result.inserted} written / ${result.scraped} scraped / ${result.skipped} skipped / ${result.errors.length} errors`,
+            );
+          } catch (err) {
+            console.error(
+              `[onboarding scrape] FAILED for ${city}, ${state}:`,
+              err,
+            );
+          }
+        });
+      }
     } else {
       console.log(
         `[onboarding] ${city}, ${state} already has ${eventCount} events on file — skipping scrape`,
@@ -153,7 +223,14 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     success: true,
-    geocoded: !!geocoded,
+    geocoded,
     scrapeQueued,
+    quotaExceeded,
+    quota: {
+      dailyUsed: dailyMarkets.size,
+      dailyLimit: DAILY_MARKET_LIMIT,
+      monthlyUsed: monthlyMarkets.size,
+      monthlyLimit: MONTHLY_MARKET_LIMIT,
+    },
   });
 }
