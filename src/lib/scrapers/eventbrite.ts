@@ -122,6 +122,12 @@ export async function scrapeEventbriteForMarket(
     sampleRaw: null,
   };
 
+  console.log("[eventbrite] requesting actor", {
+    actorId: ACTOR_ID,
+    searchUrl,
+    maxResults,
+  });
+
   let raw: EventbriteRawEvent[];
   try {
     raw = await runActorSync<EventbriteRawEvent>({
@@ -131,8 +137,11 @@ export async function scrapeEventbriteForMarket(
     });
   } catch (err) {
     result.errors.push(err instanceof Error ? err.message : String(err));
+    console.error("[eventbrite] actor threw:", err);
     return result;
   }
+
+  console.log(`[eventbrite] actor returned ${raw.length} events`);
 
   result.scraped = raw.length;
   result.sampleRaw = raw[0] ?? null;
@@ -140,7 +149,11 @@ export async function scrapeEventbriteForMarket(
   if (raw[0]) {
     console.log(
       "[eventbrite] sample raw event:",
-      JSON.stringify(raw[0], null, 2).slice(0, 2000),
+      JSON.stringify(raw[0], null, 2),
+    );
+  } else {
+    console.log(
+      "[eventbrite] actor returned empty array — paste the searchUrl above into a browser to verify Eventbrite has events for this market",
     );
   }
 

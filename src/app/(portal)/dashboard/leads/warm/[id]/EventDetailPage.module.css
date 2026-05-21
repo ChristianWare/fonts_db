@@ -843,7 +843,7 @@
   font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--text);
+  color: var(--blue);
   text-decoration: underline;
   align-self: flex-start;
   transition: color 0.15s ease;

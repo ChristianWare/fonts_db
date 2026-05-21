@@ -661,7 +661,6 @@ export default function EventDetailClient({
           </div>
 
           <div>
-           
             {event.venueRating != null && (
               <p className={styles.enrichmentRating}>
                 <span className={styles.enrichmentStars}>★</span>
@@ -690,7 +689,7 @@ export default function EventDetailClient({
                   rel='noopener noreferrer'
                   className={styles.enrichmentLink}
                 >
-                  🌐 {cleanUrlForDisplay(event.venueWebsite)}
+                  Live Site ↗
                 </a>
               )}
             </div>

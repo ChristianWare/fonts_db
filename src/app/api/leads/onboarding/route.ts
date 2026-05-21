@@ -3,12 +3,12 @@ import { after } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import { geocodeCity } from "@/lib/googlePlaces";
-import { scrapeEventbriteForMarket } from "@/lib/scrapers/eventbrite";
 import {
   normalizeMarketKey,
   DAILY_MARKET_LIMIT,
   MONTHLY_MARKET_LIMIT,
 } from "@/lib/leads/scrapeQuota";
+import { runOnDemandScrape } from "@/lib/leads/onDemandScrape";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -23,6 +23,11 @@ type Body = {
 };
 
 const ALLOWED_RADII = [5, 10, 20, 50, 75];
+
+// Lookback window for detecting an in-flight scrape for the same market.
+// Matches the search route's CONCURRENT_JOB_LOOKBACK_MIN value so both
+// routes use the same dedup window.
+const CONCURRENT_JOB_LOOKBACK_MIN = 10;
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -166,53 +171,95 @@ export async function POST(req: NextRequest) {
     });
 
     if (eventCount === 0) {
-      // Count markets OTHER than this one — if it's already in usage from a
-      // prior request, don't double-count it on the boundary check.
-      const dailyOthers = dailyMarkets.has(marketKey)
-        ? dailyMarkets.size - 1
-        : dailyMarkets.size;
-      const monthlyOthers = monthlyMarkets.has(marketKey)
-        ? monthlyMarkets.size - 1
-        : monthlyMarkets.size;
+      // Check for an in-flight scrape for this market BEFORE doing anything
+      // else. If one is already running (could have been started by the
+      // search route, or by a concurrent save in another tab), join it
+      // rather than firing a duplicate — that's what caused the double-bill
+      // we just diagnosed.
+      const recentJobCutoff = new Date(
+        Date.now() - CONCURRENT_JOB_LOOKBACK_MIN * 60 * 1000,
+      );
+      const existingJob = await db.scrapeJob.findFirst({
+        where: {
+          marketKey,
+          status: { in: ["PENDING", "SCRAPING", "ENRICHING"] },
+          startedAt: { gte: recentJobCutoff },
+        },
+        orderBy: { startedAt: "desc" },
+        select: { id: true },
+      });
 
-      if (
-        dailyOthers >= DAILY_MARKET_LIMIT ||
-        monthlyOthers >= MONTHLY_MARKET_LIMIT
-      ) {
-        quotaExceeded = true;
+      if (existingJob) {
         console.log(
-          `[onboarding] quota exceeded for profile ${profile.id} — daily=${dailyOthers}/${DAILY_MARKET_LIMIT}, monthly=${monthlyOthers}/${MONTHLY_MARKET_LIMIT}`,
+          `[onboarding] in-flight scrape ${existingJob.id} already running for ${city}, ${state} — joining instead of duplicating`,
         );
-      } else {
+        // A scrape IS happening for this market, just not one we kicked off.
+        // Set scrapeQueued so the client UI reflects reality.
         scrapeQueued = true;
+        // Don't write MarketScrapeUsage — whoever started the existing job
+        // already did. Writing again would inflate the quota count.
+      } else {
+        // Count markets OTHER than this one — if it's already in usage from
+        // a prior request, don't double-count it on the boundary check.
+        const dailyOthers = dailyMarkets.has(marketKey)
+          ? dailyMarkets.size - 1
+          : dailyMarkets.size;
+        const monthlyOthers = monthlyMarkets.has(marketKey)
+          ? monthlyMarkets.size - 1
+          : monthlyMarkets.size;
 
-        // Write usage synchronously so the response numbers reflect reality
-        // and the in-memory sets stay accurate for the response payload.
-        await db.marketScrapeUsage.create({
-          data: {
-            clientProfileId: profile.id,
-            marketKey,
-          },
-        });
-        dailyMarkets.add(marketKey);
-        monthlyMarkets.add(marketKey);
+        if (
+          dailyOthers >= DAILY_MARKET_LIMIT ||
+          monthlyOthers >= MONTHLY_MARKET_LIMIT
+        ) {
+          quotaExceeded = true;
+          console.log(
+            `[onboarding] quota exceeded for profile ${profile.id} — daily=${dailyOthers}/${DAILY_MARKET_LIMIT}, monthly=${monthlyOthers}/${MONTHLY_MARKET_LIMIT}`,
+          );
+        } else {
+          scrapeQueued = true;
 
-        after(async () => {
-          try {
+          // Write usage synchronously so the response numbers reflect
+          // reality and the in-memory sets stay accurate for the response
+          // payload.
+          await db.marketScrapeUsage.create({
+            data: {
+              clientProfileId: profile.id,
+              marketKey,
+            },
+          });
+          dailyMarkets.add(marketKey);
+          monthlyMarkets.add(marketKey);
+
+          // Create the ScrapeJob row BEFORE queueing the background work.
+          // This is the critical fix: the search route's in-flight check
+          // looks at ScrapeJob rows, so without this row our scrape was
+          // invisible and the search route would fire a duplicate.
+          const job = await db.scrapeJob.create({
+            data: {
+              clientProfileId: profile.id,
+              marketCity: city,
+              marketState: state,
+              marketKey,
+              status: "PENDING",
+              stage: "Starting up",
+            },
+          });
+
+          after(async () => {
             console.log(
-              `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id})`,
+              `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id}, job ${job.id})`,
             );
-            const result = await scrapeEventbriteForMarket({ city, state });
+            // runOnDemandScrape handles status transitions through
+            // SCRAPING → ENRICHING → COMPLETE (or FAILED on error) and
+            // also runs the enrichment step that scrapeEventbriteForMarket
+            // by itself was skipping. Errors caught internally.
+            await runOnDemandScrape(job.id, city, state);
             console.log(
-              `[onboarding scrape] ${city}, ${state} complete: ${result.inserted} written / ${result.scraped} scraped / ${result.skipped} skipped / ${result.errors.length} errors`,
+              `[onboarding scrape] ${city}, ${state} finished (job ${job.id})`,
             );
-          } catch (err) {
-            console.error(
-              `[onboarding scrape] FAILED for ${city}, ${state}:`,
-              err,
-            );
-          }
-        });
+          });
+        }
       }
     } else {
       console.log(
