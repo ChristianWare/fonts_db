@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./EnrollLeadsPage.module.css";
+import Button from "@/components/shared/Button/Button";
 
 type Props = {
   paywallEnabled: boolean;
@@ -40,14 +41,15 @@ export default function EnrollLeadsButton({ paywallEnabled }: Props) {
 
   return (
     <>
-      <button
-        type='button'
-        onClick={handleClick}
-        disabled={loading}
-        className={styles.cta}
-      >
-        {loading ? loadingText : idleText}
-      </button>
+      <div className={styles.btnContainer}>
+        <Button
+          text={loading ? loadingText : idleText}
+          btnType='black'
+          onClick={handleClick}
+          disabled={loading}
+          arrow
+        />
+      </div>
       {error && <p className={styles.error}>{error}</p>}
     </>
   );

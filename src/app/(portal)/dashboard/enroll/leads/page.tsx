@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
 import EnrollLeadsButton from "./EnrollLeadsButton";
 import styles from "./EnrollLeadsPage.module.css";
+import Arrow from "@/components/shared/icons/Arrow/Arrow";
 
 export const dynamic = "force-dynamic";
 
@@ -64,31 +65,38 @@ export default async function EnrollLeadsPage({
 
         <ul className={styles.features}>
           <li>
+            <Arrow className={styles.arrow} />
             Hot leads — events happening in your market within 14 days. The
             organizer hasn&apos;t booked ground transportation yet.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Warm leads — galas, conferences, and weddings 15-90 days out. Time
             to build the relationship before logistics get locked in.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Cold leads — hotels, wedding venues, corporate offices, country
             clubs, and resort spas in your service area. The repeat-business
             accounts.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Every lead AI-scored 0-100 and enriched with verified organizer and
             venue contacts from Google Places.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Strategic briefs and outreach scripts generated for every lead you
             save — who to call, what to lead with, when to follow up.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Pipeline tracking — NEW → CONTACTED → NURTURING → WON, with notes,
             snooze, and a built-in spreadsheet view.
           </li>
           <li>
+            <Arrow className={styles.arrow} />
             Set your service radius (5-75 miles) and your market. We only show
             leads you can actually serve.
           </li>

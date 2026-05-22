@@ -9,7 +9,7 @@
   font-family: var(--GeistMono);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   transition: all 0.2s ease-in-out;
   white-space: nowrap;
   cursor: pointer;
@@ -100,6 +100,6 @@
 
 @media screen and (max-width: 568px) {
   .btn {
-    font-size: 14px;
+    font-size: 16px;
   }
 }

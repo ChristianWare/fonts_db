@@ -11,8 +11,8 @@
   width: 100%;
   max-width: 720px;
   padding: 5rem;
-  border: 1px solid var(--grayii);
-  background-color: var(--white);
+  border: 1px solid var(--lightBlack);
+  background-color: var(--accent);
 }
 
 .eyebrow {
@@ -32,7 +32,9 @@
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   margin-bottom: 2rem;
   line-height: 1.5;
@@ -68,7 +70,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 3rem;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -94,20 +98,33 @@
   font-family: var(--Roboto);
   font-size: 1.6rem;
   color: var(--black);
-  padding-left: 2rem;
+  /* padding-left: 2rem; */
   position: relative;
   line-height: 1.4;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
 }
 
-.features li::before {
+.arrow {
+  min-width: 2rem;
+  min-height: 2rem;
+  flex-shrink: 0;
+  transform: rotate(90deg);
+}
+
+/* .features li::before {
   content: "→";
   position: absolute;
   left: -2rem;
-  color: var(--accent);
   font-family: var(--GeistMono);
   font-weight: 700;
-}
+  font-size: 2rem;
+} */
 
 .notice {
   font-family: var(--GeistMono);
@@ -166,6 +183,16 @@
 .betaTag {
   color: var(--text);
   opacity: 0.7;
+}
+
+.btnContainer {
+  display: grid;
+  width: 100%;
+}
+
+.cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media screen and (max-width: 768px) {
