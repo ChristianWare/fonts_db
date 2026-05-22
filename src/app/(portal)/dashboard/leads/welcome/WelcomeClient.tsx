@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import styles from "./WelcomePage.module.css";
 
 type Props = {
-  jobId: string;
+  jobId: string | null;
   initialStatus: string;
   initialStage: string;
   initialProgressPct: number;
@@ -74,8 +74,16 @@ export default function WelcomeClient({
   const isComplete = status === "COMPLETE";
   const isFailed = status === "FAILED";
 
-  // Poll the job status until it completes or fails
+  // Did this user arrive on a setup that's already done? True for re-enrollment
+  // with cached events (no active scrape job). Stable across renders because
+  // it's derived from initialStatus, not the live status state.
+  const landedComplete = initialStatus === "COMPLETE";
+
+  // Poll the job status until it completes or fails. Skip entirely when there's
+  // no job to poll — this happens on re-enrollment with cached events, where
+  // the server passed jobId=null and initialStatus=COMPLETE.
   useEffect(() => {
+    if (!jobId) return;
     if (isComplete || isFailed) return;
 
     let cancelled = false;
@@ -129,14 +137,16 @@ export default function WelcomeClient({
         Welcome to your <span>lead engine</span>
       </h1>
       <p className={styles.subhead}>
-        We&apos;re preparing your market — {marketCity}, {marketState}. This
-        takes a few minutes the first time. While you wait, here&apos;s how the
-        three lead types work.
+        {landedComplete
+          ? `Your market — ${marketCity}, ${marketState} — is set up and ready to go. Here's a quick refresher on how the three lead types work.`
+          : `We're preparing your market — ${marketCity}, ${marketState}. This takes a few minutes the first time. While you wait, here's how the three lead types work.`}
       </p>
 
       {/* Progress stepper */}
       <div className={styles.progressSection}>
-        <h2 className={styles.sectionLabel}>Setting up your market</h2>
+        <h2 className={styles.sectionLabel}>
+          {landedComplete ? "Your market" : "Setting up your market"}
+        </h2>
 
         <div className={styles.stepper}>
           {STAGES.map((s, i) => {

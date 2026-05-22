@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
-import { getProductAccess } from "@/lib/subscriptions";
+import { getProductAccess, effectiveHasLeads } from "@/lib/subscriptions";
 import WelcomeClient from "./WelcomeClient";
 import styles from "./WelcomePage.module.css";
 
@@ -19,7 +19,7 @@ export default async function LeadsWelcomePage() {
 
   const access = await getProductAccess(profile.id);
   const isAdmin = session.user.roles?.includes("ADMIN") ?? false;
-  if (!access.hasLeads && !isAdmin) {
+  if (!effectiveHasLeads(access, isAdmin)) {
     redirect("/dashboard/enroll/leads");
   }
 
@@ -28,46 +28,48 @@ export default async function LeadsWelcomePage() {
     select: { primaryCity: true, primaryState: true },
   });
 
-  // If they reach this page without having set up a market, kick them
-  // back to settings to do that first.
+  // No market configured yet — kick to settings to do that first.
   if (!settings?.primaryCity || !settings?.primaryState) {
-    redirect("/dashboard/leads/settings");
+    redirect("/dashboard/leads/settings?welcome=1");
   }
 
-  // Find the most recent scrape job for this market. Could be in flight
-  // (PENDING / SCRAPING / ENRICHING) or already complete. We use whatever
-  // we find as the starting state for the client polling loop.
-  const recentJob = await db.scrapeJob.findFirst({
-    where: {
-      clientProfileId: profile.id,
-      marketCity: settings.primaryCity,
-      marketState: settings.primaryState,
-    },
-    orderBy: { startedAt: "desc" },
-    select: {
-      id: true,
-      status: true,
-      stage: true,
-      progressPct: true,
-      eventCount: true,
-    },
-  });
-
-  // No scrape job exists for this market — either they navigated here
-  // manually with stale settings, or something fell through. Send them
-  // to search, which will trigger its own scrape if needed.
-  if (!recentJob) {
-    redirect("/dashboard/leads/search");
-  }
+  // Find the most recent scrape job for this market, plus the current event
+  // count. The job tells us "is something running" — the count tells us
+  // "is there data ready" when no job is running (re-enrollment with cached
+  // events). Either can be null/zero; the client component renders the
+  // right state for each combination.
+  const [recentJob, eventCount] = await Promise.all([
+    db.scrapeJob.findFirst({
+      where: {
+        clientProfileId: profile.id,
+        marketCity: settings.primaryCity,
+        marketState: settings.primaryState,
+      },
+      orderBy: { startedAt: "desc" },
+      select: {
+        id: true,
+        status: true,
+        stage: true,
+        progressPct: true,
+        eventCount: true,
+      },
+    }),
+    db.eventbriteEvent.count({
+      where: {
+        marketCity: { equals: settings.primaryCity, mode: "insensitive" },
+        marketState: { equals: settings.primaryState, mode: "insensitive" },
+      },
+    }),
+  ]);
 
   return (
     <div className={styles.page}>
       <WelcomeClient
-        jobId={recentJob.id}
-        initialStatus={recentJob.status}
-        initialStage={recentJob.stage ?? "Starting up"}
-        initialProgressPct={recentJob.progressPct}
-        initialEventCount={recentJob.eventCount}
+        jobId={recentJob?.id ?? null}
+        initialStatus={recentJob?.status ?? "COMPLETE"}
+        initialStage={recentJob?.stage ?? "Complete"}
+        initialProgressPct={recentJob?.progressPct ?? 100}
+        initialEventCount={recentJob?.eventCount ?? eventCount}
         marketCity={settings.primaryCity}
         marketState={settings.primaryState}
       />

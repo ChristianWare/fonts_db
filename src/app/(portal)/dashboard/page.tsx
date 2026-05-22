@@ -1,5 +1,5 @@
 import { getClientProfile } from "@/actions/client/getClientProfile";
-import { getProductAccess } from "@/lib/subscriptions";
+import { getProductAccess, effectiveHasLeads } from "@/lib/subscriptions";
 import { auth } from "../../../../auth";
 import styles from "./DashboardPage.module.css";
 import Link from "next/link";
@@ -17,10 +17,12 @@ export default async function DashboardPage() {
   const isLive = profile?.onboardingStage === "SITE_LIVE";
   const liveUrl = profile?.liveUrl ?? null;
 
-  // Real leads access — admins always see it as enrolled
+  // Leads access — admin override only applies when no subscription exists.
+  // Once a subscription is in place (active, cancelled, anything), admins
+  // are treated like regular customers. See effectiveHasLeads for details.
   const isAdmin = session?.user?.roles?.includes("ADMIN") ?? false;
   const access = profile ? await getProductAccess(profile.id) : null;
-  const hasLeads = (access?.hasLeads ?? false) || isAdmin;
+  const hasLeads = access ? effectiveHasLeads(access, isAdmin) : isAdmin;
 
   return (
     <div className={styles.page}>

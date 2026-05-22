@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./LeadsSettingsPage.module.css";
 import QuotaWarningModal from "./QuotaWarningModal";
 
@@ -67,6 +67,14 @@ function loadGoogleMaps(browserKey: string): Promise<void> {
 
 export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // When set to "1", this user just came from enrollment and should ALWAYS
+  // be routed to /welcome on a successful save — even on subsequent re-saves
+  // before they leave the page, in case they tweak the city. Without the
+  // flag, only first-time setups redirect to welcome (per the
+  // isFirstTimeSetup field on the response payload).
+  const fromEnrollment = searchParams.get("welcome") === "1";
 
   const [city, setCity] = useState(initial.primaryCity);
   const [state, setState] = useState(initial.primaryState);
@@ -203,11 +211,13 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         throw new Error(data.error ?? "Could not save your settings");
       }
 
-      // First-time setup: route them through the welcome page so the
-      // unavoidable scrape wait is filled with useful tutorial content.
-      // The welcome page polls the scrape status and auto-advances them
-      // to /dashboard/leads/search when it completes.
-      if (data.isFirstTimeSetup) {
+      // Quota-exceeded saves stay on the settings page so the user sees the
+      // explanatory message. Everything else routes to /welcome when the
+      // save is part of enrollment, or on genuine first-time setup.
+      const shouldGoToWelcome =
+        !data.quotaExceeded && (fromEnrollment || data.isFirstTimeSetup);
+
+      if (shouldGoToWelcome) {
         router.push("/dashboard/leads/welcome");
         return;
       }

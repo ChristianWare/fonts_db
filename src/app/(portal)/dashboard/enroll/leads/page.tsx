@@ -27,8 +27,9 @@ export default async function EnrollLeadsPage({
 
   const access = await getProductAccess(profile.id);
 
-  // Already subscribed — bounce them to the leads dashboard
-  if (access.hasLeads) redirect("/dashboard/leads");
+  // Already subscribed — send them to search (the main leads workspace),
+  // never to the bare /dashboard/leads route.
+  if (access.hasLeads) redirect("/dashboard/leads/search");
 
   const { cancelled } = await searchParams;
 

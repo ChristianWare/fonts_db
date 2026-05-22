@@ -63,21 +63,23 @@ export async function POST(req: NextRequest) {
         planAmountCents: 0,
         monthlyAmountCents: 0,
         setupFeeAmountCents: 0,
-        // No stripeSubscriptionId — this is a beta access row
       },
       update: {
         status: "ACTIVE",
       },
     });
 
-    // Bootstrap LeadsSettings so onboarding modal triggers
+    // Bootstrap LeadsSettings so the user always lands on settings with a row
+    // to read defaults from.
     await db.leadsSettings.upsert({
       where: { clientProfileId: profile.id },
       create: { clientProfileId: profile.id },
       update: {},
     });
 
-    return NextResponse.json({ url: "/dashboard/leads?welcome=true" });
+    // Land on settings with the welcome flag, so the form knows to route to
+    // /welcome after the first successful save.
+    return NextResponse.json({ url: "/dashboard/leads/settings?welcome=1" });
   }
 
   // ── PAID PATH — full Stripe checkout flow ──
@@ -90,7 +92,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Reuse Stripe customer if we have one, else create
   let stripeCustomerId = profile.stripeCustomerId;
   if (!stripeCustomerId) {
     const customer = await stripe.customers.create({
@@ -125,7 +126,7 @@ export async function POST(req: NextRequest) {
       clientProfileId: profile.id,
       productType: "LEADS",
     },
-    success_url: `${origin}/dashboard/leads?welcome=true`,
+    success_url: `${origin}/dashboard/leads/settings?welcome=1`,
     cancel_url: `${origin}/dashboard/enroll/leads?cancelled=true`,
     allow_promotion_codes: true,
   });
