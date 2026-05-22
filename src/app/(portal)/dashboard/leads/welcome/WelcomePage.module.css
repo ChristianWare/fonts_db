@@ -1,0 +1,327 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background-color: var(--white);
+}
+
+.card {
+  width: 100%;
+  max-width: 1100px;
+  padding: 5rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+}
+
+/* ── Header ── */
+.eyebrow {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 2rem;
+  opacity: 0.7;
+}
+
+.headline {
+  font-family: var(--RobotoFlexii);
+  font-size: 4rem;
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 2rem;
+}
+
+.headline span {
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0 1rem;
+  display: inline-block;
+  line-height: 1.5;
+}
+
+.subhead {
+  font-family: var(--Roboto);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 4rem;
+  max-width: 760px;
+}
+
+/* ── Section labels ── */
+.sectionLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.7;
+  margin-bottom: 2rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--grayii);
+}
+
+/* ── Progress stepper ── */
+.progressSection {
+  margin-bottom: 4rem;
+}
+
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.step {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 2rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.step_active {
+  background-color: var(--white);
+  border-color: var(--black);
+}
+
+.step_done {
+  opacity: 0.55;
+  background-color: var(--lightGrayiii);
+}
+
+.step_pending {
+  opacity: 0.45;
+}
+
+.stepIndicator {
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  border: 1px solid var(--grayii);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.step_active .stepIndicator {
+  background-color: var(--accent);
+  border-color: var(--black);
+}
+
+.step_done .stepIndicator {
+  background-color: var(--black);
+  border-color: var(--black);
+}
+
+.stepNumber {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.step_done .stepNumber {
+  color: var(--accent);
+}
+
+.stepContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stepTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  margin: 0;
+}
+
+.stepDesc {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin: 0;
+}
+
+.stepEstimate {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.errorBlock {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--black);
+  padding: 2rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--lightGrayiii);
+  margin-top: 2rem;
+}
+
+/* ── Tutorial ── */
+.tutorial {
+  margin-bottom: 4rem;
+}
+
+.tutorialGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.leadTypeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 2.4rem;
+  border: 1px solid var(--grayii);
+  background-color: var(--white);
+}
+
+.leadTypeHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--grayii);
+}
+
+.leadTypeEmoji {
+  font-size: 2.4rem;
+}
+
+.leadTypeTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-variation-settings: "wght" 700, "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+.leadTypeDesc {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.55;
+  color: var(--text);
+  margin: 0;
+}
+
+.leadTypeStrategy {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--black);
+  margin: 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--grayii);
+}
+
+.leadTypeStrategy strong {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.3rem 0.8rem;
+  display: inline-block;
+  margin-right: 0.6rem;
+}
+
+/* ── CTA ── */
+.ctaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--grayii);
+}
+
+.cta {
+  width: 100%;
+  padding: 2rem;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background-color: var(--black);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.cta:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.completeHint,
+.pendingHint {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  color: var(--text);
+  opacity: 0.7;
+  text-align: center;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 968px) {
+  .tutorialGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    padding: 3rem;
+  }
+
+  .headline {
+    font-size: 3rem;
+  }
+
+  .step {
+    padding: 1.6rem;
+    gap: 1.4rem;
+  }
+
+  .stepIndicator {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+}

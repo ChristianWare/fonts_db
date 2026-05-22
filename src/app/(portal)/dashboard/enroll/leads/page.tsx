@@ -42,8 +42,9 @@ export default async function EnrollLeadsPage({
           Stop chasing leads. <span>Start receiving them.</span>
         </h1>
         <p className={styles.subhead}>
-          Hot, warm, and cold leads delivered to your dashboard every day — plus
-          AI outreach scripts and a built-in pipeline.
+          Events happening in your market, the venues planning them, and the
+          corporate accounts most worth your time — all AI-scored and enriched
+          with verified contacts. Built for ground transportation operators.
           {PAYWALL_ENABLED
             ? " Try it free for 7 days."
             : " Free during private beta."}
@@ -62,12 +63,35 @@ export default async function EnrollLeadsPage({
         )}
 
         <ul className={styles.features}>
-          <li>Hot leads from Facebook, Nextdoor, Eventbrite</li>
-          <li>Warm leads — new hotels, corporate events, venue signals</li>
-          <li>Cold lead search — any city, any category</li>
-          <li>AI-generated email, call, and LinkedIn scripts</li>
-          <li>Pipeline kanban with snooze, reminders, won/lost tracking</li>
-          <li>SMS alerts on new hot leads in your market</li>
+          <li>
+            Hot leads — events happening in your market within 14 days. The
+            organizer hasn&apos;t booked ground transportation yet.
+          </li>
+          <li>
+            Warm leads — galas, conferences, and weddings 15-90 days out. Time
+            to build the relationship before logistics get locked in.
+          </li>
+          <li>
+            Cold leads — hotels, wedding venues, corporate offices, country
+            clubs, and resort spas in your service area. The repeat-business
+            accounts.
+          </li>
+          <li>
+            Every lead AI-scored 0-100 and enriched with verified organizer and
+            venue contacts from Google Places.
+          </li>
+          <li>
+            Strategic briefs and outreach scripts generated for every lead you
+            save — who to call, what to lead with, when to follow up.
+          </li>
+          <li>
+            Pipeline tracking — NEW → CONTACTED → NURTURING → WON, with notes,
+            snooze, and a built-in spreadsheet view.
+          </li>
+          <li>
+            Set your service radius (5-75 miles) and your market. We only show
+            leads you can actually serve.
+          </li>
         </ul>
 
         {cancelled && (

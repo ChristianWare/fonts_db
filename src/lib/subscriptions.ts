@@ -66,3 +66,34 @@ export async function getSubscription(
     },
   });
 }
+
+/**
+ * Returns the effective "has leads access" for a user, accounting for the
+ * admin override.
+ *
+ * Admin override applies ONLY when no subscription record exists — so admins
+ * can demo and test the leads product before any subscription is created.
+ * Once a subscription exists (even cancelled), admins get the same access
+ * semantics as customers: only ACTIVE / PAST_DUE grants access.
+ *
+ * Use this anywhere you'd previously have written `isAdmin || access.hasLeads`.
+ */
+export function effectiveHasLeads(
+  access: ProductAccess,
+  isAdmin: boolean,
+): boolean {
+  if (access.leadsStatus === null) return isAdmin;
+  return access.hasLeads;
+}
+
+/**
+ * Same admin-override semantics for the website product. Mirror of
+ * effectiveHasLeads so the same pattern is consistent across products.
+ */
+export function effectiveHasWebsite(
+  access: ProductAccess,
+  isAdmin: boolean,
+): boolean {
+  if (access.websiteStatus === null) return isAdmin;
+  return access.hasWebsite;
+}

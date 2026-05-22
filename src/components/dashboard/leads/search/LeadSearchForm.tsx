@@ -84,8 +84,8 @@ const MIN_SCORE_OPTIONS: Array<{ value: number; label: string }> = [
   { value: 85, label: "85+ (top)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v12";
-const DEFAULT_MIN_SCORE = 50;
+const STORAGE_KEY = "leadSearch:state:v13";
+const DEFAULT_MIN_SCORE = 0;
 
 type StoredState = {
   selectedTemperature: Temperature | null;
@@ -139,7 +139,6 @@ function resultPassesScoreFilter(r: SearchResult, minScore: number): boolean {
   return score >= minScore;
 }
 
-// --- Header-click sort helpers ---
 function getBusinessSortValue(r: SearchResult): string {
   return (r.temperature === "cold" ? r.name : r.eventName).toLowerCase();
 }
@@ -168,7 +167,6 @@ function applyHeaderSort(
     } else if (sort.field === "meta") {
       diff = getMetaSortValue(a) - getMetaSortValue(b);
     } else {
-      // score
       diff = (a.aiScore ?? 0) - (b.aiScore ?? 0);
     }
     return sort.direction === "asc" ? diff : -diff;
@@ -310,9 +308,6 @@ export default function LeadSearchForm() {
           window.dispatchEvent(new Event("leads:quota-changed"));
 
           if (count === 0) {
-            // Scrape completed but found nothing — don't re-search, that
-            // would loop. The server now treats this completed job as a
-            // cache hit, so the empty state below is correct.
             const where =
               marketCity && marketState
                 ? `${marketCity}, ${marketState}`
@@ -648,14 +643,15 @@ export default function LeadSearchForm() {
     selectedTemperature !== null &&
     (selectedTemperature !== "cold" || selectedCategories.length > 0);
   const isScraping = scrapePhase !== null;
-  const showResultsSection = hasDisplayResults && !isScraping && !quotaError;
-  const showFilteredEmpty =
-    !loading &&
-    !error &&
-    !isScraping &&
-    !quotaError &&
-    hasResults &&
-    !hasDisplayResults;
+
+  // Show the results header + filters bar whenever we have search results to
+  // filter on, even if every result is currently hidden. This prevents users
+  // from getting stuck unable to lower a filter that's hiding everything.
+  const showResultsContext =
+    !loading && !error && !isScraping && !quotaError && hasResults;
+
+  const showTable = showResultsContext && hasDisplayResults;
+  const showFilteredEmpty = showResultsContext && !hasDisplayResults;
   const showEmptyState =
     !loading &&
     !error &&
@@ -937,7 +933,7 @@ export default function LeadSearchForm() {
         </div>
       )}
 
-      {showResultsSection && (
+      {showResultsContext && (
         <>
           <div
             className={`${styles.resultsHeader} ${
@@ -1084,74 +1080,88 @@ export default function LeadSearchForm() {
             </div>
           </div>
 
-          <PaginationBar />
-
-          <div ref={tableRef} className={rowStyles.tableWrapper}>
-            <div className={rowStyles.tableHeader}>
-              <div className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}>
-                #
-              </div>
-              <SortableHeader
-                field='business'
-                label={businessHeaderLabel}
-                colClass={rowStyles.colBusiness}
-              />
-              <SortableHeader
-                field='category'
-                label='Category'
-                colClass={rowStyles.colCategory}
-              />
-              <SortableHeader
-                field='meta'
-                label={metaHeaderLabel}
-                colClass={rowStyles.colMeta}
-              />
-              <SortableHeader
-                field='score'
-                label='Lead score'
-                colClass={rowStyles.colContact}
-              />
-              <div className={`${rowStyles.headerCell} ${rowStyles.colSave}`}>
-                Save
-              </div>
-              <div className={`${rowStyles.headerCell} ${rowStyles.colView}`}>
-                View
-              </div>
+          {showFilteredEmpty && (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyTitle}>No leads match your filters</p>
+              <p className={styles.emptyHint}>
+                Found {results.length} {results.length === 1 ? "lead" : "leads"}
+                , but all are hidden by your active filters. Lower the minimum
+                score above
+                {searchedTemperature !== "cold" && contactReadyOnly
+                  ? ' or turn off "Ready only"'
+                  : ""}{" "}
+                to see them.
+              </p>
             </div>
+          )}
 
-            {currentPageResults.map((r, i) => {
-              const globalIndex = startIdx + i + 1;
-              const isPending =
-                r.temperature === "cold" && pendingPlaceIds.has(r.placeId);
-              const key =
-                r.temperature === "cold"
-                  ? `cold-${r.placeId}`
-                  : `${r.temperature}-${r.externalId}`;
-              return (
-                <LeadRow
-                  key={key}
-                  result={r}
-                  isPending={isPending}
-                  onSave={() => saveLead(r)}
-                  index={globalIndex}
-                />
-              );
-            })}
-          </div>
+          {showTable && (
+            <>
+              <PaginationBar />
 
-          <PaginationBar />
+              <div ref={tableRef} className={rowStyles.tableWrapper}>
+                <div className={rowStyles.tableHeader}>
+                  <div
+                    className={`${rowStyles.headerCell} ${rowStyles.colNumber}`}
+                  >
+                    #
+                  </div>
+                  <SortableHeader
+                    field='business'
+                    label={businessHeaderLabel}
+                    colClass={rowStyles.colBusiness}
+                  />
+                  <SortableHeader
+                    field='category'
+                    label='Category'
+                    colClass={rowStyles.colCategory}
+                  />
+                  <SortableHeader
+                    field='meta'
+                    label={metaHeaderLabel}
+                    colClass={rowStyles.colMeta}
+                  />
+                  <SortableHeader
+                    field='score'
+                    label='Lead score'
+                    colClass={rowStyles.colContact}
+                  />
+                  <div
+                    className={`${rowStyles.headerCell} ${rowStyles.colSave}`}
+                  >
+                    Save
+                  </div>
+                  <div
+                    className={`${rowStyles.headerCell} ${rowStyles.colView}`}
+                  >
+                    View
+                  </div>
+                </div>
+
+                {currentPageResults.map((r, i) => {
+                  const globalIndex = startIdx + i + 1;
+                  const isPending =
+                    r.temperature === "cold" && pendingPlaceIds.has(r.placeId);
+                  const key =
+                    r.temperature === "cold"
+                      ? `cold-${r.placeId}`
+                      : `${r.temperature}-${r.externalId}`;
+                  return (
+                    <LeadRow
+                      key={key}
+                      result={r}
+                      isPending={isPending}
+                      onSave={() => saveLead(r)}
+                      index={globalIndex}
+                    />
+                  );
+                })}
+              </div>
+
+              <PaginationBar />
+            </>
+          )}
         </>
-      )}
-
-      {showFilteredEmpty && (
-        <div className={styles.emptyState}>
-          <p className={styles.emptyTitle}>No leads match your filters</p>
-          <p className={styles.emptyHint}>
-            Found {results.length} {results.length === 1 ? "lead" : "leads"},
-            but all are hidden by your active filters. Try lowering the minimum
-            score or turning off &quot;Ready only.&quot;
-          </p>
-        </div>
       )}
 
       {showEmptyState && (

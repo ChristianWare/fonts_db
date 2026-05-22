@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
-import { getProductAccess } from "@/lib/subscriptions";
+import {
+  getProductAccess,
+  effectiveHasLeads,
+  effectiveHasWebsite,
+} from "@/lib/subscriptions";
 import PortalLayout from "@/components/portal/PortalLayout/PortalLayout";
 
 export default async function PortalRouteLayout({
@@ -22,11 +26,12 @@ export default async function PortalRouteLayout({
   const access = await getProductAccess(profile.id);
   const isAdmin = session.user.roles?.includes("ADMIN") ?? false;
 
-  // Admins always see every product nav — they need to support clients
-  // and demo to prospects without subscribing themselves.
+  // Admins see every product nav UNLESS they've subscribed and cancelled.
+  // Once a subscription exists in a non-active state, admins are treated
+  // the same as cancelled customers — the leads nav item disappears.
   const effectiveAccess = {
-    hasWebsite: isAdmin || access.hasWebsite,
-    hasLeads: isAdmin || access.hasLeads,
+    hasWebsite: effectiveHasWebsite(access, isAdmin),
+    hasLeads: effectiveHasLeads(access, isAdmin),
   };
 
   return <PortalLayout access={effectiveAccess}>{children}</PortalLayout>;

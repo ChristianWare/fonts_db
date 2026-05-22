@@ -23,10 +23,6 @@ type Body = {
 };
 
 const ALLOWED_RADII = [5, 10, 20, 50, 75];
-
-// Lookback window for detecting an in-flight scrape for the same market.
-// Matches the search route's CONCURRENT_JOB_LOOKBACK_MIN value so both
-// routes use the same dedup window.
 const CONCURRENT_JOB_LOOKBACK_MIN = 10;
 
 export async function POST(req: NextRequest) {
@@ -75,6 +71,11 @@ export async function POST(req: NextRequest) {
     select: { primaryCity: true, primaryState: true },
   });
 
+  // First-time setup = no LeadsSettings row existed before this save.
+  // The client uses this to decide whether to route to the welcome page
+  // (with progress + tutorial) or just refresh the settings page in place.
+  const isFirstTimeSetup = !previous;
+
   // Coordinate resolution
   let lat: number | null = null;
   let lng: number | null = null;
@@ -121,8 +122,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Compute current quota usage. Used for the gate check below AND returned
-  // in the response so the client can show a warning modal at thresholds.
   const now = new Date();
   const startOfToday = new Date(
     now.getFullYear(),
@@ -171,11 +170,6 @@ export async function POST(req: NextRequest) {
     });
 
     if (eventCount === 0) {
-      // Check for an in-flight scrape for this market BEFORE doing anything
-      // else. If one is already running (could have been started by the
-      // search route, or by a concurrent save in another tab), join it
-      // rather than firing a duplicate — that's what caused the double-bill
-      // we just diagnosed.
       const recentJobCutoff = new Date(
         Date.now() - CONCURRENT_JOB_LOOKBACK_MIN * 60 * 1000,
       );
@@ -193,14 +187,8 @@ export async function POST(req: NextRequest) {
         console.log(
           `[onboarding] in-flight scrape ${existingJob.id} already running for ${city}, ${state} — joining instead of duplicating`,
         );
-        // A scrape IS happening for this market, just not one we kicked off.
-        // Set scrapeQueued so the client UI reflects reality.
         scrapeQueued = true;
-        // Don't write MarketScrapeUsage — whoever started the existing job
-        // already did. Writing again would inflate the quota count.
       } else {
-        // Count markets OTHER than this one — if it's already in usage from
-        // a prior request, don't double-count it on the boundary check.
         const dailyOthers = dailyMarkets.has(marketKey)
           ? dailyMarkets.size - 1
           : dailyMarkets.size;
@@ -219,9 +207,6 @@ export async function POST(req: NextRequest) {
         } else {
           scrapeQueued = true;
 
-          // Write usage synchronously so the response numbers reflect
-          // reality and the in-memory sets stay accurate for the response
-          // payload.
           await db.marketScrapeUsage.create({
             data: {
               clientProfileId: profile.id,
@@ -231,10 +216,6 @@ export async function POST(req: NextRequest) {
           dailyMarkets.add(marketKey);
           monthlyMarkets.add(marketKey);
 
-          // Create the ScrapeJob row BEFORE queueing the background work.
-          // This is the critical fix: the search route's in-flight check
-          // looks at ScrapeJob rows, so without this row our scrape was
-          // invisible and the search route would fire a duplicate.
           const job = await db.scrapeJob.create({
             data: {
               clientProfileId: profile.id,
@@ -250,10 +231,6 @@ export async function POST(req: NextRequest) {
             console.log(
               `[onboarding scrape] starting for ${city}, ${state} (profile ${profile.id}, job ${job.id})`,
             );
-            // runOnDemandScrape handles status transitions through
-            // SCRAPING → ENRICHING → COMPLETE (or FAILED on error) and
-            // also runs the enrichment step that scrapeEventbriteForMarket
-            // by itself was skipping. Errors caught internally.
             await runOnDemandScrape(job.id, city, state);
             console.log(
               `[onboarding scrape] ${city}, ${state} finished (job ${job.id})`,
@@ -273,6 +250,7 @@ export async function POST(req: NextRequest) {
     geocoded,
     scrapeQueued,
     quotaExceeded,
+    isFirstTimeSetup,
     quota: {
       dailyUsed: dailyMarkets.size,
       dailyLimit: DAILY_MARKET_LIMIT,

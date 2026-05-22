@@ -26,14 +26,14 @@ type SaveResponse = {
   geocoded?: boolean;
   scrapeQueued?: boolean;
   quotaExceeded?: boolean;
+  isFirstTimeSetup?: boolean;
   quota?: QuotaInfo;
 };
 
 const RADIUS_OPTIONS = [5, 10, 20, 50, 75] as const;
 
-// Tunables — when to surface the warning modal.
-const DAILY_WARN_REMAINING = 1; // Warn when 1 or fewer daily slots remain
-const MONTHLY_WARN_REMAINING = 3; // Warn when 3 or fewer monthly slots remain
+const DAILY_WARN_REMAINING = 1;
+const MONTHLY_WARN_REMAINING = 3;
 
 function loadGoogleMaps(browserKey: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
@@ -90,7 +90,6 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
     null,
   );
 
-  // Quota warning modal state
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningQuota, setWarningQuota] = useState<QuotaInfo | null>(null);
 
@@ -204,6 +203,15 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         throw new Error(data.error ?? "Could not save your settings");
       }
 
+      // First-time setup: route them through the welcome page so the
+      // unavoidable scrape wait is filled with useful tutorial content.
+      // The welcome page polls the scrape status and auto-advances them
+      // to /dashboard/leads/search when it completes.
+      if (data.isFirstTimeSetup) {
+        router.push("/dashboard/leads/welcome");
+        return;
+      }
+
       if (data.quotaExceeded) {
         setSuccessMessage(
           "Settings saved, but you've reached your market scrape limit. Leads for this market will refresh when your quota resets.",
@@ -216,10 +224,6 @@ export default function LeadsSettingsForm({ initial }: { initial: Initial }) {
         setSuccessMessage("Settings saved.");
       }
 
-      // Decide whether to pop the warning modal based on returned quota.
-      // We show it whenever the user has crossed the warning threshold —
-      // including the "at limit" case, since quotaExceeded already saved
-      // settings but they should still see the remaining-zero message.
       if (data.quota) {
         const dailyRemaining = data.quota.dailyLimit - data.quota.dailyUsed;
         const monthlyRemaining =
