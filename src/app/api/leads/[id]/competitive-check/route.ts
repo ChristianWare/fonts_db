@@ -22,6 +22,59 @@ type AnalysisFailed = {
   reason: string;
 };
 
+/**
+ * Translates internal failure messages from fetchAndExtract / the no-website
+ * branch into copy a non-technical user can act on. Patterns are tested in
+ * order from most specific to least, with a generic fallback at the end.
+ *
+ * Matching is case-insensitive so we don't have to worry about capitalization
+ * drift in the underlying error strings.
+ */
+function userFacingReason(rawError: string): string {
+  const e = rawError.toLowerCase();
+
+  // === Status-code based failures ===
+  if (e.includes("403") || e.includes("blocked")) {
+    return "This website is blocking automated checks — common for larger venues behind security services like Cloudflare. Open the live site link above and skim their About or Partners page to spot any existing transportation provider.";
+  }
+  if (e.includes("404")) {
+    return "The page we tried to read no longer exists. Check the live site link above to confirm this business is still operating, or look for an updated website.";
+  }
+  if (/status 5\d\d/.test(e)) {
+    return "Their website is having problems right now — their server returned an error. Try again in a few minutes, or just open the live site link above and check their site yourself.";
+  }
+  if (/status 4\d\d/.test(e)) {
+    return "We couldn't reach this website (it returned an error). Open the live site link above to check their About or Partners page yourself.";
+  }
+
+  // === Network-level failures ===
+  if (e.includes("timeout") || e.includes("etimedout")) {
+    return "Their website is responding too slowly for us to analyze. Try again in a few minutes, or just open the live site yourself.";
+  }
+  if (e.includes("enotfound") || e.includes("eai_again") || e.includes("dns")) {
+    return "Their website couldn't be reached. It may be offline, or the URL on file is incorrect — open the live site link above to verify.";
+  }
+  if (e.includes("econnrefused") || e.includes("econnreset")) {
+    return "Their website refused our connection. It may be down or blocking outside traffic — try the live site link above.";
+  }
+
+  // === Content-shape failures ===
+  if (e.includes("not html")) {
+    return "This URL doesn't point to a normal webpage — it might be a PDF, image, or app redirect. Open the live site link above to check their actual site.";
+  }
+  if (e.includes("minimal text") || e.includes("javascript-rendered")) {
+    return "This website loads its content with JavaScript, which we can't read automatically. Open the live site link above and check their About or Partners page directly.";
+  }
+
+  // === Missing data ===
+  if (e.includes("no website") || e.includes("missing")) {
+    return "This business doesn't have a website on file, so there's nothing for us to scan. A quick Google search may turn up their presence elsewhere.";
+  }
+
+  // === Generic fallback ===
+  return "We weren't able to analyze this website. Open the live site link above to check for any existing transportation provider before pitching.";
+}
+
 async function fetchAndExtract(
   url: string,
 ): Promise<{ ok: true; text: string } | { ok: false; reason: string }> {
@@ -137,9 +190,11 @@ export async function POST(
   }
 
   if (!lead.businessWebsite) {
+    const rawReason = "No website on file for this business";
+    console.log(`[competitive-check] lead ${id}: ${rawReason}`);
     const failed: AnalysisFailed = {
       analyzed: false,
-      reason: "No website on file for this business",
+      reason: userFacingReason(rawReason),
     };
     await db.savedLead.update({
       where: { id },
@@ -150,9 +205,12 @@ export async function POST(
 
   const fetchResult = await fetchAndExtract(lead.businessWebsite);
   if (!fetchResult.ok) {
+    console.log(
+      `[competitive-check] lead ${id} fetch failed: ${fetchResult.reason}`,
+    );
     const failed: AnalysisFailed = {
       analyzed: false,
-      reason: fetchResult.reason,
+      reason: userFacingReason(fetchResult.reason),
     };
     await db.savedLead.update({
       where: { id },

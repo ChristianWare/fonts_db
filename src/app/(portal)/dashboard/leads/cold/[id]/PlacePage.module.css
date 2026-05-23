@@ -471,7 +471,8 @@
 
 /* === Accordion sections (About → Notes & Activity) === */
 .accordionGroup {
-  /* border-top: 1px solid var(--lightGray); */
+  border: 1px solid var(--lightBlack);
+  padding: 3rem;
   width: 100%;
 }
 
@@ -497,6 +498,14 @@
   cursor: pointer;
   user-select: none;
   transition: all 0.3s ease;
+}
+
+.accordionSection:first-child .accordionHeader {
+  padding-top: 0;
+}
+
+.accordionSection:last-child .accordionHeader {
+  padding-bottom: 0;
 }
 
 .accordionHeader:hover .accordionTitle {
@@ -604,6 +613,10 @@
   }
 
   .topBar {
+    padding: 2rem;
+  }
+
+  .accordionGroup {
     padding: 2rem;
   }
 }

@@ -853,7 +853,8 @@ export default function PlacePageClient({
                 rel='noopener noreferrer'
                 className={previewStyles.heroLink}
               >
-                {lead.businessWebsite.replace(/^https?:\/\//, "")} ↗
+                Live Site ↗
+                {/* {lead.businessWebsite.replace(/^https?:\/\//, "")} ↗ */}
               </a>
             )}
             {mapsUrl && (
@@ -881,6 +882,7 @@ export default function PlacePageClient({
 
           <div className={previewStyles.competetiveLandscapeSection}>
             <h2 className={detailStyles.sectionTitle}>Competitive Landscape</h2>
+            <br />
             {lead.competitiveAnalysis &&
               lead.competitiveAnalysis.analyzed === true &&
               !generatingCompetitive && (
@@ -896,7 +898,7 @@ export default function PlacePageClient({
                   <button
                     type='button'
                     onClick={() =>
-                      generateAi("competitive-check", "competitive")
+                      generateAi("competitive-check", "competitive", true)
                     }
                     className={detailStyles.regenerateBtn}
                     style={{ marginTop: "2rem" }}
@@ -920,7 +922,9 @@ export default function PlacePageClient({
                 </p>
                 <button
                   type='button'
-                  onClick={() => generateAi("competitive-check", "competitive")}
+                  onClick={() =>
+                    generateAi("competitive-check", "competitive", true)
+                  }
                   className={detailStyles.generateBtn}
                 >
                   Retry
@@ -938,7 +942,9 @@ export default function PlacePageClient({
                 </p>
                 <button
                   type='button'
-                  onClick={() => generateAi("competitive-check", "competitive")}
+                  onClick={() =>
+                    generateAi("competitive-check", "competitive", true)
+                  }
                   className={detailStyles.regenerateBtn}
                 >
                   Try again
@@ -978,10 +984,167 @@ export default function PlacePageClient({
               </div>
             )}
           </div>
-<br />
-<br />
+          <br />
+          <br />
           <div className={previewStyles.competetiveLandscapeSection}>
-            <h2 className={detailStyles.sectionTitle}>Review Intelligence</h2>
+            <h2 className={detailStyles.sectionTitle}>Strategic Brief</h2>
+            {/* {lead.reviewIntelligence && !generatingReviews && (
+              <div
+                className={placeStyles.accordionBodyActions}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "2rem",
+                }}
+              >
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("review-intelligence", "reviews", true)
+                  }
+                  className={detailStyles.regenerateBtn}
+                  style={{ marginTop: "2rem" }}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingReviews ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
+              </div>
+            ) : lead.reviewIntelligence ? (
+              <div className={detailStyles.reviewBody}>
+                {lead.reviewIntelligence.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Review analysis failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() =>
+                    generateAi("review-intelligence", "reviews", true)
+                  }
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )} */}
+            {lead.strategicBrief && !generatingBrief && (
+              <div
+                className={placeStyles.accordionBodyActions}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "2rem",
+                }}
+              >
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  disabled={generatingBrief}
+                  className={detailStyles.regenerateBtn}
+                  style={{
+                    marginTop: "2rem",
+                  }}
+                >
+                  Regenerate
+                </button>
+              </div>
+            )}
+
+            {generatingBrief ? (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  ✨ Generating strategic brief…
+                </p>
+              </div>
+            ) : lead.strategicBrief ? (
+              <div className={detailStyles.briefBody}>
+                {lead.strategicBrief.split("\n\n").map((para, i) => (
+                  <p key={i} className={detailStyles.briefParagraph}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <div className={detailStyles.emptyBlock}>
+                <p className={detailStyles.emptyDesc}>
+                  Brief generation failed. Try again.
+                </p>
+                <button
+                  type='button'
+                  onClick={() => generateAi("strategic-brief", "brief", true)}
+                  className={detailStyles.generateBtn}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* === ACCORDION GROUP — About through Notes & Activity === */}
+        <div className={placeStyles.accordionGroup}>
+          {/* SEASONAL CONTEXT */}
+          {seasonality.applicable && (
+            <AccordionSection
+              sectionKey='seasonality'
+              title='Seasonal Context'
+              isOpen={openSection === "seasonality"}
+              onToggle={toggleSection}
+            >
+              <div className={placeStyles.accordionBodyActions}>
+                <span
+                  className={`${placeStyles.seasonStatus} ${
+                    seasonality.currentSeason === "peak"
+                      ? placeStyles.seasonStatusPeak
+                      : seasonality.currentSeason === "approaching_peak"
+                        ? placeStyles.seasonStatusApproaching
+                        : seasonality.currentSeason === "off_season"
+                          ? placeStyles.seasonStatusOff
+                          : placeStyles.seasonStatusNeutral
+                  }`}
+                >
+                  {seasonality.currentSeason.replace(/_/g, " ")}
+                </span>
+              </div>
+              <p className={placeStyles.seasonWindow}>
+                Peak: {seasonality.peakBookingWindow}
+              </p>
+              <p className={placeStyles.seasonRec}>
+                {seasonality.recommendation}
+              </p>
+            </AccordionSection>
+          )}
+
+          {/* RECOMMENDED MOVE */}
+          <AccordionSection
+            sectionKey='recommendedMove'
+            title='Recommended Move'
+            isOpen={openSection === "recommendedMove"}
+            onToggle={toggleSection}
+          >
+            <RecommendedMoveCard suggestion={nextMove} />
+          </AccordionSection>
+
+          {/* REVIEW INTELLIGENCE */}
+          <AccordionSection
+            sectionKey='reviewIntel'
+            title='Review Intelligence'
+            isOpen={openSection === "reviewIntel"}
+            onToggle={toggleSection}
+          >
             {lead.reviewIntelligence && !generatingReviews && (
               <div
                 className={placeStyles.accordionBodyActions}
@@ -1033,112 +1196,7 @@ export default function PlacePageClient({
                 </button>
               </div>
             )}
-          </div>
-        </section>
-
-        {/* === ACCORDION GROUP — About through Notes & Activity === */}
-        <div className={placeStyles.accordionGroup}>
-          {/* STRATEGIC BRIEF */}
-          <AccordionSection
-            sectionKey='strategicBrief'
-            title='Strategic Brief'
-            isOpen={openSection === "strategicBrief"}
-            onToggle={toggleSection}
-          >
-            {lead.strategicBrief && !generatingBrief && (
-              <div className={placeStyles.accordionBodyActions}>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  disabled={generatingBrief}
-                  className={detailStyles.regenerateBtn}
-                >
-                  Regenerate
-                </button>
-              </div>
-            )}
-
-            {generatingBrief ? (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  ✨ Generating strategic brief…
-                </p>
-              </div>
-            ) : lead.strategicBrief ? (
-              <div className={detailStyles.briefBody}>
-                {lead.strategicBrief.split("\n\n").map((para, i) => (
-                  <p key={i} className={detailStyles.briefParagraph}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  Brief generation failed. Try again.
-                </p>
-                <button
-                  type='button'
-                  onClick={() => generateAi("strategic-brief", "brief", true)}
-                  className={detailStyles.generateBtn}
-                >
-                  Retry
-                </button>
-              </div>
-            )}
           </AccordionSection>
-
-          {/* SEASONAL CONTEXT */}
-          {seasonality.applicable && (
-            <AccordionSection
-              sectionKey='seasonality'
-              title='Seasonal Context'
-              isOpen={openSection === "seasonality"}
-              onToggle={toggleSection}
-            >
-              <div className={placeStyles.accordionBodyActions}>
-                <span
-                  className={`${placeStyles.seasonStatus} ${
-                    seasonality.currentSeason === "peak"
-                      ? placeStyles.seasonStatusPeak
-                      : seasonality.currentSeason === "approaching_peak"
-                        ? placeStyles.seasonStatusApproaching
-                        : seasonality.currentSeason === "off_season"
-                          ? placeStyles.seasonStatusOff
-                          : placeStyles.seasonStatusNeutral
-                  }`}
-                >
-                  {seasonality.currentSeason.replace(/_/g, " ")}
-                </span>
-              </div>
-              <p className={placeStyles.seasonWindow}>
-                Peak: {seasonality.peakBookingWindow}
-              </p>
-              <p className={placeStyles.seasonRec}>
-                {seasonality.recommendation}
-              </p>
-            </AccordionSection>
-          )}
-
-          {/* RECOMMENDED MOVE */}
-          <AccordionSection
-            sectionKey='recommendedMove'
-            title='Recommended Move'
-            isOpen={openSection === "recommendedMove"}
-            onToggle={toggleSection}
-          >
-            <RecommendedMoveCard suggestion={nextMove} />
-          </AccordionSection>
-
-          {/* REVIEW INTELLIGENCE */}
-          {/* <AccordionSection
-            sectionKey='reviewIntel'
-            title='Review Intelligence'
-            isOpen={openSection === "reviewIntel"}
-            onToggle={toggleSection}
-          >
-          
-          </AccordionSection> */}
 
           {/* WHO TO CONTACT */}
           <AccordionSection
@@ -1422,15 +1480,18 @@ export default function PlacePageClient({
           )}
 
           {/* NOTES & ACTIVITY */}
-          <AccordionSection
+          {/* <AccordionSection
             sectionKey='notesActivity'
             title='Notes & Activity'
             isOpen={openSection === "notesActivity"}
             onToggle={toggleSection}
           >
             <NotesActivityFeed leadId={lead.id} activities={lead.activities} />
-          </AccordionSection>
+          </AccordionSection> */}
         </div>
+        <br />
+        <h2 className={detailStyles.sectionTitle}>Notes & Activity</h2>
+        <NotesActivityFeed leadId={lead.id} activities={lead.activities} />
       </div>
 
       {/* SIDEBAR — unchanged */}

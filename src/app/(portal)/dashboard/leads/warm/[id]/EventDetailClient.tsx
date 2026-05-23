@@ -1307,20 +1307,10 @@ export default function EventDetailClient({
               </div>
             )}
           </AccordionSection>
-
-          {/* NOTES & ACTIVITY */}
-          <AccordionSection
-            sectionKey='notesActivity'
-            title='Notes & Activity'
-            isOpen={openSection === "notesActivity"}
-            onToggle={toggleSection}
-          >
-            <NotesActivityFeed
-              leadId={lead.leadId}
-              activities={lead.activities}
-            />
-          </AccordionSection>
         </div>
+        <br />
+        <h2 className={detailStyles.sectionTitle}>Notes & Activity</h2>
+        <NotesActivityFeed leadId={lead.leadId} activities={lead.activities} />
       </div>
 
       {/* SIDEBAR — unchanged */}

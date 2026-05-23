@@ -181,6 +181,7 @@
 
 .heroLinks {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 3rem;
   flex-wrap: wrap;
@@ -190,8 +191,14 @@
 }
 
 .heroLink {
-  color: #2563eb;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+  align-self: flex-start;
+  font-size: 1.6rem;
   text-decoration: underline;
+  transition: color 0.15s;
 }
 
 .heroLink:hover {
