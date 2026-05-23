@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import styles from "./LeadEnhancements.module.css";
 
@@ -55,15 +56,15 @@ export default function LeadSourceBar({
         <span className={styles.sourceBarItem}>{formatCategory(category)}</span>
         <span className={styles.sourceBarItem}>·</span>
         <span className={styles.sourceBarItem}>via {sourceLabel}</span>
-        <span className={styles.sourceBarItem}>·</span>
-        <span className={styles.sourceBarItem}>
+        {/* <span className={styles.sourceBarItem}>·</span> */}
+        {/* <span className={styles.sourceBarItem}>
           saved {formatDate(createdAt)}
-        </span>
+        </span> */}
       </div>
       <div className={styles.sourceBarRight}>
-        <span className={styles.sourceBarItem}>
+        {/* <span className={styles.sourceBarItem}>
           {outreachAttempts} attempt{outreachAttempts === 1 ? "" : "s"}
-        </span>
+        </span> */}
         {daysSinceLastContact !== null && (
           <>
             <span className={styles.sourceBarItem}>·</span>
