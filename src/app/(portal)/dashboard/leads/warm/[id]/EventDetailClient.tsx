@@ -5,12 +5,14 @@ import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import detailStyles from "../../[id]/LeadDetailPage.module.css";
 import previewStyles from "../../preview/[placeId]/PreviewPage.module.css";
+import placeStyles from "./EventDetailPace.module.css"
 import styles from "./EventDetailPage.module.css";
 import LeadSourceBar from "../../[id]/_components/LeadSourceBar";
 import NotesActivityFeed from "../../[id]/_components/NotesActivityFeed";
 import NextActionCard from "../../[id]/_components/NextActionCard";
 import OutreachQuickLog from "../../[id]/_components/OutreachQuickLog";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
+import Modal from "@/components/shared/Modal/Modal";
 import type { OutreachWindow } from "@/lib/warmLeadIntelligence";
 
 type LeadStatus =
@@ -361,6 +363,7 @@ export default function EventDetailClient({
   const [mapFailed, setMapFailed] = useState(false);
   const [driveTime, setDriveTime] = useState<{ seconds: number } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Accordion — only one section open at a time, all closed by default
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -558,6 +561,28 @@ export default function EventDetailClient({
       });
     } finally {
       setStatusUpdating(false);
+    }
+  }
+
+  function requestDelete() {
+    setShowDeleteModal(true);
+  }
+
+  async function confirmDelete() {
+    setShowDeleteModal(false);
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/leads/${lead.leadId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        console.error("Delete failed", await res.text());
+        window.alert("Failed to delete. Try again.");
+        return;
+      }
+      router.push("/dashboard/leads/search");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -849,37 +874,6 @@ export default function EventDetailClient({
                     />
                   </div>
                 )}
-                {/* <div className={previewStyles.locationStats}>
-                  <div className={previewStyles.locationStatRow}>
-                    <div className={previewStyles.locationStat}>
-                      <p className={previewStyles.locationStatValue}>
-                        {lead.distanceMiles.toFixed(1)} mi
-                      </p>
-                      <p className={previewStyles.locationStatLabel}>
-                        distance
-                      </p>
-                    </div>
-                    {driveTime && (
-                      <div className={previewStyles.locationStat}>
-                        <p className={previewStyles.locationStatValue}>
-                          {formatDriveTime(driveTime.seconds)}
-                        </p>
-                        <p className={previewStyles.locationStatLabel}>
-                          drive time
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <p className={previewStyles.locationDesc}>
-                    from your base in {lead.primaryMarket}
-                    {lead.serviceRadiusMiles &&
-                    lead.distanceMiles > lead.serviceRadiusMiles
-                      ? ` — outside your ${lead.serviceRadiusMiles}-mile service radius`
-                      : lead.serviceRadiusMiles
-                        ? ` — within your ${lead.serviceRadiusMiles}-mile service radius`
-                        : ""}
-                  </p>
-                </div> */}
               </section>
             )}
 
@@ -1313,7 +1307,7 @@ export default function EventDetailClient({
         <NotesActivityFeed leadId={lead.leadId} activities={lead.activities} />
       </div>
 
-      {/* SIDEBAR — unchanged */}
+      {/* SIDEBAR */}
       <aside className={detailStyles.sidebar}>
         <div className={detailStyles.sidebarSticky}>
           {lead.isDraft ? (
@@ -1404,10 +1398,48 @@ export default function EventDetailClient({
                   {new Date(lead.lastContactedAt).toLocaleDateString()}
                 </p>
               )}
+
+              <div className={detailStyles.sidebarDangerZone}>
+                <button
+                  type='button'
+                  onClick={requestDelete}
+                  disabled={saving}
+                  className={detailStyles.sidebarBtnDanger}
+                >
+                  Delete lead
+                </button>
+              </div>
             </>
           )}
         </div>
       </aside>
+
+      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <div className={placeStyles.deleteModalContent}>
+          <p className={placeStyles.deleteModalTitle}>Delete this lead?</p>
+          <p className={placeStyles.deleteModalDesc}>
+            <strong>{event.eventName ?? "This lead"}</strong> will be
+            permanently removed along with all notes, activities, and outreach
+            scripts. This cannot be undone.
+          </p>
+          <div className={placeStyles.deleteModalActions}>
+            <button
+              type='button'
+              onClick={() => setShowDeleteModal(false)}
+              className={placeStyles.deleteModalCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type='button'
+              onClick={confirmDelete}
+              className={placeStyles.deleteModalConfirm}
+            >
+              Delete permanently
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
