@@ -49,6 +49,15 @@ type DecisionMaker = {
   linkedinSearch: string;
 };
 
+type FailureCategory =
+  | "BLOCKED"
+  | "JS_RENDERED"
+  | "NOT_HTML"
+  | "NO_WEBSITE"
+  | "BAD_URL"
+  | "TRANSIENT"
+  | "UNKNOWN";
+
 type CompetitiveAnalysis =
   | {
       analyzed: true;
@@ -57,7 +66,11 @@ type CompetitiveAnalysis =
       evidence: string | null;
       recommendation: string;
     }
-  | { analyzed: false; reason: string };
+  | {
+      analyzed: false;
+      reason: string;
+      category?: FailureCategory; // optional — old DB records won't have it
+    };
 
 type ApolloEnrichment =
   | {
@@ -311,6 +324,112 @@ function AccordionSection({
         }`}
       >
         <div className={placeStyles.accordionBodyInner}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function getFailureActions(category: FailureCategory | undefined): {
+  showRetry: boolean;
+  showSiteLink: boolean;
+  showGoogleSearch: boolean;
+  headerText: string;
+} {
+  const cat = category ?? "UNKNOWN";
+
+  switch (cat) {
+    case "NO_WEBSITE":
+      return {
+        showRetry: false,
+        showSiteLink: false,
+        showGoogleSearch: true,
+        headerText: "⚠ Manual lookup needed",
+      };
+    case "BLOCKED":
+    case "JS_RENDERED":
+    case "NOT_HTML":
+      return {
+        showRetry: false,
+        showSiteLink: true,
+        showGoogleSearch: false,
+        headerText: "⚠ Manual check needed",
+      };
+    case "BAD_URL":
+      return {
+        showRetry: false,
+        showSiteLink: true,
+        showGoogleSearch: true,
+        headerText: "⚠ Website URL may be stale",
+      };
+    case "TRANSIENT":
+      return {
+        showRetry: true,
+        showSiteLink: true,
+        showGoogleSearch: false,
+        headerText: "⚠ Temporary issue",
+      };
+    case "UNKNOWN":
+    default:
+      return {
+        showRetry: true,
+        showSiteLink: true,
+        showGoogleSearch: false,
+        headerText: "⚠ Could not analyze",
+      };
+  }
+}
+
+function CompetitiveFailureCard({
+  analysis,
+  websiteUrl,
+  businessName,
+  onRetry,
+}: {
+  analysis: { analyzed: false; reason: string; category?: FailureCategory };
+  websiteUrl: string | null;
+  businessName: string | null;
+  onRetry: () => void;
+}) {
+  const actions = getFailureActions(analysis.category);
+
+  return (
+    <div
+      className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardError}`}
+    >
+      <span className={placeStyles.competitiveStatus}>
+        {actions.headerText}
+      </span>
+      <p className={placeStyles.competitiveError}>{analysis.reason}</p>
+      <div className={placeStyles.competitiveActions}>
+        {actions.showSiteLink && websiteUrl && (
+          <a
+            href={websiteUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={detailStyles.generateBtn}
+          >
+            Open live site ↗
+          </a>
+        )}
+        {actions.showGoogleSearch && businessName && (
+          <a
+            href={`https://www.google.com/search?q=${encodeURIComponent(businessName)}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className={detailStyles.generateBtn}
+          >
+            Search Google ↗
+          </a>
+        )}
+        {actions.showRetry && (
+          <button
+            type='button'
+            onClick={onRetry}
+            className={detailStyles.regenerateBtn}
+          >
+            Try again
+          </button>
+        )}
       </div>
     </div>
   );
@@ -931,25 +1050,14 @@ export default function PlacePageClient({
                 </button>
               </div>
             ) : lead.competitiveAnalysis.analyzed === false ? (
-              <div
-                className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardError}`}
-              >
-                <span className={placeStyles.competitiveStatus}>
-                  ⚠ Could not analyze
-                </span>
-                <p className={placeStyles.competitiveError}>
-                  {lead.competitiveAnalysis.reason}
-                </p>
-                <button
-                  type='button'
-                  onClick={() =>
-                    generateAi("competitive-check", "competitive", true)
-                  }
-                  className={detailStyles.regenerateBtn}
-                >
-                  Try again
-                </button>
-              </div>
+              <CompetitiveFailureCard
+                analysis={lead.competitiveAnalysis}
+                websiteUrl={lead.businessWebsite}
+                businessName={lead.businessName}
+                onRetry={() =>
+                  generateAi("competitive-check", "competitive", true)
+                }
+              />
             ) : lead.competitiveAnalysis.hasExistingPartner ? (
               <div
                 className={`${placeStyles.competitiveCard} ${placeStyles.competitiveCardWarn}`}

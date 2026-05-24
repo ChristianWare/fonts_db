@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import Anthropic from "@anthropic-ai/sdk";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 90;
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -17,62 +17,78 @@ type AnalysisOk = {
   recommendation: string;
 };
 
+export type FailureCategory =
+  | "BLOCKED" // 403 / Cloudflare / bot shield. Manual only.
+  | "JS_RENDERED" // App-rendered, no real HTML to read. Manual only.
+  | "NOT_HTML" // PDF, image, app redirect. Manual only.
+  | "NO_WEBSITE" // No URL on file. Google search instead.
+  | "BAD_URL" // 404, DNS failure. URL is broken or stale.
+  | "TRANSIENT" // Timeout, 5xx, connection reset. Retry-able.
+  | "UNKNOWN";
+
 type AnalysisFailed = {
   analyzed: false;
   reason: string;
+  category: FailureCategory;
 };
 
 /**
- * Translates internal failure messages from fetchAndExtract / the no-website
- * branch into copy a non-technical user can act on. Patterns are tested in
- * order from most specific to least, with a generic fallback at the end.
- *
- * Matching is case-insensitive so we don't have to worry about capitalization
- * drift in the underlying error strings.
+ * Buckets raw fetch failures into a small set of categories that drive both
+ * the user-facing copy and the UI buttons. Order matters — specific patterns
+ * before generic ones.
  */
-function userFacingReason(rawError: string): string {
+function classifyFailure(rawError: string): FailureCategory {
   const e = rawError.toLowerCase();
 
-  // === Status-code based failures ===
-  if (e.includes("403") || e.includes("blocked")) {
-    return "This website is blocking automated checks — common for larger venues behind security services like Cloudflare. Open the live site link above and skim their About or Partners page to spot any existing transportation provider.";
-  }
-  if (e.includes("404")) {
-    return "The page we tried to read no longer exists. Check the live site link above to confirm this business is still operating, or look for an updated website.";
-  }
-  if (/status 5\d\d/.test(e)) {
-    return "Their website is having problems right now — their server returned an error. Try again in a few minutes, or just open the live site link above and check their site yourself.";
-  }
-  if (/status 4\d\d/.test(e)) {
-    return "We couldn't reach this website (it returned an error). Open the live site link above to check their About or Partners page yourself.";
+  if (e.includes("no website") || e.includes("missing")) return "NO_WEBSITE";
+  if (e.includes("403") || e.includes("blocked")) return "BLOCKED";
+  if (e.includes("minimal text") || e.includes("javascript-rendered"))
+    return "JS_RENDERED";
+  if (e.includes("not html")) return "NOT_HTML";
+
+  if (
+    e.includes("404") ||
+    e.includes("enotfound") ||
+    e.includes("eai_again") ||
+    e.includes("dns")
+  ) {
+    return "BAD_URL";
   }
 
-  // === Network-level failures ===
-  if (e.includes("timeout") || e.includes("etimedout")) {
-    return "Their website is responding too slowly for us to analyze. Try again in a few minutes, or just open the live site yourself.";
-  }
-  if (e.includes("enotfound") || e.includes("eai_again") || e.includes("dns")) {
-    return "Their website couldn't be reached. It may be offline, or the URL on file is incorrect — open the live site link above to verify.";
-  }
-  if (e.includes("econnrefused") || e.includes("econnreset")) {
-    return "Their website refused our connection. It may be down or blocking outside traffic — try the live site link above.";
-  }
-
-  // === Content-shape failures ===
-  if (e.includes("not html")) {
-    return "This URL doesn't point to a normal webpage — it might be a PDF, image, or app redirect. Open the live site link above to check their actual site.";
-  }
-  if (e.includes("minimal text") || e.includes("javascript-rendered")) {
-    return "This website loads its content with JavaScript, which we can't read automatically. Open the live site link above and check their About or Partners page directly.";
+  if (
+    /status 5\d\d/.test(e) ||
+    e.includes("timeout") ||
+    e.includes("etimedout") ||
+    e.includes("econnrefused") ||
+    e.includes("econnreset")
+  ) {
+    return "TRANSIENT";
   }
 
-  // === Missing data ===
-  if (e.includes("no website") || e.includes("missing")) {
-    return "This business doesn't have a website on file, so there's nothing for us to scan. A quick Google search may turn up their presence elsewhere.";
-  }
+  return "UNKNOWN";
+}
 
-  // === Generic fallback ===
-  return "We weren't able to analyze this website. Open the live site link above to check for any existing transportation provider before pitching.";
+function userFacingReason(rawError: string): string {
+  const category = classifyFailure(rawError);
+
+  switch (category) {
+    case "NO_WEBSITE":
+      return "There's no website on file for this business — nothing for us to scan. Try a quick Google search for their name. They may have a Facebook page, Instagram, or directory listing that mentions a preferred transportation partner.";
+    case "BLOCKED":
+      return "This site is protected against automated readers — common with larger venues. Open it yourself and skim their About, Partners, or FAQ pages. What you're looking for is any 'transportation provided by' or 'preferred vendor' mention. Takes 60 seconds.";
+    case "JS_RENDERED":
+      return "This site is built in a way our reader can't see — common with modern booking platforms and event sites. Open it yourself and check the About, Partners, or FAQ pages for any mention of a preferred transportation or chauffeur provider.";
+
+    case "NOT_HTML":
+      return "The URL on file points to a PDF, image, or app redirect rather than a normal webpage. Open the live site to find their actual web presence.";
+    case "BAD_URL":
+      return "The website URL on file isn't reachable — it may be outdated, offline, or moved to a new address. Open the live site link to verify, or do a quick Google search to find their current site.";
+    case "TRANSIENT":
+      return "We couldn't reach their site right now — it may be overloaded or briefly down. Try again in a few minutes. If it keeps failing, just open it manually.";
+    case "UNKNOWN":
+    default:
+      return "We weren't able to analyze this website automatically. Open the live site link to check for any existing transportation provider before reaching out.";
+  }
 }
 
 async function fetchAndExtract(
@@ -145,6 +161,76 @@ async function fetchAndExtract(
   }
 }
 
+function shouldFallBackToApify(reason: string): boolean {
+  const r = reason.toLowerCase();
+  return (
+    r.includes("403") ||
+    r.includes("blocked") ||
+    r.includes("minimal text") ||
+    r.includes("javascript-rendered") ||
+    r.includes("not html")
+  );
+}
+
+async function fetchViaApify(
+  url: string,
+): Promise<{ ok: true; text: string } | { ok: false; reason: string }> {
+  const token = process.env.APIFY_API_TOKEN;
+  if (!token) {
+    return { ok: false, reason: "Apify fallback not configured" };
+  }
+
+  const pageFunction = `async function pageFunction({ request, $, log }) {
+    $('script, style, noscript').remove();
+    const text = $('body').text().replace(/\\s+/g, ' ').trim();
+    return { text: text.slice(0, 10000) };
+  }`;
+
+  const input = {
+    startUrls: [{ url }],
+    pageFunction,
+    maxRequestsPerCrawl: 1,
+    maxConcurrency: 1,
+    proxyConfiguration: { useApifyProxy: true },
+  };
+
+  try {
+    const res = await fetch(
+      `https://api.apify.com/v2/acts/apify~cheerio-scraper/run-sync-get-dataset-items?token=${token}&timeout=60`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(70_000),
+      },
+    );
+
+    if (!res.ok) {
+      const errText = await res.text();
+      return {
+        ok: false,
+        reason: `Apify fallback returned status ${res.status}: ${errText.slice(0, 200)}`,
+      };
+    }
+
+    const items = await res.json();
+    const text = items?.[0]?.text;
+    if (typeof text !== "string" || text.length < 200) {
+      return { ok: false, reason: "Apify fallback returned minimal text" };
+    }
+
+    return { ok: true, text };
+  } catch (err) {
+    if (err instanceof Error && err.name === "TimeoutError") {
+      return { ok: false, reason: "Apify fallback timed out" };
+    }
+    return {
+      ok: false,
+      reason: `Apify fallback threw: ${err instanceof Error ? err.message : "unknown"}`,
+    };
+  }
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -181,7 +267,6 @@ export async function POST(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Idempotent: return cached unless force=true
   if (lead.competitiveAnalysis && !force) {
     return NextResponse.json({
       success: true,
@@ -195,6 +280,7 @@ export async function POST(
     const failed: AnalysisFailed = {
       analyzed: false,
       reason: userFacingReason(rawReason),
+      category: classifyFailure(rawReason),
     };
     await db.savedLead.update({
       where: { id },
@@ -203,7 +289,23 @@ export async function POST(
     return NextResponse.json({ success: true, analysis: failed });
   }
 
-  const fetchResult = await fetchAndExtract(lead.businessWebsite);
+  let fetchResult = await fetchAndExtract(lead.businessWebsite);
+
+  if (!fetchResult.ok && shouldFallBackToApify(fetchResult.reason)) {
+    console.log(
+      `[competitive-check] lead ${id} direct fetch failed (${fetchResult.reason}), trying Apify fallback`,
+    );
+    const apifyResult = await fetchViaApify(lead.businessWebsite);
+    if (apifyResult.ok) {
+      console.log(`[competitive-check] lead ${id} Apify fallback succeeded`);
+      fetchResult = apifyResult;
+    } else {
+      console.log(
+        `[competitive-check] lead ${id} Apify fallback also failed: ${apifyResult.reason}`,
+      );
+    }
+  }
+
   if (!fetchResult.ok) {
     console.log(
       `[competitive-check] lead ${id} fetch failed: ${fetchResult.reason}`,
@@ -211,6 +313,7 @@ export async function POST(
     const failed: AnalysisFailed = {
       analyzed: false,
       reason: userFacingReason(fetchResult.reason),
+      category: classifyFailure(fetchResult.reason),
     };
     await db.savedLead.update({
       where: { id },

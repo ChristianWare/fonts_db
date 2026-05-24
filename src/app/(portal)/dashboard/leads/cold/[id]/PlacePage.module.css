@@ -590,6 +590,14 @@
   padding-bottom: 3rem;
 }
 
+.competitiveActions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 768px) {
   .accordionTitle {
     font-size: 2rem;

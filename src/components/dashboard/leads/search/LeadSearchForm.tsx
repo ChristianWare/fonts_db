@@ -51,12 +51,13 @@ const CATEGORIES: Array<{ value: string; label: string }> = [
   { value: "funeral homes", label: "Funeral Homes" },
   { value: "resort spas", label: "Resort Spas" },
   { value: "event venues", label: "Event Venues" },
-  { value: "corporate offices", label: "Corporate Offices" },
+  { value: "casinos", label: "Casinos" },
+  { value: "55+ communities", label: "55+ Communities" },
 ];
 
 const LEAD_TYPE_COPY: Record<Temperature, string[]> = {
   cold: [
-    "Cold leads are businesses in your service area that fit your ideal customer profile — wedding venues, hotels, corporate offices, country clubs, funeral homes. No specific event signal yet, but they're the right type of organization to be pitching.",
+    "Cold leads are businesses in your service area that fit your ideal customer profile — wedding venues, hotels, law firms, country clubs, funeral homes, casinos, and 55+ communities. No specific event signal yet, but they're the right type of organization to be pitching.",
     "Best for long-term pipeline building. Strategy: introduce yourself, drop a useful resource (rate sheet, hotel-pickup logistics guide), follow up quarterly. These won't convert quickly, but they compound over time as your name becomes familiar.",
   ],
   warm: [
