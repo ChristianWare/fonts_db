@@ -1,4 +1,5 @@
 import AboutPageProject from "@/components/AboutPage/AboutPageProject/AboutPageProject";
+import ComparisonChart from "@/components/HomePage/ComparisonChart/ComparisonChart";
 import Faq from "@/components/HomePage/Faq/Faq";
 import HowItWorks from "@/components/HomePage/HowItWorks/HowItWorks";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
@@ -22,6 +23,7 @@ export default function WebsitesPage() {
       <WhatsIncluded />
       <PricingPreview />
       <HowItWorks />
+      <ComparisonChart />
       <AboutPageProject />
       <Faq />
     </main>

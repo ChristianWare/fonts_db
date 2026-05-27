@@ -121,7 +121,7 @@ export default function AuditPage() {
         icon={<AuditTool />}
         sectionIntroText='Free Website Audit'
         heading="Find out exactly what's costing you bookings"
-        headingAccent='in 60 seconds or less.'
+        headingAccent='in 60 seconds. For Free. '
         subheading='$0 · Detailed Report sent to your inbox'
         copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
       />
