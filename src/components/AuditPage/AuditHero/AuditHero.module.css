@@ -7,7 +7,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10rem 0rem;
   width: 100%;
   border-top: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
@@ -66,7 +65,7 @@
     transparent 50%
   );
   background-size: 7px 7px;
-  padding: 5rem;
+  padding: 10rem 0rem;
 }
 
 .top {
@@ -111,7 +110,7 @@
 }
 
 @media screen and (max-width: 1468px) {
-  .parent {
+  .content {
     padding: 3rem;
   }
 
@@ -132,10 +131,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .parent {
-    padding: 2rem;
-  }
-
   .content {
     gap: 5rem;
     padding: 3rem;
