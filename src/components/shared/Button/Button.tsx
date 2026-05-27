@@ -32,6 +32,25 @@ export default function Button({
   const content = text || children;
 
   if (href) {
+    const isHashLink = href.startsWith("#");
+
+    if (isHashLink) {
+      return (
+        <a
+          href={href}
+          onClick={onClick}
+          className={`${styles.btn} ${styles[btnType]}`}
+        >
+          {content}
+          {arrow && (
+            <div className={styles.arrowContainer}>
+              <Arrow className={styles.arrow} />
+            </div>
+          )}
+        </a>
+      );
+    }
+
     return (
       <Link
         href={href}

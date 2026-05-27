@@ -119,7 +119,7 @@ export default function AuditPage() {
     <main className={styles.container}>
       <PageIntroHero
         icon={<AuditTool />}
-        sectionIntroText='Product 01 of 03'
+        sectionIntroText='Free Website Audit'
         heading="Find out exactly what's costing you bookings"
         headingAccent='in 60 seconds or less.'
         subheading='$0 · Detailed Report sent to your inbox'

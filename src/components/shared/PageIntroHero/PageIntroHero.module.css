@@ -67,7 +67,7 @@
 .top {
   padding-bottom: 5rem;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1.5fr 2fr;
   grid-gap: 5rem;
 }
 
@@ -166,8 +166,8 @@
   }
 
   .iconWrapper svg {
-    width: 15rem;
-    height: 15rem;
+    width: 25rem;
+    height: 25rem;
   }
 }
 

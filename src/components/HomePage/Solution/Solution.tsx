@@ -38,15 +38,15 @@ export default function Solution() {
                 </p>
                 <div className={styles.btnContainer}>
                   <Button
-                    href='/#features'
+                    href='#features'
                     text='Take the tour'
-                    btnType='accent'
-                    arrow
+                    btnType='black'
+                    // arrow
                   />
                 </div>
               </div>
             </div>
-            <div className={styles.bottom}>
+            <div className={styles.bottom} id='features'>
               <div className={styles.mapDataContainer}>
                 {SolutionData.map((x) => (
                   <div className={styles.card} key={x.id}>

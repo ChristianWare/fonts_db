@@ -14,7 +14,7 @@ const data = [
   },
   {
     id: 2,
-    title: "YCategory scores across all six areas",
+    title: "Category scores across all six areas",
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ export default function AuditParallaxResults() {
               </div>
               <div className={styles.right}>
                 <div className={styles.sectionIntroContainer}>
-                  <SectionIntro text='You get' />
+                  <SectionIntro text='What You get' />
                 </div>
                 <ul className={styles.dataBox}>
                   {data.map((x) => (

@@ -72,6 +72,14 @@
   position: relative;
   background-color: var(--accent);
   will-change: transform;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
 }
 
 .card::before {
@@ -102,6 +110,11 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 2rem;
+}
+
+.card h3 {
+  background-color: var(--accent);
+  padding: 1rem;
 }
 
 .label {

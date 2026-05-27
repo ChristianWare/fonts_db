@@ -12,7 +12,7 @@ export default function WebsitesPage() {
     <main>
       <PageIntroHero
         icon={<Cursor />}
-        sectionIntroText='Product 03 of 03'
+        sectionIntroText='Custom Built Website'
         heading='A website that closes the deal'
         headingAccent='after you make the call'
         subheading='$499/month · Everything included · No setup fee · Cancel anytime'
