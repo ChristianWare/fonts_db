@@ -50,7 +50,7 @@ export default function Nav({
   };
 
   const items = [
-    { text: "About", href: "/about" },
+    { text: "About Us", href: "/about" },
     { text: "Free Audit", href: "/audit" },
     { text: "Leads", href: "/leads" },
     { text: "Websites", href: "/websites" },

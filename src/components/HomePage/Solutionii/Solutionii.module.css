@@ -71,7 +71,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 7rem;
   border: 1px solid var(--lightGray);
   padding: 4rem;
   position: relative;
@@ -115,13 +115,15 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 2rem;
+  width: 100%;
 }
 
 .card h3 {
   background-color: var(--white);
   padding: 1rem;
+  border: 1px solid var(--lightGray);
+  width: 100%;
 }
-
 .label {
   font-size: 1.4rem;
   font-family: var(--GeistMono);
