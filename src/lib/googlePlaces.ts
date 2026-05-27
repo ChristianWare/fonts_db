@@ -255,4 +255,75 @@ export function extractDomain(websiteUrl: string | null): string | null {
   }
 }
 
+/**
+ * Whitelist of Google Places `types` that legitimately match each cold-lead
+ * category. After Google's free-text search returns results, we filter to
+ * only places whose `types` array overlaps with the whitelist for that
+ * category — drops false positives like movie theaters appearing under
+ * "casinos."
+ *
+ * Keys are normalized category strings: lowercase, spaces → underscores.
+ * Add a category here to enable filtering for it. Categories not listed
+ * pass through unfiltered (useful for fuzzy ones like "55+ communities"
+ * that don't have a reliable Google type).
+ */
+const CATEGORY_TYPE_WHITELIST: Record<string, string[]> = {
+  wedding_venues: ["wedding_venue", "event_venue", "banquet_hall"],
+  event_venues: ["event_venue", "banquet_hall", "convention_center"],
+  hotels: ["lodging", "hotel", "resort_hotel", "bed_and_breakfast"],
+  resort_spas: ["spa", "resort_hotel"],
+  law_firms: ["lawyer", "legal_services"],
+  country_clubs: ["country_club", "golf_course"],
+  funeral_homes: ["funeral_home"],
+  casinos: ["casino"],
+  // "55+ communities" — no reliable Google type, intentionally skipped.
+  // Google classifies these inconsistently (sometimes lodging, sometimes
+  // just establishment). Better to let text search work and accept some
+  // noise than over-filter and return nothing.
+};
+
+/**
+ * Filters Places API results to only those whose `types` array overlaps
+ * with the whitelist for the given category. Categories without a
+ * whitelist entry are returned unchanged.
+ *
+ * Logs dropped results to help tune the whitelist over time — watch
+ * server logs while testing each category to see what's being filtered
+ * out and whether the choices are correct.
+ */
+export function filterPlacesByCategory<
+  T extends { name: string; types: string[] },
+>(places: T[], category: string): { kept: T[]; droppedCount: number } {
+  const key = category.toLowerCase().replace(/\s+/g, "_");
+  const whitelist = CATEGORY_TYPE_WHITELIST[key];
+
+  // No whitelist for this category — pass everything through
+  if (!whitelist || whitelist.length === 0) {
+    return { kept: places, droppedCount: 0 };
+  }
+
+  const whitelistSet = new Set(whitelist);
+  const kept: T[] = [];
+  const dropped: T[] = [];
+
+  for (const p of places) {
+    if (p.types.some((t) => whitelistSet.has(t))) {
+      kept.push(p);
+    } else {
+      dropped.push(p);
+    }
+  }
+
+  if (dropped.length > 0) {
+    const samples = dropped
+      .slice(0, 3)
+      .map((p) => `${p.name} [${p.types.slice(0, 4).join(", ")}]`);
+    console.log(
+      `[googlePlaces] category="${category}": dropped ${dropped.length}/${places.length} results. Sample: ${samples.join(" | ")}`,
+    );
+  }
+
+  return { kept, droppedCount: dropped.length };
+}
+
 export { MILES_TO_METERS };

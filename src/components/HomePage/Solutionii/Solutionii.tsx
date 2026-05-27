@@ -12,6 +12,7 @@ type Card = {
   label: string;
   heading: string;
   body: string;
+  href: string;
 };
 
 const cards: Card[] = [
@@ -20,18 +21,21 @@ const cards: Card[] = [
     label: "Solution 1",
     heading: "Free Website Audit",
     body: "Enter your URL and get a full breakdown of what's costing you bookings — your Google visibility, site speed, mobile performance, and conversion gaps. Free, no email required, under a minute.",
+    href: "/audit",
   },
   {
     id: 8,
     label: "Solution 2",
     heading: "Lead Generation Tool",
     body: "Find the businesses in your market that generate consistent transportation demand. Every lead comes with a specific contact, verified email or phone, and an AI-written outreach script personalized to that business.",
+    href: "/leads",
   },
   {
     id: 9,
     label: "Solution 3",
     heading: "Custom Booking Website",
     body: "A professionally built booking website designed specifically for black car operators. Direct booking, no per-booking fees, flight tracking, driver portal, and payment processing — all included at one flat monthly rate.",
+    href: "/websites",
   },
 ];
 
@@ -124,7 +128,7 @@ export default function Solutionii() {
                       <p className={styles.body}>{x.body}</p>
                       <div className={styles.btnContainer}>
                         <Button
-                          href='/'
+                          href={x.href}
                           text='Learn more'
                           btnType='accent'
                           arrow

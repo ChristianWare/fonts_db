@@ -5,7 +5,7 @@ import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import detailStyles from "../../[id]/LeadDetailPage.module.css";
 import previewStyles from "../../preview/[placeId]/PreviewPage.module.css";
-import placeStyles from "./EventDetailPace.module.css"
+import placeStyles from "./EventDetailPace.module.css";
 import styles from "./EventDetailPage.module.css";
 import LeadSourceBar from "../../[id]/_components/LeadSourceBar";
 import NotesActivityFeed from "../../[id]/_components/NotesActivityFeed";
@@ -896,9 +896,29 @@ export default function EventDetailClient({
             </p>
           </section>
         </section>
+        <br />
+
+        {/* ABOUT THIS EVENT */}
+        {event.description && (
+          <div className={styles.introDetails}>
+            <h2 className={styles.sectionTitle}>About this event</h2>
+            <p className={styles.description}>{visibleDescription}</p>
+            {descriptionTruncated && (
+              <button
+                type='button'
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className={styles.descriptionToggle}
+              >
+                {showFullDescription ? "Show less" : "Show more"}
+              </button>
+            )}
+          </div>
+        )}
+
+        <br />
 
         <div className={styles.introDetails}>
-          <h2 className={styles.sectionTitle}>About this event</h2>
+          <h2 className={styles.sectionTitle}>Strategic Brief</h2>
           {lead.strategicBrief && !generatingBrief && (
             <div className={styles.accordionBodyActions}>
               <button

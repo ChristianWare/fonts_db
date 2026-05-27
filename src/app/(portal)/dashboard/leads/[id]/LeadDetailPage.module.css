@@ -249,7 +249,7 @@
 
 .briefBody {
   background-color: #3b82f60d;
-    border-left-color: #3b82f6;
+  border-left-color: #3b82f6;
 }
 
 .reviewBody {
@@ -325,6 +325,7 @@
   padding: 4rem;
   border: 1px dashed var(--lightGray);
   align-items: flex-start;
+  margin-top: 2rem;
 }
 
 .emptyDesc {

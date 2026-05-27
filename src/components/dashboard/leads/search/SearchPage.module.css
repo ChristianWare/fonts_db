@@ -862,16 +862,21 @@
 /* Mobile dropdown swap — ≤568px */
 @media screen and (max-width: 568px) {
   .pillRow {
-    display: none;
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
+  .pill {
+    padding: 3rem 2rem;
+  }
+  /* 
   .mobileSelect {
     display: block;
-  }
+  } */
 
-  .mobileMultiSelect {
+  /* .mobileMultiSelect {
     display: block;
-  }
+  } */
 
   .mobileHint {
     display: block;

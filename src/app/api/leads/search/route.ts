@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { after } from "next/server";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
-import { searchPlaces, geocodeCity } from "@/lib/googlePlaces";
+import {
+  searchPlaces,
+  geocodeCity,
+  filterPlacesByCategory,
+} from "@/lib/googlePlaces";
 import {
   normalizeMarketKey,
   checkScrapeQuota,
@@ -492,9 +496,13 @@ export async function POST(req: NextRequest) {
             lng: lng!,
             radiusMiles,
             maxPages: MAX_PAGES_PER_CATEGORY,
-          }).then((places) =>
-            places.map((p) => ({ ...p, category: cat }) as EnrichedPlace),
-          ),
+          }).then((places) => {
+            // Filter out results whose Google Places `types` don't match
+            // the category. Drops false positives like movie theaters
+            // appearing under "casinos." See googlePlaces.ts for whitelist.
+            const { kept } = filterPlacesByCategory(places, cat);
+            return kept.map((p) => ({ ...p, category: cat }) as EnrichedPlace);
+          }),
         ),
       );
 
