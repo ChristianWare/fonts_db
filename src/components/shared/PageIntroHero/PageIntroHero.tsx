@@ -1,12 +1,28 @@
 "use client";
 
 import LayoutWrapper from "@/components/shared/LayoutWrapper";
-import styles from "./WebsitesPageHero.module.css";
+import styles from "./PageIntroHero.module.css";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
-import Cursor from "@/components/shared/icons/Cursor/Cursor";
+import { ReactNode } from "react";
 
-export default function WebsitesPageHero() {
+interface PageIntroHeroProps {
+  icon: ReactNode;
+  sectionIntroText: string;
+  heading: string;
+  headingAccent: string;
+  subheading: string;
+  copy: string;
+}
+
+export default function PageIntroHero({
+  icon,
+  sectionIntroText,
+  heading,
+  headingAccent,
+  subheading,
+  copy,
+}: PageIntroHeroProps) {
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
@@ -22,36 +38,23 @@ export default function WebsitesPageHero() {
             <div className={styles.top}>
               <div className={styles.topLeft}>
                 <div className={styles.imagContainer}>
-                  <Cursor className={styles.icon} />
+                  <div className={styles.iconWrapper}>{icon}</div>
                 </div>
               </div>
               <div className={styles.topRight}>
                 <SectionIntro
-                  text='Product 03 of 03'
+                  text={sectionIntroText}
                   background='bgBlack'
                   color='colorWhite'
                 />
                 <h1 className={`${styles.heading} h2`}>
-                  A website that closes the deal{" "}
-                  <span className={styles.accent}>
-                    {" "}
-                    after you make the call
-                  </span>
+                  {heading}{" "}
+                  <span className={styles.accent}> {headingAccent}</span>
                 </h1>
 
-                <h3 className={`${styles.subheading} h6`}>
-                  $499/month · Everything included · No setup fee · Cancel
-                  anytime
-                </h3>
-                {/*  fixes it */}
-                <p className={styles.copy}>
-                  We didn&apos;t build a generic tool and point it at the
-                  transportation industry. Every product was built from the
-                  ground up for black car operators specifically — the way you
-                  work, the clients you chase, and the problems you actually
-                  face. Each one works on its own, but they&apos;re designed to
-                  work together.
-                </p>
+                <h3 className={`${styles.subheading} h6`}>{subheading}</h3>
+
+                <p className={styles.copy}>{copy}</p>
               </div>
             </div>
           </div>

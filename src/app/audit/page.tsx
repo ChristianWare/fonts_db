@@ -7,6 +7,8 @@ import AuditHowItWorks from "@/components/AuditPage/AuditHowItWorks/AuditHowItWo
 import AuditParallaxResults from "@/components/AuditPage/AuditParallaxResults/AuditParallaxResults";
 import AuditExpectations from "@/components/AuditPage/AuditExpectations/AuditExpectations";
 import Faq from "@/components/HomePage/Faq/Faq";
+import AuditTool from "@/components/shared/icons/AuditTool/AuditTool";
+import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -115,6 +117,14 @@ export default function AuditPage() {
 
   return (
     <main className={styles.container}>
+      <PageIntroHero
+        icon={<AuditTool />}
+        sectionIntroText='Product 01 of 03'
+        heading="Find out exactly what's costing you bookings"
+        headingAccent='in 60 seconds or less.'
+        subheading='$0 · Detailed Report sent to your inbox'
+        copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
+      />
       <AuditHero
         state={modalState}
         scanStep={scanStep}
