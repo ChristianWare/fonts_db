@@ -8,7 +8,7 @@
   } */
 
 .container {
-  padding: 3rem 0rem;
+  padding: 3rem 0;
   background-color: transparent;
   border-left: 1px solid var(--lightGray);
   border-right: 1px solid var(--lightGray);
@@ -22,6 +22,11 @@
   border-right: 1px solid var(--blackii);
 }
 
+.borderDarkii {
+  border-left: 1px solid var(--lightGrayV);
+  border-right: 1px solid var(--lightGrayV);
+}
+
 /* @media screen and (max-width: 870px) {
   .container {
     padding: 3rem 0rem;
@@ -30,6 +35,6 @@
 
 @media screen and (max-width: 568px) {
   .container {
-    padding: 4rem 0rem;
+    padding: 4rem 0;
   }
 }

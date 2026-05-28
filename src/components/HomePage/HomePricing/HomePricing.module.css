@@ -1,0 +1,290 @@
+.container {
+  background-color: var(--black);
+  border-bottom: 1px solid var(--lightGrayV);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  padding-top: 10rem;
+  padding-bottom: 15rem;
+}
+
+.top {
+  padding: 10rem 5rem;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border-top: 1px solid var(--lightGrayV);
+}
+
+.heading {
+  text-align: center;
+  max-width: 1068px;
+  color: var(--white);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.copy {
+  max-width: 800px;
+  text-align: center;
+  color: var(--textii);
+}
+
+.bottom {
+  padding: 2rem;
+}
+
+.mapDataContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+}
+
+.card:nth-child(1) {
+  margin-top: 0;
+}
+
+.card:nth-child(2) {
+  margin-top: 10rem;
+}
+
+.card:nth-child(3) {
+  margin-top: 20rem;
+}
+
+/* ── Card base ── */
+.card {
+  width: 100%;
+  min-height: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3rem;
+  border: 1px solid var(--lightGrayV);
+  position: relative;
+  background-color: var(--black);
+  will-change: transform;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent);
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent);
+  z-index: 1;
+  top: 0;
+  right: 0;
+}
+
+.cardTop {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  width: 100%;
+  border-bottom: 1px solid var(--lightGrayV);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+}
+
+.label {
+  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  color: var(--accent);
+  background-color: var(--black);
+  border: 1px solid var(--lightGrayV);
+  padding: 6px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.popularBadge {
+  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 6px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.cardName {
+  color: var(--white);
+  background-color: var(--black);
+  width: 100%;
+}
+
+.cardDesc {
+  color: var(--textii);
+  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.price {
+  color: var(--white);
+}
+
+.priceSuffix {
+  font-size: 1.6rem;
+  color: var(--textii);
+  margin-left: 4px;
+}
+
+.cardBottom {
+  padding: 4rem;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.feature {
+  position: relative;
+  padding-left: 2rem;
+  color: var(--white);
+}
+
+.feature::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent);
+}
+
+.btnFootnoteContainer {
+  padding: 4rem;
+  margin-top: 5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+.btnContainer {
+  width: 100%;
+}
+
+.footnote {
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  color: var(--textii);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+@media screen and (max-width: 1268px) {
+  .top {
+    padding: 10rem 3rem;
+    padding-bottom: 0;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    margin-top: 0;
+  }
+
+  .card:nth-child(3) {
+    grid-column: span 2;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top {
+    padding: 5rem 2rem;
+    padding-bottom: 0;
+  }
+
+  .copy {
+    max-width: 500px;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: 1fr;
+    gap: 5rem;
+  }
+
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    margin-top: 0;
+  }
+
+  .card {
+    min-height: 400px;
+    box-shadow: 0 7px 12px rgb(0 0 0 / 40%);
+  }
+
+  .card:nth-child(3) {
+    grid-column: span 1;
+  }
+
+  .cardTop,
+  .cardBottom,
+  .btnFootnoteContainer {
+    padding: 3rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .content {
+    padding-bottom: 5rem;
+  }
+
+  .cardTop,
+  .cardBottom,
+  .btnFootnoteContainer {
+    padding: 2rem;
+  }
+}

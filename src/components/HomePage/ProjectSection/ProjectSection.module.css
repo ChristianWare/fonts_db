@@ -92,7 +92,8 @@
   color: var(--black);
   opacity: 0.7;
   text-transform: uppercase;
-  font-size: 1.2rem;
+  font-size: 12px;
+  text-align: center;
   letter-spacing: 0.5px;
 }
 
@@ -116,13 +117,17 @@
 
 @media screen and (max-width: 1268px) {
   .content {
-    padding: 10rem 3rem;
+    padding: 10rem 0;
   }
 
   .heading {
     font-size: 5.2rem;
     letter-spacing: -1.6px;
     white-space: wrap;
+  }
+
+  .leftTop {
+    padding: 0 4rem;
   }
 }
 
@@ -143,12 +148,16 @@
 
 @media screen and (max-width: 768px) {
   .content {
-    padding: 5rem 2rem;
+    padding: 5rem 0;
   }
 
   .heading {
     font-size: 3.8rem;
     letter-spacing: -1.1px;
+  }
+
+  .leftTop {
+    padding: 0 3rem;
   }
 }
 
@@ -157,9 +166,12 @@
     gap: 3rem;
   }
 
+   .leftTop {
+    padding: 0 2rem;
+  }
+
   .btnContainer {
     display: grid;
-
     width: 100%;
   }
 }

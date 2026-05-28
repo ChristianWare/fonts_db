@@ -95,6 +95,7 @@
 
 .qaContainer {
   padding: 2rem;
+  padding-left: 5rem;
   border-bottom: 1px solid var(--lightGray);
   width: 100%;
   cursor: pointer;
@@ -115,10 +116,6 @@
 .answerContainer.show {
   max-height: 350px;
 }
-
-/* .qaContainer.show {
-  background-color: var(--black);
-} */
 
 .headingArrowContainer {
   display: grid;
@@ -169,6 +166,8 @@
   letter-spacing: 0.6px;
   text-transform: uppercase;
   font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .answer {
@@ -234,6 +233,10 @@
   .bottom {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .qaContainer {
+    padding-left: 2rem;
   }
 }
 
