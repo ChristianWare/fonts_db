@@ -994,7 +994,6 @@
   transition: all 0.3s ease;
 }
 
-
 .accordionSection:first-child .accordionHeader {
   padding-top: 0;
 }
@@ -1155,7 +1154,7 @@
 .addressTicketPriceContainer {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 2rem;
+  gap: 2rem;
 }
 
 .sectionTitle {

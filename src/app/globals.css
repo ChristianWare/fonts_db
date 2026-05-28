@@ -1,8 +1,9 @@
+/* stylelint-disable comment-empty-line-before */
 :root {
   --black: #0f0f0f;
   --lightBlack: #8f7f7f;
   --blackii: #b49114;
-  --white: #ffffff;
+  --white: #fff;
   --gray: #ffffff80;
   --grayii: #ebebeb;
   --grayiii: gray;
@@ -38,8 +39,8 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   background: transparent;
 }
 
@@ -199,6 +200,7 @@ h3,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 h5,
 .h5 {
   font-size: 3.2rem;

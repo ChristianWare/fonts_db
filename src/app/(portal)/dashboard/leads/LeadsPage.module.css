@@ -52,7 +52,9 @@
   font-size: 3rem;
   text-transform: uppercase;
   color: var(--white);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -60,7 +62,9 @@
 .marketRadius {
   font-family: var(--RobotoFlexii);
   color: var(--lightGray);
-  font-variation-settings: "wght" 400, "wdth" 81;
+  font-variation-settings:
+    "wght" 400,
+    "wdth" 81;
 }
 
 .marketCta {
@@ -125,7 +129,9 @@
   font-size: 3rem;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -172,7 +178,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 4rem;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   line-height: 1;
 }
 
@@ -211,7 +219,7 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   margin-bottom: 2.5rem;
-   padding: 4rem;
+  padding: 4rem;
   border: 1px solid var(--lightBlack);
   background-color: var(--white);
   border-left: 6px solid var(--accent);
@@ -231,7 +239,9 @@
   font-size: 2.6rem;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -259,7 +269,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 2rem;
   color: var(--text);
-  font-variation-settings: "wght" 500, "wdth" 81;
+  font-variation-settings:
+    "wght" 500,
+    "wdth" 81;
   padding: 2rem 0;
 }
 
@@ -312,7 +324,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 1.8rem;
   color: var(--black);
-  font-variation-settings: "wght" 600, "wdth" 81;
+  font-variation-settings:
+    "wght" 600,
+    "wdth" 81;
 }
 
 .attentionMeta {
@@ -337,7 +351,7 @@
 .pipelineGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 2rem;
+  gap: 2rem;
   /* border: 1px solid var(--grayiii); */
 }
 
@@ -369,7 +383,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 4.5rem;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   line-height: 1;
   transition: color 0.15s ease;
 }
@@ -482,7 +498,9 @@
   font-size: 2.2rem;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.02em;
   line-height: 1;
 }

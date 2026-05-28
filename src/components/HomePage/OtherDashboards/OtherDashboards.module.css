@@ -13,7 +13,7 @@
   padding-bottom: 5rem;
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-gap: 5rem;
+  gap: 5rem;
 }
 
 .icon {
@@ -51,7 +51,7 @@
 .mapDataContainer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 2rem;
+  gap: 2rem;
 }
 
 .card {

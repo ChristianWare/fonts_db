@@ -6,7 +6,7 @@
   padding: 10rem 5rem;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 5rem;
+  gap: 5rem;
 }
 
 .heading {
@@ -135,7 +135,7 @@
 
   .bottom {
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 2rem;
+    gap: 2rem;
   }
 
   .bottomLeft {

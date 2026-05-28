@@ -36,7 +36,7 @@
 .copyContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10rem;
+  gap: 10rem;
 }
 
 .bottom {
@@ -115,13 +115,12 @@
 @media screen and (max-width: 1068px) {
   .content {
     padding: 3rem;
-        padding-bottom: 10rem;
-
+    padding-bottom: 10rem;
   }
 
   .copyContainer {
     grid-template-columns: 1fr;
-    grid-gap: 3rem;
+    gap: 3rem;
   }
 }
 

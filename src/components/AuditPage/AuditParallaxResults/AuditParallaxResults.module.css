@@ -30,7 +30,7 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 5rem;
+  gap: 5rem;
   padding: 2rem;
   height: 100%;
 }
@@ -67,7 +67,7 @@
 .bottom {
   display: grid;
   grid-template-columns: 1.5fr 2fr;
-  grid-gap: 3rem;
+  gap: 3rem;
 }
 
 .copy {
@@ -114,7 +114,7 @@
 
 @media screen and (max-width: 1268px) {
   .contentChildren {
-    grid-gap: 2rem;
+    gap: 2rem;
   }
 
   .heading,
@@ -126,7 +126,7 @@
 
   .bottom {
     grid-template-columns: 1fr;
-    grid-gap: 2rem;
+    gap: 2rem;
   }
 
   .imgContainer {
@@ -171,7 +171,6 @@
 
   .copy {
     text-align: left;
-
   }
 
   .title {

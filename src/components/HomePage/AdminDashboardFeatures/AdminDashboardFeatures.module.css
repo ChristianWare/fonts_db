@@ -34,7 +34,7 @@
 .bottom {
   display: grid;
   grid-template-columns: 2fr 4fr;
-  grid-gap: 4rem;
+  gap: 4rem;
   align-items: start;
 }
 
@@ -319,7 +319,6 @@
 
   .projectText {
     max-width: 100%;
-    
   }
 
   .projectTitle {
@@ -329,13 +328,12 @@
   }
 }
 
-
 @media screen and (max-width: 480px) {
   .projectText {
     padding: 0rem;
   }
-  
-  .projectTitle  {
+
+  .projectTitle {
     font-size: 7vw;
   }
-} 
+}

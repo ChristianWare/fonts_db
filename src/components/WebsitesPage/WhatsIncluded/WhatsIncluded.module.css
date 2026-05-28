@@ -9,7 +9,7 @@
   padding: 7rem 5rem;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  grid-gap: 5rem;
+  gap: 5rem;
 }
 
 .topLeft {
@@ -36,7 +36,7 @@
   border-top: 1px solid var(--lightGray);
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 2rem;
+  gap: 2rem;
 }
 
 .card {
@@ -92,7 +92,7 @@
 .bulletList {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 0.8rem;
+  gap: 0.8rem;
   margin-left: 2rem;
   list-style: none;
 }

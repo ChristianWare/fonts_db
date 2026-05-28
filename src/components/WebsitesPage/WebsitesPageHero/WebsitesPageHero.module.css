@@ -68,7 +68,7 @@
   padding-bottom: 5rem;
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-gap: 5rem;
+  gap: 5rem;
 }
 
 .icon {
@@ -86,8 +86,8 @@
 }
 
 .heading {
-    border-bottom: 1px solid var(--blackii);
-    padding-bottom: 1rem;
+  border-bottom: 1px solid var(--blackii);
+  padding-bottom: 1rem;
 }
 
 .accent {

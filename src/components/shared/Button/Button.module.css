@@ -1,9 +1,6 @@
 .btn {
   position: relative;
   overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
   gap: 5rem;
   padding: 2rem 2.4rem;
   font-family: var(--GeistMono);
@@ -22,6 +19,7 @@
 .btn:visited {
   color: inherit;
 }
+
 .accent,
 .accent:link,
 .accent:visited {
@@ -44,6 +42,17 @@
 .black:hover .arrow {
   background-color: var(--white);
   color: var(--black);
+}
+
+.gray,
+.gray:link,
+.gray:visited {
+  background-color: var(--lightGrayii);
+  color: var(--black);
+}
+
+.gray:hover {
+  background-color: var(--lightGray);
 }
 
 .white,

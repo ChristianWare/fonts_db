@@ -7,6 +7,7 @@ import ContactSection from "@/components/HomePage/ContactSection/ContactSection"
 import Chris from "@/components/HomePage/Chris/Chris";
 import Solutionii from "@/components/HomePage/Solutionii/Solutionii";
 import ParallaxArea from "@/components/HomePage/ParallaxArea/ParallaxArea";
+import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
 
 export default function HomePage() {
   return (
@@ -16,6 +17,7 @@ export default function HomePage() {
       <Solutionii />
       <Solution />
       <ProjectSection />
+      <PricingPreview />
       <Chris />
       <ParallaxArea />
       <Faq />
