@@ -149,9 +149,7 @@
   font-family: var(--GeistMono);
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  font-weight: 700;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+ 
 }
 
 .price {
