@@ -23,6 +23,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--black);
 }
 

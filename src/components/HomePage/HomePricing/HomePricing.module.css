@@ -29,6 +29,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--accent);
 }
 
@@ -149,7 +150,6 @@
   font-family: var(--GeistMono);
   letter-spacing: 0.6px;
   text-transform: uppercase;
- 
 }
 
 .price {

@@ -17,6 +17,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--accent);
 }
 

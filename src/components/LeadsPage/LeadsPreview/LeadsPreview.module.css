@@ -36,6 +36,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--black);
 }
 
@@ -143,7 +144,7 @@
   .leftTop {
     padding: 0 4rem;
   }
-  
+
   .heading {
     max-width: 700px;
   }

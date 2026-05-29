@@ -91,6 +91,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--accent);
 }
 
@@ -107,6 +108,7 @@
 }
 
 .accent {
+  font-family: inherit;
   color: var(--black);
 }
 
