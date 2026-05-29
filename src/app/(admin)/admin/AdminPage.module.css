@@ -17,10 +17,26 @@
   background-color: var(--black);
   z-index: 2;
 }
-.dot1 { top: 0; left: 0; }
-.dot2 { top: 0; right: 0; }
-.dot3 { bottom: 0; left: 0; }
-.dot4 { bottom: 0; right: 0; }
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+}
 
 /* ── Hero ── */
 .hero {
@@ -446,6 +462,6 @@
   }
 
   .pipelineHeader {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
 }

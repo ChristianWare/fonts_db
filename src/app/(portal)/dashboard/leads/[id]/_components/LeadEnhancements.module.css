@@ -5,7 +5,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 1.5rem 3rem;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgb(0 0 0 / 4%);
   border: 1px solid var(--grayii);
   flex-wrap: wrap;
 }

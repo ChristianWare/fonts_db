@@ -96,7 +96,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 2rem 2rem;
+  padding: 2rem;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition:
@@ -1082,14 +1082,14 @@
   }
 
   .trackerSectionHeader {
-    padding: 2rem 2rem;
+    padding: 2rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
 
   .stage {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
 
   .connector {
@@ -1097,7 +1097,7 @@
   }
 
   .liveToggleRow {
-    padding: 2rem 2rem;
+    padding: 2rem;
     flex-direction: column;
     align-items: flex-start;
   }

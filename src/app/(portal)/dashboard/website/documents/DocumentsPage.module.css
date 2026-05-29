@@ -147,7 +147,6 @@
   font-size: 1.6rem;
   letter-spacing: 0.04em;
   color: var(--black);
-
 }
 
 .docMeta {
@@ -290,9 +289,9 @@
   }
 
   .signatureRecordHeading {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
   .signatureEntry {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
 }

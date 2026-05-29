@@ -490,7 +490,7 @@
     padding: 2.4rem 2rem;
   }
   .navRow {
-    padding: 2rem 2rem;
+    padding: 2rem;
     flex-direction: column;
     gap: 1.2rem;
     align-items: stretch;
@@ -514,7 +514,7 @@
   }
 
   .readOnlySectionTitle {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
   .readOnlyRow {
     padding: 1.4rem 2rem;

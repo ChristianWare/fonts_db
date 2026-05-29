@@ -421,7 +421,7 @@
   }
 
   .trackerSectionHeader {
-    padding: 2rem 2rem;
+    padding: 2rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.8rem;
@@ -443,7 +443,7 @@
   .quickLink {
     border-right: none;
     border-bottom: 1px solid var(--grayii);
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
 
   .quickLink:last-child {

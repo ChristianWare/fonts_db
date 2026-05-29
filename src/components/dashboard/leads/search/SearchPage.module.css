@@ -223,7 +223,7 @@
 }
 
 .leadTypeExplanation_cold {
-  background-color: rgba(59, 130, 246, 0.08);
+  background-color: rgb(59 130 246 / 8%);
   border-left-color: #3b82f6;
 }
 
@@ -573,7 +573,7 @@
 /* Warning card */
 .warningCard {
   padding: 3rem;
-  background-color: rgba(245, 158, 11, 0.08);
+  background-color: rgb(245 158 11 / 8%);
   border-left: 6px solid #f59e0b;
 }
 

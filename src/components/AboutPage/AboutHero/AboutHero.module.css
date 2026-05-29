@@ -114,14 +114,7 @@
 
 .copy,
 .span {
-  /* color: var(--text);
-  font-size: 2.2rem;
-  letter-spacing: -0.7px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  /* font-family: var(--GeistMono); */
   letter-spacing: normal;
-  /* text-transform: uppercase; */
   color: var(--black);
 }
 
@@ -195,7 +188,7 @@
   }
 
   .overlay {
-    background: rgba(0, 0, 0, 0);
+    background: rgb(0 0 0 / 0%);
   }
 
   .btnContainer {

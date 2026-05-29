@@ -261,22 +261,28 @@
   .header {
     padding: 3rem 2rem;
   }
+
   .heading {
     font-size: 3.6rem;
   }
+
   .previewHeader {
-    padding: 2rem 2rem;
+    padding: 2rem;
   }
+
   .signCard {
     padding: 3rem 2rem;
   }
+
   .legalNote {
     padding: 3rem 2rem;
   }
+
   .signActions {
     flex-direction: column;
     align-items: stretch;
   }
+
   .cancelBtn,
   .signBtn {
     text-align: center;
