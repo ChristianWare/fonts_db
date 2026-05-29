@@ -2,7 +2,7 @@ import styles from "./WhatsIncluded.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import Image from "next/image";
-import { whatsIncludedData } from "@/lib/data";
+import { whatsInDashboardData } from "@/lib/data";
 
 export default function WhatsIncluded() {
   return (
@@ -36,7 +36,7 @@ export default function WhatsIncluded() {
             </div>
             <div className={styles.bottom}>
               <div className={styles.mapDataContainer}>
-                {whatsIncludedData.map((x) => (
+                {whatsInDashboardData.map((x) => (
                   <div className={styles.card} key={x.id}>
                     <div className={styles.cardLeft}>
                       <div className={styles.cardLeftTop}>

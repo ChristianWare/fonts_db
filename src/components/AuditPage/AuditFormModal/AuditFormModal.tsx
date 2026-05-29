@@ -51,6 +51,8 @@ export default function AuditFormModal({ onSubmit, error }: Props) {
       onSubmit={handleSubmit(onFormSubmit)}
       aria-busy={loading}
     >
+      <span className={styles.pulseRing} aria-hidden='true' />
+
       <div className={styles.formHeading}>
         <h2 className={styles.heading}>Run Your Free Audit Here</h2>
         <p className={styles.subheading}>

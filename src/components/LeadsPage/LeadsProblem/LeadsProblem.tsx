@@ -33,11 +33,7 @@ export default function LeadsProblem() {
                 you&apos;re competing on price for a job that should have been
                 yours from the first call.
               </p>
-              <p className={styles.body}>
-                The problem isn&apos;t that the work isn&apos;t there. The work is always
-                there. The problem is that nobody is watching for it on your
-                behalf.
-              </p>
+             
               <p className={styles.copy}>
                 The work is always there. <br />
                 The problem is that nobody is <br />

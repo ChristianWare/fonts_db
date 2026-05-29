@@ -1246,65 +1246,7 @@ export default function PlacePageClient({
             <RecommendedMoveCard suggestion={nextMove} />
           </AccordionSection>
 
-          {/* REVIEW INTELLIGENCE */}
-          <AccordionSection
-            sectionKey='reviewIntel'
-            title='Review Intelligence'
-            isOpen={openSection === "reviewIntel"}
-            onToggle={toggleSection}
-          >
-            {lead.reviewIntelligence && !generatingReviews && (
-              <div
-                className={placeStyles.accordionBodyActions}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: "2rem",
-                }}
-              >
-                <button
-                  type='button'
-                  onClick={() =>
-                    generateAi("review-intelligence", "reviews", true)
-                  }
-                  className={detailStyles.regenerateBtn}
-                  style={{ marginTop: "2rem" }}
-                >
-                  Regenerate
-                </button>
-              </div>
-            )}
-
-            {generatingReviews ? (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>✨ Analyzing reviews…</p>
-              </div>
-            ) : lead.reviewIntelligence ? (
-              <div className={detailStyles.reviewBody}>
-                {lead.reviewIntelligence.split("\n\n").map((para, i) => (
-                  <p key={i} className={detailStyles.briefParagraph}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <div className={detailStyles.emptyBlock}>
-                <p className={detailStyles.emptyDesc}>
-                  Review analysis failed. Try again.
-                </p>
-                <button
-                  type='button'
-                  onClick={() =>
-                    generateAi("review-intelligence", "reviews", true)
-                  }
-                  className={detailStyles.generateBtn}
-                >
-                  Retry
-                </button>
-              </div>
-            )}
-          </AccordionSection>
+        
 
           {/* WHO TO CONTACT */}
           <AccordionSection

@@ -4,10 +4,10 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./PageIntroHero.module.css";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
-import { ReactNode } from "react";
+import Image, { StaticImageData } from "next/image";
 
 interface PageIntroHeroProps {
-  icon: ReactNode;
+  src: StaticImageData;
   sectionIntroText: string;
   heading: string;
   headingAccent: string;
@@ -16,7 +16,7 @@ interface PageIntroHeroProps {
 }
 
 export default function PageIntroHero({
-  icon,
+  src,
   sectionIntroText,
   heading,
   headingAccent,
@@ -25,7 +25,7 @@ export default function PageIntroHero({
 }: PageIntroHeroProps) {
   return (
     <section className={styles.container}>
-      <LayoutWrapper borderDark>
+      <LayoutWrapper >
         <div className={styles.parent}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -36,23 +36,25 @@ export default function PageIntroHero({
               <Nav variant='black' hamburgerColor='hamburgerBlack' />{" "}
             </div>
             <div className={styles.top}>
-              <div className={styles.topLeft}>
-                <div className={styles.imagContainer}>
-                  <div className={styles.iconWrapper}>{icon}</div>
-                </div>
+              <div className={styles.imgContainer}>
+                <Image src={src} alt='Audit Hero' fill className={styles.img} />
               </div>
               <div className={styles.topRight}>
-                <SectionIntro
-                  text={sectionIntroText}
-                  background='bgBlack'
-                  color='colorWhite'
-                />
-                <h1 className={`${styles.heading} h2`}>
-                  {heading}{" "}
-                  <span className={styles.accent}> {headingAccent}</span>
-                </h1>
-
-                <h3 className={`${styles.subheading} h6`}>{subheading}</h3>
+                <div className={styles.topRightA}>
+                  <SectionIntro
+                    text={sectionIntroText}
+                    background='bgBlack'
+                    color='colorWhite'
+                  />
+                  <h1 className={`${styles.heading} h2ii`}>
+                    {heading}{" "}
+                    <span className={`${styles.accent} h2ii`}>
+                      {" "}
+                      {headingAccent}
+                    </span>
+                  </h1>
+                  <h3 className={`${styles.subheading} h6`}>{subheading}</h3>
+                </div>
 
                 <p className={styles.copy}>{copy}</p>
               </div>

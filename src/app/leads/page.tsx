@@ -1,18 +1,16 @@
-import Features from "@/components/HomePage/Features/Features";
-import HowItWorks from "@/components/HomePage/HowItWorks/HowItWorks";
-import OtherDashboards from "@/components/HomePage/OtherDashboards/OtherDashboards";
-import Outgrow from "@/components/HomePage/Outgrow/Outgrow";
+import Faq from "@/components/HomePage/Faq/Faq";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
 import LeadsHowItWorks from "@/components/LeadsPage/LeadsHowItWorks/LeadsHowItWorks";
 import LeadsProblem from "@/components/LeadsPage/LeadsProblem/LeadsProblem";
-import LightBulbii from "@/components/shared/icons/LightBulbii/LightBulbii";
+import Img1 from "../../../public/images/leads.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
+import WhatsIncluded from "@/components/WebsitesPage/WhatsIncluded/WhatsIncluded";
 
 export default function LeadsPage() {
   return (
     <main>
       <PageIntroHero
-        icon={<LightBulbii />}
+        src={Img1}
         sectionIntroText='Leads Tool'
         heading='Find your next client'
         headingAccent='before your competitor does'
@@ -21,11 +19,9 @@ export default function LeadsPage() {
       />
       <LeadsProblem />
       <LeadsHowItWorks />
-      <Features />
-      <HowItWorks />
-      <OtherDashboards />
-      <Outgrow />
+      <WhatsIncluded />
       <PricingPreview />
+      <Faq />
     </main>
   );
 }

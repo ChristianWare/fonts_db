@@ -72,6 +72,7 @@
 
 .revealText {
   color: var(--accent);
+  font-family: inherit;
   -webkit-text-stroke: 1px var(--lightGray);
   line-height: 1;
 }

@@ -2,7 +2,6 @@ import Image, { StaticImageData } from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import styles from "./OtherDashboards.module.css";
-// import LogoImg from "../../../../../public/logos/fnf_logo_black.png";
 import DriverImg from "../../../../public/images/WhyWeExist.jpg";
 import CustomerImg from "../../../../public/images/brandStoryii.jpg";
 import CorporateImg from "../../../../public/images/whydb.jpg";
@@ -21,7 +20,7 @@ const cards: Card[] = [
   {
     id: 7,
     label: "For your drivers",
-    heading: "Your drivers always know where to be.",
+    heading: "Your drivers will always know where to be and when.",
     body: "No more calls to relay trip details. Every driver gets their own portal — full schedule, passenger info, real-time updates, and earnings tracking, all from their phone.",
     highlights: [
       "Full trip schedule with pickup, drop-off, passenger, and flight info",
@@ -49,7 +48,7 @@ const cards: Card[] = [
   {
     id: 9,
     label: "Built for business clients",
-    heading: "Land corporate contracts. Keep them.",
+    heading: "Land corporate contracts/clients and Keep them.",
     body: "Corporate clients want centralized billing, employee controls, and a booking experience that feels built for business. Your platform gives them exactly that — from the first application to the hundredth ride.",
     highlights: [
       "Online application and one-click approval from your admin dashboard",
@@ -99,7 +98,7 @@ export default function OtherDashboards() {
                   <div className={styles.card} key={x.id}>
                     <div className={styles.cardTop}>
                       <span className={styles.label}>{x.label}</span>
-                      <h3 className={styles.heading}>{x.heading}</h3>
+                      <h3 className={`${styles.headingii} h5`}>{x.heading}</h3>
                     </div>
                     <div className={styles.cardMiddle}>
                       <Image

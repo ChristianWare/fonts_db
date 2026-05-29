@@ -6,6 +6,47 @@
   position: relative;
 }
 
+.form::before,
+.form::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--accent);
+  z-index: -1;
+  pointer-events: none;
+  transform: scale(1);
+  animation: form-pulse 2s infinite ease-in-out;
+}
+
+.form::after {
+  border-width: 3px;
+  animation-delay: 1s; /* staggered second ring */
+}
+
+@keyframes form-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.08); /* subtle outward push — tune this */
+    opacity: 0;
+  }
+}
+
+.pulseRing {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 4px solid var(--accent);
+  z-index: -1;
+  pointer-events: none;
+  transform: scale(1);
+  animation: form-pulse 2s infinite ease-in-out;
+  animation-delay: 0.5s;
+}
+
 .formHeading {
   padding: 4rem 2rem 2rem;
   display: flex;
@@ -38,10 +79,6 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  /* gap: 2rem; */
-  /* padding: 2rem; */
-  /* margin: 2rem auto; */
-
   border: 1px solid var(--blackii);
 }
 
@@ -59,7 +96,6 @@
   text-transform: uppercase;
   color: var(--black);
   width: 100%;
-  /* border-top: 1px solid var(--blackii); */
   border-bottom: 1px solid var(--blackii);
 }
 
@@ -71,7 +107,6 @@
   color: var(--black);
   padding: 1rem 2rem;
   box-sizing: border-box;
-  /* font-family: var(--GeistMono); */
   font-size: 1.6rem;
   font-weight: bold;
   letter-spacing: normal;
@@ -102,7 +137,7 @@
   color: red !important;
   padding: 1rem 2rem;
   width: 100%;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgb(255 0 0 / 5%);
   border-bottom: 1px solid var(--blackii);
 }
 
@@ -146,9 +181,11 @@
   .heading {
     font-size: 2.6rem;
   }
+
   .formHeading {
     padding: 3rem 2rem 1.5rem;
   }
+
   .labelInputBox input {
     height: auto;
     padding: 1.4rem 2rem;

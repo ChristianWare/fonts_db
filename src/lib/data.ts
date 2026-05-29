@@ -246,6 +246,144 @@ export const whatsIncludedData = [
   // },
 ] as const;
 
+export const whatsInDashboardData = [
+  {
+    id: 1,
+    oneWordDesc: "Brief",
+    title: "Strategic Brief",
+    src: WIOne,
+    description:
+      "A 180-word memo on how to approach each specific prospect — based on the actual business, their category, the signals visible on their website, and current outreach strategy for that vertical. Not template advice. Tailored guidance for this exact lead.",
+    bullets: [
+      "The angle to lead with for this specific prospect",
+      "The contact most likely to actually convert",
+      "Category-specific outreach strategy",
+      "Red flags or weak signals worth knowing",
+      "Short enough to actually read before the call",
+    ],
+  },
+  {
+    id: 2,
+    oneWordDesc: "Recon",
+    title: "Competitive Landscape Check",
+    src: WITwo,
+    description:
+      "We read the prospect's website to detect whether they already have a transportation partner. If they do, we tell you who and how to position around them. If they don't, you know exactly what to lead with as their first transportation choice.",
+    bullets: [
+      "Automated read of the prospect's live website",
+      "Existing-partner detection with named vendor",
+      "Positioning angles when they already have one",
+      "Lead-with messaging when they don't",
+      "Bot-protection backup engine for blocked sites",
+    ],
+  },
+  {
+    id: 3,
+    oneWordDesc: "Contact",
+    title: "Decision-Maker Hypothesis",
+    src: WIThree,
+    description:
+      "The right person to call at this specific type of business. Wedding venues have event sales coordinators. Law firms have office managers. Casinos have VIP hosts. 55+ communities have lifestyle directors. We get that specific — and tell you why.",
+    bullets: [
+      "Primary contact identified by title and role",
+      "Secondary fallback contact for cold outreach",
+      "One-sentence reason each contact matters",
+      "Pre-built LinkedIn search for the right person",
+      "Different recommendations per business category",
+    ],
+  },
+  {
+    id: 4,
+    oneWordDesc: "Apollo",
+    title: "Verified Contact Lookup",
+    src: WIFour,
+    description:
+      "Once you save a lead, we automatically search Apollo for verified email addresses tied to the decision-maker we identified. Skip 20 minutes of LinkedIn detective work per prospect.",
+    bullets: [
+      "Apollo-verified email addresses",
+      "Direct LinkedIn profile links",
+      "Multiple contacts when the org has several",
+      "Triggered automatically the moment you save",
+      "Email verification status flagged per contact",
+    ],
+  },
+  {
+    id: 5,
+    oneWordDesc: "Scripts",
+    title: "Outreach Scripts, Four Formats",
+    src: WIFive,
+    description:
+      "Personalized email, cold call opener, LinkedIn DM, and SMS — each referencing this exact business or event. Copy, paste, adjust as you go. Specific to this lead, never a generic template.",
+    bullets: [
+      "Email — full subject line and body",
+      "Cold call — first 30 seconds nailed",
+      "LinkedIn DM — fits the platform's voice",
+      "SMS — short and conversion-focused",
+      "Regenerate any script in one click",
+    ],
+  },
+  {
+    id: 6,
+    oneWordDesc: "Pipeline",
+    title: "Pipeline & CRM Tracking",
+    src: WISix,
+    description:
+      "Every saved lead lives in your pipeline with status, notes, activity log, and snooze reminders. Track 100 active prospects at once without losing the plot.",
+    bullets: [
+      "Six pipeline stages — New through Won and Dead",
+      "Free-form notes attached to every lead",
+      "Activity log auto-populated from outreach",
+      "Snooze reminders to follow up on the right day",
+      "Filter and sort across your entire pipeline",
+    ],
+  },
+  {
+    id: 7,
+    oneWordDesc: "Score",
+    title: "AI Lead Scoring",
+    src: WISeven,
+    description:
+      "Every lead is scored 0–100 by an AI model tuned for black car operations. We tell you not just the score but the one-sentence reason behind it — so you know whether to prioritize, defer, or skip.",
+    bullets: [
+      "Score 0–100 on every lead",
+      "One-sentence reasoning attached to each score",
+      "Tuned for black car operator needs",
+      "Different scoring logic per temperature",
+      "Sort and filter by score in any view",
+    ],
+  },
+  {
+    id: 8,
+    oneWordDesc: "Markets",
+    title: "Search Any Market You Serve",
+    src: WIEight,
+    description:
+      "Your primary market is monitored automatically every day. If you serve multiple cities — or want to scope out a new one before committing — you can search beyond your home market within reason.",
+    bullets: [
+      "Primary market monitored every day",
+      "Search up to 5 new markets per day",
+      "Up to 15 new markets per month",
+      "Same enriched lead quality across markets",
+      "Caching prevents re-scraping the same market",
+    ],
+  },
+  {
+    id: 9,
+    oneWordDesc: "Timing",
+    title: "Outreach Window Recommendations",
+    src: WINine,
+    description:
+      "For every event-based lead, we tell you the optimal outreach window. Some events need a call today. Some are too early — reaching out now would actually hurt. We tell you which is which so you spend time on the leads ready to convert.",
+    bullets: [
+      "Optimal day-range for warm leads",
+      "Urgency level for hot leads",
+      "Status badge — too early, sweet spot, last chance",
+      "Recommendation specific to the event type",
+      "Updates automatically as the event date approaches",
+    ],
+  },
+] as const;
+
 export const FocusFeatures = [
   {
     id: 1,

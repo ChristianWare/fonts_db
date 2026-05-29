@@ -33,7 +33,7 @@
 .mapDataContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-row-gap: 10rem;
+  row-gap: 10rem;
 }
 
 .cardParent {
@@ -115,7 +115,7 @@
 
   .mapDataContainer {
     grid-template-columns: repeat(3, 1fr);
-    grid-row-gap: 5rem;
+    row-gap: 5rem;
   }
 }
 
@@ -136,5 +136,11 @@
 
   .cardParent:nth-child(even) {
     flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .step {
+    font-size: 16px;
   }
 }

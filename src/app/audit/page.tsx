@@ -3,11 +3,10 @@
 import { useState } from "react";
 import styles from "./audit.module.css";
 import AuditHero from "@/components/AuditPage/AuditHero/AuditHero";
-import AuditHowItWorks from "@/components/AuditPage/AuditHowItWorks/AuditHowItWorks";
 import AuditParallaxResults from "@/components/AuditPage/AuditParallaxResults/AuditParallaxResults";
 import AuditExpectations from "@/components/AuditPage/AuditExpectations/AuditExpectations";
 import Faq from "@/components/HomePage/Faq/Faq";
-import AuditTool from "@/components/shared/icons/AuditTool/AuditTool";
+import Img1 from "../../../public/images/audit.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -118,10 +117,10 @@ export default function AuditPage() {
   return (
     <main className={styles.container}>
       <PageIntroHero
-        icon={<AuditTool />}
+        src={Img1}
         sectionIntroText='Free Website Audit'
         heading="Find out exactly what's costing you bookings"
-        headingAccent='in 60 seconds. For Free. '
+        headingAccent='in 60 seconds or less, For Free. '
         subheading='$0 · Detailed Report sent to your inbox'
         copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
       />
@@ -134,9 +133,8 @@ export default function AuditPage() {
         onSubmit={handleSubmit}
         onReset={handleReset}
       />
-      <AuditHowItWorks />
-      <AuditParallaxResults />
       <AuditExpectations />
+      <AuditParallaxResults />
       <Faq />
     </main>
   );
