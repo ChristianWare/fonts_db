@@ -24,6 +24,11 @@ export default function Modal({ isOpen, onClose, children }: Props) {
     scrollRef.current = root.scrollTop;
     htmlPrev.current = html.getAttribute("style") ?? "";
 
+    // Reset modal scroll to top on every open so tall content
+    // doesn't reopen at the previously-scrolled position
+    const modalEl = document.getElementById("app-modal-dialog");
+    if (modalEl) modalEl.scrollTop = 0;
+
     html.style.overflow = "hidden";
     (html.style as any).scrollbarGutter = "stable";
 

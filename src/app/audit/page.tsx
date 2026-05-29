@@ -8,6 +8,7 @@ import AuditExpectations from "@/components/AuditPage/AuditExpectations/AuditExp
 import Faq from "@/components/HomePage/Faq/Faq";
 import Img1 from "../../../public/images/audit.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
+import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -135,6 +136,7 @@ export default function AuditPage() {
       />
       <AuditExpectations />
       <AuditParallaxResults />
+      <PricingPreview product='audit' />
       <Faq />
     </main>
   );

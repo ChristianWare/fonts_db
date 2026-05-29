@@ -24,7 +24,7 @@ export default function WebsitesPage() {
       <Features />
       <HowItWorks />
       <ProjectSection />
-      <PricingPreview />
+      <PricingPreview product='website' />
       <Faq />
     </main>
   );

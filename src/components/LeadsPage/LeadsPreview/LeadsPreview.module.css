@@ -32,8 +32,7 @@
 }
 
 .heading {
-  font-size: 7.2rem;
-  letter-spacing: -2.2px;
+  max-width: 500px;
 }
 
 .accent {
@@ -138,22 +137,15 @@
 @media screen and (max-width: 1268px) {
   .content {
     padding: 10rem 0;
-  }
-
-  .heading {
-    font-size: 5.2rem;
-    letter-spacing: -1.6px;
-    white-space: wrap;
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .leftTop {
     padding: 0 4rem;
   }
-}
-
-@media screen and (max-width: 968px) {
-  .content {
-    grid-template-columns: repeat(1, 1fr);
+  
+  .heading {
+    max-width: 700px;
   }
 
   .imgContainer {
@@ -169,11 +161,6 @@
 @media screen and (max-width: 768px) {
   .content {
     padding: 5rem 0;
-  }
-
-  .heading {
-    font-size: 3.8rem;
-    letter-spacing: -1.1px;
   }
 
   .leftTop {

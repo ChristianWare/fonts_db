@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import LayoutWrapper from "../../shared/LayoutWrapper";
-import styles from "./ProjectSection.module.css";
+import styles from "./LeadsPreview.module.css";
 import Image from "next/image";
-import NierHomePage from "../../../../public/images/nierHomePage.png";
+import DashboardPreview from "../../../../public/images/leadsPreview.png";
 import Button from "../../shared/Button/Button";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Modal from "@/components/shared/Modal/Modal";
 
-export default function ProjectSection() {
+export default function LeadsPreview() {
   const [modalOpen, setModalOpen] = useState(false);
 
   function openModal() {
@@ -28,64 +28,64 @@ export default function ProjectSection() {
             <div className={styles.left}>
               <div className={styles.leftTop}>
                 <SectionIntro
-                  text='Real results'
+                  text='Inside the tool'
                   background='bgBlack'
                   color='colorWhite'
                 />
-                <h2 className={styles.heading}>
-                  Built, deployed, and proven with a real operator.
+                <h2 className={`${styles.heading} h3`}>
+                  See what the leads tool actually looks like
                 </h2>
                 <div className={styles.imgContainerii}>
                   <Image
-                    src={NierHomePage}
-                    alt='Nier Transportation Home Page'
-                    title='Nier Transportation Home Page'
+                    src={DashboardPreview}
+                    alt='Leads dashboard preview'
+                    title='Leads dashboard preview'
                     fill
                     className={styles.imgRight}
                   />
                   <div className={styles.expandBtnWrap}>
                     <Button
                       text='Click to expand'
-                      btnType='accent'
+                      btnType='white'
                       arrow
                       onClick={openModal}
                     />
                   </div>
                 </div>
                 <p>
-                  Nier Transportation has been running black car and private
-                  transportation services in Phoenix since 2004. When they came
-                  to Fonts & Footers, they were managing bookings through
-                  third-party platforms; paying per-booking fees, operating
-                  under someone else&apos;s brand, and losing ownership of their
-                  customer relationships.
+                  The black car operators booking the most corporate work
+                  aren&apos;t waiting for referrals. They&apos;re working a
+                  pipeline of prospects every week — venues, hotels, law firms,
+                  casinos, and event coordinators they&apos;ve identified,
+                  scored, and personally pitched. The reality is that most
+                  operators don&apos;t have the time or research bandwidth to
+                  build that pipeline from scratch.
                   <br />
                   <br />
                   <span className={styles.accent}>
-                    We built them a fully custom direct booking platform from
-                    the ground up; branded entirely to Nier, on their own
-                    domain. Complete with a multi-step booking engine, admin
-                    dashboard, driver portal, customer portal, corporate account
-                    management, live flight tracking, and Stripe payment
-                    processing. One system. Every role covered. Zero platform
-                    fees.
+                    That&apos;s what our leads tool delivers. Every morning we
+                    surface the highest-scoring prospects in your market across
+                    nine categories — enriched with verified contacts, paired
+                    with personalized outreach scripts, and complete with a
+                    strategic brief on how to approach each one. One email.
+                    Everything you need to act. No spreadsheets, no LinkedIn
+                    detective work, no guessing.
                   </span>
                 </p>
               </div>
               <div className={styles.statBox}>
                 <div className={styles.statLeft}>
-                  <span className={styles.detail}>Duplicate work</span>
-                  <span className={`${styles.heading} h1`}>-27%</span>
+                  <span className={styles.detail}>Lead categories tracked</span>
+                  <span className={`${styles.heading} h2ii`}>+9</span>
                 </div>
                 <div className={styles.statRight}>
-                  <span className={styles.detail}>On-time delivery</span>
-                  <span className={`${styles.heading} h1`}>+42%</span>
+                  <span className={styles.detail}>Weekly research saved</span>
+                  <span className={`${styles.heading} h2ii`}>−40h</span>
                 </div>
                 <div className={styles.btnContainer}>
                   <Button
-                    href='https://www.niertransportation.com/'
-                    target='_blank'
-                    text='see live site'
+                    href='/contact'
+                    text='Book a demo'
                     btnType='gray'
                     arrow
                   />
@@ -95,16 +95,16 @@ export default function ProjectSection() {
             <div className={styles.right}>
               <div className={styles.imgContainer}>
                 <Image
-                  src={NierHomePage}
-                  alt='Nier Transportation Home Page'
-                  title='Nier Transportation Home Page'
+                  src={DashboardPreview}
+                  alt='Leads dashboard preview'
+                  title='Leads dashboard preview'
                   fill
                   className={styles.imgRight}
                 />
                 <div className={styles.expandBtnWrap}>
                   <Button
                     text='Click to expand'
-                    btnType='accent'
+                    btnType='white'
                     arrow
                     onClick={openModal}
                   />
@@ -118,9 +118,9 @@ export default function ProjectSection() {
       <Modal isOpen={modalOpen} onClose={closeModal}>
         <div className={styles.modalImageWrap}>
           <Image
-            src={NierHomePage}
-            alt='Nier Transportation Home Page — full preview'
-            title='Nier Transportation Home Page — full preview'
+            src={DashboardPreview}
+            alt='Leads dashboard — full preview'
+            title='Leads dashboard — full preview'
             className={styles.modalImage}
             priority
           />

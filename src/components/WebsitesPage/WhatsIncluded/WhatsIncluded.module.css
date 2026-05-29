@@ -41,6 +41,15 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
+  padding: 2rem;
 }
 
 .card {
@@ -162,7 +171,7 @@
 .bulletList {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 0.8rem;
+  gap: 1rem;
   list-style: none;
   margin: 0;
   border-left: 6px solid #3b82f6;
@@ -174,9 +183,9 @@
 .bulletTitle {
   font-size: 2.4rem;
   font-family: var(--RobotoFlexii);
-  opacity: 0.3;
   position: relative;
   padding-left: 1.5rem;
+  color: #3b82f6
 }
 
 .bulletTitle::after {

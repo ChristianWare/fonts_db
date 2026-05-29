@@ -1,0 +1,169 @@
+.container {
+  background-color: var(--accent);
+}
+
+.parent {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10rem 5rem;
+  width: 100%;
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
+}
+
+.dot1,
+.dot2,
+.dot3,
+.dot4 {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background-color: var(--accent);
+  z-index: 1;
+}
+
+.dot1 {
+  top: 0;
+  left: 0;
+}
+
+.dot2 {
+  top: 0;
+  right: 0;
+}
+
+.dot3 {
+  bottom: 0;
+  left: 0;
+}
+
+.dot4 {
+  bottom: 0;
+  right: 0;
+}
+
+/* ── Content stack ── */
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+}
+
+.topHeading {
+  color: var(--black);
+  max-width: 768px;
+}
+
+/* ── Top intro row — 2-col like Mission reference ── */
+.top {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--blackii);
+}
+
+.topLeft {
+  display: flex;
+  align-items: flex-start;
+}
+
+.heading {
+  color: var(--black);
+  max-width: 700px;
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 3rem;
+  border: 1px solid var(--blackii);
+  transition: border-color 0.2s ease;
+}
+
+.index {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  color: var(--text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.feature {
+  color: var(--black);
+  font-family: var(--RobotoFlexii);
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.desc {
+  color: var(--text);
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.outro {
+  padding-top: 3rem;
+  border-top: 1px solid var(--blackii);
+}
+
+.outroCopy {
+  font-size: 1.6rem;
+  font-family: var(--GeistMono);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  max-width: 800px;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 1268px) {
+  .parent {
+    padding: 7rem 3rem;
+  }
+
+  .bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .parent {
+    padding: 5rem 2rem;
+  }
+
+  .content {
+    gap: 4rem;
+  }
+
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}

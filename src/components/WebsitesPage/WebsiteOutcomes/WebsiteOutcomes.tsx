@@ -75,7 +75,7 @@ export default function WebsiteOutcomes() {
                       <p className={styles.dataDesc}>{item.desc}</p>
                     </div>
                   </div>
-                  <div className={styles.cardSpace} />
+                  <div className={`${styles.cardSpace} bgLines`} />
                 </div>
               ))}
             </div>

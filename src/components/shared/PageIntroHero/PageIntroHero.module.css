@@ -120,15 +120,16 @@
   margin-top: 1rem;
   display: block;
   text-shadow:
-    -1px -1px 0 var(--lightGray),
-    1px -1px 0 var(--lightGray),
-    -1px 1px 0 var(--lightGray),
-    1px 1px 0 var(--lightGray),
-    0 -1px 0 var(--lightGray),
-    0 1px 0 var(--lightGray),
-    -1px 0 0 var(--lightGray),
-    1px 0 0 var(--lightGray);
-    max-width: 550px;
+    -1px -1px 0 var(--lightGrayV),
+    1px -1px 0 var(--lightGrayV),
+    -1px 1px 0 var(--lightGrayV),
+    1px 1px 0 var(--lightGrayV),
+    0 -1px 0 var(--lightGrayV),
+    0 1px 0 var(--lightGrayV),
+    -1px 0 0 var(--lightGrayV),
+    1px 0 0 var(--lightGrayV);
+  max-width: 550px;
+  letter-spacing: 2px;
 }
 
 .subheading {
@@ -216,7 +217,7 @@
     gap: 4rem;
   }
 
-  .heading {
+  /* .heading {
     color: var(--accent);
     background-color: var(--black);
     padding: 2rem;
@@ -232,6 +233,10 @@
     margin-top: 0;
     display: inline-block;
     text-shadow: none;
+  } */
+
+  .accent {
+    letter-spacing: 3px;
   }
 }
 

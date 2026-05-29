@@ -32,7 +32,7 @@
 
 .mapDataContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   row-gap: 10rem;
 }
 
@@ -52,6 +52,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 5rem;
+  background-color: #3b82f60d;
 }
 
 .cardTop {

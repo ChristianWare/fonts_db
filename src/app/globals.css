@@ -382,3 +382,14 @@ textarea:focus {
   font-style: normal;
   font-weight: 400;
 }
+
+.bgLines {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
+}

@@ -4,7 +4,10 @@ import LeadsHowItWorks from "@/components/LeadsPage/LeadsHowItWorks/LeadsHowItWo
 import LeadsProblem from "@/components/LeadsPage/LeadsProblem/LeadsProblem";
 import Img1 from "../../../public/images/leads.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
-import WhatsIncluded from "@/components/WebsitesPage/WhatsIncluded/WhatsIncluded";
+// import WhatsIncluded from "@/components/WebsitesPage/WhatsIncluded/WhatsIncluded";
+import LeadsEmail from "@/components/LeadsPage/LeadsEmail/LeadsEmail";
+import LeadsVsList from "@/components/LeadsPage/LeadsVsList/LeadsVsList";
+import LeadsPreview from "@/components/LeadsPage/LeadsPreview/LeadsPreview";
 
 export default function LeadsPage() {
   return (
@@ -19,8 +22,11 @@ export default function LeadsPage() {
       />
       <LeadsProblem />
       <LeadsHowItWorks />
-      <WhatsIncluded />
-      <PricingPreview />
+      <LeadsPreview />
+      <LeadsEmail />
+      {/* <WhatsIncluded /> */}
+      <LeadsVsList />
+      <PricingPreview product='leads' />
       <Faq />
     </main>
   );
