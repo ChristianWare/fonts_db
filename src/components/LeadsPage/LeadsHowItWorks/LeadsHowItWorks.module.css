@@ -1,0 +1,159 @@
+.content {
+  border-top: 1px solid var(--lightGray);
+  padding-top: 5rem;
+  margin-top: 5rem;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
+  padding: 3rem;
+}
+
+.copy {
+  color: var(--text);
+  max-width: 550px;
+}
+
+.accent {
+  color: var(--black);
+}
+
+.bottom {
+  margin-top: 5rem;
+}
+
+.mapDataContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 10rem;
+}
+
+.cardParent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border: 1px solid var(--lightGray);
+}
+
+.cardParent:nth-child(even) {
+  flex-direction: column-reverse;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5rem;
+}
+
+.cardParent:nth-child(1) .step {
+  background-color: #ef444414;
+  border-left: 6px solid #ef4444;
+}
+
+.cardParent:nth-child(2) .step {
+  background-color: #f9731614;
+  border-left: 6px solid #f97316;
+}
+
+.cardParent:nth-child(3) .step {
+  background-color: #3b82f614;
+  border-left: 6px solid #3b82f6;
+}
+
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.step {
+  font-family: var(--GeistMono);
+  font-size: 14px;
+  background-color: var(--lightGrayii);
+  height: 60px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid var(--lightGray);
+  width: 100%;
+}
+
+.iconContainer {
+  margin-left: auto;
+  padding: 2rem;
+  font-size: 5rem;
+}
+
+.icon {
+  width: 3rem;
+  color: var(--text);
+}
+
+.cardBottom {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  border-top: 1px solid var(--lightGray);
+}
+
+.cardSpace {
+  height: 6rem;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  width: 100%;
+}
+
+.cardParent:nth-child(even) .cardSpace {
+  border-top: none;
+}
+
+.cardParent:nth-child(odd) .cardSpace {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 1268px) {
+  .heading {
+    max-width: 600px;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 5rem;
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .mapDataContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top {
+    gap: 2rem;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .cardParent:nth-child(even) {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .step {
+    font-size: 16px;
+  }
+}

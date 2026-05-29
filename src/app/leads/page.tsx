@@ -3,6 +3,7 @@ import HowItWorks from "@/components/HomePage/HowItWorks/HowItWorks";
 import OtherDashboards from "@/components/HomePage/OtherDashboards/OtherDashboards";
 import Outgrow from "@/components/HomePage/Outgrow/Outgrow";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
+import LeadsHowItWorks from "@/components/LeadsPage/LeadsHowItWorks/LeadsHowItWorks";
 import LeadsProblem from "@/components/LeadsPage/LeadsProblem/LeadsProblem";
 import LightBulbii from "@/components/shared/icons/LightBulbii/LightBulbii";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
@@ -19,6 +20,7 @@ export default function LeadsPage() {
         copy='A lead generation tool built exclusively for black car operators. Hot leads from people actively requesting transportation. Warm leads from businesses signaling upcoming demand. Cold leads from the B2B accounts that will fill your calendar for years.'
       />
       <LeadsProblem />
+      <LeadsHowItWorks />
       <Features />
       <HowItWorks />
       <OtherDashboards />

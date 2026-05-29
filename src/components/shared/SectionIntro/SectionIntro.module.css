@@ -6,7 +6,7 @@
 
 .text {
   font-family: var(--GeistMono);
-  font-size: 16px;
+  font-size: 12px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }

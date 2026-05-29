@@ -7,8 +7,8 @@ import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 export default function LeadsProblem() {
   return (
     <section className={styles.container}>
-        <div className={styles.content}>
-      <LayoutWrapper >
+      <div className={styles.content}>
+        <LayoutWrapper>
           <div className={styles.imgOverlay}></div>
           <div className={styles.contentChildren}>
             <div className={styles.left}>
@@ -24,6 +24,19 @@ export default function LeadsProblem() {
                 A fundraiser is being planned for a gala in six weeks. A wedding
                 venue you&apos;ve never met is booking ten weddings between now
                 and October — and not one of those couples knows you exist.
+              </p>
+              <p className={styles.body}>
+                Most operators find these leads the same way: by accident. A
+                referral lands in your lap. A bride finds you on Google. A
+                corporate buyer asks around. By the time you&apos;re in the
+                conversation, three or four other operators are too — and now
+                you&apos;re competing on price for a job that should have been
+                yours from the first call.
+              </p>
+              <p className={styles.body}>
+                The problem isn&apos;t that the work isn&apos;t there. The work is always
+                there. The problem is that nobody is watching for it on your
+                behalf.
               </p>
               <p className={styles.copy}>
                 The work is always there. <br />
@@ -65,8 +78,8 @@ export default function LeadsProblem() {
               </div>
             </div>
           </div>
-      </LayoutWrapper>
-        </div>
+        </LayoutWrapper>
+      </div>
     </section>
   );
 }
