@@ -49,8 +49,8 @@ const SECTION_META: Record<
   },
   websites: {
     title: "Websites FAQ",
-    headingSpan: "What you'll get",
-    headingRest: "with your platform.",
+    headingSpan: "What you get",
+    headingRest: "with your own website",
   },
   work: {
     title: "Project & Process FAQ",
@@ -121,7 +121,8 @@ export default function Faq() {
               <div className={styles.topLeft}>
                 <SectionIntro text='Help & oinfo' />
                 <h2 className={styles.heading}>
-                  <span className={styles.span}>{meta.headingSpan}</span> <br />
+                  {meta.headingSpan}
+                  <br />
                   {meta.headingRest}
                 </h2>
               </div>
@@ -199,8 +200,8 @@ export default function Faq() {
                 </div>
                 <div className={styles.bcRight}>
                   <p className={styles.copyii}>
-                    Book a 20-minute discovery call. We&apos;ll walk through your
-                    operation, show you the live platform, and figure out
+                    Book a 20-minute discovery call. We&apos;ll walk through
+                    your operation, show you the live platform, and figure out
                     whether it makes sense for your business. No pitch, no
                     pressure.
                   </p>

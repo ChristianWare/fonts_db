@@ -8,6 +8,7 @@ import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 import LeadsEmail from "@/components/LeadsPage/LeadsEmail/LeadsEmail";
 import LeadsVsList from "@/components/LeadsPage/LeadsVsList/LeadsVsList";
 import LeadsPreview from "@/components/LeadsPage/LeadsPreview/LeadsPreview";
+import LeadExamples from "@/components/LeadsPage/LeadExamples/LeadExamples";
 
 export default function LeadsPage() {
   return (
@@ -23,6 +24,7 @@ export default function LeadsPage() {
       <LeadsProblem />
       <LeadsHowItWorks />
       <LeadsPreview />
+      <LeadExamples />
       <LeadsEmail />
       {/* <WhatsIncluded /> */}
       <LeadsVsList />

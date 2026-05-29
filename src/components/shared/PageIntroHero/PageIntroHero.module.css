@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--lightGrayii);
+  background-color: var(--white);
 }
 
 .parent {
@@ -106,7 +106,6 @@
 }
 
 .accent {
-  font-family: inherit;
   padding: 1rem;
   background-image: repeating-linear-gradient(
     45deg,
@@ -129,7 +128,7 @@
     0 1px 0 var(--lightGrayV),
     -1px 0 0 var(--lightGrayV),
     1px 0 0 var(--lightGrayV);
-  max-width: 550px;
+  max-width: 650px;
   letter-spacing: 2px;
 }
 
@@ -226,7 +225,6 @@
   }
   
   .accent {
-font-family: inherit;
     line-height: 1.2;
     padding: 0;
     background-image: none;
@@ -238,7 +236,6 @@ font-family: inherit;
   } */
 
   .accent {
-    font-family: inherit;
     letter-spacing: 3px;
   }
 }

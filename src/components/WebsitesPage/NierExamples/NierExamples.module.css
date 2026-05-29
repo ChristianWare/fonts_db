@@ -1,0 +1,146 @@
+.container {
+  background-color: var(--white);
+}
+
+.parent {
+  border-top: 1px solid var(--lightGray);
+  margin-top: 3rem;
+}
+
+.top {
+  padding: 20rem 5rem;
+  padding-bottom: 5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+}
+
+.icon {
+  color: var(--accent);
+  width: 100%;
+  height: 100%;
+}
+
+.topRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.accent {
+  font-family: inherit;
+  color: var(--accent);
+}
+
+.subheading {
+  max-width: 500px;
+}
+
+.copy {
+  max-width: 700px;
+}
+
+/* ── Bottom: grid of website page examples ── */
+.bottom {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  margin-top: 5rem;
+  padding: 0 5rem 20rem;
+}
+
+.exampleCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exampleTitle {
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--black);
+  opacity: 0.7;
+}
+
+/* ── Image containers (same pattern as ProjectSection) ── */
+.imgContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.imgContainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 1;
+  pointer-events: none;
+  transition: background-color 0.2s ease;
+}
+
+.imgContainer:hover::after {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.imgRight {
+  object-fit: cover;
+  object-position: top;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Centered expand button ── */
+.expandBtnWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* ── Modal image (the full-length view) ── */
+.modalImageWrap {
+  width: 100%;
+}
+
+.modalImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media screen and (max-width: 968px) {
+  .bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top {
+    padding: 10rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .copy {
+    max-width: 500px;
+  }
+
+  .bottom {
+    padding: 0 3rem 10rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}
