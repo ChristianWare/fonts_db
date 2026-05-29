@@ -1,10 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import styles from "./WhatsIncluded.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
-import Image from "next/image";
+import Arrow from "@/components/shared/icons/Arrow/Arrow";
 import { whatsInDashboardData } from "@/lib/data";
 
 export default function WhatsIncluded() {
+  // Only one card open at a time, all collapsed by default — same pattern as
+  // PlacePageClient's AccordionSection group.
+  const [openId, setOpenId] = useState<number | null>(null);
+
+  function toggle(id: number) {
+    setOpenId((prev) => (prev === id ? null : id));
+  }
+
   return (
     <section className={styles.container}>
       <LayoutWrapper>
@@ -16,63 +27,78 @@ export default function WhatsIncluded() {
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.topLeft}>
-                <SectionIntro text="WHAT'S INCLUDED" />
+                <SectionIntro text="WHAT'S IN THE DASHBOARD" />
                 <h2 className={`${styles.heading}`}>
-                  Everything in one number
+                  Every lead has a full intelligence brief waiting.
                 </h2>
               </div>
               <div className={styles.topRight}>
                 <h3 className={`${styles.subheading} h6`}>
-                  $499/month covers everything.{" "}
+                  The email gets you started. The dashboard is where you
+                  actually work the leads.
                 </h3>
                 <p className={styles.copy}>
                   <span className={styles.accent}>
-                    No setup fee. No per-booking fees. No per-driver fees. No
-                    upgrade fees as we ship new features. One number, every
-                    month, everything covered.
+                    Nine intelligence layers built into every lead — so you
+                    spend your morning on outreach, not research.
                   </span>
                 </p>
               </div>
             </div>
             <div className={styles.bottom}>
               <div className={styles.mapDataContainer}>
-                {whatsInDashboardData.map((x) => (
-                  <div className={styles.card} key={x.id}>
-                    <div className={styles.cardLeft}>
-                      <div className={styles.cardLeftTop}>
-                        <span className={styles.oneWordDesc}>
-                          {x.oneWordDesc}
-                        </span>
-                        <h3 className={styles.cardHeading}>{x.title}</h3>
-                        <p className={styles.desc}>{x.description}</p>
+                {whatsInDashboardData.map((x) => {
+                  const isOpen = openId === x.id;
+                  return (
+                    <div className={styles.card} key={x.id}>
+                      <div
+                        className={styles.cardHeader}
+                        onClick={() => toggle(x.id)}
+                        role='button'
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            toggle(x.id);
+                          }
+                        }}
+                      >
+                        <div className={styles.cardHeaderContent}>
+                          <span className={styles.oneWordDesc}>
+                            {x.oneWordDesc}
+                          </span>
+                          <h3 className={styles.cardHeading}>{x.title}</h3>
+                          {/* desc moved out of here ↓ */}
+                        </div>
+                        <div className={styles.accordionArrow}>
+                          <Arrow
+                            className={isOpen ? styles.iconFlip : styles.icon}
+                          />
+                        </div>
                       </div>
-                      <div className={styles.cardLeftBottom}>
-                        <ul className={styles.bulletList}>
-                          {x.bullets.map((bullet, index) => (
-                            <li
-                              key={index}
-                              className={`${styles.bulletTitle} h3`}
-                            >
-                              {bullet}
-                            </li>
-                          ))}
-                        </ul>
+                      <div
+                        className={`${styles.accordionBody} ${
+                          isOpen ? styles.accordionBodyOpen : ""
+                        }`}
+                      >
+                        <div className={styles.accordionBodyInner}>
+                          {/* desc lives here now ↓ */}
+                          <p className={styles.desc}>{x.description}</p>
+                          <ul className={styles.bulletList}>
+                            {x.bullets.map((bullet, index) => (
+                              <li
+                                key={index}
+                                className={`${styles.bulletTitle} h3`}
+                              >
+                                {bullet}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
-                    <div className={styles.cardRight}>
-                      <div className={styles.imgContainer}>
-                        <Image
-                          src={x.src}
-                          alt={x.title}
-                          title={x.title}
-                          fill
-                          className={styles.img}
-                        />
-                        <div className={styles.imgOverlay} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

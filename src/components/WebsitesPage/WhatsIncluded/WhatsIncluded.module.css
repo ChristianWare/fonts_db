@@ -32,38 +32,53 @@
   color: var(--black);
 }
 
+.subheading {
+  text-decoration: underline;
+}
+
 .mapDataContainer {
   border-top: 1px solid var(--lightGray);
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
 .card {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
   background-color: var(--white);
   border-top: 1px solid var(--lightGray);
   border-bottom: 1px solid var(--lightGray);
-  align-self: flex-start;
-  position: sticky;
-  top: 90px;
-  height: 100%;
 }
 
 .card:first-child {
   margin-top: -2px;
 }
 
-.cardLeft {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
+.cardHeader {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2rem;
   padding: 4rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
 }
 
-.cardLeftTop {
+.cardHeading {
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.cardHeader:hover .cardHeading {
+  color: var(--black);
+}
+
+.cardHeaderContent {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -88,19 +103,80 @@
   font-size: 1.6rem;
 }
 
+/* ── Arrow (mirrors reference .accordionArrow / .icon / .iconFlip) ── */
+.accordionArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--grayii);
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--accent);
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0;
+}
+
+.accordionArrow:has(.iconFlip) {
+  background-color: var(--accentii);
+}
+
+.icon {
+  transition: all 0.4s ease-in-out;
+  font-size: 1.5rem;
+  color: var(--black);
+  transform: rotate(45deg);
+}
+
+.iconFlip {
+  transition: all 0.3s ease-in-out;
+  font-size: 1.5rem;
+  color: var(--black);
+  transform: rotate(180deg);
+}
+
+/* ── Accordion body — grid-rows trick from reference, animates any height ── */
+.accordionBody {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s ease-in-out;
+}
+
+.accordionBodyOpen {
+  grid-template-rows: 1fr;
+}
+
+.accordionBodyInner {
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 4rem;
+}
+
+.accordionBodyOpen .accordionBodyInner {
+  padding: 0 4rem 4rem;
+}
+
+/* ── Bullet list container — the 3 requested rules + reset margin ── */
 .bulletList {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 0.8rem;
-  margin-left: 2rem;
   list-style: none;
+  margin: 0;
+  border-left: 6px solid #3b82f6;
+  background-color: #3b82f60d;
+  padding: 3rem;
 }
 
+/* ── Bullet items — UNCHANGED from your original ── */
 .bulletTitle {
   font-size: 2.4rem;
   font-family: var(--RobotoFlexii);
   opacity: 0.3;
   position: relative;
+  padding-left: 1.5rem;
 }
 
 .bulletTitle::after {
@@ -112,46 +188,6 @@
   height: 7px;
   background-color: var(--black);
   opacity: 0.3;
-}
-
-.imgContainer {
-  position: relative;
-  width: 400px;
-  height: 500px;
-  border: 1px solid var(--accent);
-  margin: 2rem;
-}
-
-.img {
-  object-fit: cover;
-  background-color: var(--accent);
-  object-position: top;
-}
-
-.imgOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgb(0 0 0 / 10%);
-  z-index: 1;
-}
-
-.imgDescription {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 2.5rem;
-  right: 2.5rem;
-  z-index: 2;
-  color: var(--white);
-  font-family: var(--GeistMono);
-  font-weight: 700;
-  letter-spacing: normal;
-  margin: 0;
-  font-size: 1.6rem;
-  width: 80%;
-}
-
-.subheading {
-  text-decoration: underline;
 }
 
 @media screen and (max-width: 1268px) {
@@ -191,16 +227,9 @@
     margin-left: auto;
     margin-right: auto;
   }
-
-  .btnContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
 }
 
-@media screen and (max-width: 968px) {
+@media screen and (max-width: 1068px) {
   .content {
     margin-top: 15rem;
   }
@@ -219,24 +248,19 @@
 
   .mapDataContainer {
     gap: 5rem;
+    grid-template-columns: repeat(1, 1fr);
   }
 
-  .card {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .cardLeft {
+  .cardHeader {
     padding: 3rem;
-    gap: 5rem;
   }
 
-  .imgContainer {
-    width: 100%;
-    height: 100%;
+  .accordionBodyOpen .accordionBodyInner {
+    padding: 0 3rem 3rem 3rem;
   }
 }
 
-@media screen and (max-width: 968px) {
+@media screen and (max-width: 768px) {
   .content {
     margin-top: 10rem;
   }
@@ -264,29 +288,9 @@
     gap: 5rem;
   }
 
-  .card {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .cardLeft {
-    gap: 3rem;
-  }
-
-  .cardRight {
-    padding: 2rem;
-  }
-
-  .imgContainer {
-    width: 100%;
-    height: 500px;
-    margin: 0;
-  }
-
-
-  .btnContainer {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    width: 100%;
+  .accordionArrow {
+    width: 3rem;
+    height: 3rem;
   }
 }
 
@@ -301,5 +305,21 @@
     opacity: 1;
     border-bottom: 1px solid var(--blackii);
     padding-bottom: 0.5rem;
+  }
+
+  .bulletTitle::after {
+    display: none;
+  }
+
+  .cardHeader {
+    padding: 2rem;
+  }
+
+  .accordionBodyOpen .accordionBodyInner {
+    padding: 0 2rem 2rem 2rem;
+  }
+
+  .bulletList {
+    padding: 2rem;
   }
 }
