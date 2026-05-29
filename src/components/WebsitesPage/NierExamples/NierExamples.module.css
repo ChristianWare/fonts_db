@@ -115,7 +115,14 @@
   display: block;
 }
 
-@media screen and (max-width: 968px) {
+.btnContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+@media screen and (max-width: 1068px) {
   .bottom {
     grid-template-columns: repeat(2, 1fr);
   }

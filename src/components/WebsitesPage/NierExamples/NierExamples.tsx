@@ -116,6 +116,15 @@ export default function NierExamples() {
                   </div>
                 </div>
               ))}
+              <div className={styles.btnContainer}>
+                <Button
+                  href='https://www.niertransportation.com/'
+                  target='_blank'
+                  text='Live Site'
+                  btnType='black'
+                  arrow
+                />
+              </div>
             </div>
           </div>
         </div>

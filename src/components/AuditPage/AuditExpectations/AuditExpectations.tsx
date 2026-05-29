@@ -157,7 +157,7 @@ export default function AuditExpectations() {
           </div>
         </div>
         <div className={styles.btnContainer}>
-          <Button text='Try it for free' btnType='accent' arrow />
+          <Button href='#audit' text='Try it for free' btnType='accent' arrow />
         </div>
       </LayoutWrapper>
     </section>

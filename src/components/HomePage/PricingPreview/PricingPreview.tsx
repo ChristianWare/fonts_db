@@ -82,7 +82,7 @@ const PRICING_DATA: Record<Product, ProductPricing> = {
     foundingTitle: "Founding operator rate",
     foundingCopy:
       "The first operators onboard lock in $125/month for life — including every category and intelligence layer added going forward. This rate will not be available to future clients as the lead pool and feature set grow.",
-    ctaHref: "/contact",
+    ctaHref: "/dashboard",
     ctaText: "Start your trial",
     includedHeading: "What's included",
     included: [
@@ -122,7 +122,7 @@ const PRICING_DATA: Record<Product, ProductPricing> = {
     pricePer: "",
     priceFootnote: "Result in 60 seconds. PDF emailed to you.",
     showFoundingBox: false,
-    ctaHref: "/audit",
+    ctaHref: "#audit",
     ctaText: "Run your free audit",
     includedHeading: "What the audit checks",
     included: [
@@ -189,7 +189,6 @@ export default function PricingPreview({ product = "website" }: Props) {
                 <div className={styles.btnContainer}>
                   <Button
                     href={data.ctaHref}
-                    // target={data.ctaTarget}
                     btnType='accent'
                     text={data.ctaText}
                     arrow

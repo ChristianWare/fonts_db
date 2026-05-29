@@ -25,7 +25,7 @@ export default function AuditHero({
   onReset,
 }: Props) {
   return (
-    <section className={styles.container}>
+    <section className={styles.container} id='audit'>
       <LayoutWrapper>
         <div className={styles.parent}>
           <div className={styles.dot1} />

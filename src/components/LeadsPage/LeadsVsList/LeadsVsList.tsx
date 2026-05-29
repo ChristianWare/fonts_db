@@ -155,7 +155,7 @@ export default function LeadsVsList() {
         </div>
         <div className={styles.btnContainer}>
           <Button
-            href='/contact'
+            href='/dashboard'
             text='Start your trial'
             btnType='accent'
             arrow
