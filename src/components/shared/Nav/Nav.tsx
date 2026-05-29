@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent } from "react";
+import { createPortal } from "react-dom";
 
 type NavVariant = "white" | "black";
 
@@ -59,7 +60,7 @@ export default function Nav({
   ];
 
   // Variant-based styling
-  const btnType = variant === "black" ? "navYellow" : "navWhite";
+  const btnType = variant === "black" ? "navBlack" : "navWhite";
   const navItemClass =
     variant === "black"
       ? `${styles.navItem} ${styles.navItemBlack}`
@@ -138,6 +139,11 @@ export default function Nav({
             </span>
           </div>
         </div>
+        {isOpen &&
+          createPortal(
+            <div className={styles.overlay} onClick={closeMenu} />,
+            document.body,
+          )}
       </nav>
     </header>
   );

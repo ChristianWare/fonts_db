@@ -112,3 +112,19 @@
     font-size: 16px;
   }
 }
+
+.navBlack {
+  padding: 1.5rem 2rem;
+  background-color: var(--black);
+  color: var(--white) !important;
+}
+
+/* Invert the arrow on the black button so it's visible against the dark bg
+   (mirrors how .black handles its arrow) */
+.navBlack .arrowContainer {
+  background-color: var(--white);
+}
+
+.navBlack .arrow {
+  color: var(--black);
+}

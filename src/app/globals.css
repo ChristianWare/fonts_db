@@ -31,7 +31,7 @@
   scroll-behavior: smooth;
   scroll-margin-top: 40px;
   -webkit-tap-highlight-color: transparent;
-  font-family: var(--SuisseIntlRegular);
+  font-family: var(--Roboto);
 }
 
 html {

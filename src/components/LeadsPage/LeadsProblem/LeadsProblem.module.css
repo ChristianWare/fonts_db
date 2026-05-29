@@ -1,0 +1,272 @@
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/whydb.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.imgOverlay {
+  background-color: rgb(0 0 0 / 65%);
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  z-index: 2;
+}
+
+.contentChildren {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  padding: 2rem;
+  padding: 10rem 2rem;
+  z-index: 3;
+  height: 100%;
+  gap: 5rem;
+}
+
+.left,
+.right {
+  z-index: 3;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 5rem;
+}
+
+.headingGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.heading {
+  color: var(--white);
+  max-width: 700px;
+}
+
+.arrowWrap {
+  line-height: inherit;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.icon {
+  width: 8.5rem;
+  height: 8.5rem;
+  color: var(--accent);
+}
+
+.body {
+  color: var(--white);
+  font-size: 2rem;
+  line-height: 1.5;
+  max-width: 600px;
+  opacity: 0.85;
+}
+
+.copy {
+  color: var(--white);
+  font-family: var(--GeistMono);
+  letter-spacing: normal;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.right {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Card (mirrors DummyProductCard) ── */
+.card {
+  padding: 2rem;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease-in;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
+}
+
+.cardTop,
+.cardBottom {
+  width: 100%;
+}
+
+.cardTitle {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--white);
+  border: 1px solid var(--lightGray);
+}
+
+.cardLabel {
+  opacity: 0.5;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+}
+
+.cardImgContainer {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  flex-grow: 1;
+}
+
+.cardImg {
+  object-fit: cover;
+}
+
+.cardDetails {
+  margin-top: 5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
+.cardDetailsLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cardMissed {
+  font-size: 1.4rem;
+  opacity: 0.5;
+  font-family: var(--Roboto) !important;
+  text-transform: uppercase;
+  display: block;
+}
+
+.cardScore {
+  font-size: 1.6rem;
+  font-family: var(--GeistMono) !important;
+  font-weight: 500;
+  line-height: 1;
+  display: block;
+}
+
+.cardDetailsRight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cardTag,
+.cardTagHot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--black);
+  background-color: var(--white);
+  border-radius: 50px;
+  padding: 0.7rem 2rem;
+  font-size: 1.4rem;
+}
+
+.cardTagHot {
+  border: 1px solid var(--red);
+  background-color: var(--red);
+  color: var(--white);
+}
+
+/* ── 1068px — hide right card, single column ── */
+@media screen and (max-width: 1068px) {
+  .left,
+  .headingGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .right {
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contentChildren {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* ── 768px ── */
+@media screen and (max-width: 768px) {
+  .icon {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .left {
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .heading,
+  .body,
+  .copy {
+    text-align: center;
+  }
+}
+
+/* ── 568px ── */
+@media screen and (max-width: 568px) {
+  .content {
+    height: 100%;
+  }
+
+  .left,
+  .headingGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 2rem;
+  }
+
+  .heading,
+  .body,
+  .copy {
+    text-align: left;
+  }
+
+  .contentChildren {
+    padding: 3rem 2rem;
+  }
+}

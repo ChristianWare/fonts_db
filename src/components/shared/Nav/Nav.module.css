@@ -34,7 +34,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0rem;
+  gap: 0;
   list-style: none;
 }
 
@@ -45,7 +45,7 @@
   line-height: 1;
   color: var(--gray);
   white-space: nowrap;
-  padding: 0.2rem 0rem;
+  padding: 0.2rem 0;
   border-radius: 50px;
   transition: all 0.3s ease-in;
 }
@@ -62,9 +62,8 @@
 }
 
 .navItem:not(.navItemActive):hover {
-  color: var(--accent) !important;
+  /* color: var(--accent) !important; */
   text-decoration: line-through;
-  /* background-color: var(--black); */
 }
 
 .black {
@@ -117,11 +116,6 @@
   background-color: var(--black);
 }
 
-/* The closed hamburger sits on a solid black box, so the bars must stay
-   white to be visible — even when the hamburgerBlack modifier is passed.
-   :not(.active) limits this to the CLOSED menu, so the open-state X
-   (controlled by .barOpen) is left untouched. The descendant selector
-   (.hamburger .whiteBar) is more specific than .hamburgerBlack, so it wins. */
 .hamburger:not(.active) .whiteBar {
   background-color: var(--white);
 }
@@ -134,8 +128,7 @@
   position: fixed;
   inset: 0;
   z-index: 9990;
-  background: rgba(0, 0, 0, 0.2);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgb(0 0 0 / 20%);
   backdrop-filter: blur(6px);
   height: 100dvh;
   min-height: 100vh;
@@ -161,7 +154,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,13 +263,6 @@
   .btnContainerii {
     display: grid;
     width: 100%;
-  }
-
-  .menuImage {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 185px;
   }
 
   .img {
