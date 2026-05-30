@@ -125,8 +125,14 @@
   transition: opacity 0.2s ease;
 }
 
-.saveBtn:hover { opacity: 0.85; }
-.saveBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.saveBtn:hover {
+  opacity: 0.85;
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 @media screen and (max-width: 768px) {
   .fields { grid-template-columns: 1fr; }
