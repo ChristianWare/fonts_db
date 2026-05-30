@@ -25,7 +25,7 @@ export default function PageIntroHero({
 }: PageIntroHeroProps) {
   return (
     <section className={styles.container}>
-      <LayoutWrapper >
+      <LayoutWrapper borderDark>
         <div className={styles.parent}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />

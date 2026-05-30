@@ -9,6 +9,7 @@ import LeadsEmail from "@/components/LeadsPage/LeadsEmail/LeadsEmail";
 import LeadsVsList from "@/components/LeadsPage/LeadsVsList/LeadsVsList";
 import LeadsPreview from "@/components/LeadsPage/LeadsPreview/LeadsPreview";
 import LeadExamples from "@/components/LeadsPage/LeadExamples/LeadExamples";
+import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 
 export default function LeadsPage() {
   return (
@@ -16,8 +17,8 @@ export default function LeadsPage() {
       <PageIntroHero
         src={Img1}
         sectionIntroText='Leads Tool'
-        heading='Find your next client'
-        headingAccent='before your competitor does'
+        heading='Find your next client before your competitor does'
+        headingAccent=''
         subheading='$125/month · 7 Day free trial · cold, warm & hot leads · Cancel anytime'
         copy='A lead generation tool built exclusively for black car operators. Hot leads from people actively requesting transportation. Warm leads from businesses signaling upcoming demand. Cold leads from the B2B accounts that will fill your calendar for years.'
       />
@@ -30,6 +31,7 @@ export default function LeadsPage() {
       <LeadsVsList />
       <PricingPreview product='leads' />
       <Faq />
+      <ContactSection />
     </main>
   );
 }

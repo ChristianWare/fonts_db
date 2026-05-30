@@ -193,7 +193,7 @@ export default function Faq() {
                 })}
               </div>
             </div>
-            <div className={styles.bottomii}>
+            {/* <div className={styles.bottomii}>
               <div className={styles.bottomiiContent}>
                 <div className={styles.bcLeft}>
                   <h3 className={styles.headingii}>Ready to talk?</h3>
@@ -216,7 +216,7 @@ export default function Faq() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </LayoutWrapper>
       </section>

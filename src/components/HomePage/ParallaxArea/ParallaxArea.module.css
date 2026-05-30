@@ -33,11 +33,6 @@
 
 .heading {
   color: white;
-  font-size: clamp(3rem, 10vw, 8rem);
-  font-size: 10vw;
-  line-height: 1;
-  letter-spacing: -3px;
-  font-weight: 500;
 }
 
 .imgContainer {
@@ -73,7 +68,7 @@
   letter-spacing: normal;
   text-transform: uppercase;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 
@@ -84,7 +79,7 @@
 .title {
   color: var(--white);
   font-family: var(--Roboto);
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--lightGrayii);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -142,12 +137,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
-  .heading {
-    font-size: 14vw;
-    letter-spacing: -0.5vw;
-  }
-}
+
 
 @media screen and (max-width: 568px) {
   .contentChildren {

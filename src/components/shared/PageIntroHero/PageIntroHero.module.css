@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--white);
+  background-color: var(--accent);
 }
 
 .parent {
@@ -9,8 +9,8 @@
   flex-direction: column;
   padding: 5rem;
   width: 100%;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .dot1,
@@ -105,35 +105,8 @@
   flex-direction: column;
 }
 
-.accent {
-  padding: 1rem;
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--lightGray) 0,
-    var(--lightGray) 1px,
-    transparent 0,
-    transparent 50%
-  );
-  background-size: 7px 7px;
-  color: var(--accent);
-  font-family: inherit;
-  margin-top: 1rem;
-  display: block;
-  text-shadow:
-    -1px -1px 0 var(--lightGrayV),
-    1px -1px 0 var(--lightGrayV),
-    -1px 1px 0 var(--lightGrayV),
-    1px 1px 0 var(--lightGrayV),
-    0 -1px 0 var(--lightGrayV),
-    0 1px 0 var(--lightGrayV),
-    -1px 0 0 var(--lightGrayV),
-    1px 0 0 var(--lightGrayV);
-  max-width: 650px;
-  letter-spacing: 2px;
-}
-
 .subheading {
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
   padding-top: 1rem;
 }
 
@@ -185,9 +158,7 @@
   .b2 {
     gap: 5rem;
   }
-}
 
-@media screen and (max-width: 968px) {
   .top {
     display: flex;
     flex-direction: column-reverse;

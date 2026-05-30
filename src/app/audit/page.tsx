@@ -9,6 +9,7 @@ import Faq from "@/components/HomePage/Faq/Faq";
 import Img1 from "../../../public/images/audit.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
+import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -120,8 +121,8 @@ export default function AuditPage() {
       <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'
-        heading="Find out exactly what's costing you bookings"
-        headingAccent='in 60 seconds or less — For Free. '
+        heading="Find out exactly what's costing you bookings in 60 seconds or less — For Free."
+        headingAccent=''
         subheading='$0 · Detailed Report sent to your inbox'
         copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
       />
@@ -138,6 +139,7 @@ export default function AuditPage() {
       <AuditParallaxResults />
       <PricingPreview product='audit' />
       <Faq />
+      <ContactSection />
     </main>
   );
 }
