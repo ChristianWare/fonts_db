@@ -81,11 +81,17 @@
   border-left-color: var(--black);
 }
 
-.arrowsContainer {
+.arrowsContainer,
+.arrowsContainerii {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 2rem;
+}
+
+.arrowsContainerii {
+  align-items: center;
+  justify-content: center;
 }
 
 .arrowButton {
@@ -221,7 +227,7 @@
   color: var(--white);
 }
 
-@media screen and (max-width: 1268px) {
+@media screen and (max-width: 1468px) {
   .content {
     margin-top: 20rem;
   }
@@ -231,7 +237,7 @@
   }
 }
 
-@media screen and (max-width: 1068px) {
+@media screen and (max-width: 1468px) {
   .bottom {
     grid-template-columns: 1fr;
   }
@@ -243,7 +249,7 @@
   }
 
   .featureTab {
-    border-bottom: 1px solid var(--lightGray);
+    border-bottom: 1px solid var(--blackii);
   }
 
   .featureTab:last-child {

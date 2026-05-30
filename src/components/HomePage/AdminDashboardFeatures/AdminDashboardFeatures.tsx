@@ -57,7 +57,7 @@ export default function AdminFocusFeatures() {
                 them because they were never designed to. We chose depth over
                 reach — and that focus shows up in every product we ship.
               </p>
-              <div className={styles.arrowsContainer}>
+              {/* <div className={styles.arrowsContainer}>
                 <button
                   type='button'
                   className={styles.arrowButton}
@@ -74,7 +74,7 @@ export default function AdminFocusFeatures() {
                 >
                   <Arrow className={styles.arrowRight} />
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className={styles.bottom}>
               <div className={styles.bottomLeft}>
@@ -115,19 +115,9 @@ export default function AdminFocusFeatures() {
                         pointerEvents: isActive ? "auto" : "none",
                       }}
                     >
-                      <div className={styles.imageWrapper}>
-                        {/* <Image
-                          src={feature.src}
-                          alt={feature.title}
-                          fill
-                          className={styles.projectImage}
-                          priority={index === 0}
-                        /> */}
-                        <div className={styles.imageOverlay} />
-                      </div>
                       <div className={styles.projectInfo}>
                         <div className={styles.projectText}>
-                          <h3 className={`${styles.projectTitle} h2ii`}>
+                          <h3 className={`${styles.projectTitle} h3`}>
                             {feature.title}
                           </h3>
                           <p className={styles.projectH1}>{feature.desc}</p>
@@ -142,6 +132,24 @@ export default function AdminFocusFeatures() {
                     </div>
                   );
                 })}
+              </div>
+              <div className={styles.arrowsContainerii}>
+                <button
+                  type='button'
+                  className={styles.arrowButton}
+                  onClick={handlePrev}
+                  aria-label='Previous reason'
+                >
+                  <Arrow className={styles.arrowLeft} />
+                </button>
+                <button
+                  type='button'
+                  className={styles.arrowButton}
+                  onClick={handleNext}
+                  aria-label='Next reason'
+                >
+                  <Arrow className={styles.arrowRight} />
+                </button>
               </div>
             </div>
           </div>
