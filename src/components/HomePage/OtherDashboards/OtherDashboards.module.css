@@ -4,6 +4,7 @@
 }
 
 .parent {
+  padding-bottom: 20rem;
   border-top: 1px solid var(--lightGray);
   margin-top: 3rem;
 }
@@ -45,6 +46,7 @@
   max-width: 700px;
 }
 
+/* ── Bottom: parallax-staggered grid (matches Solutionii) ── */
 .bottom {
   padding: 2rem;
 }
@@ -52,29 +54,11 @@
 .mapDataContainer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  align-items: start;
 }
 
-.card {
-  width: 100%;
-  min-height: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 3rem;
-  border: 1px solid var(--lightGray);
-  padding: 4rem;
-  position: relative;
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--lightGray) 0,
-    var(--lightGray) 1px,
-    transparent 0,
-    transparent 50%
-  );
-  text-align: right;
-  background-size: 7px 7px;
+.card:nth-child(1) {
+  margin-top: 0;
 }
 
 .card:nth-child(2) {
@@ -83,6 +67,30 @@
 
 .card:nth-child(3) {
   margin-top: 20rem;
+}
+
+/* ── Card base ── */
+.card {
+  width: 100%;
+  min-height: 550px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3rem;
+  border: 1px solid var(--lightGray);
+  padding: 4rem;
+  position: relative;
+  background-color: var(--white);
+  will-change: transform;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGray) 0,
+    var(--lightGray) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
 }
 
 .card::before {
@@ -113,6 +121,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 2rem;
+  width: 100%;
 }
 
 .headingii {
@@ -120,10 +129,7 @@
   background-color: var(--white);
   padding: 1rem;
   border: 1px solid var(--lightGray);
-}
-
-.body {
-  color: var(--text);
+  width: 100%;
 }
 
 .label {
@@ -131,16 +137,17 @@
   font-family: var(--GeistMono);
   color: var(--accent);
   background-color: var(--black);
-  padding: 1rem;
+  padding: 6px 12px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
 }
 
+/* ── Image slot — fixed height so all three are identical ── */
 .cardMiddle {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 150px;
+  height: 400px;
+  flex-shrink: 0;
 }
 
 .img {
@@ -148,6 +155,23 @@
   object-position: top;
 }
 
+.cardBottom {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+}
+
+.body {
+  color: var(--text);
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  letter-spacing: normal;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.6rem;
+}
+
+/* ── Responsive ── */
 @media screen and (max-width: 1268px) {
   .top {
     padding: 10rem 3rem;
@@ -182,16 +206,18 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .card:nth-child(2) {
+  .card:nth-child(1),
+  .card:nth-child(2),
+  .card:nth-child(3) {
     margin-top: 0;
   }
 
   .card:nth-child(3) {
-    margin-top: 0;
     grid-column: span 2;
   }
 }
 
+/* ── Mobile: 1 column, no stagger, no parallax, sticky stack ── */
 @media screen and (max-width: 768px) {
   .top {
     padding: 5rem 2rem;
@@ -202,10 +228,26 @@
   }
 
   .card {
+    align-self: flex-start;
+    position: sticky;
+    top: 90px;
     height: 100%;
+    background-color: var(--white);
+    will-change: auto;
+    min-height: 400px;
+    padding: 3rem;
+    box-shadow: 0 7px 12px rgb(0 0 0 / 15%);
   }
 
   .card:nth-child(3) {
     grid-column: span 1;
+  }
+
+  .cardMiddle {
+    height: 300px;
+  }
+
+  .body {
+    font-size: 16px;
   }
 }

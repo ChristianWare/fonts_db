@@ -4,7 +4,6 @@ import LeadsHowItWorks from "@/components/LeadsPage/LeadsHowItWorks/LeadsHowItWo
 import LeadsProblem from "@/components/LeadsPage/LeadsProblem/LeadsProblem";
 import Img1 from "../../../public/images/leads.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
-// import WhatsIncluded from "@/components/WebsitesPage/WhatsIncluded/WhatsIncluded";
 import LeadsEmail from "@/components/LeadsPage/LeadsEmail/LeadsEmail";
 import LeadsVsList from "@/components/LeadsPage/LeadsVsList/LeadsVsList";
 import LeadsPreview from "@/components/LeadsPage/LeadsPreview/LeadsPreview";
@@ -14,42 +13,42 @@ import ContactSection from "@/components/HomePage/ContactSection/ContactSection"
 const heroItems = [
   {
     id: 1,
-    feature: "Page speed",
-    desc: "Core Web Vitals and mobile load times benchmarked against the operators you're competing with.",
+    feature: "Hot leads",
+    desc: "Events in your market happening in the next two weeks. Call them today, win the transportation.",
   },
   {
     id: 2,
-    feature: "Booking flow",
-    desc: "Where prospects drop off — quote, payment, mobile friction, and account-required walls.",
+    feature: "Warm leads",
+    desc: "Events two weeks to three months out. Time to build the relationship before they need the ride.",
   },
   {
     id: 3,
-    feature: "Tech stack",
-    desc: "Platform-specific risks flagged, with the fixes that actually move revenue.",
+    feature: "Cold leads",
+    desc: "B2B accounts across nine categories — wedding venues, hotels, casinos, and the prospects that fill calendars for years.",
   },
   {
     id: 4,
-    feature: "Brand & trust",
-    desc: "Reviews, credentials, fleet imagery, and the conversion gaps costing you work.",
+    feature: "Every morning",
+    desc: "One inbox digest with the highest-scoring prospects across all three tiers. No login required to see your day.",
   },
 ];
 
-export default function AuditPage() {
+export default function LeadsPage() {
   return (
     <main>
       <PageIntroHero
-        sectionIntroText='Free Website Audit'
-        heading="Find out exactly what's costing you bookings in 60 seconds or less — for free."
-        subheading='$0 · Detailed report sent to your inbox'
+        src={Img1}
+        sectionIntroText='Leads Tool'
+        heading='Find your next client before your competition does.'
+        subheading='Three lead temperatures, delivered to your inbox every morning. Every lead scored, briefed, and paired with a ready-to-send outreach script.'
         items={heroItems}
-        copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
+        copy='$125/month flat. 7-day free trial. Hot, warm, and cold leads in one inbox. No per-lead fees. Cancel anytime.'
       />
       <LeadsProblem />
       <LeadsHowItWorks />
       <LeadsPreview />
       <LeadExamples />
       <LeadsEmail />
-      {/* <WhatsIncluded /> */}
       <LeadsVsList />
       <PricingPreview product='leads' />
       <Faq />

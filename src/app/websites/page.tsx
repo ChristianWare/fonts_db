@@ -10,16 +10,39 @@ import WebsiteOutcomes from "@/components/WebsitesPage/WebsiteOutcomes/WebsiteOu
 import NierExamples from "@/components/WebsitesPage/NierExamples/NierExamples";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 
+const heroItems = [
+  {
+    id: 1,
+    feature: "Direct booking engine",
+    desc: "Multi-step, mobile-fast, no account required. Built so corporate clients actually finish the booking on the first visit.",
+  },
+  {
+    id: 2,
+    feature: "Admin dashboard",
+    desc: "Bookings, payments, drivers, and reporting in one view. The operations system you have been faking with spreadsheets.",
+  },
+  {
+    id: 3,
+    feature: "Driver portal",
+    desc: "Trip details, navigation, and push notifications. Dispatch handled without phone calls back to the office.",
+  },
+  {
+    id: 4,
+    feature: "Corporate accounts",
+    desc: "Employee management and centralized billing for the accounts that book transportation as a relationship, not a transaction.",
+  },
+];
+
 export default function WebsitesPage() {
   return (
     <main>
       <PageIntroHero
         src={Img1}
         sectionIntroText='Custom Built Website'
-        heading='A custom website that closes the deal'
-        headingAccent=''
-        subheading='$499/month · Everything included · No setup fee · Cancel anytime'
-        copy='We build custom websites that are designed to convert visitors into customers. Our websites are built with the latest technology and are optimized for speed, SEO, and user experience. We also provide ongoing support and maintenance to ensure your website is always up-to-date and performing at its best.'
+        heading='The platform that runs your whole black car business.'
+        subheading='$499/month + $500 setup · Custom-built · Zero per-booking fees · Cancel anytime.'
+        items={heroItems}
+        copy='Built specifically for black car operators. Bookings, dispatch, payments, corporate accounts, and flight tracking — one platform, on your domain. No per-booking fees. No platform middlemen. Cancel anytime.'
       />
       <OtherDashboards />
       <Features />

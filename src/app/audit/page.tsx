@@ -69,6 +69,29 @@ export const SCAN_STEPS = [
 
 export type ModalState = "form" | "scanning" | "results";
 
+const heroItems = [
+  {
+    id: 1,
+    feature: "Lost bookings",
+    desc: "Your estimated monthly bookings lost to slow load times, broken booking flows, and missing trust signals — turned into a real dollar figure.",
+  },
+  {
+    id: 2,
+    feature: "Page performance",
+    desc: "Core Web Vitals and mobile load times scored against the operators you're actually competing with — with the fixes that move revenue.",
+  },
+  {
+    id: 3,
+    feature: "Booking friction",
+    desc: "Where prospects drop off — quote, payment, mobile usability, and account-required walls keeping them from completing the ride.",
+  },
+  {
+    id: 4,
+    feature: "Visibility & traffic",
+    desc: "Your monthly traffic estimate, top keywords you rank for, and the searches your competitors are capturing instead.",
+  },
+];
+
 export default function AuditPage() {
   const [modalState, setModalState] = useState<ModalState>("form");
   const [scanStep, setScanStep] = useState(0);
@@ -116,38 +139,15 @@ export default function AuditPage() {
     setModalState("form");
   }
 
-  const heroItems = [
-    {
-      id: 1,
-      feature: "Page speed",
-      desc: "Core Web Vitals and mobile load times benchmarked against the operators you're competing with.",
-    },
-    {
-      id: 2,
-      feature: "Booking flow",
-      desc: "Where prospects drop off — quote, payment, mobile friction, and account-required walls.",
-    },
-    {
-      id: 3,
-      feature: "Tech stack",
-      desc: "Platform-specific risks flagged, with the fixes that actually move revenue.",
-    },
-    {
-      id: 4,
-      feature: "Brand & trust",
-      desc: "Reviews, credentials, fleet imagery, and the conversion gaps costing you work.",
-    },
-  ];
-
   return (
     <main className={styles.container}>
       <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'
-        heading="Find out exactly what's costing you bookings in 60 seconds or less — for free."
-        subheading='$0 · Detailed report sent to your inbox'
+        heading="Find out exactly what's costing you bookings — for free, in 60 seconds."
+        subheading='$0 · Six-category scored audit · Full PDF report emailed to your inbox.'
         items={heroItems}
-        copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
+        copy='Built specifically for black car operators. The audit scores your site across six categories — speed, booking flow, SEO, trust signals, tech stack, and brand — and estimates the monthly bookings you are losing because of them. Free. No card. Result in 60 seconds.'
       />
       <AuditHero
         state={modalState}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import SectionIntro from "../../shared/SectionIntro/SectionIntro";
@@ -62,20 +65,48 @@ const cards: Card[] = [
 ];
 
 export default function OtherDashboards() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card3Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Disable parallax on mobile / narrow viewports
+      if (window.innerWidth <= 1268) {
+        if (card1Ref.current) card1Ref.current.style.transform = "";
+        if (card3Ref.current) card3Ref.current.style.transform = "";
+        return;
+      }
+
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const scrolledIntoView = window.innerHeight - rect.top;
+      const factor = 0.12;
+
+      if (card1Ref.current) {
+        card1Ref.current.style.transform = `translateY(${scrolledIntoView * factor}px)`;
+      }
+      if (card3Ref.current) {
+        card3Ref.current.style.transform = `translateY(${-scrolledIntoView * factor}px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <section className={styles.container}>
+    <section className={styles.container} ref={sectionRef}>
       <LayoutWrapper>
         <div className={styles.parent}>
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.topLeft}>
                 <div className={styles.imagContainer}>
-                  {/* <Image
-                    src={LogoImg}
-                    alt='Fonts & Footers Logo'
-                    title='Fonts & Footers Logo'
-                    className={styles.logo}
-                  /> */}
                   <Speedometer className={styles.icon} />
                 </div>
               </div>
@@ -92,10 +123,15 @@ export default function OtherDashboards() {
                 </p>
               </div>
             </div>
+
             <div className={styles.bottom}>
               <div className={styles.mapDataContainer}>
-                {cards.map((x) => (
-                  <div className={styles.card} key={x.id}>
+                {cards.map((x, index) => (
+                  <div
+                    className={styles.card}
+                    key={x.id}
+                    ref={index === 0 ? card1Ref : index === 2 ? card3Ref : null}
+                  >
                     <div className={styles.cardTop}>
                       <span className={styles.label}>{x.label}</span>
                       <h3 className={`${styles.headingii} h5`}>{x.heading}</h3>
@@ -106,7 +142,7 @@ export default function OtherDashboards() {
                         alt={x.heading}
                         fill
                         className={styles.img}
-                      />{" "}
+                      />
                     </div>
                     <div className={styles.cardBottom}>
                       <p className={styles.body}>{x.body}</p>
