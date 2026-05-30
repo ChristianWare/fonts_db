@@ -116,14 +116,37 @@ export default function AuditPage() {
     setModalState("form");
   }
 
+  const heroItems = [
+    {
+      id: 1,
+      feature: "Page speed",
+      desc: "Core Web Vitals and mobile load times benchmarked against the operators you're competing with.",
+    },
+    {
+      id: 2,
+      feature: "Booking flow",
+      desc: "Where prospects drop off — quote, payment, mobile friction, and account-required walls.",
+    },
+    {
+      id: 3,
+      feature: "Tech stack",
+      desc: "Platform-specific risks flagged, with the fixes that actually move revenue.",
+    },
+    {
+      id: 4,
+      feature: "Brand & trust",
+      desc: "Reviews, credentials, fleet imagery, and the conversion gaps costing you work.",
+    },
+  ];
+
   return (
     <main className={styles.container}>
       <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'
-        heading="Find out exactly what's costing you bookings in 60 seconds or less — For Free."
-        headingAccent=''
-        subheading='$0 · Detailed Report sent to your inbox'
+        heading="Find out exactly what's costing you bookings in 60 seconds or less — for free."
+        subheading='$0 · Detailed report sent to your inbox'
+        items={heroItems}
         copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
       />
       <AuditHero

@@ -6,23 +6,31 @@ import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Image, { StaticImageData } from "next/image";
 
+interface HeroBoxItem {
+  id: number;
+  feature: string;
+  desc: string;
+}
+
 interface PageIntroHeroProps {
-  src: StaticImageData;
   sectionIntroText: string;
   heading: string;
-  headingAccent: string;
   subheading: string;
+  items?: HeroBoxItem[];
   copy: string;
+  src: StaticImageData;
 }
 
 export default function PageIntroHero({
-  src,
   sectionIntroText,
   heading,
-  headingAccent,
   subheading,
+  items,
   copy,
+  src,
 }: PageIntroHeroProps) {
+  const hasItems = items && items.length > 0;
+
   return (
     <section className={styles.container}>
       <LayoutWrapper borderDark>
@@ -31,34 +39,53 @@ export default function PageIntroHero({
           <div className={styles.dot2} />
           <div className={styles.dot3} />
           <div className={styles.dot4} />
+
           <div className={styles.content}>
             <div className={styles.topParent}>
-              <Nav variant='black' hamburgerColor='hamburgerBlack' />{" "}
+              <Nav variant='black' hamburgerColor='hamburgerBlack' />
             </div>
-            <div className={styles.top}>
-              <div className={styles.imgContainer}>
-                <Image src={src} alt='Audit Hero' fill className={styles.img} />
-              </div>
-              <div className={styles.topRight}>
-                <div className={styles.topRightA}>
-                  <SectionIntro
-                    text={sectionIntroText}
-                    background='bgBlack'
-                    color='colorWhite'
-                  />
-                  <h1 className={`${styles.heading} h2ii`}>
-                    {heading}{" "}
-                    <span className={`${styles.accent} h2ii`}>
-                      {" "}
-                      {headingAccent}
-                    </span>
-                  </h1>
-                  <h3 className={`${styles.subheading} h6`}>{subheading}</h3>
+            <div className={styles.headingImageContainer}>
+              <div className={styles.hICA}>
+                <SectionIntro
+                  text={sectionIntroText}
+                  background='bgBlack'
+                  color='colorWhite'
+                />
+                <h2 className={`${styles.topHeading} h2ii`}>{heading}</h2>
+                <h3 className={`${styles.heading} h6`}>{subheading}</h3>
+                <div className={styles.outro}>
+                  <p className={styles.outroCopy}>{copy}</p>
                 </div>
-
-                <p className={styles.copy}>{copy}</p>
+              </div>
+              <div className={styles.hICB}>
+                <div className={styles.imgContainer}>
+                  <Image
+                    src={src}
+                    alt=''
+                    title=''
+                    fill
+                    className={styles.img}
+                  />
+                </div>
               </div>
             </div>
+            <div
+              className={`${styles.top} ${!hasItems ? styles.topNoBorder : ""}`}
+            ></div>
+
+            {hasItems && (
+              <div className={styles.bottom}>
+                {items.map((x, i) => (
+                  <div key={x.id} className={`${styles.box} bgLines`}>
+                    <span className={styles.index}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h4 className={styles.feature}>{x.feature}</h4>
+                    <p className={styles.desc}>{x.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </LayoutWrapper>

@@ -54,7 +54,7 @@
   text-transform: uppercase;
   font-size: 1.5rem;
   line-height: 1;
-  color: var(--gray);
+  color: var(--white);
   white-space: nowrap;
   padding: 0.2rem 0;
   border-radius: 50px;
@@ -192,8 +192,16 @@
 }
 
 @media screen and (max-width: 568px) {
+  .content {
+    padding: 0;
+  }
+  
   .heading {
     background-size: 5px 5px;
     padding-top: 1.5rem;
+  }
+
+  .navItems {
+    padding-right: 2rem;
   }
 }

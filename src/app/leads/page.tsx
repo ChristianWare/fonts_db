@@ -11,16 +11,38 @@ import LeadsPreview from "@/components/LeadsPage/LeadsPreview/LeadsPreview";
 import LeadExamples from "@/components/LeadsPage/LeadExamples/LeadExamples";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 
-export default function LeadsPage() {
+const heroItems = [
+  {
+    id: 1,
+    feature: "Page speed",
+    desc: "Core Web Vitals and mobile load times benchmarked against the operators you're competing with.",
+  },
+  {
+    id: 2,
+    feature: "Booking flow",
+    desc: "Where prospects drop off — quote, payment, mobile friction, and account-required walls.",
+  },
+  {
+    id: 3,
+    feature: "Tech stack",
+    desc: "Platform-specific risks flagged, with the fixes that actually move revenue.",
+  },
+  {
+    id: 4,
+    feature: "Brand & trust",
+    desc: "Reviews, credentials, fleet imagery, and the conversion gaps costing you work.",
+  },
+];
+
+export default function AuditPage() {
   return (
     <main>
       <PageIntroHero
-        src={Img1}
-        sectionIntroText='Leads Tool'
-        heading='Find your next client before your competitor does'
-        headingAccent=''
-        subheading='$125/month · 7 Day free trial · cold, warm & hot leads · Cancel anytime'
-        copy='A lead generation tool built exclusively for black car operators. Hot leads from people actively requesting transportation. Warm leads from businesses signaling upcoming demand. Cold leads from the B2B accounts that will fill your calendar for years.'
+        sectionIntroText='Free Website Audit'
+        heading="Find out exactly what's costing you bookings in 60 seconds or less — for free."
+        subheading='$0 · Detailed report sent to your inbox'
+        items={heroItems}
+        copy='The Fonts & Footers audit tool analyzes your website across the factors that determine whether you get found, whether visitors trust you, and whether your site actually converts. Free, instant results, with the full report sent straight to your inbox.'
       />
       <LeadsProblem />
       <LeadsHowItWorks />
