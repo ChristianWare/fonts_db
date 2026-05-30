@@ -96,7 +96,6 @@
 
 .heading {
   color: var(--black);
-  text-align: center;
 }
 
 .copy {
@@ -134,8 +133,6 @@
     margin-right: auto;
   }
 }
-
-
 
 @media screen and (max-width: 1068px) {
   .content {
