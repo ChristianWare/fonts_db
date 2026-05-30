@@ -233,12 +233,12 @@ export default function BillingCheckout({
         appearance: {
           theme: "flat",
           variables: {
-            colorBackground: "#ffffff",
+            colorBackground: "#fff",
             colorText: "#0a0a0a",
             colorDanger: "#c53030",
             fontFamily: '"Roboto", system-ui, sans-serif',
             fontSizeBase: "14px",
-            borderRadius: "0px",
+            borderRadius: "0",
             colorTextPlaceholder: "#888888",
             colorTextSecondary: "#555555",
             spacingUnit: "4px",

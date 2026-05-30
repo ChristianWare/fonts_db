@@ -54,7 +54,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* overflow: hidden; */
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   z-index: 0;
@@ -101,7 +100,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgb(0 0 0 / 45%);
   z-index: 1;
 }
 
@@ -150,7 +149,7 @@
   height: 100%;
   background-color: var(--accent);
   left: -12px;
-  bottom: 0px;
+  bottom: 0;
 }
 
 .accent {
@@ -179,7 +178,6 @@
   justify-content: flex-start;
   width: 60%;
   gap: 3rem;
-  /* margin-top: 6rem; */
 }
 
 .copy,
@@ -213,6 +211,7 @@
   .content {
     gap: 10rem;
   }
+
   .copyBtnContainer {
     width: 100%;
     margin-top: 3rem;
@@ -247,12 +246,6 @@
     background-size: 5px 5px;
   }
 
-  /* .copy,
-  .span {
-    font-size: 1.6rem;
-    letter-spacing: -0.9px;
-  } */
-
   .imgContainer {
     display: none;
   }
@@ -263,7 +256,7 @@
   }
 
   .overlay {
-    background: rgba(0, 0, 0, 0);
+    background: rgb(0 0 0 / 0%);
   }
 
   .btnContainer {

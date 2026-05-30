@@ -243,7 +243,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  background-color: rgba(252, 211, 77, 0.05);
+  background-color: rgb(252 211 77 / 5%);
   border-left: 6px solid var(--accent);
 }
 
@@ -253,7 +253,7 @@
 }
 
 .reviewBody {
-  background-color: rgba(59, 130, 246, 0.05);
+  background-color: rgb(59 130 246 / 5%);
   border-left-color: #3b82f6;
 }
 
@@ -269,7 +269,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  background-color: rgba(22, 163, 74, 0.05);
+  background-color: rgb(22 163 74 / 5%);
   border-left: 6px solid #16a34a;
 }
 
@@ -391,7 +391,7 @@
   flex-direction: column;
   gap: 1rem;
   padding: 3rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
   border-left: 6px solid var(--accent);
 }
 
@@ -502,7 +502,7 @@
   flex-direction: column;
   gap: 2rem;
   padding: 3rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
   border: 1px solid var(--grayii);
 }
 

@@ -87,8 +87,14 @@
   transition: opacity 0.2s ease;
 }
 
-.submitBtn:hover { opacity: 0.85; }
-.submitBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submitBtn:hover {
+  opacity: 0.85;
+}
+
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 /* ── Legal ── */
 .legal {

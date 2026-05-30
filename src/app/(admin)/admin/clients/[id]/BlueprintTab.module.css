@@ -447,8 +447,7 @@
 /* ── Hidden scrollbar scroll area ── */
 .treeViewScroll {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
   height: 100%;
@@ -513,7 +512,7 @@
   inset: 0;
   border: 2px solid var(--accent);
   pointer-events: none;
-  animation: rectPulse 2s ease-in-out infinite;
+  animation: rect-pulse 2s ease-in-out infinite;
 }
 
 .treeNavBtnRight::after {
@@ -521,11 +520,12 @@
   animation-delay: 0.6s;
 }
 
-@keyframes rectPulse {
+@keyframes rect-pulse {
   0% {
     transform: scale(1);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.9);
     opacity: 0;
@@ -1093,7 +1093,7 @@
   font-size: 1.4rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #ffffff;
+  color: #fff;
   cursor: pointer;
   transition: opacity 0.15s;
   white-space: nowrap;

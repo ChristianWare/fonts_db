@@ -26,20 +26,24 @@
   background-color: var(--black);
   z-index: 1;
 }
+
 .dot1 {
   top: 0;
   left: 0;
 }
+
 .dot2 {
   top: 0;
   right: 0;
   left: unset;
 }
+
 .dot3 {
   bottom: 0;
   left: 0;
   top: unset;
 }
+
 .dot4 {
   bottom: 0;
   right: 0;
@@ -125,7 +129,7 @@
   font-weight: bold;
   color: var(--black);
   flex-shrink: 0;
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: rgb(0 0 0 / 8%);
 }
 
 .captionContainer {
@@ -355,7 +359,7 @@
 .emailBannerSub {
   font-family: var(--Roboto);
   font-size: 1.5rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgb(255 255 255 / 60%);
   line-height: 1.4;
   letter-spacing: -0.2px;
 }
@@ -397,6 +401,7 @@
 .input::placeholder {
   color: var(--text);
 }
+
 .input:focus {
   border-color: var(--black);
 }
@@ -501,12 +506,15 @@
 .scanStepRow:last-child {
   border-bottom: none;
 }
+
 .scanStepDone {
   opacity: 0.4;
 }
+
 .scanStepActive {
   opacity: 1;
 }
+
 .scanStepPending {
   opacity: 0.2;
 }
@@ -520,7 +528,7 @@
 }
 
 .scanStepActive .scanStepDot {
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 3px rgb(0 0 0 / 15%);
 }
 
 .scanStepText {
@@ -557,18 +565,22 @@
   background-color: #0e8e0e;
   color: var(--white);
 }
+
 .gradeB {
   background-color: #4a8e0e;
   color: var(--white);
 }
+
 .gradeC {
   background-color: var(--black);
   color: var(--accent);
 }
+
 .gradeD {
   background-color: #d97706;
   color: var(--white);
 }
+
 .gradeF {
   background-color: var(--red);
   color: var(--white);
@@ -621,7 +633,7 @@
 .catBar {
   width: 80px;
   height: 2px;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgb(0 0 0 / 15%);
   flex-shrink: 0;
 }
 
@@ -677,27 +689,34 @@
   .heading {
     font-size: 5.5rem;
   }
+  
   .leftTop {
     padding: 7rem 4rem;
   }
+
   .leftBottom {
     padding: 4rem;
   }
+
   .copy {
     font-size: 1.9rem;
   }
+
   .catRow {
     padding: 2rem 4rem;
   }
+
   .catTeaser {
     padding: 0 4rem 1.6rem;
   }
+
   .resultCta,
   .form,
   .scanPanel,
   .rightTop {
     padding: 4rem;
   }
+
   .emailBanner {
     padding: 2.5rem 4rem;
   }
@@ -707,37 +726,47 @@
   .content {
     grid-template-columns: 1fr;
   }
+
   .left {
     border-right: none;
     border-bottom: 1px solid var(--blackii);
   }
+
   .leftTop {
     padding: 5rem 3rem;
     border-bottom: none;
   }
+
   .leftBottom {
     padding: 3rem;
   }
+
   .rightTop {
     padding: 3rem;
   }
+
   .form,
   .scanPanel,
   .resultCta {
     padding: 3rem;
   }
+
   .catRow {
     padding: 1.8rem 3rem;
   }
+
   .catTeaser {
     padding: 0 3rem 1.5rem;
   }
+  
   .pullQuote {
     padding-left: 2rem;
   }
+
   .statsGrid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .emailBanner {
     padding: 2.5rem 3rem;
   }
@@ -748,21 +777,26 @@
     font-size: 4.2rem;
     letter-spacing: -1.3px;
   }
+
   .copy {
     font-size: 1.6rem;
   }
+
   .scoreNum,
   .scanPct {
     font-size: 6.5rem;
   }
+
   .catRow {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
+
   .catBar {
     width: 60px;
   }
+
   .statsGrid {
     grid-template-columns: 1fr 1fr;
   }
@@ -773,35 +807,44 @@
     font-size: 3.4rem;
     letter-spacing: -0.9px;
   }
+
   .scoreNum,
   .scanPct {
     font-size: 5rem;
   }
+
   .gradeLarge {
     font-size: 4.5rem;
     padding: 0.8rem 1.8rem;
   }
+
   .leftTop {
     padding: 4rem 2rem;
   }
+
   .leftBottom {
     padding: 2rem;
   }
+
   .rightTop,
   .form,
   .scanPanel,
   .resultCta {
     padding: 2rem;
   }
+
   .catRow {
     padding: 1.5rem 2rem;
   }
+
   .catTeaser {
     padding: 0 2rem 1.4rem;
   }
+
   .statsGrid {
     grid-template-columns: 1fr;
   }
+
   .emailBanner {
     padding: 2rem;
     gap: 1.5rem;
@@ -857,12 +900,12 @@
 }
 
 .techPillOk .techPillVal {
-  background-color: rgba(14, 142, 14, 0.12);
+  background-color: rgb(14 142 14 / 12%);
   color: #0e5e0e;
 }
 
 .techPillWarn .techPillVal {
-  background-color: rgba(255, 0, 38, 0.1);
+  background-color: rgb(255 0 38 / 10%);
   color: var(--red);
 }
 
@@ -870,6 +913,7 @@
   .techPills {
     gap: 0.6rem;
   }
+
   .techPillKey,
   .techPillVal {
     font-size: 1rem;

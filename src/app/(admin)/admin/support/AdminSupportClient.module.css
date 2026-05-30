@@ -261,6 +261,7 @@
 .sendBtn:hover {
   opacity: 0.85;
 }
+
 .sendBtn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -305,9 +306,11 @@
   .header {
     padding: 3rem 2rem;
   }
+  
   .sectionHeading {
     padding: 1.6rem 2rem;
   }
+  
   .ticketCard {
     padding: 2.4rem 2rem;
   }

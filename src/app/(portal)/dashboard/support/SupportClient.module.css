@@ -258,15 +258,19 @@
   .header {
     padding: 3rem 2rem;
   }
+  
   .card {
     padding: 2.4rem 2rem;
   }
+
   .ticketTop {
     flex-direction: column;
   }
+
   .formFooter {
     justify-content: stretch;
   }
+
   .submitBtn {
     width: 100%;
     text-align: center;

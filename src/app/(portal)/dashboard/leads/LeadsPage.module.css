@@ -23,7 +23,6 @@
   display: flex;
   flex-direction: column;
   gap: 5rem;
-  /* max-width: 900px; */
 }
 
 /* Market info bar (high-contrast top section) */
@@ -214,10 +213,9 @@
    ============================ */
 .sectionHeader {
   display: flex;
-  flex-direction: column;
+  flex-flow: column wrap;
   align-items: baseline;
   gap: 1.5rem;
-  flex-wrap: wrap;
   margin-bottom: 2.5rem;
   padding: 4rem;
   border: 1px solid var(--lightBlack);
@@ -245,16 +243,6 @@
   letter-spacing: -0.02em;
   line-height: 1;
 }
-
-/* ============================
-   Needs your attention
-   ============================ */
-/* .attentionCard {
-  padding: 4rem;
-  border: 1px solid var(--lightBlack);
-  background-color: var(--white);
-  border-left: 6px solid var(--accent);
-} */
 
 .attentionCount {
   font-family: var(--GeistMono);
@@ -339,20 +327,10 @@
   text-align: right;
 }
 
-/* ============================
-   Pipeline breakdown
-   ============================ */
-/* .pipelineCard {
-  padding: 4rem;
-  border: 1px solid var(--lightBlack);
-  background-color: var(--white);
-} */
-
 .pipelineGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
-  /* border: 1px solid var(--grayiii); */
 }
 
 .pipelineStat {

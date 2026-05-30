@@ -66,7 +66,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 2rem 3rem;
-  background-color: rgba(22, 163, 74, 0.1);
+  background-color: rgb(22 163 74 / 1%);
   border: 1px solid #16a34a;
   flex-wrap: wrap;
 }
@@ -181,10 +181,9 @@
 
 .heroLinks {
   display: flex;
-  flex-direction: column;
+  flex-flow: column wrap;
   align-items: center;
   gap: 3rem;
-  flex-wrap: wrap;
   margin-top: 2rem;
   font-family: var(--Roboto);
   font-size: 1.6rem;
@@ -237,12 +236,10 @@
   display: block;
 }
 
-/* Location card with map + distance + drive time */
 .locationCard {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
-  /* background-color: var(--black); */
   color: var(--black);
   overflow: hidden;
 }
@@ -264,7 +261,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 3rem 0rem;
+  padding: 3rem 0;
   justify-content: center;
 }
 
@@ -378,7 +375,7 @@
   font-size: 1.6rem;
   color: var(--black);
   font-weight: 700;
-  background-color: rgba(252, 211, 77, 0.2);
+  background-color: rgb(252 211 77 / 20%);
   border-left: 6px solid var(--accent);
   padding: 0.8rem 1rem;
   margin: 0 -1rem;
@@ -397,7 +394,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 3rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
   border-left: 6px solid var(--lightGray);
 }
 
@@ -470,7 +467,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 3rem;
-  background-color: rgba(252, 211, 77, 0.08);
+  background-color: rgb(252 211 77 / 8%);
   border-left: 6px solid var(--accent);
 }
 
@@ -505,7 +502,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 3rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
   border: 1px solid var(--grayii);
 }
 
@@ -609,19 +606,20 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.92);
+  background-color: rgb(0 0 0 / 92%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem;
   cursor: pointer;
-  animation: lightboxFadeIn 0.18s ease;
+  animation: lightbox-fade-in 0.18s ease;
 }
 
-@keyframes lightboxFadeIn {
+@keyframes lightbox-fade-in {
   from {
     opacity: 0;
   }
+  
   to {
     opacity: 1;
   }

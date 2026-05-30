@@ -375,6 +375,7 @@
 .nextBtn:hover {
   opacity: 0.85;
 }
+
 .nextBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -396,6 +397,7 @@
 .submitBtn:hover {
   opacity: 0.85;
 }
+
 .submitBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -418,21 +420,13 @@
 }
 
 .readOnlySectionTitle {
-  /* font-family: var(--GeistMono);
-  font-size: 2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--black);
-  padding: 2.4rem 5rem;
-  border-bottom: 1px solid var(--lightGray); */
+
   font-size: 3rem;
   background-color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--accent);
-  width: fit-content;
   padding: 1rem;
-  /* margin: 1rem; */
   width: 100%;
 }
 
@@ -489,12 +483,14 @@
   .sectionCard {
     padding: 2.4rem 2rem;
   }
+
   .navRow {
     padding: 2rem;
     flex-direction: column;
     gap: 1.2rem;
     align-items: stretch;
   }
+  
   .lockedBanner {
     padding: 1.4rem 2rem;
   }
@@ -516,6 +512,7 @@
   .readOnlySectionTitle {
     padding: 2rem;
   }
+
   .readOnlyRow {
     padding: 1.4rem 2rem;
   }

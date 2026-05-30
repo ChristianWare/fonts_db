@@ -128,7 +128,7 @@ function VelocityText({
   const copyWidth = useElementWidth(copyRef);
 
   const x: MotionValue<string> = useTransform(baseX, (v) =>
-    copyWidth === 0 ? "0px" : `${wrap(-copyWidth, 0, v)}px`,
+    copyWidth === 0 ? "0" : `${wrap(-copyWidth, 0, v)}px`,
   );
 
   /* -------------------------------------------------------------- */

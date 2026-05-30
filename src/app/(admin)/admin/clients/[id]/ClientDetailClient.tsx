@@ -700,7 +700,7 @@ export default function ClientDetailClient({
           <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
             <h3
               className={styles.cardHeading}
-              style={{ backgroundColor: "#c53030", color: "#ffffff" }}
+              style={{ backgroundColor: "#c53030", color: "#fff" }}
             >
               Danger Zone
             </h3>
@@ -766,7 +766,7 @@ export default function ClientDetailClient({
                       padding: "1rem 2rem",
                       border: "none",
                       background: "#c53030",
-                      color: "#ffffff",
+                      color: "#fff",
                       fontFamily: "var(--GeistMono)",
                       fontSize: "1.4rem",
                       textTransform: "uppercase",

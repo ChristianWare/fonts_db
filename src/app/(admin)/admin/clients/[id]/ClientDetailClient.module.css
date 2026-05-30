@@ -74,7 +74,7 @@
   letter-spacing: 0.1em;
   color: var(--accent);
   background-color: var(--black);
-  padding: 1rem 1rem;
+  padding: 1rem;
   align-self: flex-start;
 }
 
@@ -594,7 +594,7 @@
 }
 
 .downloadBtn {
-  padding: 1rem 1rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -627,7 +627,7 @@
 
 .input {
   width: 100%;
-  padding: 1rem 1rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
@@ -776,7 +776,7 @@
 }
 
 .viewBtn {
-  padding: 1rem 1rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
   font-size: 1.4rem;
@@ -1051,7 +1051,7 @@
   letter-spacing: 0.06em;
   color: var(--text);
   text-decoration: none;
-  padding: 1rem 1rem;
+  padding: 1rem;
   border: 1px solid var(--lightGray);
   transition:
     border-color 0.15s ease,

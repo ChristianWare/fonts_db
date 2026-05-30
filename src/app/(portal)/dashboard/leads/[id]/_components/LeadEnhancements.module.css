@@ -9,6 +9,7 @@
   border: 1px solid var(--grayii);
   flex-wrap: wrap;
 }
+
 .sourceBarLeft,
 .sourceBarRight {
   display: flex;
@@ -16,6 +17,7 @@
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
 .sourceBarItem {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -23,6 +25,7 @@
   letter-spacing: 0.06em;
   color: var(--text);
 }
+
 .typeBadge {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -31,14 +34,17 @@
   padding: 0.4rem 1.5rem;
   font-weight: 700;
 }
+
 .typeBadgeHot {
   background-color: #ef4444;
   color: var(--white);
 }
+
 .typeBadgeWarm {
   background-color: var(--accent);
   color: var(--black);
 }
+
 .typeBadgeCold {
   background-color: #2563eb;
   color: var(--white);
@@ -51,21 +57,25 @@
   gap: 1rem;
   padding: 3rem;
   border-left: 4px solid var(--accent);
-  background-color: rgba(252, 211, 77, 0.08);
+  background-color: rgb(252 211 77 / 8%);
 }
+
 .moveCardUrgent {
   border-left-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.08);
+  background-color: rgb(239 68 68 / 8%);
 }
+
 .moveCardDue {
   border-left-color: var(--accent);
-  background-color: rgba(252, 211, 77, 0.12);
+  background-color: rgb(252 211 77 / 12%);
 }
+
 .moveCardWait,
 .moveCardInfo {
   border-left-color: var(--lightGray);
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
 }
+
 .moveCardLabel {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -74,6 +84,7 @@
   color: var(--text);
   opacity: 0.7;
 }
+
 .moveCardHeadline {
   font-family: var(--RobotoFlexii);
   font-size: 2.5rem;
@@ -85,12 +96,14 @@
   color: var(--black);
   text-transform: uppercase;
 }
+
 .moveCardDetail {
   font-family: var(--Roboto);
   font-size: 1.6rem;
   line-height: 1.5;
   color: var(--text);
 }
+
 .moveCardChannel {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -106,6 +119,7 @@
   flex-direction: column;
   gap: 2rem;
 }
+
 .feedTitle {
   font-family: var(--RobotoFlexii);
   font-size: 2.5rem;
@@ -117,14 +131,16 @@
   color: var(--black);
   line-height: 1;
 }
+
 .noteComposer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 2rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
   border: 1px solid var(--grayii);
 }
+
 .noteInput {
   font-family: var(--Roboto);
   font-size: 1.6rem;
@@ -135,10 +151,12 @@
   color: var(--text);
   resize: vertical;
 }
+
 .noteInput:focus {
   outline: none;
   border-color: var(--black);
 }
+
 .noteSubmit {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -152,9 +170,11 @@
   align-self: flex-start;
   transition: opacity 0.15s ease;
 }
+
 .noteSubmit:hover:not(:disabled) {
   opacity: 0.85;
 }
+
 .noteSubmit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -170,12 +190,14 @@
   border-left: 1px solid var(--grayii);
   padding-left: 2rem;
 }
+
 .timelineItem {
   position: relative;
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
 }
+
 .timelineIcon {
   position: absolute;
   left: -3.5rem;
@@ -190,12 +212,14 @@
   font-size: 1.4rem;
   color: var(--text);
 }
+
 .timelineBody {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
+
 .timelineHeader {
   display: flex;
   justify-content: space-between;
@@ -203,6 +227,7 @@
   gap: 1rem;
   flex-wrap: wrap;
 }
+
 .timelineType {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -210,12 +235,14 @@
   letter-spacing: 0.06em;
   color: var(--black);
 }
+
 .timelineTime {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
   color: var(--text);
   opacity: 0.6;
 }
+
 .timelineDesc {
   font-family: var(--Roboto);
   font-size: 1.6rem;
@@ -223,6 +250,7 @@
   color: var(--text);
   white-space: pre-wrap;
 }
+
 .timelineEmpty {
   font-family: var(--Roboto);
   font-size: 1.6rem;
@@ -241,6 +269,7 @@
   background-color: var(--white);
   border: 1px solid var(--grayii);
 }
+
 .nextActionTitle {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -248,6 +277,7 @@
   letter-spacing: 0.08em;
   color: var(--black);
 }
+
 .nextActionDate,
 .nextActionNote {
   font-family: var(--Roboto);
@@ -257,18 +287,22 @@
   background-color: var(--white);
   color: var(--text);
 }
+
 .nextActionNote {
   resize: vertical;
 }
+
 .nextActionDate:focus,
 .nextActionNote:focus {
   outline: none;
   border-color: var(--black);
 }
+
 .nextActionButtons {
   display: flex;
   gap: 0.5rem;
 }
+
 .nextActionSave {
   flex: 1;
   font-family: var(--GeistMono);
@@ -281,13 +315,16 @@
   border: none;
   cursor: pointer;
 }
+
 .nextActionSave:hover:not(:disabled) {
   opacity: 0.85;
 }
+
 .nextActionSave:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 .nextActionClear {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -299,6 +336,7 @@
   border: 1px solid var(--lightGray);
   cursor: pointer;
 }
+
 .nextActionClear:hover:not(:disabled) {
   border-color: var(--black);
   color: var(--black);
@@ -313,6 +351,7 @@
   background-color: var(--white);
   border: 1px solid var(--grayii);
 }
+
 .outreachLogTitle {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -320,11 +359,13 @@
   letter-spacing: 0.08em;
   color: var(--black);
 }
+
 .outreachChannelGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 }
+
 .outreachChannelBtn {
   font-family: var(--GeistMono);
   font-size: 1.6rem;
@@ -337,15 +378,18 @@
   cursor: pointer;
   transition: all 0.15s ease;
 }
+
 .outreachChannelBtn:hover {
   border-color: var(--black);
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgb(0 0 0 / 3%);
 }
+
 .outreachChannelChosen {
   font-family: var(--Roboto);
   font-size: 1.6rem;
   color: var(--text);
 }
+
 .outreachLogNote {
   font-family: var(--Roboto);
   font-size: 1.6rem;
@@ -355,10 +399,12 @@
   color: var(--text);
   resize: vertical;
 }
+
 .outreachLogButtons {
   display: flex;
   gap: 0.5rem;
 }
+
 .outreachLogSubmit {
   flex: 1;
   font-family: var(--GeistMono);
@@ -371,6 +417,7 @@
   border: none;
   cursor: pointer;
 }
+
 .outreachLogCancel {
   font-family: var(--GeistMono);
   font-size: 1.6rem;

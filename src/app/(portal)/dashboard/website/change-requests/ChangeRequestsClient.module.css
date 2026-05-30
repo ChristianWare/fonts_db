@@ -305,12 +305,15 @@
   .header {
     padding: 3rem 2rem;
   }
+  
   .formCard {
     padding: 2.4rem 2rem;
   }
+
   .historySectionHeading {
     padding: 2rem;
   }
+
   .requestCard {
     padding: 2rem;
   }
@@ -322,6 +325,7 @@
   .formFooter {
     justify-content: stretch;
   }
+
   .submitBtn {
     width: 100%;
     text-align: center;

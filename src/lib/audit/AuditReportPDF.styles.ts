@@ -4,7 +4,7 @@ import { StyleSheet } from "@react-pdf/renderer";
 const FONT = "Helvetica";
 const FONT_BOLD = "Helvetica-Bold";
 const BLACK = "#0f0f0f";
-const WHITE = "#ffffff";
+const WHITE = "#fff";
 const ACCENT = "#ffbe00";
 const GRAY = "#666666";
 const LIGHT_GRAY = "#f5f5f5";

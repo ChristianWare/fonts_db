@@ -3,10 +3,7 @@
   max-width: 1600px;
   margin-right: auto;
   margin-left: auto;
-  padding-right: 30px;
-  padding-left: 30px;
-  padding-top: 0rem;
-  padding-bottom: 0rem;
+  padding: 0 30px;
   background-color: transparent;
   flex: 1;
   display: flex;

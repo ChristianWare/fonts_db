@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
                         <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-family:monospace;">
                           Fonts &amp; Footers
                         </p>
-                        <h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;font-family:monospace;">
+                        <h1 style="margin:0;font-size:26px;font-weight:700;color:#fff;letter-spacing:-0.5px;font-family:monospace;">
                           New inquiry
                         </h1>
                       </td>
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
                           <tr>
                             <td style="padding-bottom:16px;">
                               <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-family:monospace;">Name</p>
-                              <p style="margin:0;font-size:16px;color:#ffffff;font-family:monospace;">${firstName} ${lastName}</p>
+                              <p style="margin:0;font-size:16px;color:#fff;font-family:monospace;">${firstName} ${lastName}</p>
                             </td>
                           </tr>
                           <tr>
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
                               ? `<tr>
                             <td style="padding-bottom:16px;">
                               <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-family:monospace;">Company</p>
-                              <p style="margin:0;font-size:16px;color:#ffffff;font-family:monospace;">${company}</p>
+                              <p style="margin:0;font-size:16px;color:#fff;font-family:monospace;">${company}</p>
                             </td>
                           </tr>`
                               : ""

@@ -314,6 +314,7 @@
 .saveBtn:hover {
   opacity: 0.85;
 }
+
 .saveBtn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -358,12 +359,15 @@
   .header {
     padding: 3rem 2rem;
   }
+
   .sectionHeading {
     padding: 1.6rem 2rem;
   }
+
   .requestTop {
     padding: 2rem;
   }
+  
   .requestBody {
     padding: 2rem 2rem 2.4rem;
   }

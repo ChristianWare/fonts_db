@@ -202,7 +202,7 @@
     will-change: auto;
     min-height: 400px;
     padding: 3rem;
-    box-shadow: 0 7px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 7px 12px rgb(0 0 0 / 15%);
   }
 
   .card:nth-child(3) {

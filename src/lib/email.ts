@@ -70,7 +70,7 @@ export function buildEmailHTML({
   <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#f5f5f5;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:560px;background-color:#ffffff;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:560px;background-color:#fff;">
 
           <!-- Header -->
           <tr>

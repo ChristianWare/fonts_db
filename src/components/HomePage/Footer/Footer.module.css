@@ -45,7 +45,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0rem;
+  gap: 0;
   list-style: none;
 }
 
@@ -56,7 +56,7 @@
   line-height: 1;
   color: var(--gray);
   white-space: nowrap;
-  padding: 0.2rem 0rem;
+  padding: 0.2rem 0;
   border-radius: 50px;
   transition: all 0.3s ease-in;
 }
@@ -73,14 +73,12 @@
 
 .bottomii {
   padding: 2rem;
-  padding-bottom: 0rem;
+  padding-bottom: 0;
 }
 
 .footerBottom {
-  padding: 2rem 0rem;
+  padding: 2rem 0;
   border-top: 1px solid var(--lightGray);
-  /* border-top: 1px solid var(--lighterGray); */
-  /* border-bottom: 1px solid var(--lighterGray); */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,7 +105,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 2rem;
-  /* margin-top: 7rem; */
 }
 
 .socialIconContainer {
@@ -170,10 +167,6 @@
 
   .navItem {
     font-size: 2rem;
-  }
-
-  .btnContainer {
-    width: 100%;
   }
 
   .footerBottom {

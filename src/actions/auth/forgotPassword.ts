@@ -41,7 +41,7 @@ export async function forgotPassword(email: string) {
     to: user.email,
     subject: "Reset your password",
     html: `
-      <div style="font-family: monospace; max-width: 480px; margin: 0 auto; padding: 40px 24px; background: #ffffff;">
+      <div style="font-family: monospace; max-width: 480px; margin: 0 auto; padding: 40px 24px; background: #fff;">
         <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin: 0 0 32px;">
           Fonts & Footers
         </p>

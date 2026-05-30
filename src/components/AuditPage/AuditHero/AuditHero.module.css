@@ -65,7 +65,7 @@
     transparent 50%
   );
   background-size: 7px 7px;
-  padding: 10rem 0rem;
+  padding: 10rem 0;
 }
 
 .top {
@@ -113,9 +113,6 @@
 @media screen and (max-width: 1468px) {
   .content {
     padding: 3rem;
-  }
-
-  .content {
     gap: 7rem;
   }
 
@@ -142,6 +139,7 @@
   .heading {
     background-size: 5px 5px;
   }
+
   .content {
     padding: 2rem;
   }

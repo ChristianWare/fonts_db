@@ -1,5 +1,5 @@
 .top {
-  padding: 10rem 0rem;
+  padding: 10rem 0;
   padding-bottom: 5rem;
   display: flex;
   flex-direction: column;
@@ -68,7 +68,6 @@
   opacity: 0.03;
   pointer-events: none;
   background: url("/images/noise.gif");
-  /* background-size: cover; */
 }
 
 .row {
@@ -214,14 +213,14 @@
 .valuePartial {
   font-size: 1.3rem;
   font-family: var(--SuisseIntlMedium);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgb(255 255 255 / 50%);
   text-align: center;
 }
 
 @media screen and (max-width: 1268px) {
   .top {
     padding: 10rem 3rem;
-    padding-bottom: 0rem;
+    padding-bottom: 0;
   }
 }
 
@@ -265,7 +264,7 @@
   }
 
   .headerRowii .headerCell:nth-child(2) {
-    border-top-right-radius: 0px;
+    border-top-right-radius: 0;
   }
 
   .row > .valueCell:nth-child(2) .icon {
@@ -276,7 +275,7 @@
 @media screen and (max-width: 768px) {
   .top {
     padding: 5rem 2rem;
-    padding-bottom: 0rem;
+    padding-bottom: 0;
   }
 
   .grid {

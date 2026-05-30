@@ -388,28 +388,36 @@
   .header {
     padding: 3rem 2rem;
   }
+
   .checkoutLeft {
     padding: 3rem 2rem;
   }
+
   .checkoutRight {
     padding: 3rem 2rem;
   }
+
   .subscriptionTop {
     padding: 2.4rem 2rem;
     flex-direction: column;
   }
+
   .detailRow {
     padding: 1.4rem 2rem;
   }
+
   .noSubscription {
     padding: 2rem;
   }
+  
   .pastDueBanner {
     padding: 1.4rem 2rem;
   }
+
   .invoiceSectionHeading {
     padding: 2rem;
   }
+  
   .invoiceRow {
     padding: 1.6rem 2rem;
     flex-direction: column;

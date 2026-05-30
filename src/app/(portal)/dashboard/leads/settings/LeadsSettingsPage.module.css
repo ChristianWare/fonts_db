@@ -208,10 +208,10 @@
 .error {
   font-family: var(--Roboto);
   font-size: 16px;
-  color: #ff4444;
+  color: #f44;
   padding: 1rem 2rem;
-  border: 1px solid #ff4444;
-  background-color: rgba(255, 68, 68, 0.05);
+  border: 1px solid #f44;
+  background-color: rgb(255 68 68 / 5%);
 }
 
 .success {
@@ -220,14 +220,14 @@
   color: #16a34a;
   padding: 1rem 2rem;
   border: 1px solid #16a34a;
-  background-color: rgba(22, 163, 74, 0.05);
+  background-color: rgb(22 163 74 / 5%);
 }
 
 /* Danger zone */
 .dangerCard {
   padding: 3rem;
-  border: 1px solid #ff4444;
-  background-color: rgba(255, 68, 68, 0.03);
+  border: 1px solid #f44;
+  background-color: rgb(255 68 68 / 3%);
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -247,8 +247,8 @@
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
   background-color: var(--white);
-  color: #ff4444;
-  border: 1px solid #ff4444;
+  color: #f44;
+  border: 1px solid #f44;
   cursor: pointer;
   width: fit-content;
   transition:
@@ -257,7 +257,7 @@
 }
 
 .dangerBtn:hover {
-  background-color: #ff4444;
+  background-color: #f44;
   color: var(--white);
 }
 
@@ -268,15 +268,12 @@
   justify-content: flex-start;
   gap: 4rem;
   padding: 3rem;
-  /* padding-top: 5rem; */
 }
 
 .confirmText {
   font-family: var(--Roboto);
   font-size: 2rem;
   width: 90%;
-  /* text-transform: uppercase; */
-  /* letter-spacing: 0.06em; */
   color: var(--black);
   padding-top: 5rem;
 }
@@ -293,7 +290,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   padding: 2rem 4rem;
-  background-color: #ff4444;
+  background-color: #f44;
   color: var(--white);
   border: none;
   cursor: pointer;
@@ -357,12 +354,8 @@
   transition: border-color 0.15s ease;
   cursor: pointer;
 
-  /* kill the native OS appearance */
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 
-  /* custom chevron — black, matches the rest of the form */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 6 7 11 1'/></svg>");
   background-repeat: no-repeat;
   background-position: right 2rem center;

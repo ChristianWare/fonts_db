@@ -129,6 +129,7 @@
   .copy {
     width: 100%;
   }
+  
   .bottom {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -150,6 +151,6 @@
   }
 
   .img {
-    padding: 0rem;
+    padding: 0;
   }
 }

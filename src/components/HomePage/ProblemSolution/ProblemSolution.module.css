@@ -1,5 +1,5 @@
 .container {
-  /* padding: 10rem 0rem; */
+  /* padding: 10rem 0; */
   background-color: var(--white);
   position: relative;
 }
@@ -7,7 +7,6 @@
 .content {
   display: grid;
   grid-template-columns: 35% 30% 35%;
-  /* padding: 10rem 2rem; */
 }
 
 .left,
@@ -101,8 +100,7 @@
 
 .rightList {
   background-color: var(--white);
-  padding-top: 0rem;
-  padding: 0rem;
+  padding: 0;
 }
 
 .right .img {
@@ -136,7 +134,6 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1rem;
-  font-size: 1.6rem;
   width: 100%;
   border-bottom: 1px solid var(--blackii);
   padding-bottom: 0.3rem;
@@ -208,7 +205,6 @@
   width: 70px;
   height: 70px;
   background-color: var(--accent);
-  -webkit-mask-image: url("/logos/fnf_logo_black.png");
   mask-image: url("/logos/fnf_logo_black.png");
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -296,10 +292,7 @@
   }
 
   .left::after {
-    top: auto;
-    bottom: 0;
-    right: auto;
-    left: 50%;
+    inset: auto 50% 0 auto;
     transform: translateX(-50%);
     width: 2px;
     height: 20rem;
@@ -309,9 +302,7 @@
   }
 
   .right::after {
-    top: 0;
-    bottom: auto;
-    left: 50%;
+    inset: 0 auto auto 50%;
     transform: translateX(-50%);
     width: 2px;
     height: 20rem;
@@ -354,7 +345,7 @@
   .imgMiddleContainer {
     width: 132px;
     height: 132px;
-    top: 0px;
+    top: 0;
     z-index: 999;
   }
 

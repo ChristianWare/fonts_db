@@ -117,7 +117,7 @@
 }
 
 .scanStepActive .scanStepDot {
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 3px rgb(0 0 0 / 15%);
 }
 
 .scanStepText {
@@ -219,7 +219,7 @@
 .emailBannerSub {
   font-family: var(--Roboto);
   font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255 255 255 / 70%);
   line-height: 1.4;
 }
 
@@ -312,7 +312,7 @@
 .catBar {
   width: 60px;
   height: 2px;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgb(0 0 0 / 15%);
   flex-shrink: 0;
 }
 
@@ -452,23 +452,29 @@
   .heading {
     font-size: 2.4rem;
   }
+
   .scanPct {
     font-size: 4.5rem;
   }
+
   .scoreNum {
     font-size: 4.2rem;
   }
+
   .gradeLarge {
     font-size: 3.5rem;
     padding: 0.8rem 1.4rem;
   }
+
   .statsGrid {
     grid-template-columns: 1fr;
   }
+
   .statItem {
     border-right: none;
     border-bottom: 1px solid var(--blackii);
   }
+  
   .statItem:last-child {
     border-bottom: none;
   }
