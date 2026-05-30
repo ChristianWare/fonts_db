@@ -7,8 +7,8 @@
 .top {
   padding: 7rem 5rem;
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 5rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 7rem;
 }
 
 .topLeft {
@@ -43,8 +43,8 @@
   display: grid;
   grid-template-columns: 3fr 1fr;
   background-color: var(--white);
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--text);
+  border-bottom: 1px solid var(--text);
   align-self: flex-start;
   position: sticky;
   top: 90px;
@@ -61,6 +61,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 4rem;
+  background-color: var(--lightGrayiii);
 }
 
 .cardLeftTop {
@@ -94,13 +95,17 @@
   gap: 0.8rem;
   margin-left: 2rem;
   list-style: none;
+  width: 100%;
 }
 
 .bulletTitle {
   font-size: 2.4rem;
   font-family: var(--RobotoFlexii);
-  opacity: 0.3;
+  opacity: 0.5;
   position: relative;
+  border-bottom: 1px solid var(--text);
+  padding-bottom: .5rem;
+  width: 100%;
 }
 
 .bulletTitle::after {
