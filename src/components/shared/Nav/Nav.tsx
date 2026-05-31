@@ -55,6 +55,7 @@ export default function Nav({
     { text: "Leads", href: "/leads" },
     { text: "Websites", href: "/websites" },
     { text: "About Us", href: "/about" },
+    { text: "Contact", href: "/contact" },
     // { text: "Work", href: "/work" },
     // { text: "My Account", href: "/dashboard" },
   ];
