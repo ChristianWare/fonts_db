@@ -314,20 +314,9 @@ textarea:focus {
   .h1,
   h1,
   .h2ii {
-    /* line-height: 1.1em; */
-    font-size: 4.9rem;
+    font-size: 5.5rem;
     letter-spacing: -0.9px;
   }
-
-  /* .h2ii {
-    font-size: 3.4rem;
-    letter-spacing: -1px;
-  } */
-
-  /* .h2ii {
-    font-size: 2.8rem;
-    letter-spacing: -0.8px;
-  } */
 
   h3,
   .h3 {

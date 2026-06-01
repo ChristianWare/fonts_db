@@ -97,6 +97,9 @@
 
 .accent {
   font-family: inherit;
+  hyphens: auto;
+  word-break: break-all;
+
   color: var(--accent);
 }
 
