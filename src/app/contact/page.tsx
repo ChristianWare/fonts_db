@@ -1,9 +1,12 @@
+import ContactPageHero from "@/components/ContactPage/ContactPageHero/ContactPageHero";
+import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 import React from "react";
 
 export default function ContactPage() {
   return (
     <main>
-      <h1>Contact Page</h1>
+      <ContactPageHero />
+      <ContactSection />
     </main>
   );
 }
