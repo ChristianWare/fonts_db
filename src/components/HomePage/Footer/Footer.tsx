@@ -4,7 +4,6 @@ import Link from "next/link";
 import Button from "@/components/shared/Button/Button";
 import LinkedIn from "@/components/shared/icons/LinkedIn/LinkedIn";
 import Instagram from "@/components/shared/icons/Instagram/Instagram";
-// import Facebook from "@/components/shared/icons/Facebook/Facebook";
 
 const items = [
   { text: "Home", href: "/" },

@@ -3,24 +3,45 @@ import styles from "./ContactPageHero.module.css";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Check from "@/components/shared/Check/Check";
+import Link from "next/link";
+import LinkedIn from "@/components/shared/icons/LinkedIn/LinkedIn";
+import Instagram from "@/components/shared/icons/Instagram/Instagram";
 
 const data = [
   {
     id: 1,
-    text: "Understand your goals and how your team currently operates",
+    text: "Look at your current website and booking setup together",
   },
   {
     id: 2,
-    text: "Understand your goals and how your team currently operates",
+    text: "Identify where you are losing bookings or work to competitors",
   },
   {
     id: 3,
-    text: "Show you exactly how Strativ can support a more adaptive workflow",
+    text: "Walk through whether the audit, leads tool, or custom build fits your situation",
   },
   {
     id: 4,
-    text: "Give you practical, no-nonsense next steps",
+    text: "Talk through pricing, timeline, and what would actually happen next",
   },
+];
+
+const data3 = [
+  {
+    id: 8,
+    href: "https://www.linkedin.com/in/christian-ware/",
+    icon: <LinkedIn className={styles.socialIcon} />,
+  },
+  {
+    id: 9,
+    href: "https://www.instagram.com/fontsandfooters/",
+    icon: <Instagram className={styles.socialIcon} />,
+  },
+  // {
+  //   id: 10,
+  //   href: "https://www.facebook.com/fontsandfooters",
+  //   icon: <Facebook className={styles.socialIcon} />,
+  // },
 ];
 
 export default function ContactPageHero() {
@@ -38,10 +59,10 @@ export default function ContactPageHero() {
             </div>
             <div className={styles.bottom}>
               <div className={styles.b1}>
-                <SectionIntro text='About Us' />
+                <SectionIntro text='Get in touch' />
                 <h1 className={styles.heading}>
-                  Clarity starts with <br />{" "}
-                  <span className={styles.accent}>a conversation</span>
+                  Tell us about <br />{" "}
+                  <span className={styles.accent}>your operation.</span>
                 </h1>
               </div>
             </div>
@@ -49,44 +70,60 @@ export default function ContactPageHero() {
         </div>
         <div className={styles.b2}>
           <div className={styles.b2Left}>
-            <h3 className={styles.subHeadinigh}>General Questions</h3>
+            <h3 className={styles.subHeadinigh}>General questions</h3>
             <p className={styles.copy}>
-              If you’re exploring Strativ or need clarity about how it works,
-              feel free to reach out.{" "}
+              Pricing questions, feature questions, &quot;is this right for my
+              operation&quot; questions — drop us a line.{" "}
               <span className={styles.copyAccent}>
-                We’re here to help you understand whether Strativ is the right
-                fit for your team.
+                Same inbox, same person, same response time.
               </span>
             </p>
             <div>
               <p className={styles.emailLinkHeading}>Email</p>
-              <a className={styles.emailLink}>hello@fontsandfooters.com</a>
+              <a
+                className={styles.emailLink}
+                href='mailto:chris@fontsandfooters.com'
+              >
+                hello@fontsandfooters.com
+              </a>
             </div>
             <div>
               <p className={styles.emailLinkHeading}>Office Hours</p>
               <a className={styles.emailLink}>
-                Monday - Friday
+                Monday — Friday
                 <br />
-                9:00 AM - 6:00 PM (CET)
+                9:00 AM — 6:00 PM (MST)
               </a>
             </div>
             <div>
               <p className={styles.emailLinkHeading}>Socials</p>
-              <a className={styles.emailLink}>Socials here</a>
+              <a className={styles.emailLink}>
+                <div className={styles.footerSocials}>
+                  {data3.map((x) => (
+                    <Link
+                      key={x.id}
+                      href={x.href}
+                      target='_blank'
+                      className={styles.socialIconContainer}
+                    >
+                      {x.icon}
+                    </Link>
+                  ))}
+                </div>
+              </a>
             </div>
           </div>
           <div className={styles.b2Right}>
-            <h3 className={styles.subHeadinigh}>General Questions</h3>
+            <h3 className={styles.subHeadinigh}>Book a discovery call</h3>
             <p className={styles.copy}>
-              If you’re exploring Strativ or need clarity about how it works,
-              feel free to reach out.{" "}
+              30 minutes on Calendly. The fastest way to figure out if any of
+              this fits your business —{" "}
               <span className={styles.copyAccent}>
-                We’re here to help you understand whether Strativ is the right
-                fit for your team.
+                and if it doesn&apos;t, I&apos;ll say so.
               </span>
             </p>
             <div>
-              <p className={styles.explain}>During this session, we will:</p>
+              <p className={styles.explain}>During this call, we will:</p>
               <div className={styles.mapDataContainer}>
                 {data.map((item) => (
                   <div key={item.id} className={styles.mapDataItem}>
@@ -98,7 +135,8 @@ export default function ContactPageHero() {
             </div>
             <p className={styles.copy}>
               <span className={styles.copyAccent}>
-                It’s focused, helpful, and 100% pressure-free.
+                No sales pitch. No pressure. If we&apos;re not a fit, we&apos;ll
+                say so.
               </span>
             </p>
           </div>

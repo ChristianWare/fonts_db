@@ -53,14 +53,14 @@ export default function ContactSection() {
           <div className={styles.right}>
             <div className={styles.rightTop}>
               <p className={styles.copy}>
-                Most black car operators are still taking bookings over the
-                phone or through third-party platforms that take a cut of every
-                ride.
+                Wherever your operation is — chasing more corporate work, losing
+                bookings to a slow site, or paying third-party platforms for
+                every ride — start here.
                 <br />
                 <br />
-                Tell us about your business and we&apos;ll show you exactly what
-                a custom direct booking platform looks like for your operation —
-                no generic demos, no sales pressure.
+                Tell us what you&apos;re working with and we&apos;ll show you the
+                fastest path forward. If none of the three products fit,
+                we&apos;ll say so.
               </p>
             </div>
             <ContactForm />
