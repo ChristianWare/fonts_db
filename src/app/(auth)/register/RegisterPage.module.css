@@ -38,7 +38,7 @@
 
 .brandTagline {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--lightGray);
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -108,7 +108,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -135,7 +135,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -148,7 +148,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   transition: border-color 0.15s ease;
   outline: none;
@@ -189,7 +189,7 @@
   border: none;
   background: none;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   outline: none;
   width: 100%;
@@ -220,7 +220,7 @@
 /* ── Errors ── */
 .fieldError {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
 }
@@ -231,7 +231,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -244,7 +244,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   cursor: pointer;
@@ -294,7 +294,7 @@
 
 .successText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   max-width: 380px;
@@ -303,7 +303,7 @@
 
 .backToLogin {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -315,7 +315,7 @@
 .loginPrompt {
   text-align: center;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }

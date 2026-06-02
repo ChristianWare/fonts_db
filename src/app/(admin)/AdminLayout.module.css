@@ -58,7 +58,7 @@
 
 .brandSub {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--accent);
   background-color: var(--black);
   text-transform: uppercase;
@@ -148,7 +148,7 @@
 
 .navLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   overflow: hidden;
@@ -163,7 +163,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding: 1rem;
@@ -210,7 +210,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -228,7 +228,7 @@
 
 .userName {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -239,7 +239,7 @@
 
 .userRole {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -292,7 +292,7 @@
 
 .topbarBrand {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--lightGray);
@@ -300,14 +300,14 @@
 
 .topbarDivider {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--lightGray);
   opacity: 0.4;
 }
 
 .topbarSection {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -315,7 +315,7 @@
 
 .adminBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);

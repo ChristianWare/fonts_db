@@ -119,14 +119,14 @@
 
 .checkboxLabel {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   cursor: pointer;
 }
 
 .submit {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 1.5rem 2rem;
@@ -164,7 +164,7 @@
   .title {
     font-size: 2.4rem;
   }
-  
+
   .fieldRow2col {
     grid-template-columns: 1fr;
   }

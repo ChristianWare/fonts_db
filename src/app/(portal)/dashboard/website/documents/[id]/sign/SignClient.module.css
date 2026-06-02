@@ -17,7 +17,7 @@
   align-items: center;
   gap: 1rem;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   background: none;
   border: none;
@@ -42,7 +42,7 @@
 
 .docType {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -50,7 +50,7 @@
 
 .docDate {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -85,7 +85,7 @@
 
 .previewLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -96,7 +96,7 @@
   align-items: center;
   gap: 1rem;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-decoration: none;
   text-transform: uppercase;
@@ -141,7 +141,7 @@
 
 .signDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -176,7 +176,7 @@
 
 .consentText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   line-height: 1.6;
@@ -189,7 +189,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -205,7 +205,7 @@
 
 .cancelBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -225,7 +225,7 @@
 
 .signBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--accent);
@@ -248,7 +248,7 @@
 /* ── Legal note ── */
 .legalNote {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-align: center;
   text-transform: none;

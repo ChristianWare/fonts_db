@@ -22,7 +22,7 @@
 
 .backBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -60,7 +60,7 @@
 
 .clientEmail {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.05em;
   color: var(--text);
   text-transform: none;
@@ -69,7 +69,7 @@
 .stageBadge {
   flex-shrink: 0;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
@@ -89,7 +89,7 @@
 
 .tab {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -164,7 +164,7 @@
 
 .cardDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   text-transform: none;
@@ -174,7 +174,7 @@
 
 .emptyText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -226,7 +226,7 @@
 
 .trackerCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--white);
@@ -325,7 +325,7 @@
 
 .stageLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -337,7 +337,7 @@
 
 .stageDate {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: #16a34a;
@@ -347,7 +347,7 @@
 
 .stageDatePending {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -357,7 +357,7 @@
 
 .stageDateActive {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -367,7 +367,7 @@
 
 .stageDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--text);
   text-transform: none;
@@ -396,7 +396,7 @@
 
 .liveToggleLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -404,7 +404,7 @@
 
 .liveToggleDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.5;
@@ -473,7 +473,7 @@
 
 .skipText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -500,7 +500,7 @@
 
 .infoLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -509,7 +509,7 @@
 
 .infoValue {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--black);
   text-transform: none;
@@ -518,7 +518,7 @@
 
 .infoLink {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.05em;
   color: var(--black);
   text-decoration: underline;
@@ -551,7 +551,7 @@
 
 .stageLogText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--black);
@@ -559,7 +559,7 @@
 
 .stageLogMeta {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   flex-shrink: 0;
@@ -575,7 +575,7 @@
 
 .signedBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
@@ -585,7 +585,7 @@
 
 .pendingBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #ca8a04;
@@ -597,7 +597,7 @@
   padding: 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -631,7 +631,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--black);
   transition: border-color 0.15s ease;
@@ -656,7 +656,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -674,7 +674,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -699,7 +699,7 @@
   border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -723,7 +723,7 @@
 
 .checkboxText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -758,7 +758,7 @@
 
 .docTitle {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -769,7 +769,7 @@
 
 .docMeta {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   text-transform: none;
@@ -779,7 +779,7 @@
   padding: 1rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -805,7 +805,7 @@
 
 .selectionBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--white);
@@ -838,7 +838,7 @@
 
 .selectionViewBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -868,7 +868,7 @@
 
 .selectionNotesText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--text);
   text-transform: none;
@@ -887,7 +887,7 @@
 
 .submittedDate {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -909,7 +909,7 @@
 
 .answerKey {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -917,7 +917,7 @@
 
 .answerValue {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--black);
   text-transform: none;
@@ -951,7 +951,7 @@
 
 .assetName {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -959,7 +959,7 @@
 
 .assetMeta {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   text-transform: none;
@@ -994,7 +994,7 @@
 
 .invoiceNumber {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -1002,7 +1002,7 @@
 
 .invoiceMeta {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -1016,14 +1016,14 @@
 
 .invoiceAmount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--black);
 }
 
 .invoiceStatus {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0 1rem;
@@ -1046,7 +1046,7 @@
 
 .invoiceDownload {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);

@@ -645,7 +645,7 @@
   color: #c0392b;
   border: 1px solid #c0392b;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.15s;
 }

@@ -98,7 +98,7 @@
 
 .oneWordDesc {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
 }

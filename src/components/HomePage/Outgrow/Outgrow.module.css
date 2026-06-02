@@ -103,7 +103,7 @@
 
 .imgCaptionTitle {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   text-align: right;
@@ -275,7 +275,7 @@
     justify-content: center;
     gap: 3rem;
   }
-  
+
   .imgContainer {
     width: 100%;
     height: 700px;

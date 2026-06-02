@@ -125,7 +125,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: bold;
   color: var(--black);
   flex-shrink: 0;
@@ -142,7 +142,7 @@
 .captionTitle {
   font-family: var(--GeistMono);
   text-transform: uppercase;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   font-weight: bold;
   letter-spacing: 0.6px;
@@ -172,7 +172,7 @@
 
 .checkDash {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   flex-shrink: 0;
   margin-top: 0.1rem;
@@ -270,7 +270,7 @@
 
 .statLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);
@@ -279,7 +279,7 @@
 
 .resultUrl {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   letter-spacing: 0.3px;
   text-transform: lowercase;
@@ -287,7 +287,7 @@
 
 .resetBtn {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -380,7 +380,7 @@
 
 .fieldLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--text);
@@ -413,7 +413,7 @@
   background-color: var(--black);
   color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   padding: 1.8rem 3rem;
@@ -432,7 +432,7 @@
 
 .disclaimer {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -441,7 +441,7 @@
 .errorMsg {
   color: var(--red);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.3px;
 }
 
@@ -533,7 +533,7 @@
 
 .scanStepText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -644,7 +644,7 @@
 
 .catScore {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   letter-spacing: 0.3px;
   min-width: 5rem;
@@ -658,7 +658,7 @@
 
 .catTeaserText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);
@@ -689,7 +689,7 @@
   .heading {
     font-size: 5.5rem;
   }
-  
+
   .leftTop {
     padding: 7rem 4rem;
   }
@@ -758,7 +758,7 @@
   .catTeaser {
     padding: 0 3rem 1.5rem;
   }
-  
+
   .pullQuote {
     padding-left: 2rem;
   }
@@ -862,7 +862,7 @@
 
 .techStackLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   color: var(--text);
@@ -885,7 +885,7 @@
 
 .techPillKey {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   padding: 0.5rem 0.8rem;

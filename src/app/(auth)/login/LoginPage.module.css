@@ -36,7 +36,7 @@
 
 .brandTagline {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -107,7 +107,7 @@
 
 .subheading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -134,7 +134,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -146,7 +146,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--black);
   transition: border-color 0.15s ease;
@@ -167,7 +167,7 @@
 
 .fieldError {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: #e53e3e;
   text-transform: uppercase;
@@ -175,7 +175,7 @@
 
 .forgotLink {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -193,7 +193,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: #c53030;
   text-transform: uppercase;
@@ -205,7 +205,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -226,7 +226,7 @@
 .registerPrompt {
   text-align: center;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -234,7 +234,7 @@
 
 .registerLink {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);

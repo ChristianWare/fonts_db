@@ -15,7 +15,7 @@
 
 .subheading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -31,7 +31,7 @@
 
 .sectionHeading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -82,7 +82,7 @@
 
 .requestBusiness {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
@@ -104,7 +104,7 @@
 
 .requestDate {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   text-transform: none;
@@ -121,7 +121,7 @@
 /* ── Status badges ── */
 .requestStatus {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.3rem 1rem;
@@ -170,7 +170,7 @@
 
 .requestDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--text);
   text-transform: none;
@@ -188,7 +188,7 @@
 
 .adminNotesLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--black);
@@ -196,7 +196,7 @@
 
 .adminNotesText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--black);
   text-transform: none;
@@ -224,7 +224,7 @@
 
 .editLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -235,7 +235,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -254,7 +254,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.03em;
   color: var(--black);
   resize: vertical;
@@ -282,7 +282,7 @@
   padding: 1rem 2rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -303,7 +303,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -325,7 +325,7 @@
   padding: 0.8rem 2rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -348,7 +348,7 @@
 
 .emptyText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -367,7 +367,7 @@
   .requestTop {
     padding: 2rem;
   }
-  
+
   .requestBody {
     padding: 2rem 2rem 2.4rem;
   }

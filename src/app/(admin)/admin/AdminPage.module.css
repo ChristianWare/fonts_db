@@ -57,7 +57,7 @@
 
 .eyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -71,17 +71,33 @@
   line-height: 0.9em;
   color: var(--black);
   text-transform: uppercase;
-  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on,
+    "pnum" on;
   font-variation-settings:
-    "opsz" 144, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
-    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
-    "YTAS" 750, "YTDE" -203, "YTFI" 738;
+    "opsz" 144,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
   -webkit-font-smoothing: antialiased;
 }
 
 .mrrLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -98,7 +114,7 @@
 
 .dateLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -130,11 +146,27 @@
   line-height: 0.9em;
   color: var(--black);
   text-transform: uppercase;
-  font-feature-settings: "blwf" on, "cv09" on, "cv03" on, "cv04" on, "cv11" on, "pnum" on;
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on,
+    "pnum" on;
   font-variation-settings:
-    "opsz" 56, "wght" 700, "GRAD" 0, "wdth" 81, "slnt" 0,
-    "XOPQ" 96, "YOPQ" 72, "XTRA" 468, "YTUC" 760, "YTLC" 514,
-    "YTAS" 750, "YTDE" -203, "YTFI" 738;
+    "opsz" 56,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -144,7 +176,7 @@
 
 .heroStatLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -184,7 +216,7 @@
 
 .quickLinkLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -208,7 +240,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
   line-height: 1;
@@ -232,7 +264,7 @@
 
 .pipelineEyebrow {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--black);
@@ -240,7 +272,7 @@
 
 .pipelineCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -274,7 +306,7 @@
 
 .clientIndex {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.06em;
   color: var(--text);
   flex-shrink: 0;
@@ -293,7 +325,9 @@
   letter-spacing: -0.03em;
   color: var(--black);
   text-transform: uppercase;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   white-space: nowrap;
   overflow: hidden;
@@ -302,7 +336,7 @@
 
 .clientEmail {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--text);
   text-transform: none;
@@ -325,7 +359,7 @@
 
 .stageLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -341,7 +375,7 @@
 
 .mrrBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--black);
   text-transform: none;
@@ -349,13 +383,13 @@
 
 .mrrBadgeEmpty {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
 }
 
 .arrow {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   transition: color 0.15s ease;
 }
@@ -372,7 +406,7 @@
 
 .emptyText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);

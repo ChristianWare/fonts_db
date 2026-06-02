@@ -14,7 +14,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -33,7 +33,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -113,7 +113,7 @@
 
 .dropzoneSub {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   max-width: 360px;
@@ -133,7 +133,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   margin-top: 0.4rem;
@@ -164,7 +164,7 @@
 
 .uploadingText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -177,7 +177,7 @@
   border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -192,7 +192,7 @@
 
 .assetListHeading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--black);
@@ -258,7 +258,7 @@
 
 .assetName {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   white-space: nowrap;

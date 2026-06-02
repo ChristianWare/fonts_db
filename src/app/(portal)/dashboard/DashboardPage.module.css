@@ -131,8 +131,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .statusLabel {
@@ -145,7 +150,7 @@
 
 .productPrice {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -176,7 +181,9 @@
   line-height: 1;
   color: var(--black);
   text-transform: uppercase;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -203,7 +210,7 @@
   align-items: center;
   gap: 1rem;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--black);
@@ -219,7 +226,7 @@
 
 .productSecondaryCta {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -236,7 +243,7 @@
   align-items: center;
   gap: 1rem;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);
@@ -262,7 +269,9 @@
   justify-content: space-between;
   padding: 2.4rem 5rem;
   border-right: 1px solid var(--grayii);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
   color: var(--black);
   text-decoration: none;
   gap: 2rem;
@@ -279,7 +288,7 @@
 
 .quickLinkLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }

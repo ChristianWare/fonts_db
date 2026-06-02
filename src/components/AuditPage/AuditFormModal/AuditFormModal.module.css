@@ -119,7 +119,7 @@
 }
 
 .labelInputBox span {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--blue);
   width: 100%;
   padding: 1rem 2rem;
@@ -129,7 +129,7 @@
   color: var(--black);
   text-transform: uppercase;
   opacity: 0.5;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .error {
@@ -144,7 +144,7 @@
 .errorMsg {
   color: red;
   font-family: var(--GeistMono);
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.3px;
   padding: 1rem 2rem;
 }

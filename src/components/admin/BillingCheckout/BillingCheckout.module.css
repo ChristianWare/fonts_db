@@ -25,7 +25,7 @@
 
 .summaryLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -35,7 +35,9 @@
   font-family: var(--RobotoFlexii);
   font-size: 2.8rem;
   font-weight: 400;
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   letter-spacing: -0.5px;
   color: var(--black);
   -webkit-font-smoothing: antialiased;
@@ -43,7 +45,7 @@
 
 .summaryDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.5;
@@ -66,7 +68,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -79,7 +81,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -99,7 +101,7 @@
 /* ── Legal ── */
 .legal {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -125,12 +127,14 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -143,7 +147,7 @@
 
 .errorStateText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
 }
@@ -178,7 +182,7 @@
 
 .successText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -190,7 +194,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -199,7 +203,9 @@
   margin-top: 0.8rem;
 }
 
-.successBtn:hover { opacity: 0.85; }
+.successBtn:hover {
+  opacity: 0.85;
+}
 
 /* ── Form ── */
 .form {

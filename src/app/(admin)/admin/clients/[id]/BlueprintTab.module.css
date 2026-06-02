@@ -27,7 +27,7 @@
 
 .emptyStateDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -59,7 +59,7 @@
 
 .sidebarLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -99,7 +99,7 @@
 /* ── Drag handle ── */
 .dragHandle {
   padding: 0 0 0 1rem;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.2;
   cursor: grab;
@@ -119,7 +119,7 @@
 
 .pageSlugMarker {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.35;
   flex-shrink: 0;
@@ -145,10 +145,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0;
-  transition: opacity 0.12s, color 0.12s;
+  transition:
+    opacity 0.12s,
+    color 0.12s;
   flex-shrink: 0;
   line-height: 1;
 }
@@ -171,7 +173,9 @@
   font-size: 1.6rem;
   color: var(--text);
   opacity: 0;
-  transition: opacity 0.12s, color 0.12s;
+  transition:
+    opacity 0.12s,
+    color 0.12s;
   flex-shrink: 0;
   line-height: 1;
 }
@@ -214,7 +218,7 @@
 /* ── Page name + count ── */
 .pageName {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -226,7 +230,7 @@
 
 .pageCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
   flex-shrink: 0;
@@ -242,13 +246,15 @@
   background: none;
   cursor: pointer;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
   margin-top: 1rem;
   width: 100%;
-  transition: border-color 0.12s, color 0.12s;
+  transition:
+    border-color 0.12s,
+    color 0.12s;
 }
 
 .addPageBtn:hover {
@@ -279,7 +285,7 @@
   background: none;
   cursor: pointer;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #c53030;
@@ -308,7 +314,7 @@
 .emptyMain {
   padding: 4rem;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
 }
 
@@ -333,12 +339,14 @@
   border-right: none;
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
   cursor: pointer;
-  transition: background-color 0.12s, color 0.12s;
+  transition:
+    background-color 0.12s,
+    color 0.12s;
   white-space: nowrap;
 }
 
@@ -364,7 +372,7 @@
 
 .viewToggleHint {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -399,14 +407,17 @@
   border: 1px solid var(--lightGray);
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .fullscreenBtn:hover {
@@ -480,7 +491,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s, color 0.15s, opacity 0.2s;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    opacity 0.2s;
   z-index: 2;
   align-self: center;
 }
@@ -554,7 +568,9 @@
   cursor: pointer;
   min-width: 140px;
   text-align: center;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
 }
 
 .treeBox:hover {
@@ -589,7 +605,7 @@
 .treeBoxName {
   display: block;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -599,14 +615,14 @@
 .treeBoxCount {
   display: block;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
 }
 
 .treeBoxToggle {
   display: block;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.4;
   background: none;
@@ -700,7 +716,7 @@
 
 .treeLegendLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -708,7 +724,7 @@
 
 .treeNote {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -721,7 +737,7 @@
 .treeEmpty {
   padding: 4rem;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
 }
 
@@ -758,7 +774,7 @@
 
 .slugBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -774,7 +790,7 @@
 
 .progressLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -798,7 +814,7 @@
 /* ── Status pills ── */
 .statusPill {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0 1rem;
@@ -830,7 +846,7 @@
 
 .emptySections {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   padding: 3rem;
 }
@@ -859,7 +875,7 @@
 }
 
 .chevron {
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.4;
   transition: transform 0.18s;
@@ -874,7 +890,7 @@
 
 .sectionTitle {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -903,7 +919,7 @@
 
 .copyLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -912,7 +928,7 @@
 
 .copyDisplay {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   line-height: 1.65;
   text-transform: none;
@@ -924,7 +940,7 @@
 
 .copyEmpty {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   font-style: italic;
   text-transform: none;
@@ -936,7 +952,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   line-height: 1.65;
   resize: vertical;
@@ -965,7 +981,7 @@
 
 .commentMeta {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -974,7 +990,7 @@
 
 .commentText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   line-height: 1.5;
   text-transform: none;
@@ -992,7 +1008,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   outline: none;
@@ -1026,12 +1042,14 @@
   border: 1px solid var(--lightGray);
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
   white-space: nowrap;
 }
 
@@ -1050,7 +1068,7 @@
   border: none;
   background-color: var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--accent);
@@ -1073,7 +1091,7 @@
   border: none;
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -1090,7 +1108,7 @@
   border: none;
   background-color: #c53030;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #fff;
@@ -1109,7 +1127,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -1128,7 +1146,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   outline: none;
@@ -1172,7 +1190,7 @@
 
 .modalText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   line-height: 1.6;
@@ -1180,7 +1198,7 @@
 
 .modalTextSmall {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -1203,7 +1221,7 @@
 
 .reparentLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);

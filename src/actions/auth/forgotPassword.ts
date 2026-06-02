@@ -42,19 +42,19 @@ export async function forgotPassword(email: string) {
     subject: "Reset your password",
     html: `
       <div style="font-family: monospace; max-width: 480px; margin: 0 auto; padding: 40px 24px; background: #fff;">
-        <p style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin: 0 0 32px;">
+        <p style="font-size: 16px; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin: 0 0 32px;">
           Fonts & Footers
         </p>
         <h1 style="font-size: 28px; font-weight: 700; text-transform: uppercase; color: #0a0a0a; margin: 0 0 16px; letter-spacing: -1px;">
           Reset your password
         </h1>
-        <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 32px;">
+        <p style="font-size: 16px; color: #555; line-height: 1.6; margin: 0 0 32px;">
           Hi ${user.name ?? "there"}, we received a request to reset your password.
           Click the button below to choose a new one. This link expires in 1 hour.
         </p>
         <a href="${resetUrl}"
           style="display: inline-block; padding: 14px 32px; background-color: #0a0a0a; color: #ffc809;
-          font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+          font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
           text-decoration: none;">
           Reset password
         </a>

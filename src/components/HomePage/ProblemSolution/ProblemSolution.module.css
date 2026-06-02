@@ -221,7 +221,7 @@
   text-align: center;
   font-family: var(--GeistMono);
   text-transform: uppercase;
-  font-size: 1.4rem;
+  font-size: 16px;
   background-color: var(--white);
   z-index: 9999;
 }

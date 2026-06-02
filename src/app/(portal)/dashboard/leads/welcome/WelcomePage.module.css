@@ -33,7 +33,9 @@
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   margin-bottom: 2rem;
 }
@@ -58,7 +60,7 @@
 /* ── Section labels ── */
 .sectionLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text);
@@ -86,7 +88,9 @@
   padding: 2rem;
   border: 1px solid var(--grayii);
   background-color: var(--white);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .step_active {
@@ -112,7 +116,9 @@
   justify-content: center;
   background-color: var(--white);
   border: 1px solid var(--grayii);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .step_active .stepIndicator {
@@ -220,7 +226,9 @@
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: var(--black);
-  font-variation-settings: "wght" 700, "wdth" 81;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
   -webkit-font-smoothing: antialiased;
   margin: 0;
 }
@@ -235,7 +243,7 @@
 
 .leadTypeStrategy {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   line-height: 1.5;
   color: var(--black);
   margin: 0;

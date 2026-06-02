@@ -34,7 +34,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -46,7 +46,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   outline: none;
   transition: border-color 0.15s ease;
@@ -62,7 +62,7 @@
 
 .hint {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.5;
@@ -70,7 +70,7 @@
 
 .testLink {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -90,7 +90,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -105,7 +105,7 @@
 
 .savedText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
@@ -117,7 +117,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -135,5 +135,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .fields { grid-template-columns: 1fr; }
+  .fields {
+    grid-template-columns: 1fr;
+  }
 }

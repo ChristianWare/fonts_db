@@ -14,7 +14,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   max-width: 640px;
@@ -31,7 +31,7 @@
   background-color: #f0fdf4;
   border-bottom: 1px solid #bbf7d0;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #16a34a;
   text-transform: none;
   line-height: 1.5;
@@ -60,7 +60,7 @@
 
 .emptyText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -100,7 +100,7 @@
 
 .instructionText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.4;
@@ -108,7 +108,7 @@
 
 .instructionDivider {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--lightGray);
   flex-shrink: 0;
   padding: 0 0.8rem;
@@ -168,7 +168,7 @@
 
 .lightboxName {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -198,7 +198,7 @@
   padding: 0.9rem 2rem;
   border: 1px solid var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -269,7 +269,7 @@
 
 .lightboxFooterHint {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -343,7 +343,7 @@
 
 .templateName {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   overflow: hidden;
@@ -420,7 +420,7 @@
   padding: 0.9rem 2rem;
   background-color: rgb(255 255 255 / 96%);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -459,7 +459,7 @@
   padding: 0.9rem 2rem;
   border: 1px solid var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -535,7 +535,7 @@
 
 .confirmDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.5;
@@ -553,7 +553,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   resize: vertical;
   outline: none;
@@ -574,7 +574,7 @@
   border-bottom: 1px solid #fed7d7;
   background-color: #fff5f5;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -586,7 +586,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border: none;
@@ -623,7 +623,7 @@
 
 .notesText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;

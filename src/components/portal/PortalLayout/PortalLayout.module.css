@@ -67,7 +67,7 @@
 
 .brandSub {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--accent);
   background-color: var(--black);
   text-transform: uppercase;
@@ -156,7 +156,7 @@
 
 .navLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   overflow: hidden;
@@ -171,7 +171,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding: 1rem;
@@ -218,7 +218,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -236,7 +236,7 @@
 
 .userName {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--black);
@@ -247,7 +247,7 @@
 
 .userEmail {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.04em;
   color: var(--lightGray);
   text-transform: none;
@@ -316,7 +316,7 @@
 
 .pageIndicatorText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--lightGray);
@@ -333,7 +333,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -396,7 +396,7 @@
   /* Lock grid + CSS var so the topbar always begins right after the 56px strip */
   .shell {
     grid-template-columns: 56px 1fr;
-    
+
     --sidebar-width: 56px;
   }
 
@@ -455,7 +455,7 @@
   .navGroupLabel,
   .userName,
   .userEmail {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .navLabel {

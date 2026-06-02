@@ -13,7 +13,9 @@ const items = [
   { text: "About", href: "/#about" },
   { text: "Contact", href: "/#contact" },
   { text: "Audit", href: "/audit" },
-  { text: "My Account", href: "/dashboard" },
+  { text: "My Dashboard", href: "/dashboard" },
+  { text: "Login", href: "/login" },
+  { text: "Register", href: "/register" },
 ];
 
 const data3 = [
@@ -43,7 +45,7 @@ export default function Footer() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>
-              Audits. Leads. <br /> 
+              Audits. Leads. <br />
               <span className={styles.accent}>websites.</span>
             </h2>
           </div>

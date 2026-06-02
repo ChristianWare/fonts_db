@@ -111,7 +111,7 @@
 }
 
 .setupFee {
-  /* font-size: 1.4rem; */
+  /* font-size: 16px; */
   color: rgb(255 255 255 / 95%);
   margin-top: -1.6rem;
   text-decoration: underline;
@@ -127,7 +127,7 @@
 }
 
 .foundingTitle {
-  /* font-size: 1.4rem; */
+  /* font-size: 16px; */
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);

@@ -31,13 +31,13 @@
 }
 
 .bannerIcon {
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--accent);
 }
 
 .bannerText {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -49,7 +49,7 @@
 
 .bannerCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   letter-spacing: 0.07em;
   color: var(--text);
 }
@@ -80,7 +80,7 @@
 
 .sidebarLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text);
@@ -114,7 +114,7 @@
 
 .pageSlugMarker {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.35;
   flex-shrink: 0;
@@ -156,7 +156,7 @@
 
 .pageCount {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
   flex-shrink: 0;
@@ -173,7 +173,7 @@
 .emptyMain {
   padding: 4rem;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
 }
 
@@ -198,7 +198,7 @@
   border-right: none;
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -231,7 +231,7 @@
 
 .viewToggleHint {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -266,7 +266,7 @@
   border: 1px solid var(--lightGray);
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -464,7 +464,7 @@
 .treeBoxName {
   display: block;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -474,14 +474,14 @@
 .treeBoxCount {
   display: block;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.5;
 }
 
 .treeBoxToggle {
   display: block;
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.4;
   background: none;
@@ -575,7 +575,7 @@
 
 .treeLegendLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -583,7 +583,7 @@
 
 .treeNote {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -596,7 +596,7 @@
 .treeEmpty {
   padding: 4rem;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
 }
 
@@ -633,7 +633,7 @@
 
 .slugBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -643,7 +643,7 @@
 
 .pageApprovedBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: #16a34a;
@@ -654,7 +654,7 @@
 
 .pageProgressBadge {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);
@@ -690,7 +690,7 @@
 
 .emptySections {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   padding: 3rem;
   text-transform: none;
@@ -724,7 +724,7 @@
 }
 
 .chevron {
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   opacity: 0.4;
   transition: transform 0.18s;
@@ -739,7 +739,7 @@
 
 .sectionTitle {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
@@ -748,7 +748,7 @@
 
 .approvedPill {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #16a34a;
@@ -759,7 +759,7 @@
 
 .reviewPill {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #ca8a04;
@@ -770,7 +770,7 @@
 
 .draftPill {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -801,7 +801,7 @@
 
 .copyLabel {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -810,7 +810,7 @@
 
 .copyText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   line-height: 1.65;
   text-transform: none;
@@ -819,7 +819,7 @@
 
 .copyEmpty {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   font-style: italic;
   text-transform: none;
@@ -849,7 +849,7 @@
 
 .commentMeta {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -858,7 +858,7 @@
 
 .commentText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   line-height: 1.5;
   text-transform: none;
@@ -876,7 +876,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   outline: none;
@@ -898,7 +898,7 @@
   border: none;
   background-color: var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--accent);
@@ -921,7 +921,7 @@
   border: 1px solid var(--lightGray);
   background: none;
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);

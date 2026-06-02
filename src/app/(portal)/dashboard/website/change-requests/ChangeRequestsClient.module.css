@@ -14,7 +14,7 @@
 
 .subheading {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -52,7 +52,7 @@
 
 .lockedText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   max-width: 380px;
@@ -84,7 +84,7 @@
 
 .label {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);
@@ -97,7 +97,7 @@
   border: 1px solid var(--lightGray);
   background-color: var(--white);
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   transition: border-color 0.15s ease;
   outline: none;
@@ -125,7 +125,7 @@
   border-top: 1px solid #bbf7d0;
   border-bottom: 1px solid #bbf7d0;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #16a34a;
   text-transform: none;
   line-height: 1.5;
@@ -137,7 +137,7 @@
   border-top: 1px solid #fed7d7;
   border-bottom: 1px solid #fed7d7;
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
   line-height: 1.5;
@@ -152,7 +152,7 @@
   padding: 1.2rem 3rem;
   background-color: var(--black);
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);
@@ -178,7 +178,7 @@
 
 .historySectionHeading {
   font-family: var(--GeistMono);
-  font-size: 1.4rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--black);
@@ -231,7 +231,7 @@
 
 .requestDate {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -268,7 +268,7 @@
 
 .requestDesc {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
   line-height: 1.6;
@@ -294,7 +294,7 @@
 
 .adminNoteText {
   font-family: var(--Roboto);
-  font-size: 1.4rem;
+  font-size: 16px;
   color: var(--black);
   text-transform: none;
   line-height: 1.5;
@@ -305,7 +305,7 @@
   .header {
     padding: 3rem 2rem;
   }
-  
+
   .formCard {
     padding: 2.4rem 2rem;
   }
