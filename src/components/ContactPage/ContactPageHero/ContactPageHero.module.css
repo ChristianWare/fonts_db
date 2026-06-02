@@ -127,13 +127,59 @@
   color: var(--black);
 }
 
-.emailLinkHeading {
+.emailLinkHeading,
+.explain,
+.mapDataText {
   font-family: var(--GeistMono);
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.b2Right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding: 8rem 4rem;
+  background-color: var(--lightGrayii);
+}
+
+.mapDataContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.explain {
+  margin-bottom: 2rem;
+}
+
+.mapDataItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.icon {
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+  max-width: 2rem;
+  max-height: 2rem;
+  background-color: var(--accent);
+  padding: 0.2rem;
+  color: var(--black);
+}
+
+.mapDataText {
+  color: var(--black);
+  margin-bottom: 0;
 }
 
 @media screen and (max-width: 1268px) {
@@ -150,6 +196,16 @@
   .b2 {
     grid-template-columns: 1fr;
     gap: 5rem;
+  }
+
+  .b2Left, .b2Right {
+    padding: 3.6rem 2rem;
+    gap: 3rem;
+  }
+
+  .mapDataItem {
+    align-items: flex-start;
+
   }
 }
 

@@ -2,6 +2,26 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import styles from "./ContactPageHero.module.css";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
+import Check from "@/components/shared/Check/Check";
+
+const data = [
+  {
+    id: 1,
+    text: "Understand your goals and how your team currently operates",
+  },
+  {
+    id: 2,
+    text: "Understand your goals and how your team currently operates",
+  },
+  {
+    id: 3,
+    text: "Show you exactly how Strativ can support a more adaptive workflow",
+  },
+  {
+    id: 4,
+    text: "Give you practical, no-nonsense next steps",
+  },
+];
 
 export default function ContactPageHero() {
   return (
@@ -55,7 +75,33 @@ export default function ContactPageHero() {
               <a className={styles.emailLink}>Socials here</a>
             </div>
           </div>
-          <div className={styles.b2Right}></div>
+          <div className={styles.b2Right}>
+            <h3 className={styles.subHeadinigh}>General Questions</h3>
+            <p className={styles.copy}>
+              If you’re exploring Strativ or need clarity about how it works,
+              feel free to reach out.{" "}
+              <span className={styles.copyAccent}>
+                We’re here to help you understand whether Strativ is the right
+                fit for your team.
+              </span>
+            </p>
+            <div>
+              <p className={styles.explain}>During this session, we will:</p>
+              <div className={styles.mapDataContainer}>
+                {data.map((item) => (
+                  <div key={item.id} className={styles.mapDataItem}>
+                    <Check className={styles.icon} />
+                    <p className={styles.mapDataText}>{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className={styles.copy}>
+              <span className={styles.copyAccent}>
+                It’s focused, helpful, and 100% pressure-free.
+              </span>
+            </p>
+          </div>
         </div>
       </LayoutWrapper>
     </section>
