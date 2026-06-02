@@ -52,6 +52,14 @@ export default function AuditParallaxResults() {
                   missing the city name, which is costing you local search
                   visibility for your market.&rdquo;
                 </p>
+                <div className={styles.btnContainer}>
+                  <Button
+                    href='#audit'
+                    text='Try it for free'
+                    btnType='accent'
+                    arrow
+                  />
+                </div>
               </div>
               <div className={styles.right}>
                 <div className={styles.sectionIntroContainer}>
@@ -64,14 +72,6 @@ export default function AuditParallaxResults() {
                     </li>
                   ))}
                 </ul>
-                <div className={styles.btnContainer}>
-                  <Button
-                    href='#audit'
-                    text='Try it for free'
-                    btnType='accent'
-                    arrow
-                  />
-                </div>
               </div>
             </div>
           </div>

@@ -204,10 +204,34 @@ h3,
 
 h5,
 .h5 {
+  font-feature-settings:
+    "blwf" on,
+    "cv09" on,
+    "cv03" on,
+    "cv04" on,
+    "cv11" on;
+  font-variation-settings:
+    "opsz" 56,
+    "wght" 700,
+    "GRAD" 0,
+    "wdth" 81,
+    "slnt" 0,
+    "XOPQ" 96,
+    "YOPQ" 72,
+    "XTRA" 468,
+    "YTUC" 760,
+    "YTLC" 514,
+    "YTAS" 750,
+    "YTDE" -203,
+    "YTFI" 738;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-size: 3.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
   line-height: 1.2;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
 }
 
 h6,

@@ -75,11 +75,11 @@ export default function ProjectSection() {
               <div className={styles.statBox}>
                 <div className={styles.statLeft}>
                   <span className={styles.detail}>Duplicate work</span>
-                  <span className={`${styles.heading} h1`}>-27%</span>
+                  <span className={`${styles.heading} h2`}>-27%</span>
                 </div>
                 <div className={styles.statRight}>
                   <span className={styles.detail}>On-time delivery</span>
-                  <span className={`${styles.heading} h1`}>+42%</span>
+                  <span className={`${styles.heading} h2`}>+42%</span>
                 </div>
                 <div className={styles.btnContainer}>
                   <Button

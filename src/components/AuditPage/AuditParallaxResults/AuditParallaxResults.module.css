@@ -97,7 +97,8 @@
 }
 
 .btnContainer {
-  margin-top: 2rem;
+  margin-top: 3rem;
+  width: fit-content;
 }
 
 @media screen and (max-width: 1268px) {
@@ -114,7 +115,7 @@
 
   .bottom {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 7rem;
   }
 
   .imgContainer {
@@ -128,17 +129,22 @@
     justify-content: center;
   }
 
-  .dataBox,
-  .btnContainer {
+  .dataBox {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
   }
+
+  .btnContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 1068px) {
-  .dataBox,
-  .btnContainer {
+  .dataBox {
     width: 100%;
   }
 }

@@ -41,7 +41,6 @@ export default function Solution() {
                     href='#features'
                     text='Take the tour'
                     btnType='black'
-                    // arrow
                   />
                 </div>
               </div>
@@ -63,7 +62,7 @@ export default function Solution() {
                           {x.bullets.map((bullet, index) => (
                             <li
                               key={index}
-                              className={`${styles.bulletTitle} h3`}
+                              className={`${styles.bulletTitle} h5`}
                             >
                               {bullet}
                             </li>
@@ -81,7 +80,6 @@ export default function Solution() {
                           className={styles.img}
                         />
                         <div className={styles.imgOverlay} />
-                        {/* <p className={styles.imgDescription}>{x.description}</p> */}
                       </div>
                     </div>
                   </div>

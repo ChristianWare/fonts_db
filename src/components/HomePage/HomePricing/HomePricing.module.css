@@ -183,7 +183,7 @@
 .feature {
   position: relative;
   padding-left: 2rem;
-  color: var(--white);
+  color: var(--white) !important;
 }
 
 .feature::before {
