@@ -7,15 +7,12 @@ import Instagram from "@/components/shared/icons/Instagram/Instagram";
 
 const items = [
   { text: "Home", href: "/" },
-  { text: "Features", href: "/#features" },
-  { text: "Work", href: "/#work" },
-  { text: "Pricing", href: "/#pricing" },
-  { text: "About", href: "/#about" },
-  { text: "Contact", href: "/#contact" },
-  { text: "Audit", href: "/audit" },
+  { text: "Free Audit", href: "/audit" },
+  { text: "Leads", href: "/leads" },
+  { text: "Websites", href: "/websites" },
+  { text: "About Us", href: "/about" },
+  { text: "Contact", href: "/contact" },
   { text: "My Dashboard", href: "/dashboard" },
-  { text: "Login", href: "/login" },
-  { text: "Register", href: "/register" },
 ];
 
 const data3 = [

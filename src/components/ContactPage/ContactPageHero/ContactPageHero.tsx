@@ -119,7 +119,7 @@ export default function ContactPageHero() {
               30 minutes on Calendly. The fastest way to figure out if any of
               this fits your business —{" "}
               <span className={styles.copyAccent}>
-                and if it doesn&apos;t, I&apos;ll say so.
+                and if it doesn&apos;t, we&apos;ll say so.
               </span>
             </p>
             <div>
