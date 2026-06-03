@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { RegisterSchema, RegisterSchemaType } from "@/schemas/RegisterSchema";
 import { register as registerUser } from "@/actions/auth/register";
 import styles from "./RegisterPage.module.css";
+import Check from "@/components/shared/Check/Check";
 
 function EyeIcon() {
   return (
@@ -139,7 +140,10 @@ export default function RegisterPage() {
 
           {success ? (
             <div className={styles.successState}>
-              <div className={styles.successIcon}>✓</div>
+              <div className={styles.successIcon}>
+                
+                <Check />
+              </div>
               <h3 className={styles.successHeading}>Check your email</h3>
               <p className={styles.successText}>
                 We sent a verification link to your email address. Click it to

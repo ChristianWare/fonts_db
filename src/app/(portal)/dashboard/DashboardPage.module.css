@@ -9,7 +9,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 4rem 5rem;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .headerLeft {
@@ -46,7 +46,7 @@
   gap: 1.6rem;
   padding: 2rem 5rem;
   background-color: var(--black);
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .sectionNumber {
@@ -70,14 +70,14 @@
 .productGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid var(--grayii);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .productCard {
   display: flex;
   flex-direction: column;
   background-color: var(--white);
-  border-right: 1px solid var(--grayii);
+  border-right: 1px solid var(--lightGray);
   padding: 4rem 5rem;
   text-decoration: none;
   color: var(--black);
@@ -90,20 +90,19 @@
 }
 
 .productCard:not(.productCardGhost):hover {
-  background-color: var(--lightGrayiii);
+  background-color: var(--lightGray);
 }
 
 /* Ghosted (inactive) state */
 .productCardGhost {
   opacity: 0.55;
-  background-color: var(--lightGrayiii);
+  background-color: var(--lightGray);
 }
 
 .productCardGhost:hover {
   opacity: 0.75;
 }
 
-/* Top row: status + price */
 .productCardTop {
   display: flex;
   align-items: center;
@@ -125,9 +124,8 @@
 }
 
 .statusDotInactive {
-  background-color: var(--text);
+  background-color: #dc2626;
   animation: none;
-  opacity: 0.5;
 }
 
 @keyframes pulse {
@@ -135,6 +133,7 @@
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -202,7 +201,6 @@
   gap: 2rem;
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid var(--grayii);
 }
 
 .productCta {
@@ -261,6 +259,7 @@
 .quickLinks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .quickLink {
@@ -268,7 +267,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 2.4rem 5rem;
-  border-right: 1px solid var(--grayii);
+  border-right: 1px solid var(--lightGray);
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -301,7 +300,7 @@
 
   .productCard {
     border-right: none;
-    border-bottom: 1px solid var(--grayii);
+    border-bottom: 1px solid var(--lightGray);
   }
 
   .productCard:last-child {
@@ -332,7 +331,7 @@
 
   .quickLink {
     border-right: none;
-    border-bottom: 1px solid var(--grayii);
+    border-bottom: 1px solid var(--lightGray);
     padding: 2rem;
   }
 

@@ -1,13 +1,12 @@
 import { getClientProfile } from "@/actions/client/getClientProfile";
-import { getProductAccess, effectiveHasLeads } from "@/lib/subscriptions";
+import {
+  getProductAccess,
+  effectiveHasLeads,
+  effectiveHasWebsite,
+} from "@/lib/subscriptions";
 import { auth } from "../../../../auth";
 import styles from "./DashboardPage.module.css";
 import Link from "next/link";
-
-// ── Mock subscription state — website still needs wiring ──
-const MOCK_SUBSCRIPTIONS = {
-  hasWebsite: true,
-};
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -17,12 +16,13 @@ export default async function DashboardPage() {
   const isLive = profile?.onboardingStage === "SITE_LIVE";
   const liveUrl = profile?.liveUrl ?? null;
 
-  // Leads access — admin override only applies when no subscription exists.
+  // Product access — admin override only applies when no subscription exists.
   // Once a subscription is in place (active, cancelled, anything), admins
-  // are treated like regular customers. See effectiveHasLeads for details.
+  // are treated like regular customers.
   const isAdmin = session?.user?.roles?.includes("ADMIN") ?? false;
   const access = profile ? await getProductAccess(profile.id) : null;
   const hasLeads = access ? effectiveHasLeads(access, isAdmin) : isAdmin;
+  const hasWebsite = access ? effectiveHasWebsite(access, isAdmin) : isAdmin;
 
   return (
     <div className={styles.page}>
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
       {/* ── Two-card product overview ── */}
       <div className={styles.productGrid}>
         {/* WEBSITE CARD */}
-        {MOCK_SUBSCRIPTIONS.hasWebsite ? (
+        {hasWebsite ? (
           <Link href='/dashboard/website' className={styles.productCard}>
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
             </div>
           </Link>
         ) : (
-          <div className={`${styles.productCard} ${styles.productCardGhost}`}>
+          <div className={styles.productCard}>
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
                 <span
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
             </div>
           </Link>
         ) : (
-          <div className={`${styles.productCard} ${styles.productCardGhost}`}>
+          <div className={styles.productCard}>
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
                 <span
