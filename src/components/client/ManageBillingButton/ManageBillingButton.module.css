@@ -1,0 +1,35 @@
+/* ManageBillingButton.module.css */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.btn {
+  padding: 1.2rem 2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error {
+  font-family: var(--Roboto);
+  font-size: 14px;
+  color: #c53030;
+  text-transform: none;
+}

@@ -21,11 +21,237 @@
   margin-top: 0.4rem;
 }
 
+/* ── Pending actions strip ── */
+.alertStrip {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.alertRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 5rem;
+  background-color: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  font-family: var(--Roboto);
+  font-size: 16px;
+  color: #92400e;
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.alertRow:last-child {
+  border-bottom: none;
+}
+
+/* ── Product card grid (mirrors DashboardPage) ── */
+.productGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.productCard {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  border-right: 1px solid var(--lightGray);
+  padding: 4rem 5rem;
+  color: var(--black);
+  min-height: 360px;
+}
+
+.productCard:last-child {
+  border-right: none;
+}
+
+.productCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.productStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.statusDot {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.dotActive {
+  background-color: #16a34a;
+  animation: pulse 2s infinite;
+}
+
+.dotTrial {
+  background-color: #2563eb;
+  animation: pulse 2s infinite;
+}
+
+.dotPastDue {
+  background-color: #c2410c;
+  animation: pulse 2s infinite;
+}
+
+.dotInactive {
+  background-color: #dc2626;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.statusLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+.productPrice {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  font-weight: 700;
+}
+
+.productCardMain {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  flex: 1;
+}
+
+.productLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.productTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 3.6rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+}
+
+.productDesc {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 90%;
+}
+
+/* Billing detail rows inside cards */
+.cardDetails {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--lightGray);
+  margin-top: 1.2rem;
+}
+
+.cardDetailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.2rem 1.6rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.cardDetailRow:last-child {
+  border-bottom: none;
+}
+
+.cardDetailLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.cardDetailValue {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--black);
+  text-transform: none;
+  text-align: right;
+}
+
+.cardAlert {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: #c2410c;
+  text-transform: none;
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 1.2rem 1.6rem;
+  margin-top: 1.2rem;
+}
+
+/* Bottom CTA row */
+.productCardBottom {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 1.2rem 2rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.cardCta:hover {
+  opacity: 0.85;
+}
+
 /* ── Checkout section (pre-billing) ── */
 .checkoutSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid var(--lightGray);
+  scroll-margin-top: 90px;
 }
 
 .checkoutLeft {
@@ -91,135 +317,58 @@
   padding: 4rem 5rem;
 }
 
-/* ── Subscription block ── */
-.subscriptionCard {
+/* ── Payment method section ── */
+.paymentSection {
   display: flex;
   flex-direction: column;
-  gap: 0;
   border-bottom: 1px solid var(--lightGray);
 }
 
-.subscriptionTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 3rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
-}
-
-.subscriptionLeft {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.subscriptionLabel {
+.paymentSectionHeading {
   font-family: var(--GeistMono);
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text);
-}
-
-.subscriptionPlan {
-  font-family: var(--RobotoFlexii);
-  font-size: 5rem;
-  font-weight: 400;
-  font-variation-settings:
-    "wght" 700,
-    "wdth" 81;
-  letter-spacing: -1px;
-  text-transform: uppercase;
   color: var(--black);
-  line-height: 0.95em;
-  -webkit-font-smoothing: antialiased;
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
 }
 
-.subscriptionStatus {
-  padding: 0.3rem 1rem;
-  border: 1px solid;
-  font-family: var(--GeistMono);
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  flex-shrink: 0;
-  margin-top: 0.4rem;
-}
-
-.statusActive {
-  color: #16a34a;
-  border-color: #16a34a;
-}
-
-.statusPastDue {
-  color: #c2410c;
-  border-color: #c2410c;
-}
-
-.statusInactive {
-  color: var(--text);
-  border-color: var(--lightGray);
-}
-
-.subscriptionDetails {
-  display: flex;
-  flex-direction: column;
-}
-
-.detailRow {
+.paymentRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.4rem 5rem;
-  border-bottom: 1px solid var(--lightGray);
   gap: 2rem;
+  padding: 2rem 5rem;
 }
 
-.detailRow:last-child {
-  border-bottom: none;
+.paymentInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
 }
 
-.detailLabel {
+.cardBrand {
   font-family: var(--GeistMono);
   font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text);
-}
-
-.detailValue {
-  font-family: var(--Roboto);
-  font-size: 16px;
+  letter-spacing: 0.08em;
   color: var(--black);
-  text-transform: none;
+  font-weight: 700;
 }
 
-.noSubscription {
-  padding: 2.4rem 5rem;
-}
-
-.noSubscriptionText {
+.cardMeta {
   font-family: var(--Roboto);
   font-size: 16px;
   color: var(--text);
   text-transform: none;
-  line-height: 1.6;
-  max-width: 560px;
 }
 
-.pastDueBanner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.4rem 5rem;
-  background-color: #fff7ed;
-  border-top: 1px solid #fed7aa;
+.noCardText {
   font-family: var(--Roboto);
   font-size: 16px;
-  color: #c2410c;
+  color: var(--text);
   text-transform: none;
-  line-height: 1.5;
 }
 
 /* ── Invoice section ── */
@@ -297,12 +446,28 @@
   min-width: 0;
 }
 
+.invoiceTopLine {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .invoiceNumber {
   font-family: var(--GeistMono);
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--black);
+}
+
+.productTag {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 0.2rem 0.8rem;
 }
 
 .invoiceDesc {
@@ -384,9 +549,36 @@
   }
 }
 
+@media screen and (max-width: 968px) {
+  .productGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .productCard {
+    border-right: none;
+    border-bottom: 1px solid var(--lightGray);
+  }
+
+  .productCard:last-child {
+    border-bottom: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .header {
     padding: 3rem 2rem;
+  }
+
+  .alertRow {
+    padding: 1.4rem 2rem;
+  }
+
+  .productCard {
+    padding: 3rem 2rem;
+  }
+
+  .productTitle {
+    font-size: 2.8rem;
   }
 
   .checkoutLeft {
@@ -397,21 +589,14 @@
     padding: 3rem 2rem;
   }
 
-  .subscriptionTop {
-    padding: 2.4rem 2rem;
-    flex-direction: column;
-  }
-
-  .detailRow {
-    padding: 1.4rem 2rem;
-  }
-
-  .noSubscription {
+  .paymentSectionHeading {
     padding: 2rem;
   }
 
-  .pastDueBanner {
-    padding: 1.4rem 2rem;
+  .paymentRow {
+    padding: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .invoiceSectionHeading {

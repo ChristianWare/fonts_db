@@ -222,7 +222,7 @@ const productGroups: NavGroup[] = [
       // },
       {
         href: "/dashboard/leads/search",
-        label: "Search",
+        label: "Search Leads",
         icon: (
           <svg
             width='20'
