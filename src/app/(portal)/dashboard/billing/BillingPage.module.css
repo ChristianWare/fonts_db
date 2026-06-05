@@ -340,6 +340,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 2rem 5rem;
+  flex-wrap: wrap;
 }
 
 .paymentInfo {

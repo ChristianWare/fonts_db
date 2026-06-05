@@ -485,6 +485,10 @@ model Subscription {
   cancelledAt DateTime?
   pausedAt    DateTime?
 
+  // True while a cancellation is scheduled for period end (Stripe's
+  // cancel_at_period_end). Status stays ACTIVE until the sub actually ends.
+  cancelAtPeriodEnd Boolean @default(false)
+
   // Setup fee fields (relevant for WEBSITE; defaults to 0 for LEADS)
   setupFeeAmountCents Int     @default(50000)
   monthlyAmountCents  Int     @default(49900)

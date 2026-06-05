@@ -1,0 +1,334 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Hero ── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 6rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.eyebrow {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.heading {
+  font-family: var(--RobotoFlexii);
+  font-size: 5.6rem;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+  max-width: 900px;
+}
+
+.subheading {
+  font-family: var(--Roboto);
+  font-size: 1.7rem;
+  line-height: 1.6;
+  color: var(--text);
+  text-transform: none;
+  max-width: 560px;
+}
+
+.heroCtas {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.primaryCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background-color: var(--black);
+  padding: 1.6rem 2.8rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.primaryCta:hover {
+  opacity: 0.85;
+}
+
+.secondaryCta {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.secondaryCta:hover {
+  opacity: 0.6;
+}
+
+/* ── Section headers (mirrors DashboardPage) ── */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 2rem 5rem;
+  background-color: var(--black);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.sectionNumber {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.sectionHeading {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── What's included ── */
+.includedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.includedCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 4rem 5rem;
+  border-right: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.includedCard:nth-child(2n) {
+  border-right: none;
+}
+
+.includedIndex {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.includedTitle {
+  font-family: var(--RobotoFlexii);
+  font-size: 2.4rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+}
+
+.includedDesc {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  text-transform: none;
+  max-width: 90%;
+}
+
+.includedFootnote {
+  padding: 2.4rem 5rem;
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.footnoteText {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 720px;
+}
+
+/* ── Steps ── */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--lightGray);
+}
+
+.stepCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 3.6rem 3rem;
+  border-right: 1px solid var(--lightGray);
+}
+
+.stepCard:last-child {
+  border-right: none;
+}
+
+.stepNum {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  background-color: var(--accent);
+  padding: 0.4rem 1rem;
+  width: fit-content;
+  font-weight: 700;
+}
+
+.stepTitle {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+  font-weight: 700;
+}
+
+.stepDesc {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  text-transform: none;
+}
+
+/* ── Bottom CTA ── */
+.bottomCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  padding: 5rem;
+  flex-wrap: wrap;
+}
+
+.bottomCtaLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 560px;
+}
+
+.bottomCtaHeading {
+  font-family: var(--RobotoFlexii);
+  font-size: 3.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--black);
+  text-transform: uppercase;
+  font-variation-settings:
+    "wght" 700,
+    "wdth" 81;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bottomCtaText {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  text-transform: none;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 968px) {
+  .includedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .includedCard {
+    border-right: none;
+  }
+
+  .stepsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stepCard:nth-child(2n) {
+    border-right: none;
+  }
+
+  .stepCard {
+    border-bottom: 1px solid var(--lightGray);
+  }
+
+  .stepCard:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hero {
+    padding: 4rem 2rem;
+  }
+
+  .heading {
+    font-size: 3.6rem;
+  }
+
+  .sectionHeader {
+    padding: 2rem;
+  }
+
+  .includedCard {
+    padding: 3rem 2rem;
+  }
+
+  .includedFootnote {
+    padding: 2rem;
+  }
+
+  .bottomCta {
+    padding: 4rem 2rem;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stepCard {
+    border-right: none;
+  }
+
+  .stepCard:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--lightGray);
+  }
+
+  .stepCard:last-child {
+    border-bottom: none;
+  }
+}

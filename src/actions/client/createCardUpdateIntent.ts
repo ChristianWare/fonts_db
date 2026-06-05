@@ -4,25 +4,24 @@ import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import stripe from "@/lib/stripe";
 
-export async function createBillingPortalSession() {
+export async function createCardUpdateIntent() {
   const session = await auth();
   if (!session?.user?.id) return { error: "Unauthorized" };
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
-    select: { stripeCustomerId: true },
+    select: { id: true, stripeCustomerId: true },
   });
 
   if (!profile?.stripeCustomerId) {
     return { error: "No billing account found" };
   }
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-  const portalSession = await stripe.billingPortal.sessions.create({
+  const setupIntent = await stripe.setupIntents.create({
     customer: profile.stripeCustomerId,
-    return_url: `${origin}/dashboard/billing`,
+    payment_method_types: ["card"],
+    metadata: { clientProfileId: profile.id, type: "card_update" },
   });
 
-  return { url: portalSession.url };
+  return { clientSecret: setupIntent.client_secret };
 }

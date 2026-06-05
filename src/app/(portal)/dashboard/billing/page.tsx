@@ -5,7 +5,8 @@ import Link from "next/link";
 import Stripe from "stripe";
 import stripe from "@/lib/stripe";
 import BillingCheckout from "@/components/admin/BillingCheckout/BillingCheckout";
-import ManageBillingButton from "@/components/client/ManageBillingButton/ManageBillingButton";
+import UpdatePaymentMethod from "@/components/client/UpdatePaymentMethod/UpdatePaymentMethod";
+import CancelSubscription from "@/components/client/CancelSubscription/CancelSubscription";
 
 const productLabels: Record<string, string> = {
   WEBSITE: "Custom Website",
@@ -105,7 +106,11 @@ export default async function BillingPage() {
     }
   }
   const leadsSub = subscriptions.find((s) => s.productType === "LEADS") ?? null;
-  if (leadsSub?.trialEndsAt && new Date(leadsSub.trialEndsAt) > now) {
+  if (
+    leadsSub?.trialEndsAt &&
+    new Date(leadsSub.trialEndsAt) > now &&
+    !leadsSub.cancelAtPeriodEnd
+  ) {
     const daysLeft = Math.ceil(
       (new Date(leadsSub.trialEndsAt).getTime() - now.getTime()) / 86400000,
     );
@@ -337,7 +342,7 @@ export default async function BillingPage() {
                           {format(new Date(sub.trialEndsAt), "MMM d, yyyy")}
                         </span>
                       </div>
-                      {!isBeta && (
+                      {!isBeta && !sub.cancelAtPeriodEnd && (
                         <div className={styles.cardDetailRow}>
                           <span className={styles.cardDetailLabel}>
                             First charge
@@ -351,27 +356,53 @@ export default async function BillingPage() {
                     </>
                   )}
 
-                  {!inTrial && sub.currentPeriodEnd && (
+                  {sub.cancelAtPeriodEnd && (
                     <div className={styles.cardDetailRow}>
                       <span className={styles.cardDetailLabel}>
-                        {isActive ? "Next billing date" : "Period ended"}
+                        Access until
                       </span>
                       <span className={styles.cardDetailValue}>
-                        {format(new Date(sub.currentPeriodEnd), "MMM d, yyyy")}
+                        {format(
+                          new Date(
+                            (inTrial
+                              ? sub.trialEndsAt
+                              : sub.currentPeriodEnd) ?? now,
+                          ),
+                          "MMM d, yyyy",
+                        )}
                       </span>
                     </div>
                   )}
 
-                  {sub.billingAnchorDate && !inTrial && !isCancelled && (
-                    <div className={styles.cardDetailRow}>
-                      <span className={styles.cardDetailLabel}>
-                        Billing day
-                      </span>
-                      <span className={styles.cardDetailValue}>
-                        Day {sub.billingAnchorDate} of each month
-                      </span>
-                    </div>
-                  )}
+                  {!sub.cancelAtPeriodEnd &&
+                    !inTrial &&
+                    sub.currentPeriodEnd && (
+                      <div className={styles.cardDetailRow}>
+                        <span className={styles.cardDetailLabel}>
+                          {isActive ? "Next billing date" : "Period ended"}
+                        </span>
+                        <span className={styles.cardDetailValue}>
+                          {format(
+                            new Date(sub.currentPeriodEnd),
+                            "MMM d, yyyy",
+                          )}
+                        </span>
+                      </div>
+                    )}
+
+                  {sub.billingAnchorDate &&
+                    !inTrial &&
+                    !isCancelled &&
+                    !sub.cancelAtPeriodEnd && (
+                      <div className={styles.cardDetailRow}>
+                        <span className={styles.cardDetailLabel}>
+                          Billing day
+                        </span>
+                        <span className={styles.cardDetailValue}>
+                          Day {sub.billingAnchorDate} of each month
+                        </span>
+                      </div>
+                    )}
 
                   {isCancelled && sub.cancelledAt && (
                     <div className={styles.cardDetailRow}>
@@ -392,6 +423,24 @@ export default async function BillingPage() {
                   </p>
                 )}
               </div>
+
+              {(isActive || isPastDue) && (
+                <div className={styles.productCardBottom}>
+                  <CancelSubscription
+                    productType={sub.productType}
+                    productLabel={productLabels[sub.productType]}
+                    endDate={
+                      (inTrial
+                        ? sub.trialEndsAt
+                        : sub.currentPeriodEnd
+                      )?.toISOString() ?? null
+                    }
+                    cancelAtPeriodEnd={sub.cancelAtPeriodEnd}
+                    immediate={!sub.stripeSubscriptionId}
+                    inTrial={inTrial}
+                  />
+                </div>
+              )}
 
               {isCancelled && (
                 <div className={styles.productCardBottom}>
@@ -485,7 +534,7 @@ export default async function BillingPage() {
             ) : (
               <p className={styles.noCardText}>No card on file.</p>
             )}
-            <ManageBillingButton />
+            <UpdatePaymentMethod />
           </div>
         </div>
       )}

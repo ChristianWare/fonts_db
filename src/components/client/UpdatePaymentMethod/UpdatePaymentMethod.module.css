@@ -1,0 +1,84 @@
+.openBtn {
+  padding: 1.2rem 2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.openBtn:hover {
+  opacity: 0.85;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.saveBtn {
+  padding: 1.2rem 2rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.saveBtn:hover {
+  opacity: 0.85;
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  padding: 1.2rem 2rem;
+  background-color: transparent;
+  color: var(--text);
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--lightGray);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.cancelBtn:hover {
+  border-color: var(--black);
+}
+
+.error {
+  font-family: var(--Roboto);
+  font-size: 14px;
+  color: #c53030;
+  text-transform: none;
+}
+
+.loading {
+  font-family: var(--GeistMono);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}

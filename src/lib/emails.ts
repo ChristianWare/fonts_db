@@ -718,3 +718,113 @@ export async function sendDailyDigestEmail({
 }
 
 const MAX_DIGEST_EVENTS = 5;
+
+function formatCentsPlain(cents: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(cents / 100);
+}
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+const BILLING_URL = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://fontsandfooters.com"}/dashboard/billing`;
+
+// ── Trial ending (sent ~3 days before the leads trial converts) ──
+export async function sendLeadsTrialEndingEmail({
+  to,
+  name,
+  trialEndsAt,
+  amountCents,
+  savedLeadsCount,
+}: {
+  to: string;
+  name: string;
+  trialEndsAt: Date | null;
+  amountCents: number;
+  savedLeadsCount: number;
+}) {
+  const endText = trialEndsAt ? formatDate(trialEndsAt) : "in a few days";
+  const amount = formatCentsPlain(amountCents);
+
+  const subject = `Your leads trial ends ${endText}`;
+
+  const html = `
+    <p>Hey ${name},</p>
+    <p>Quick heads up — your Fonts &amp; Footers leads trial ends on <strong>${endText}</strong>. If you don't do anything, your card gets charged ${amount} on that date and the tool keeps running.</p>
+    ${
+      savedLeadsCount > 0
+        ? `<p>So far you've saved <strong>${savedLeadsCount} lead${savedLeadsCount === 1 ? "" : "s"}</strong> to your pipeline. If even one of those turns into a corporate account, the tool paid for itself for the year.</p>`
+        : `<p>Looks like you haven't saved any leads yet. If you haven't had a chance to dig in, now's the time — you've still got a few days of free access.</p>`
+    }
+    <p>If it's working for you, there's nothing to do.</p>
+    <p>If it's not, cancelling takes one click from your <a href="${BILLING_URL}">billing page</a> — you keep access through the end of the trial and your card is never charged. No hoops, no hard feelings.</p>
+    <p>Questions? Just reply to this email.</p>
+    <p>— Chris<br/>Fonts &amp; Footers</p>
+  `;
+
+  // Use the same transport as sendBillingConfirmedEmail:
+  return sendEmail({ to, subject, html });
+}
+
+// ── Payment failed (dunning) ──
+export async function sendPaymentFailedEmail({
+  to,
+  name,
+  productLabel,
+  amountCents,
+  nextRetryAt,
+}: {
+  to: string;
+  name: string;
+  productLabel: string;
+  amountCents: number;
+  nextRetryAt: Date | null;
+}) {
+  const amount = formatCentsPlain(amountCents);
+  const subject = `Payment issue on your Fonts & Footers account`;
+
+  const html = `
+    <p>Hey ${name},</p>
+    <p>The ${amount} charge for your <strong>${productLabel}</strong> subscription didn't go through. This is usually an expired card or a bank decline — nothing dramatic.</p>
+    <p>Your access is still active for now. To fix it, update your card on your <a href="${BILLING_URL}">billing page</a> — takes about a minute.</p>
+    ${
+      nextRetryAt
+        ? `<p>If you don't update it, we'll automatically retry the charge around ${formatDate(nextRetryAt)}.</p>`
+        : ""
+    }
+    <p>If something looks off or you have questions, just reply.</p>
+    <p>— Chris<br/>Fonts &amp; Footers</p>
+  `;
+
+  return sendEmail({ to, subject, html });
+}
+
+// ── Cancellation confirmed (sub has actually ended) ──
+export async function sendCancellationConfirmedEmail({
+  to,
+  name,
+  productLabel,
+}: {
+  to: string;
+  name: string;
+  productLabel: string;
+}) {
+  const subject = `Your ${productLabel} subscription is cancelled`;
+
+  const html = `
+    <p>Hey ${name},</p>
+    <p>Confirming your <strong>${productLabel}</strong> subscription is cancelled. No further charges.</p>
+    <p>Your account and settings are still here, so if you ever want to come back, re-enrolling takes about a minute from your <a href="${BILLING_URL}">billing page</a>.</p>
+    <p>If anything about the product didn't work for you, I'd genuinely like to know — just reply and tell me. It's a one-person shop and that feedback goes straight into the build.</p>
+    <p>— Chris<br/>Fonts &amp; Footers</p>
+  `;
+
+  return sendEmail({ to, subject, html });
+}

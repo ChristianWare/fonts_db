@@ -1,0 +1,166 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ── Triggers ── */
+.cancelLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.cancelLink:hover {
+  color: var(--black);
+}
+
+.dangerBtn {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2rem 4rem;
+  background-color: var(--white);
+  color: #f44;
+  border: 1px solid #f44;
+  cursor: pointer;
+  width: fit-content;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.dangerBtn:hover {
+  background-color: #f44;
+  color: var(--white);
+}
+
+/* ── Modal confirm ── */
+.confirmRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding: 3rem;
+}
+
+.confirmText {
+  font-family: var(--Roboto);
+  font-size: 2rem;
+  width: 90%;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.5;
+  padding-top: 5rem;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.confirmBtn {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2rem 4rem;
+  background-color: #f44;
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.confirmBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.keepBtn {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2rem 4rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.keepBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Scheduled / resume state ── */
+.scheduledText {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: var(--black);
+  text-transform: none;
+  max-width: 420px;
+}
+
+.resumeBtn {
+  padding: 1rem 1.8rem;
+  background-color: var(--black);
+  color: var(--accent);
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  transition: opacity 0.2s ease;
+}
+
+.resumeBtn:hover {
+  opacity: 0.85;
+}
+
+.resumeBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: #c53030;
+  text-transform: none;
+}
+
+@media screen and (max-width: 1268px) {
+  .confirmText {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .confirmActions {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    width: 100%;
+  }
+}

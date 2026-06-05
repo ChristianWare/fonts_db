@@ -4,7 +4,7 @@ import { auth } from "../../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess, getSubscription } from "@/lib/subscriptions";
 import LeadsSettingsForm from "./LeadsSettingsForm";
-import CancelSubscriptionButton from "./CancelSubscriptionButton";
+import CancelSubscription from "@/components/client/CancelSubscription/CancelSubscription";
 import styles from "./LeadsSettingsPage.module.css";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +36,11 @@ export default async function LeadsSettingsPage() {
   // Beta access = subscription exists but no Stripe ID (created via beta path)
   const isBeta = !!subscription && !subscription.stripeSubscriptionId;
   const statusLabel = subscription?.status ?? "INACTIVE";
+
+  const canCancel =
+    access.hasLeads &&
+    !!subscription &&
+    (subscription.status === "ACTIVE" || subscription.status === "PAST_DUE");
 
   return (
     <div className={styles.page}>
@@ -79,17 +84,31 @@ export default async function LeadsSettingsPage() {
           />
         </section>
 
-        {/* Cancel section — hidden for admin (no real sub to cancel) */}
-        {access.hasLeads && (
+        {/* Cancel section — only for live subs (admin without a sub never
+            sees this; a scheduled-cancel sub shows the resume state) */}
+        {canCancel && subscription && (
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Cancel Subscription</h2>
             <div className={styles.dangerCard}>
               <p className={styles.dangerDesc}>
-                Cancelling immediately removes your access to the leads tool.
-                Your saved settings stick around in case you decide to re-enroll
-                later.
+                {isBeta
+                  ? "Cancelling immediately removes your access to the leads tool. Your saved settings stick around in case you decide to re-enroll later."
+                  : "Cancelling stops your subscription at the end of your current billing period — you keep access until then, and your saved settings stick around in case you re-enroll later."}
               </p>
-              <CancelSubscriptionButton />
+              <CancelSubscription
+                productType='LEADS'
+                productLabel='Leads Tool'
+                endDate={
+                  (access.leadsInTrial
+                    ? subscription.trialEndsAt
+                    : subscription.currentPeriodEnd
+                  )?.toISOString() ?? null
+                }
+                cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                immediate={!subscription.stripeSubscriptionId}
+                inTrial={access.leadsInTrial}
+                variant='danger'
+              />
             </div>
           </section>
         )}

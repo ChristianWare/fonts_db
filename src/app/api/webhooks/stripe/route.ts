@@ -4,6 +4,11 @@ import stripe from "@/lib/stripe";
 import { db } from "@/lib/db";
 import Stripe from "stripe";
 import { ProductType, SubscriptionStatus } from "@prisma/client";
+import {
+  sendLeadsTrialEndingEmail,
+  sendPaymentFailedEmail,
+  sendCancellationConfirmedEmail,
+} from "@/lib/emails";
 
 const STATUS_MAP: Record<string, SubscriptionStatus> = {
   active: "ACTIVE",
@@ -14,6 +19,11 @@ const STATUS_MAP: Record<string, SubscriptionStatus> = {
   incomplete_expired: "INACTIVE",
   trialing: "ACTIVE",
   unpaid: "PAST_DUE",
+};
+
+const PRODUCT_LABELS: Record<ProductType, string> = {
+  WEBSITE: "Custom Website",
+  LEADS: "Leads Tool",
 };
 
 // Defaults to WEBSITE for backwards compat with existing live subs that
@@ -89,6 +99,7 @@ export async function POST(req: NextRequest) {
         const trialEndsAt = sub.trial_end
           ? new Date(sub.trial_end * 1000)
           : null;
+        const cancelAtPeriodEnd = sub.cancel_at_period_end ?? false;
 
         await db.subscription.upsert({
           where: {
@@ -102,6 +113,7 @@ export async function POST(req: NextRequest) {
             status,
             planAmountCents,
             trialEndsAt,
+            cancelAtPeriodEnd,
             billingAnchorDate: 1,
             // Override website-flavored defaults for the leads product
             ...(productType === "LEADS" && {
@@ -115,6 +127,7 @@ export async function POST(req: NextRequest) {
             status,
             planAmountCents,
             trialEndsAt,
+            cancelAtPeriodEnd,
           },
         });
 
@@ -134,9 +147,60 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      // ── Trial ending soon (fires ~3 days before trial end) ───────────────
+      case "customer.subscription.trial_will_end": {
+        const sub = event.data.object as Stripe.Subscription;
+        const clientProfileId = sub.metadata?.clientProfileId;
+        if (!clientProfileId) break;
+
+        // Already cancelled — they made their choice, don't nudge them.
+        if (sub.cancel_at_period_end) break;
+
+        const productType = getProductType(sub.metadata);
+        if (productType !== "LEADS") break;
+
+        const profile = await db.clientProfile.findUnique({
+          where: { id: clientProfileId },
+          select: {
+            id: true,
+            user: { select: { email: true, name: true } },
+          },
+        });
+        if (!profile?.user.email) break;
+
+        const trialEndsAt = sub.trial_end
+          ? new Date(sub.trial_end * 1000)
+          : null;
+        const amountCents = sub.items.data[0]?.price?.unit_amount ?? 0;
+
+        const savedLeadsCount = await db.savedLead.count({
+          where: { clientProfileId, isDraft: false },
+        });
+
+        await sendLeadsTrialEndingEmail({
+          to: profile.user.email,
+          name: profile.user.name?.split(" ")[0] ?? "there",
+          trialEndsAt,
+          amountCents,
+          savedLeadsCount,
+        });
+        break;
+      }
+
       // ── Subscription deleted (cancelled) ─────────────────────────────────
       case "customer.subscription.deleted": {
         const sub = event.data.object as Stripe.Subscription;
+
+        // Look up owner before the update so we can email them after.
+        const localSub = await db.subscription.findUnique({
+          where: { stripeSubscriptionId: sub.id },
+          select: {
+            productType: true,
+            clientProfile: {
+              select: { user: { select: { email: true, name: true } } },
+            },
+          },
+        });
 
         // Scoped by Stripe sub ID — cancels only the affected product, not
         // every subscription this client has.
@@ -145,8 +209,17 @@ export async function POST(req: NextRequest) {
           data: {
             status: "CANCELLED",
             cancelledAt: new Date(),
+            cancelAtPeriodEnd: false,
           },
         });
+
+        if (localSub?.clientProfile.user.email) {
+          await sendCancellationConfirmedEmail({
+            to: localSub.clientProfile.user.email,
+            name: localSub.clientProfile.user.name?.split(" ")[0] ?? "there",
+            productLabel: PRODUCT_LABELS[localSub.productType],
+          });
+        }
         break;
       }
 
@@ -191,6 +264,12 @@ export async function POST(req: NextRequest) {
             select: { productType: true },
           });
           productType = localSub?.productType ?? null;
+        }
+
+        // Setup-fee invoices have no subscription attached — identify them
+        // by the metadata confirmBillingSetup stamps on the invoice.
+        if (!productType && invoice.metadata?.type === "setup_fee") {
+          productType = "WEBSITE";
         }
 
         // Generate invoice number
@@ -244,12 +323,34 @@ export async function POST(req: NextRequest) {
 
         if (!stripeSubId) break;
 
+        const localSub = await db.subscription.findUnique({
+          where: { stripeSubscriptionId: stripeSubId },
+          select: {
+            productType: true,
+            clientProfile: {
+              select: { user: { select: { email: true, name: true } } },
+            },
+          },
+        });
+
         // Scoped to the affected sub only — don't mark the whole customer
         // past-due when only one product's invoice failed.
         await db.subscription.updateMany({
           where: { stripeSubscriptionId: stripeSubId },
           data: { status: "PAST_DUE" },
         });
+
+        if (localSub?.clientProfile.user.email) {
+          await sendPaymentFailedEmail({
+            to: localSub.clientProfile.user.email,
+            name: localSub.clientProfile.user.name?.split(" ")[0] ?? "there",
+            productLabel: PRODUCT_LABELS[localSub.productType],
+            amountCents: invoice.amount_due,
+            nextRetryAt: invoice.next_payment_attempt
+              ? new Date(invoice.next_payment_attempt * 1000)
+              : null,
+          });
+        }
         break;
       }
 
