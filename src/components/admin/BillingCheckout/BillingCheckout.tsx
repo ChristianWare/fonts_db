@@ -149,7 +149,7 @@ function CheckoutForm({
           ? `${formatCents(setupFeeAmountCents)} today and `
           : ""}
         {formatCents(monthlyAmountCents)} per month starting{" "}
-        {getFirstOfNextMonth()}. You can cancel by contacting support.
+        {getFirstOfNextMonth()}. You can cancel anytime from your billing page.
       </p>
     </div>
   );

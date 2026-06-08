@@ -499,3 +499,46 @@
     padding: 2rem;
   }
 }
+
+/* ── Product tags in client rows ── */
+.clientProducts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.productTags {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.productTag {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0.8rem;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.tagGreen {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.tagBlue {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.tagOrange {
+  color: #c2410c;
+  border-color: #c2410c;
+}
+
+.tagMuted {
+  color: var(--text);
+  border-color: var(--lightGray);
+}

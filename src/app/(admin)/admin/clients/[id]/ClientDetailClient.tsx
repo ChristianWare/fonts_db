@@ -16,6 +16,8 @@ import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRat
 import SiteUrlsEditor from "./SiteUrlsEditor";
 import { deleteClient } from "@/actions/admin/deleteClient";
 import { toggleStepOverride } from "@/actions/admin/toggleStepOverride";
+import Button from "@/components/shared/Button/Button";
+import toast from "react-hot-toast";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -75,6 +77,7 @@ export default function ClientDetailClient({
 
   const [isLive, setIsLive] = useState(client.onboardingStage === "SITE_LIVE");
   const [togglingLive, setTogglingLive] = useState(false);
+  const [approving, setApproving] = useState(false);
 
   const [docTitle, setDocTitle] = useState("");
   const [docType, setDocType] = useState("DESIGN_APPROVAL");
@@ -90,6 +93,10 @@ export default function ClientDetailClient({
   );
   const [assetsSkipped, setAssetsSkipped] = useState(client.assetsSkipped);
 
+  // Website is "approved" once the admin has advanced them past REGISTERED.
+  // Before that, the only relevant action is approving them.
+  const websiteApproved = client.onboardingStage !== "REGISTERED";
+
   const handleToggleLive = async () => {
     setTogglingLive(true);
     const targetStage: OnboardingStage = isLive ? "DESIGN_REVIEW" : "SITE_LIVE";
@@ -99,6 +106,18 @@ export default function ClientDetailClient({
       router.refresh();
     }
     setTogglingLive(false);
+  };
+
+  const handleApprove = async () => {
+    setApproving(true);
+    const result = await advanceClientStage(client.id, "AGREEMENT_PENDING");
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Approved — billing unlocked for this client.");
+      router.refresh();
+    }
+    setApproving(false);
   };
 
   const handleDocUpload = async (file: File) => {
@@ -372,6 +391,140 @@ export default function ClientDetailClient({
     { key: "billing", label: "Billing" },
   ] as const;
 
+  // Reusable cards available in both pre- and post-approval states
+  const clientInfoCard = (
+    <div className={styles.card}>
+      <h3 className={styles.cardHeading}>Client Information</h3>
+      <div className={styles.infoGrid}>
+        <div className={styles.infoRow}>
+          <span className={styles.infoLabel}>Name</span>
+          <span className={styles.infoValue}>{client.user.name}</span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.infoLabel}>Email</span>
+          <span className={styles.infoValue}>{client.user.email}</span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.infoLabel}>Business</span>
+          <span className={styles.infoValue}>{client.businessName}</span>
+        </div>
+        {client.city && (
+          <div className={styles.infoRow}>
+            <span className={styles.infoLabel}>Location</span>
+            <span className={styles.infoValue}>
+              {client.city}
+              {client.state ? `, ${client.state}` : ""}
+            </span>
+          </div>
+        )}
+        {client.phone && (
+          <div className={styles.infoRow}>
+            <span className={styles.infoLabel}>Phone</span>
+            <span className={styles.infoValue}>{client.phone}</span>
+          </div>
+        )}
+        <div className={styles.infoRow}>
+          <span className={styles.infoLabel}>Client since</span>
+          <span className={styles.infoValue}>
+            {format(new Date(client.createdAt), "MMMM d, yyyy")}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const billingRatesCard = (
+    <div className={styles.card}>
+      <BillingRatesEditor
+        clientProfileId={client.id}
+        setupFeeAmountCents={client.setupFeeAmountCents}
+        monthlyAmountCents={client.monthlyAmountCents}
+        setupFeePaid={client.setupFeePaid}
+      />
+    </div>
+  );
+
+  const dangerCard = (
+    <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
+      <h3
+        className={styles.cardHeading}
+        style={{ backgroundColor: "#c53030", color: "#fff" }}
+      >
+        Danger Zone
+      </h3>
+      <div className={styles.infoRow}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}
+        >
+          <span className={styles.liveToggleLabel}>Delete this client</span>
+          <span className={styles.liveToggleDesc}>
+            Permanently deletes the client, all documents, assets, invoices, and
+            their user account. This cannot be undone.
+          </span>
+        </div>
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            style={{
+              flexShrink: 0,
+              padding: "1rem 2rem",
+              border: "1px solid #c53030",
+              background: "none",
+              color: "#c53030",
+              fontFamily: "var(--GeistMono)",
+              fontSize: "1.4rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.07em",
+              cursor: "pointer",
+            }}
+          >
+            Delete client
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              style={{
+                padding: "1rem 2rem",
+                border: "1px solid var(--lightGray)",
+                background: "none",
+                color: "var(--text)",
+                fontFamily: "var(--GeistMono)",
+                fontSize: "1.4rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={async () => {
+                setDeleting(true);
+                await deleteClient(client.id);
+              }}
+              disabled={deleting}
+              style={{
+                padding: "1rem 2rem",
+                border: "none",
+                background: "#c53030",
+                color: "#fff",
+                fontFamily: "var(--GeistMono)",
+                fontSize: "1.4rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
+                cursor: deleting ? "not-allowed" : "pointer",
+                opacity: deleting ? 0.5 : 1,
+              }}
+            >
+              {deleting ? "Deleting..." : "Yes, delete"}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.page}>
       {/* ── Header ── */}
@@ -419,368 +572,287 @@ export default function ClientDetailClient({
       {/* ── OVERVIEW TAB ─────────────────────────────────────────────────── */}
       {activeTab === "overview" && (
         <div className={styles.tabContent}>
-          <div className={styles.trackerCard}>
-            {/* Section 01 */}
-            <div className={styles.trackerSection}>
-              <div className={styles.trackerSectionHeader}>
-                <div className={styles.trackerSectionHeadingBlock}>
-                  <span className={styles.trackerSectionNumber}>01.</span>
-                  <h3 className={styles.trackerSectionHeading}>
-                    What we need from the client
-                  </h3>
-                </div>
-                <span className={styles.trackerCount}>
-                  {completedClientCount} of {clientSteps.length} complete
-                </span>
-              </div>
-
-              <div className={styles.stages}>
-                {clientSteps.map((step, index) => {
-                  const isCurrent =
-                    !step.completed &&
-                    clientSteps.slice(0, index).every((s) => s.completed);
-
-                  return (
-                    <div
-                      key={step.key}
-                      className={`${styles.stage} ${
-                        step.completed
-                          ? styles.stageCompleted
-                          : isCurrent
-                            ? styles.stageCurrent
-                            : styles.stageUpcoming
-                      }`}
-                    >
-                      {index < clientSteps.length - 1 && (
-                        <div
-                          className={`${styles.connector} ${
-                            clientSequentiallyComplete[index]
-                              ? styles.connectorCompleted
-                              : styles.connectorUpcoming
-                          }`}
-                        />
-                      )}
-                      <div className={styles.stageDot}>
-                        {step.completed ? (
-                          <svg
-                            width='12'
-                            height='12'
-                            viewBox='0 0 24 24'
-                            fill='none'
-                            stroke='currentColor'
-                            strokeWidth='3'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          >
-                            <polyline points='20 6 9 17 4 12' />
-                          </svg>
-                        ) : isCurrent ? (
-                          <div className={styles.stageDotInner} />
-                        ) : null}
-                      </div>
-                      <div className={styles.stageText}>
-                        <div className={styles.stageLabelRow}>
-                          <span className={styles.stageLabel}>
-                            {step.label}
-                          </span>
-                          {step.completed && step.completedAt && (
-                            <span className={styles.stageDate}>
-                              {format(step.completedAt, "MMM d, yyyy")}
-                            </span>
-                          )}
-                          {step.completed && !step.completedAt && (
-                            <span className={styles.stageDate}>Complete</span>
-                          )}
-                          {!step.completed && isCurrent && (
-                            <span className={styles.stageDatePending}>
-                              Pending
-                            </span>
-                          )}
-                        </div>
-                        <span className={styles.stageDesc}>{step.desc}</span>
-                        {step.skippable && (
-                          <label className={styles.skipLabel}>
-                            <input
-                              type='checkbox'
-                              className={styles.skipCheckbox}
-                              checked={step.skipped ?? false}
-                              onChange={(e) => step.onSkip?.(e.target.checked)}
-                            />
-                            <span className={styles.skipText}>
-                              Mark as complete (override)
-                            </span>
-                          </label>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className={styles.trackerDivider} />
-
-            {/* Section 02 */}
-            <div className={styles.trackerSection}>
-              <div className={styles.trackerSectionHeader}>
-                <div className={styles.trackerSectionHeadingBlock}>
-                  <span className={styles.trackerSectionNumber}>02.</span>
-                  <h3 className={styles.trackerSectionHeading}>
-                    What we deliver
-                  </h3>
-                </div>
-                <span className={styles.trackerCount}>
-                  {completedDeliveryCount} of {deliverySteps.length} complete
-                </span>
-              </div>
-
-              <div className={styles.stages}>
-                {deliverySteps.map((step, index) => (
-                  <div
-                    key={step.key}
-                    className={`${styles.stage} ${
-                      step.completed
-                        ? styles.stageCompleted
-                        : step.active
-                          ? styles.stageCurrent
-                          : styles.stageUpcoming
-                    }`}
-                  >
-                    {index < deliverySteps.length - 1 && (
-                      <div
-                        className={`${styles.connector} ${
-                          deliverySequentiallyComplete[index]
-                            ? styles.connectorCompleted
-                            : styles.connectorUpcoming
-                        }`}
-                      />
-                    )}
-                    <div className={styles.stageDot}>
-                      {step.completed ? (
-                        <svg
-                          width='12'
-                          height='12'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          stroke='currentColor'
-                          strokeWidth='3'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        >
-                          <polyline points='20 6 9 17 4 12' />
-                        </svg>
-                      ) : step.active ? (
-                        <div className={styles.stageDotInner} />
-                      ) : null}
-                    </div>
-                    <div className={styles.stageText}>
-                      <div className={styles.stageLabelRow}>
-                        <span className={styles.stageLabel}>{step.label}</span>
-                        {step.completed && (
-                          <span className={styles.stageDate}>Complete</span>
-                        )}
-                        {!step.completed && step.active && (
-                          <span className={styles.stageDateActive}>
-                            {step.key === "additional-documents"
-                              ? hasAdditionalDocs
-                                ? `${adminUploadedDocs.length} uploaded`
-                                : "Action needed"
-                              : "Action needed"}
-                          </span>
-                        )}
-                      </div>
-                      <span className={styles.stageDesc}>{step.desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.toggleDivider} />
-              <div className={styles.liveToggleRow}>
-                <div className={styles.liveToggleLeft}>
-                  <span className={styles.liveToggleLabel}>
-                    Mark site as live
-                  </span>
-                  <span className={styles.liveToggleDesc}>
-                    {isLive
-                      ? "Site is currently live. Toggle off to revert to Design Review."
-                      : "Toggle on once the client's site has been launched and QA'd."}
-                  </span>
-                </div>
-                <button
-                  className={`${styles.toggle} ${isLive ? styles.toggleOn : styles.toggleOff}`}
-                  onClick={handleToggleLive}
-                  disabled={togglingLive}
-                  aria-label='Toggle site live'
-                >
-                  <span className={styles.toggleThumb} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Stage history */}
-          {client.stageLog.length > 0 && (
-            <div className={styles.card}>
-              <h3 className={styles.cardHeading}>Stage History</h3>
-              <div className={styles.stageLog}>
-                {client.stageLog.map((log) => (
-                  <div key={log.id} className={styles.stageLogEntry}>
-                    <span className={styles.stageLogText}>
-                      {stageLabels[log.fromStage as OnboardingStage]} →{" "}
-                      {stageLabels[log.toStage as OnboardingStage]}
-                    </span>
-                    <span className={styles.stageLogMeta}>
-                      {log.changedBy?.name ?? "Admin"} ·{" "}
-                      {format(new Date(log.createdAt), "MMM d, yyyy")}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Client info */}
-          <div className={styles.card}>
-            <h3 className={styles.cardHeading}>Client Information</h3>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Name</span>
-                <span className={styles.infoValue}>{client.user.name}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Email</span>
-                <span className={styles.infoValue}>{client.user.email}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Business</span>
-                <span className={styles.infoValue}>{client.businessName}</span>
-              </div>
-              {client.city && (
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Location</span>
-                  <span className={styles.infoValue}>
-                    {client.city}
-                    {client.state ? `, ${client.state}` : ""}
-                  </span>
-                </div>
-              )}
-              {client.phone && (
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Phone</span>
-                  <span className={styles.infoValue}>{client.phone}</span>
-                </div>
-              )}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Client since</span>
-                <span className={styles.infoValue}>
-                  {format(new Date(client.createdAt), "MMMM d, yyyy")}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <BillingRatesEditor
-              clientProfileId={client.id}
-              setupFeeAmountCents={client.setupFeeAmountCents}
-              monthlyAmountCents={client.monthlyAmountCents}
-              setupFeePaid={client.setupFeePaid}
-            />
-          </div>
-
-          <div className={styles.card}>
-            <SiteUrlsEditor
-              clientProfileId={client.id}
-              previewUrl={client.previewUrl ?? null}
-              liveUrl={client.liveUrl ?? null}
-            />
-          </div>
-
-          <div className={styles.card} style={{ borderColor: "#fed7d7" }}>
-            <h3
-              className={styles.cardHeading}
-              style={{ backgroundColor: "#c53030", color: "#fff" }}
-            >
-              Danger Zone
-            </h3>
-            <div className={styles.infoRow}>
+          {!websiteApproved ? (
+            /* ── PRE-APPROVAL: approve + set rates + info + danger ── */
+            <>
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.4rem",
-                }}
+                className={styles.card}
+                style={{ borderColor: "var(--black)" }}
               >
-                <span className={styles.liveToggleLabel}>
-                  Delete this client
-                </span>
-                <span className={styles.liveToggleDesc}>
-                  Permanently deletes the client, all documents, assets,
-                  invoices, and their user account. This cannot be undone.
-                </span>
+                <h3 className={styles.cardHeading}>
+                  Approve for Website Product
+                </h3>
+                <p className={styles.cardDesc}>
+                  This client hasn&apos;t been approved for the website product
+                  yet. Had the discovery call and want to move forward? Set
+                  their rates in Billing Rates below first (
+                  {`$${(client.setupFeeAmountCents / 100).toLocaleString()}`}{" "}
+                  setup /{" "}
+                  {`$${(client.monthlyAmountCents / 100).toLocaleString()}`}/mo
+                  currently) — rates lock in when they pay. Approving advances
+                  them to Agreement Pending and unlocks the setup-fee checkout
+                  on their billing page.
+                </p>
+                <Button
+                  onClick={handleApprove}
+                  text={approving ? "Approving..." : "Approve & unlock billing"}
+                  btnType='accent'
+                  disabled={approving}
+                  arrow
+                />
               </div>
-              {!showDeleteConfirm ? (
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  style={{
-                    flexShrink: 0,
-                    padding: "1rem 2rem",
-                    border: "1px solid #c53030",
-                    background: "none",
-                    color: "#c53030",
-                    fontFamily: "var(--GeistMono)",
-                    fontSize: "1.4rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.07em",
-                    cursor: "pointer",
-                  }}
-                >
-                  Delete client
-                </button>
-              ) : (
-                <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    style={{
-                      padding: "1rem 2rem",
-                      border: "1px solid var(--lightGray)",
-                      background: "none",
-                      color: "var(--text)",
-                      fontFamily: "var(--GeistMono)",
-                      fontSize: "1.4rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.07em",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={async () => {
-                      setDeleting(true);
-                      await deleteClient(client.id);
-                    }}
-                    disabled={deleting}
-                    style={{
-                      padding: "1rem 2rem",
-                      border: "none",
-                      background: "#c53030",
-                      color: "#fff",
-                      fontFamily: "var(--GeistMono)",
-                      fontSize: "1.4rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.07em",
-                      cursor: deleting ? "not-allowed" : "pointer",
-                      opacity: deleting ? 0.5 : 1,
-                    }}
-                  >
-                    {deleting ? "Deleting..." : "Yes, delete"}
-                  </button>
+
+              {billingRatesCard}
+              {clientInfoCard}
+              {dangerCard}
+            </>
+          ) : (
+            /* ── POST-APPROVAL: full onboarding tracker ── */
+            <>
+              <div className={styles.trackerCard}>
+                {/* Section 01 */}
+                <div className={styles.trackerSection}>
+                  <div className={styles.trackerSectionHeader}>
+                    <div className={styles.trackerSectionHeadingBlock}>
+                      <span className={styles.trackerSectionNumber}>01.</span>
+                      <h3 className={styles.trackerSectionHeading}>
+                        What we need from the client
+                      </h3>
+                    </div>
+                    <span className={styles.trackerCount}>
+                      {completedClientCount} of {clientSteps.length} complete
+                    </span>
+                  </div>
+
+                  <div className={styles.stages}>
+                    {clientSteps.map((step, index) => {
+                      const isCurrent =
+                        !step.completed &&
+                        clientSteps.slice(0, index).every((s) => s.completed);
+
+                      return (
+                        <div
+                          key={step.key}
+                          className={`${styles.stage} ${
+                            step.completed
+                              ? styles.stageCompleted
+                              : isCurrent
+                                ? styles.stageCurrent
+                                : styles.stageUpcoming
+                          }`}
+                        >
+                          {index < clientSteps.length - 1 && (
+                            <div
+                              className={`${styles.connector} ${
+                                clientSequentiallyComplete[index]
+                                  ? styles.connectorCompleted
+                                  : styles.connectorUpcoming
+                              }`}
+                            />
+                          )}
+                          <div className={styles.stageDot}>
+                            {step.completed ? (
+                              <svg
+                                width='12'
+                                height='12'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth='3'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                              >
+                                <polyline points='20 6 9 17 4 12' />
+                              </svg>
+                            ) : isCurrent ? (
+                              <div className={styles.stageDotInner} />
+                            ) : null}
+                          </div>
+                          <div className={styles.stageText}>
+                            <div className={styles.stageLabelRow}>
+                              <span className={styles.stageLabel}>
+                                {step.label}
+                              </span>
+                              {step.completed && step.completedAt && (
+                                <span className={styles.stageDate}>
+                                  {format(step.completedAt, "MMM d, yyyy")}
+                                </span>
+                              )}
+                              {step.completed && !step.completedAt && (
+                                <span className={styles.stageDate}>
+                                  Complete
+                                </span>
+                              )}
+                              {!step.completed && isCurrent && (
+                                <span className={styles.stageDatePending}>
+                                  Pending
+                                </span>
+                              )}
+                            </div>
+                            <span className={styles.stageDesc}>
+                              {step.desc}
+                            </span>
+                            {step.skippable && (
+                              <label className={styles.skipLabel}>
+                                <input
+                                  type='checkbox'
+                                  className={styles.skipCheckbox}
+                                  checked={step.skipped ?? false}
+                                  onChange={(e) =>
+                                    step.onSkip?.(e.target.checked)
+                                  }
+                                />
+                                <span className={styles.skipText}>
+                                  Mark as complete (override)
+                                </span>
+                              </label>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className={styles.trackerDivider} />
+
+                {/* Section 02 */}
+                <div className={styles.trackerSection}>
+                  <div className={styles.trackerSectionHeader}>
+                    <div className={styles.trackerSectionHeadingBlock}>
+                      <span className={styles.trackerSectionNumber}>02.</span>
+                      <h3 className={styles.trackerSectionHeading}>
+                        What we deliver
+                      </h3>
+                    </div>
+                    <span className={styles.trackerCount}>
+                      {completedDeliveryCount} of {deliverySteps.length}{" "}
+                      complete
+                    </span>
+                  </div>
+
+                  <div className={styles.stages}>
+                    {deliverySteps.map((step, index) => (
+                      <div
+                        key={step.key}
+                        className={`${styles.stage} ${
+                          step.completed
+                            ? styles.stageCompleted
+                            : step.active
+                              ? styles.stageCurrent
+                              : styles.stageUpcoming
+                        }`}
+                      >
+                        {index < deliverySteps.length - 1 && (
+                          <div
+                            className={`${styles.connector} ${
+                              deliverySequentiallyComplete[index]
+                                ? styles.connectorCompleted
+                                : styles.connectorUpcoming
+                            }`}
+                          />
+                        )}
+                        <div className={styles.stageDot}>
+                          {step.completed ? (
+                            <svg
+                              width='12'
+                              height='12'
+                              viewBox='0 0 24 24'
+                              fill='none'
+                              stroke='currentColor'
+                              strokeWidth='3'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            >
+                              <polyline points='20 6 9 17 4 12' />
+                            </svg>
+                          ) : step.active ? (
+                            <div className={styles.stageDotInner} />
+                          ) : null}
+                        </div>
+                        <div className={styles.stageText}>
+                          <div className={styles.stageLabelRow}>
+                            <span className={styles.stageLabel}>
+                              {step.label}
+                            </span>
+                            {step.completed && (
+                              <span className={styles.stageDate}>Complete</span>
+                            )}
+                            {!step.completed && step.active && (
+                              <span className={styles.stageDateActive}>
+                                {step.key === "additional-documents"
+                                  ? hasAdditionalDocs
+                                    ? `${adminUploadedDocs.length} uploaded`
+                                    : "Action needed"
+                                  : "Action needed"}
+                              </span>
+                            )}
+                          </div>
+                          <span className={styles.stageDesc}>{step.desc}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className={styles.toggleDivider} />
+                  <div className={styles.liveToggleRow}>
+                    <div className={styles.liveToggleLeft}>
+                      <span className={styles.liveToggleLabel}>
+                        Mark site as live
+                      </span>
+                      <span className={styles.liveToggleDesc}>
+                        {isLive
+                          ? "Site is currently live. Toggle off to revert to Design Review."
+                          : "Toggle on once the client's site has been launched and QA'd."}
+                      </span>
+                    </div>
+                    <button
+                      className={`${styles.toggle} ${isLive ? styles.toggleOn : styles.toggleOff}`}
+                      onClick={handleToggleLive}
+                      disabled={togglingLive}
+                      aria-label='Toggle site live'
+                    >
+                      <span className={styles.toggleThumb} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stage history */}
+              {client.stageLog.length > 0 && (
+                <div className={styles.card}>
+                  <h3 className={styles.cardHeading}>Stage History</h3>
+                  <div className={styles.stageLog}>
+                    {client.stageLog.map((log) => (
+                      <div key={log.id} className={styles.stageLogEntry}>
+                        <span className={styles.stageLogText}>
+                          {stageLabels[log.fromStage as OnboardingStage]} →{" "}
+                          {stageLabels[log.toStage as OnboardingStage]}
+                        </span>
+                        <span className={styles.stageLogMeta}>
+                          {log.changedBy?.name ?? "Admin"} ·{" "}
+                          {format(new Date(log.createdAt), "MMM d, yyyy")}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
-            </div>
-          </div>
+
+              {clientInfoCard}
+              {billingRatesCard}
+
+              <div className={styles.card}>
+                <SiteUrlsEditor
+                  clientProfileId={client.id}
+                  previewUrl={client.previewUrl ?? null}
+                  liveUrl={client.liveUrl ?? null}
+                />
+              </div>
+
+              {dangerCard}
+            </>
+          )}
         </div>
       )}
 
@@ -1158,53 +1230,106 @@ export default function ClientDetailClient({
       {/* ── BILLING TAB ──────────────────────────────────────────────────── */}
       {activeTab === "billing" && (
         <div className={styles.tabContent}>
-          <div className={styles.card}>
-            <h3 className={styles.cardHeading}>Subscription</h3>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Status</span>
-                <span className={styles.infoValue}>
-                  {websiteSubscription?.status ?? "No subscription"}
-                </span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Monthly rate</span>
-                <span className={styles.infoValue}>
-                  {client.monthlyAmountCents > 0
-                    ? `$${(client.monthlyAmountCents / 100).toLocaleString(
-                        "en-US",
-                        { minimumFractionDigits: 0 },
-                      )}/mo`
-                    : "—"}
-                </span>
-              </div>
-              {websiteSubscription?.currentPeriodEnd && (
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Next billing date</span>
-                  <span className={styles.infoValue}>
-                    {format(
-                      new Date(websiteSubscription.currentPeriodEnd),
-                      "MMMM d, yyyy",
-                    )}
-                  </span>
-                </div>
-              )}
-              {websiteSubscription?.billingAnchorDate && (
-                <div className={styles.infoRow}>
-                  <span className={styles.infoLabel}>Billing day</span>
-                  <span className={styles.infoValue}>
-                    Day {websiteSubscription.billingAnchorDate} of each month
-                  </span>
-                </div>
-              )}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Setup fee</span>
-                <span className={styles.infoValue}>
-                  {client.setupFeePaid ? "Paid" : "Not yet paid"}
-                </span>
-              </div>
+          {client.subscriptions.length === 0 ? (
+            <div className={styles.card}>
+              <h3 className={styles.cardHeading}>Subscriptions</h3>
+              <p className={styles.emptyText}>
+                No subscriptions. This client hasn&apos;t enrolled in any
+                product.
+              </p>
             </div>
-          </div>
+          ) : (
+            client.subscriptions.map((sub) => {
+              const inTrial =
+                !!sub.trialEndsAt && new Date(sub.trialEndsAt) > new Date();
+              return (
+                <div key={sub.id} className={styles.card}>
+                  <h3 className={styles.cardHeading}>
+                    {sub.productType === "LEADS"
+                      ? "Leads Tool"
+                      : "Custom Website"}
+                  </h3>
+                  <div className={styles.infoGrid}>
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>Status</span>
+                      <span className={styles.infoValue}>
+                        {inTrial ? "Free Trial" : sub.status}
+                        {sub.cancelAtPeriodEnd ? " (cancelling)" : ""}
+                      </span>
+                    </div>
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>Plan</span>
+                      <span className={styles.infoValue}>
+                        {sub.planAmountCents > 0
+                          ? `$${(sub.planAmountCents / 100).toLocaleString("en-US")}/mo`
+                          : "Free — beta"}
+                      </span>
+                    </div>
+                    {inTrial && sub.trialEndsAt && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>Trial ends</span>
+                        <span className={styles.infoValue}>
+                          {format(new Date(sub.trialEndsAt), "MMMM d, yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {sub.cancelAtPeriodEnd && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>Access until</span>
+                        <span className={styles.infoValue}>
+                          {format(
+                            new Date(
+                              (inTrial
+                                ? sub.trialEndsAt
+                                : sub.currentPeriodEnd) ?? new Date(),
+                            ),
+                            "MMMM d, yyyy",
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {!sub.cancelAtPeriodEnd && sub.currentPeriodEnd && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>
+                          Next billing date
+                        </span>
+                        <span className={styles.infoValue}>
+                          {format(
+                            new Date(sub.currentPeriodEnd),
+                            "MMMM d, yyyy",
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {sub.billingAnchorDate && !inTrial && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>Billing day</span>
+                        <span className={styles.infoValue}>
+                          Day {sub.billingAnchorDate} of each month
+                        </span>
+                      </div>
+                    )}
+                    {sub.cancelledAt && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>Cancelled on</span>
+                        <span className={styles.infoValue}>
+                          {format(new Date(sub.cancelledAt), "MMMM d, yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {sub.productType === "WEBSITE" && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>Setup fee</span>
+                        <span className={styles.infoValue}>
+                          {client.setupFeePaid ? "Paid" : "Not yet paid"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
 
           <div className={styles.card}>
             <h3 className={styles.cardHeading}>

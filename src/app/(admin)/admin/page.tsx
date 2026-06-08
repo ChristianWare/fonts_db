@@ -11,6 +11,7 @@ const stageLabels: Record<string, string> = {
   QUESTIONNAIRE_SUBMITTED: "Questionnaire Submitted",
   ASSETS_PENDING: "Assets Pending",
   ASSETS_UPLOADED: "Assets Uploaded",
+  DESIGN_SELECTION: "Design Selection",
   DESIGN_REVIEW: "Design Review",
   SITE_LIVE: "Live",
 };
@@ -23,9 +24,12 @@ const stageDotColor: Record<string, string> = {
   QUESTIONNAIRE_SUBMITTED: "#16a34a",
   ASSETS_PENDING: "#ca8a04",
   ASSETS_UPLOADED: "#16a34a",
+  DESIGN_SELECTION: "#2563eb",
   DESIGN_REVIEW: "#2563eb",
   SITE_LIVE: "#ffc809",
 };
+
+const LIVE_STATUSES = ["ACTIVE", "PAST_DUE"];
 
 function formatCents(cents: number) {
   return new Intl.NumberFormat("en-US", {
@@ -39,7 +43,24 @@ export default async function AdminPage() {
   const data = await getAdminOverview();
   if (!data) redirect("/login");
 
-  const { clients, mrr, activeCount, openTickets, pendingRequests } = data;
+  const { clients, openTickets, pendingRequests } = data;
+
+  // ── Multi-product rollups (computed from subscription rows so leads
+  // revenue counts and beta subs at $0 don't) ──
+  const now = new Date();
+
+  let mrr = 0;
+  let websiteCount = 0;
+  let leadsCount = 0;
+
+  for (const client of clients) {
+    for (const sub of client.subscriptions) {
+      if (!LIVE_STATUSES.includes(sub.status)) continue;
+      if (sub.productType === "WEBSITE") websiteCount++;
+      if (sub.productType === "LEADS") leadsCount++;
+      if (sub.status === "ACTIVE") mrr += sub.planAmountCents;
+    }
+  }
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -65,8 +86,12 @@ export default async function AdminPage() {
           <span className={styles.dateLabel}>{today}</span>
           <div className={styles.heroStats}>
             <div className={styles.heroStat}>
-              <span className={styles.heroStatValue}>{activeCount}</span>
-              <span className={styles.heroStatLabel}>Active clients</span>
+              <span className={styles.heroStatValue}>{websiteCount}</span>
+              <span className={styles.heroStatLabel}>Website subs</span>
+            </div>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatValue}>{leadsCount}</span>
+              <span className={styles.heroStatLabel}>Leads subs</span>
             </div>
             <div className={styles.heroStat}>
               <span
@@ -131,52 +156,118 @@ export default async function AdminPage() {
           </div>
         ) : (
           <div className={styles.clientList}>
-            {clients.map((client, index) => (
-              <Link
-                key={client.id}
-                href={`/admin/clients/${client.id}`}
-                className={styles.clientRow}
-              >
-                <div className={styles.clientIndex}>
-                  {String(index + 1).padStart(2, "0")}
-                </div>
+            {clients.map((client, index) => {
+              const websiteSub =
+                client.subscriptions.find((s) => s.productType === "WEBSITE") ??
+                null;
+              const leadsSub =
+                client.subscriptions.find((s) => s.productType === "LEADS") ??
+                null;
 
-                <div className={styles.clientInfo}>
-                  <span className={styles.clientName}>
-                    {client.businessName}
-                  </span>
-                  <span className={styles.clientEmail}>
-                    {client.user.email}
-                  </span>
-                </div>
+              // In the website flow = has a sub OR admin advanced their stage
+              const websiteEngaged =
+                !!websiteSub || client.onboardingStage !== "REGISTERED";
 
-                <div className={styles.clientStage}>
-                  <div
-                    className={styles.stageDot}
-                    style={{
-                      backgroundColor:
-                        stageDotColor[client.onboardingStage] ?? "#979797",
-                    }}
-                  />
-                  <span className={styles.stageLabel}>
-                    {stageLabels[client.onboardingStage]}
-                  </span>
-                </div>
+              const leadsLive =
+                !!leadsSub && LIVE_STATUSES.includes(leadsSub.status);
+              const leadsInTrial =
+                leadsLive &&
+                !!leadsSub?.trialEndsAt &&
+                new Date(leadsSub.trialEndsAt) > now;
 
-                <div className={styles.clientRight}>
-                  {client.subscriptions.some(
-                    (s) => s.productType === "WEBSITE" && s.status === "ACTIVE",
-                  ) && client.monthlyAmountCents > 0 ? (
-                    <span className={styles.mrrBadge}>
-                      {formatCents(client.monthlyAmountCents)}/mo
+              const clientMrr = client.subscriptions
+                .filter((s) => s.status === "ACTIVE")
+                .reduce((sum, s) => sum + s.planAmountCents, 0);
+
+              return (
+                <Link
+                  key={client.id}
+                  href={`/admin/clients/${client.id}`}
+                  className={styles.clientRow}
+                >
+                  <div className={styles.clientIndex}>
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+
+                  <div className={styles.clientInfo}>
+                    <span className={styles.clientName}>
+                      {client.businessName}
                     </span>
-                  ) : (
-                    <span className={styles.mrrBadgeEmpty}>—</span>
-                  )}
-                  <span className={styles.arrow}>→</span>
-                </div>
-              </Link>
-            ))}
+                    <span className={styles.clientEmail}>
+                      {client.user.email}
+                    </span>
+                  </div>
+
+                  <div className={styles.clientProducts}>
+                    {/* Product tags */}
+                    <div className={styles.productTags}>
+                      {websiteEngaged && (
+                        <span
+                          className={`${styles.productTag} ${
+                            websiteSub?.status === "ACTIVE"
+                              ? styles.tagGreen
+                              : websiteSub?.status === "PAST_DUE"
+                                ? styles.tagOrange
+                                : styles.tagMuted
+                          }`}
+                        >
+                          Web
+                        </span>
+                      )}
+                      {leadsLive && (
+                        <span
+                          className={`${styles.productTag} ${
+                            leadsInTrial
+                              ? styles.tagBlue
+                              : leadsSub?.status === "PAST_DUE"
+                                ? styles.tagOrange
+                                : styles.tagGreen
+                          }`}
+                        >
+                          {leadsInTrial ? "Leads · Trial" : "Leads"}
+                        </span>
+                      )}
+                      {!websiteEngaged && !leadsLive && (
+                        <span
+                          className={`${styles.productTag} ${styles.tagMuted}`}
+                        >
+                          No products
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Website onboarding stage — only meaningful for
+                        clients in the website flow */}
+                    {websiteEngaged && (
+                      <div className={styles.clientStage}>
+                        <div
+                          className={styles.stageDot}
+                          style={{
+                            backgroundColor:
+                              stageDotColor[client.onboardingStage] ??
+                              "#979797",
+                          }}
+                        />
+                        <span className={styles.stageLabel}>
+                          {stageLabels[client.onboardingStage]}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.clientRight}>
+                    {clientMrr > 0 ? (
+                      <span className={styles.mrrBadge}>
+                        {formatCents(clientMrr)}/mo
+                      </span>
+                    ) : (
+                      <span className={styles.mrrBadgeEmpty}>—</span>
+                    )}
+                    <span className={styles.arrow}>→</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
