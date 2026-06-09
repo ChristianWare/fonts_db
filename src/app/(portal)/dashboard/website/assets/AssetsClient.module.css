@@ -122,7 +122,7 @@
 
 .dropzoneFormats {
   font-family: var(--Roboto);
-  font-size: 1.3rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -274,7 +274,7 @@
 
 .assetLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -282,7 +282,7 @@
 
 .assetSize {
   font-family: var(--Roboto);
-  font-size: 1.3rem;
+  font-size: 16px;
   color: var(--text);
   text-transform: none;
 }
@@ -299,7 +299,7 @@
   padding: 0.8rem 1.6rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -318,7 +318,7 @@
   padding: 0.8rem 1.6rem;
   border: 1px solid #fed7d7;
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #c53030;
@@ -361,6 +361,6 @@
 
   .labelBtn {
     padding: 1.2rem 1.6rem;
-    font-size: 1.3rem;
+    font-size: 16px;
   }
 }

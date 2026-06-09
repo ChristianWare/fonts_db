@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import Modal from "@/components/shared/Modal/Modal";
 import {
   cancelSubscription,
@@ -36,7 +37,6 @@ export default function CancelSubscription({
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const endDateText = endDate
     ? new Date(endDate).toLocaleDateString("en-US", {
@@ -47,7 +47,6 @@ export default function CancelSubscription({
     : "the end of your current billing period";
 
   function openModal() {
-    setError(null);
     setModalOpen(true);
   }
 
@@ -58,12 +57,11 @@ export default function CancelSubscription({
 
   async function handleCancel() {
     setLoading(true);
-    setError(null);
 
     const result = await cancelSubscription({ productType });
 
     if (result?.error) {
-      setError(result.error);
+      toast.error(result.error);
       setLoading(false);
       return;
     }
@@ -71,27 +69,31 @@ export default function CancelSubscription({
     setModalOpen(false);
     setLoading(false);
 
-    // Immediate cancel kills access right away — leave product pages
-    // gracefully instead of letting the gate redirect mid-view.
+    // Success toast — wording reflects what actually happened.
     if (result.immediate) {
+      toast.success(`Your ${productLabel} subscription has been cancelled.`);
+      // Immediate cancel kills access right away — leave product pages
+      // gracefully instead of letting the gate redirect mid-view.
       router.push("/dashboard");
+    } else {
+      toast.success(`Cancelled — you'll keep access until ${endDateText}.`);
     }
     router.refresh();
   }
 
   async function handleResume() {
     setLoading(true);
-    setError(null);
 
     const result = await resumeSubscription({ productType });
 
     if (result?.error) {
-      setError(result.error);
+      toast.error(result.error);
       setLoading(false);
       return;
     }
 
     setLoading(false);
+    toast.success(`Your ${productLabel} subscription has been resumed.`);
     router.refresh();
   }
 
@@ -111,7 +113,6 @@ export default function CancelSubscription({
         >
           {loading ? "Resuming..." : "Resume subscription"}
         </button>
-        {error && <p className={styles.error}>{error}</p>}
       </div>
     );
   }
@@ -153,7 +154,6 @@ export default function CancelSubscription({
               Keep subscription
             </button>
           </div>
-          {error && <p className={styles.error}>{error}</p>}
         </div>
       </Modal>
     </>

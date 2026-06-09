@@ -196,7 +196,7 @@
 
 .cardDetailLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text);

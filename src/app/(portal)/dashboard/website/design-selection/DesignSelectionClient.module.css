@@ -91,7 +91,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +182,7 @@
 
 .lightboxSourceLink {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -439,7 +439,7 @@
   padding: 0.9rem 1.8rem;
   border: 1px solid var(--lightGray);
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -488,7 +488,7 @@
 
 .sourceLink {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -615,7 +615,7 @@
 
 .notesLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);

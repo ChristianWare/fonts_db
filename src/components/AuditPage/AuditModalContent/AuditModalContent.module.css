@@ -122,7 +122,7 @@
 
 .scanStepText {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--black);
@@ -218,7 +218,7 @@
 
 .emailBannerSub {
   font-family: var(--Roboto);
-  font-size: 1.3rem;
+  font-size: 16px;
   color: rgb(255 255 255 / 70%);
   line-height: 1.4;
 }
@@ -383,7 +383,7 @@
 
 .resetBtn {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   color: var(--text);

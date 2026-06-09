@@ -1,5 +1,5 @@
 import { getClientProfile } from "@/actions/client/getClientProfile";
-import styles from './ProductBillingDetail.module.css'
+import styles from "./ProductBillingDetail.module.css";
 import { format } from "date-fns";
 import Link from "next/link";
 import Stripe from "stripe";
@@ -60,8 +60,22 @@ export default async function ProductBillingDetail({
   const isActive = sub?.status === "ACTIVE";
   const isPastDue = sub?.status === "PAST_DUE";
   const isCancelled = sub?.status === "CANCELLED";
-  const isBeta = sub?.planAmountCents === 0;
   const accessSub = isActive || isPastDue || inTrial;
+  const isBeta = sub?.planAmountCents === 0 && accessSub;
+
+  // Leads runs a 7-day trial; trial start = trial end minus the trial length.
+  const LEADS_TRIAL_DAYS = 7;
+  const trialStart = sub?.trialEndsAt
+    ? new Date(
+        new Date(sub.trialEndsAt).getTime() - LEADS_TRIAL_DAYS * 86400000,
+      )
+    : null;
+
+  // Day of the month they'll be charged. Leads anchors to the trial-end date;
+  // fall back to deriving it from trialEndsAt if billingAnchorDate isn't set yet.
+  const chargeDay =
+    sub?.billingAnchorDate ??
+    (sub?.trialEndsAt ? new Date(sub.trialEndsAt).getDate() : null);
 
   const showWebsiteCheckout =
     productType === "WEBSITE" &&
@@ -141,9 +155,7 @@ export default async function ProductBillingDetail({
         <Link href='/dashboard/billing' className={styles.backLink}>
           ← All billing
         </Link>
-        <h1 className={`${styles.heading} h2`}>
-          {productLabels[productType]}
-        </h1>
+        <h1 className={`${styles.heading} h2`}>{productLabels[productType]}</h1>
         <p className={styles.subheading}>
           Manage this subscription, your payment method, and invoices.
         </p>
@@ -171,7 +183,10 @@ export default async function ProductBillingDetail({
             {!enrolled ? (
               <p className={styles.productDesc}>
                 You&apos;re not enrolled in this product.{" "}
-                <Link href={`/dashboard/enroll/${slug}`} className={styles.inlineLink}>
+                <Link
+                  href={`/dashboard/enroll/${slug}`}
+                  className={styles.inlineLink}
+                >
                   Get started →
                 </Link>
               </p>
@@ -187,6 +202,16 @@ export default async function ProductBillingDetail({
                 )}
                 {inTrial && sub?.trialEndsAt && (
                   <>
+                    {trialStart && (
+                      <div className={styles.cardDetailRow}>
+                        <span className={styles.cardDetailLabel}>
+                          Trial started
+                        </span>
+                        <span className={styles.cardDetailValue}>
+                          {format(trialStart, "MMM d, yyyy")}
+                        </span>
+                      </div>
+                    )}
                     <div className={styles.cardDetailRow}>
                       <span className={styles.cardDetailLabel}>Trial ends</span>
                       <span className={styles.cardDetailValue}>
@@ -194,15 +219,27 @@ export default async function ProductBillingDetail({
                       </span>
                     </div>
                     {!isBeta && !sub.cancelAtPeriodEnd && (
-                      <div className={styles.cardDetailRow}>
-                        <span className={styles.cardDetailLabel}>
-                          First charge
-                        </span>
-                        <span className={styles.cardDetailValue}>
-                          {formatCents(sub.planAmountCents)} on{" "}
-                          {format(new Date(sub.trialEndsAt), "MMM d")}
-                        </span>
-                      </div>
+                      <>
+                        <div className={styles.cardDetailRow}>
+                          <span className={styles.cardDetailLabel}>
+                            First payment
+                          </span>
+                          <span className={styles.cardDetailValue}>
+                            {formatCents(sub.planAmountCents)} on{" "}
+                            {format(new Date(sub.trialEndsAt), "MMM d, yyyy")}
+                          </span>
+                        </div>
+                        {chargeDay && (
+                          <div className={styles.cardDetailRow}>
+                            <span className={styles.cardDetailLabel}>
+                              Billing
+                            </span>
+                            <span className={styles.cardDetailValue}>
+                              Monthly — day {chargeDay} of each month
+                            </span>
+                          </div>
+                        )}
+                      </>
                     )}
                   </>
                 )}
@@ -220,22 +257,27 @@ export default async function ProductBillingDetail({
                     </span>
                   </div>
                 )}
-                {sub && !sub.cancelAtPeriodEnd && !inTrial && sub.currentPeriodEnd && (
-                  <div className={styles.cardDetailRow}>
-                    <span className={styles.cardDetailLabel}>
-                      {isActive ? "Next billing date" : "Period ended"}
-                    </span>
-                    <span className={styles.cardDetailValue}>
-                      {format(new Date(sub.currentPeriodEnd), "MMM d, yyyy")}
-                    </span>
-                  </div>
-                )}
+                {sub &&
+                  !sub.cancelAtPeriodEnd &&
+                  !inTrial &&
+                  sub.currentPeriodEnd && (
+                    <div className={styles.cardDetailRow}>
+                      <span className={styles.cardDetailLabel}>
+                        {isActive ? "Next billing date" : "Period ended"}
+                      </span>
+                      <span className={styles.cardDetailValue}>
+                        {format(new Date(sub.currentPeriodEnd), "MMM d, yyyy")}
+                      </span>
+                    </div>
+                  )}
                 {sub?.billingAnchorDate &&
                   !inTrial &&
                   !isCancelled &&
                   !sub.cancelAtPeriodEnd && (
                     <div className={styles.cardDetailRow}>
-                      <span className={styles.cardDetailLabel}>Billing day</span>
+                      <span className={styles.cardDetailLabel}>
+                        Billing day
+                      </span>
                       <span className={styles.cardDetailValue}>
                         Day {sub.billingAnchorDate} of each month
                       </span>
@@ -280,8 +322,10 @@ export default async function ProductBillingDetail({
                 productType={productType}
                 productLabel={productLabels[productType]}
                 endDate={
-                  (inTrial ? sub.trialEndsAt : sub.currentPeriodEnd)?.toISOString() ??
-                  null
+                  (inTrial
+                    ? sub.trialEndsAt
+                    : sub.currentPeriodEnd
+                  )?.toISOString() ?? null
                 }
                 cancelAtPeriodEnd={sub.cancelAtPeriodEnd}
                 immediate={!sub.stripeSubscriptionId}
@@ -291,7 +335,10 @@ export default async function ProductBillingDetail({
           )}
           {isCancelled && (
             <div className={styles.productCardBottom}>
-              <Link href={`/dashboard/enroll/${slug}`} className={styles.cardCta}>
+              <Link
+                href={`/dashboard/enroll/${slug}`}
+                className={styles.cardCta}
+              >
                 Re-Enroll
                 <svg
                   width='14'

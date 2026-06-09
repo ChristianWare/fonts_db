@@ -45,8 +45,8 @@ export default async function BillingPage() {
           const isActive = sub?.status === "ACTIVE";
           const isPastDue = sub?.status === "PAST_DUE";
           const isCancelled = sub?.status === "CANCELLED";
-          const isBeta = sub?.planAmountCents === 0;
           const accessSub = isActive || isPastDue || inTrial;
+          const isBeta = sub?.planAmountCents === 0 && accessSub;
 
           const websiteMidSetup =
             productType === "WEBSITE" &&

@@ -238,7 +238,7 @@
 
 .requestStatus {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.3rem 1rem;
@@ -286,7 +286,7 @@
 
 .adminNoteLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--black);

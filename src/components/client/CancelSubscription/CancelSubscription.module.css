@@ -10,7 +10,7 @@
   border: none;
   padding: 0;
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text);
@@ -126,7 +126,7 @@
   background-color: var(--black);
   color: var(--accent);
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   border: none;
@@ -146,7 +146,7 @@
 
 .error {
   font-family: var(--Roboto);
-  font-size: 1.3rem;
+  font-size: 16px;
   color: #c53030;
   text-transform: none;
 }
