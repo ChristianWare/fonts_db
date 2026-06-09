@@ -113,12 +113,12 @@
 .productStatus {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.5rem;
 }
 
 .statusDot {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 1.5rem;
+  height: 1.5rem;
   background-color: #16a34a;
   animation: pulse 2s infinite;
 }
@@ -141,7 +141,7 @@
 
 .statusLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
@@ -342,4 +342,10 @@
   .productCardBottom {
     flex-wrap: wrap;
   }
+}
+
+.statusDotPending {
+  background-color: var(--accent);
+  border: 1px solid var(--black);
+  animation: none;
 }

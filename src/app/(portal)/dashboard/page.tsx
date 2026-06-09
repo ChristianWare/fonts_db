@@ -24,6 +24,19 @@ export default async function DashboardPage() {
   const hasLeads = access ? effectiveHasLeads(access, isAdmin) : isAdmin;
   const hasWebsite = access ? effectiveHasWebsite(access, isAdmin) : isAdmin;
 
+  // Website third state: admin approved them into the website flow (stage
+  // advanced past REGISTERED) but they haven't paid the setup fee yet, so no
+  // active subscription exists. Show "complete setup" instead of "not
+  // enrolled". Mirrors the billing page's activation gate.
+  const websiteSub =
+    profile?.subscriptions?.find((s) => s.productType === "WEBSITE") ?? null;
+  const setupFeePaid = profile?.setupFeePaid ?? false;
+  const onboardingStage = profile?.onboardingStage ?? "REGISTERED";
+  const websitePendingSetup =
+    !hasWebsite &&
+    (!!websiteSub || onboardingStage !== "REGISTERED") &&
+    !setupFeePaid;
+
   return (
     <div className={styles.page}>
       {/* ── Header ── */}
@@ -93,6 +106,47 @@ export default async function DashboardPage() {
                   Visit Site ↗
                 </a>
               )}
+            </div>
+          </Link>
+        ) : websitePendingSetup ? (
+          <Link
+            href='/dashboard/billing#activate'
+            className={styles.productCard}
+          >
+            <div className={styles.productCardTop}>
+              <div className={styles.productStatus}>
+                <span
+                  className={`${styles.statusDot} ${styles.statusDotPending}`}
+                />
+                <span className={styles.statusLabel}>Payment Needed</span>
+              </div>
+              <span className={styles.productPrice}>$499/mo</span>
+            </div>
+            <div className={styles.productCardMain}>
+              <span className={styles.productLabel}>Product 01</span>
+              <h3 className={styles.productTitle}>Custom Website</h3>
+              <p className={styles.productDesc}>
+                You&apos;re approved. Pay your one-time setup fee to activate
+                your website subscription and start your build.
+              </p>
+            </div>
+            <div className={styles.productCardBottom}>
+              <span className={styles.productEnrollCta}>
+                Complete Setup
+                <svg
+                  width='14'
+                  height='14'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                >
+                  <line x1='5' y1='12' x2='19' y2='12' />
+                  <polyline points='12 5 19 12 12 19' />
+                </svg>
+              </span>
             </div>
           </Link>
         ) : (

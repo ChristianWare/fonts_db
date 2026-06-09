@@ -170,9 +170,11 @@ export default async function BillingPage() {
                 <div className={styles.productCardTop}>
                   <div className={styles.productStatus}>
                     <span
-                      className={`${styles.statusDot} ${styles.dotPastDue}`}
+                      className={`${styles.statusDot} ${styles.dotPending}`}
                     />
-                    <span className={styles.statusLabel}>Setup Required</span>
+                    <span className={styles.statusLabel}>
+                      Payment Needed
+                    </span>{" "}
                   </div>
                   <span className={styles.productPrice}>
                     {formatCents(monthlyAmountCents)}/mo

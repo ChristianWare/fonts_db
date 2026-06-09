@@ -5,6 +5,7 @@ import { getProductAccess } from "@/lib/subscriptions";
 import EnrollLeadsButton from "./EnrollLeadsButton";
 import styles from "./EnrollLeadsPage.module.css";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
+import LeadsEnrollCheckout from "@/components/client/LeadsEnrollCheckout/LeadsEnrollCheckout";
 
 export const dynamic = "force-dynamic";
 
@@ -109,7 +110,11 @@ export default async function EnrollLeadsPage({
           </p>
         )}
 
-        <EnrollLeadsButton paywallEnabled={PAYWALL_ENABLED} />
+        {PAYWALL_ENABLED ? (
+          <LeadsEnrollCheckout />
+        ) : (
+          <EnrollLeadsButton paywallEnabled={false} />
+        )}
 
         <p className={styles.fineprint}>
           {PAYWALL_ENABLED

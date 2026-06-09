@@ -77,12 +77,12 @@
 .productStatus {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .statusDot {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .dotActive {
@@ -104,6 +104,10 @@
   background-color: #dc2626;
 }
 
+.dotPending {
+  background-color: var(--accent);
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -117,7 +121,7 @@
 
 .statusLabel {
   font-family: var(--GeistMono);
-  font-size: 1.3rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text);
