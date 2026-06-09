@@ -110,7 +110,7 @@ export default async function DashboardPage() {
           </Link>
         ) : websitePendingSetup ? (
           <Link
-            href='/dashboard/billing#activate'
+            href='/dashboard/billing/website'
             className={styles.productCard}
           >
             <div className={styles.productCardTop}>
