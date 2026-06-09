@@ -10,7 +10,7 @@ export const getAdminOverview = async () => {
   const [clients, openTickets, pendingRequests] = await Promise.all([
     db.clientProfile.findMany({
       include: {
-        user: { select: { name: true, email: true } },
+        user: { select: { email: true, name: true, roles: true } },
         subscriptions: true,
       },
       orderBy: { createdAt: "desc" },

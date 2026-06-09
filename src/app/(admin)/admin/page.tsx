@@ -53,14 +53,19 @@ export default async function AdminPage() {
   let websiteCount = 0;
   let leadsCount = 0;
 
-  for (const client of clients) {
-    for (const sub of client.subscriptions) {
-      if (!LIVE_STATUSES.includes(sub.status)) continue;
-      if (sub.productType === "WEBSITE") websiteCount++;
-      if (sub.productType === "LEADS") leadsCount++;
-      if (sub.status === "ACTIVE") mrr += sub.planAmountCents;
-    }
+for (const client of clients) {
+  // Skip admin/test accounts — their comped leads sub and test website
+  // enrollment shouldn't count toward real revenue or sub counts.
+  const clientIsAdmin = client.user.roles?.includes("ADMIN") ?? false;
+  if (clientIsAdmin) continue;
+
+  for (const sub of client.subscriptions) {
+    if (!LIVE_STATUSES.includes(sub.status)) continue;
+    if (sub.productType === "WEBSITE") websiteCount++;
+    if (sub.productType === "LEADS") leadsCount++;
+    if (sub.status === "ACTIVE") mrr += sub.planAmountCents;
   }
+}
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
