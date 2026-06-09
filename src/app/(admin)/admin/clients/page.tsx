@@ -27,11 +27,14 @@ const stageDotColor: Record<string, string> = {
   SITE_LIVE: "#ffc809",
 };
 
+const LIVE_STATUSES = ["ACTIVE", "PAST_DUE"];
+
 export default async function ClientsPage() {
   const data = await getAdminOverview();
   if (!data) redirect("/login");
 
   const { clients } = data;
+  const now = new Date();
 
   return (
     <div className={styles.page}>
@@ -49,37 +52,93 @@ export default async function ClientsPage() {
             <p className={styles.emptyText}>No clients yet.</p>
           </div>
         ) : (
-          clients.map((client, index) => (
-            <Link
-              key={client.id}
-              href={`/admin/clients/${client.id}`}
-              className={styles.clientRow}
-            >
-              <div className={styles.clientIndex}>
-                {String(index + 1).padStart(2, "0")}
-              </div>
+          clients.map((client, index) => {
+            const websiteSub =
+              client.subscriptions.find((s) => s.productType === "WEBSITE") ??
+              null;
+            const leadsSub =
+              client.subscriptions.find((s) => s.productType === "LEADS") ??
+              null;
 
-              <div className={styles.clientInfo}>
-                <span className={styles.clientName}>{client.businessName}</span>
-                <span className={styles.clientEmail}>{client.user.email}</span>
-              </div>
+            const websiteEngaged =
+              !!websiteSub || client.onboardingStage !== "REGISTERED";
+            const leadsLive =
+              !!leadsSub && LIVE_STATUSES.includes(leadsSub.status);
+            const leadsInTrial =
+              leadsLive &&
+              !!leadsSub?.trialEndsAt &&
+              new Date(leadsSub.trialEndsAt) > now;
 
-              <div className={styles.clientStage}>
-                <div
-                  className={styles.stageDot}
-                  style={{
-                    backgroundColor:
-                      stageDotColor[client.onboardingStage] ?? "#979797",
-                  }}
-                />
-                <span className={styles.stageLabel}>
-                  {stageLabels[client.onboardingStage]}
-                </span>
-              </div>
+            return (
+              <Link
+                key={client.id}
+                href={`/admin/clients/${client.id}`}
+                className={styles.clientRow}
+              >
+                <div className={styles.clientIndex}>
+                  {String(index + 1).padStart(2, "0")}
+                </div>
 
-              <span className={styles.arrow}>→</span>
-            </Link>
-          ))
+                <div className={styles.clientInfo}>
+                  <span className={styles.clientName}>
+                    {client.businessName}
+                  </span>
+                  <span className={styles.clientEmail}>
+                    {client.user.email}
+                  </span>
+                </div>
+
+                <div className={styles.productTags}>
+                  {websiteEngaged && (
+                    <span
+                      className={`${styles.productTag} ${
+                        websiteSub?.status === "ACTIVE"
+                          ? styles.tagGreen
+                          : websiteSub?.status === "PAST_DUE"
+                            ? styles.tagOrange
+                            : styles.tagMuted
+                      }`}
+                    >
+                      Web
+                    </span>
+                  )}
+                  {leadsLive && (
+                    <span
+                      className={`${styles.productTag} ${
+                        leadsInTrial
+                          ? styles.tagBlue
+                          : leadsSub?.status === "PAST_DUE"
+                            ? styles.tagOrange
+                            : styles.tagGreen
+                      }`}
+                    >
+                      {leadsInTrial ? "Leads · Trial" : "Leads"}
+                    </span>
+                  )}
+                  {!websiteEngaged && !leadsLive && (
+                    <span className={`${styles.productTag} ${styles.tagMuted}`}>
+                      No products
+                    </span>
+                  )}
+                </div>
+
+                <div className={styles.clientStage}>
+                  <div
+                    className={styles.stageDot}
+                    style={{
+                      backgroundColor:
+                        stageDotColor[client.onboardingStage] ?? "#979797",
+                    }}
+                  />
+                  <span className={styles.stageLabel}>
+                    {stageLabels[client.onboardingStage]}
+                  </span>
+                </div>
+
+                <span className={styles.arrow}>→</span>
+              </Link>
+            );
+          })
         )}
       </div>
     </div>

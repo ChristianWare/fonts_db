@@ -56,6 +56,16 @@ type ClientData = Awaited<
   ReturnType<typeof import("@/actions/admin/getClientById").getClientById>
 >;
 
+const LEADS_PRICE_CENTS = 12500;
+const LEADS_TRIAL_DAYS = 7;
+
+function formatCents(cents: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(cents / 100);
+}
+
 export default function ClientDetailClient({
   client,
 }: {
@@ -1227,81 +1237,73 @@ export default function ClientDetailClient({
         </div>
       )}
 
-      {/* ── BILLING TAB ──────────────────────────────────────────────────── */}
+      {/* ── BILLING TAB (website only) ─────────────────────────────────── */}
       {activeTab === "billing" && (
         <div className={styles.tabContent}>
-          {client.subscriptions.length === 0 ? (
-            <div className={styles.card}>
-              <h3 className={styles.cardHeading}>Subscriptions</h3>
-              <p className={styles.emptyText}>
-                No subscriptions. This client hasn&apos;t enrolled in any
-                product.
-              </p>
-            </div>
-          ) : (
-            client.subscriptions.map((sub) => {
-              const inTrial =
-                !!sub.trialEndsAt && new Date(sub.trialEndsAt) > new Date();
-              return (
-                <div key={sub.id} className={styles.card}>
-                  <h3 className={styles.cardHeading}>
-                    {sub.productType === "LEADS"
-                      ? "Leads Tool"
-                      : "Custom Website"}
-                  </h3>
-                  <div className={styles.infoGrid}>
+          {(() => {
+            const sub =
+              client.subscriptions.find((s) => s.productType === "WEBSITE") ??
+              null;
+            const isActive = sub?.status === "ACTIVE";
+            const isPastDue = sub?.status === "PAST_DUE";
+            const isCancelled = sub?.status === "CANCELLED";
+            const isPaid = (sub?.planAmountCents ?? 0) > 0;
+
+            const statusText = !sub
+              ? "Not Enrolled"
+              : isActive
+                ? "Active"
+                : isPastDue
+                  ? "Past Due"
+                  : isCancelled
+                    ? "Cancelled"
+                    : sub.status === "PAUSED"
+                      ? "Paused"
+                      : sub.status;
+
+            const priceText = !sub
+              ? `${formatCents(client.monthlyAmountCents)}/mo`
+              : `${formatCents(sub.planAmountCents)}/mo`;
+
+            return (
+              <div className={styles.card}>
+                <h3 className={styles.cardHeading}>Custom Website</h3>
+                <div className={styles.infoGrid}>
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Status</span>
+                    <span className={styles.infoValue}>
+                      {statusText}
+                      {sub?.cancelAtPeriodEnd ? " (cancelling)" : ""}
+                    </span>
+                  </div>
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Plan</span>
+                    <span className={styles.infoValue}>{priceText}</span>
+                  </div>
+
+                  {sub?.cancelAtPeriodEnd && sub.currentPeriodEnd && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Status</span>
+                      <span className={styles.infoLabel}>Access until</span>
                       <span className={styles.infoValue}>
-                        {inTrial ? "Free Trial" : sub.status}
-                        {sub.cancelAtPeriodEnd ? " (cancelling)" : ""}
+                        {format(new Date(sub.currentPeriodEnd), "MMMM d, yyyy")}
                       </span>
                     </div>
+                  )}
+
+                  {sub && !sub.cancelAtPeriodEnd && sub.currentPeriodEnd && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Plan</span>
+                      <span className={styles.infoLabel}>
+                        {isActive ? "Next billing date" : "Period ended"}
+                      </span>
                       <span className={styles.infoValue}>
-                        {sub.planAmountCents > 0
-                          ? `$${(sub.planAmountCents / 100).toLocaleString("en-US")}/mo`
-                          : "Free — beta"}
+                        {format(new Date(sub.currentPeriodEnd), "MMMM d, yyyy")}
                       </span>
                     </div>
-                    {inTrial && sub.trialEndsAt && (
-                      <div className={styles.infoRow}>
-                        <span className={styles.infoLabel}>Trial ends</span>
-                        <span className={styles.infoValue}>
-                          {format(new Date(sub.trialEndsAt), "MMMM d, yyyy")}
-                        </span>
-                      </div>
-                    )}
-                    {sub.cancelAtPeriodEnd && (
-                      <div className={styles.infoRow}>
-                        <span className={styles.infoLabel}>Access until</span>
-                        <span className={styles.infoValue}>
-                          {format(
-                            new Date(
-                              (inTrial
-                                ? sub.trialEndsAt
-                                : sub.currentPeriodEnd) ?? new Date(),
-                            ),
-                            "MMMM d, yyyy",
-                          )}
-                        </span>
-                      </div>
-                    )}
-                    {!sub.cancelAtPeriodEnd && sub.currentPeriodEnd && (
-                      <div className={styles.infoRow}>
-                        <span className={styles.infoLabel}>
-                          Next billing date
-                        </span>
-                        <span className={styles.infoValue}>
-                          {format(
-                            new Date(sub.currentPeriodEnd),
-                            "MMMM d, yyyy",
-                          )}
-                        </span>
-                      </div>
-                    )}
-                    {sub.billingAnchorDate && !inTrial && (
+                  )}
+
+                  {sub?.billingAnchorDate &&
+                    !isCancelled &&
+                    !sub.cancelAtPeriodEnd && (
                       <div className={styles.infoRow}>
                         <span className={styles.infoLabel}>Billing day</span>
                         <span className={styles.infoValue}>
@@ -1309,86 +1311,86 @@ export default function ClientDetailClient({
                         </span>
                       </div>
                     )}
-                    {sub.cancelledAt && (
-                      <div className={styles.infoRow}>
-                        <span className={styles.infoLabel}>Cancelled on</span>
-                        <span className={styles.infoValue}>
-                          {format(new Date(sub.cancelledAt), "MMMM d, yyyy")}
-                        </span>
-                      </div>
-                    )}
-                    {sub.productType === "WEBSITE" && (
-                      <div className={styles.infoRow}>
-                        <span className={styles.infoLabel}>Setup fee</span>
-                        <span className={styles.infoValue}>
-                          {client.setupFeePaid ? "Paid" : "Not yet paid"}
-                        </span>
-                      </div>
-                    )}
+
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Setup fee</span>
+                    <span className={styles.infoValue}>
+                      {client.setupFeePaid ? "Paid" : "Not yet paid"}
+                    </span>
                   </div>
+
+                  {isCancelled && sub?.cancelledAt && (
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>Cancelled on</span>
+                      <span className={styles.infoValue}>
+                        {format(new Date(sub.cancelledAt), "MMMM d, yyyy")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Website invoices (leads invoices live on the leads page) */}
+          <div className={styles.card}>
+            <h3 className={styles.cardHeading}>Website Invoices</h3>
+            {(() => {
+              const websiteInvoices = client.invoices.filter(
+                (inv) => inv.productType === "WEBSITE" || !inv.productType,
+              );
+              return websiteInvoices.length === 0 ? (
+                <p className={styles.emptyText}>No invoices yet.</p>
+              ) : (
+                <div className={styles.invoiceList}>
+                  {websiteInvoices.map((invoice) => (
+                    <div key={invoice.id} className={styles.invoiceRow}>
+                      <div className={styles.invoiceLeft}>
+                        <span className={styles.invoiceNumber}>
+                          {invoice.invoiceNumber}
+                        </span>
+                        <span className={styles.invoiceMeta}>
+                          {invoice.description ??
+                            (invoice.periodStart && invoice.periodEnd
+                              ? `${format(new Date(invoice.periodStart), "MMM d")} – ${format(new Date(invoice.periodEnd), "MMM d, yyyy")}`
+                              : "Subscription")}
+                        </span>
+                      </div>
+                      <div className={styles.invoiceRight}>
+                        <span className={styles.invoiceAmount}>
+                          {formatCents(invoice.amountCents)}
+                        </span>
+                        <span
+                          className={`${styles.invoiceStatus} ${
+                            invoice.status === "PAID"
+                              ? styles.invoiceStatusPaid
+                              : invoice.status === "OPEN"
+                                ? styles.invoiceStatusOpen
+                                : styles.invoiceStatusOther
+                          }`}
+                        >
+                          {invoice.status === "PAID"
+                            ? "Paid"
+                            : invoice.status === "OPEN"
+                              ? "Due"
+                              : invoice.status}
+                        </span>
+                        {invoice.pdfUrl && (
+                          <a
+                            href={invoice.pdfUrl}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className={styles.invoiceDownload}
+                          >
+                            ↓ PDF
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               );
-            })
-          )}
-
-          <div className={styles.card}>
-            <h3 className={styles.cardHeading}>
-              Invoice History ({client.invoices.length})
-            </h3>
-            {client.invoices.length === 0 ? (
-              <p className={styles.emptyText}>No invoices yet.</p>
-            ) : (
-              <div className={styles.invoiceList}>
-                {client.invoices.map((invoice) => (
-                  <div key={invoice.id} className={styles.invoiceRow}>
-                    <div className={styles.invoiceLeft}>
-                      <span className={styles.invoiceNumber}>
-                        {invoice.invoiceNumber}
-                      </span>
-                      <span className={styles.invoiceMeta}>
-                        {invoice.description ??
-                          (invoice.periodStart && invoice.periodEnd
-                            ? `${format(new Date(invoice.periodStart), "MMM d")} – ${format(new Date(invoice.periodEnd), "MMM d, yyyy")}`
-                            : "Subscription")}
-                      </span>
-                    </div>
-                    <div className={styles.invoiceRight}>
-                      <span className={styles.invoiceAmount}>
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        }).format(invoice.amountCents / 100)}
-                      </span>
-                      <span
-                        className={`${styles.invoiceStatus} ${
-                          invoice.status === "PAID"
-                            ? styles.invoiceStatusPaid
-                            : invoice.status === "OPEN"
-                              ? styles.invoiceStatusOpen
-                              : styles.invoiceStatusOther
-                        }`}
-                      >
-                        {invoice.status === "PAID"
-                          ? "Paid"
-                          : invoice.status === "OPEN"
-                            ? "Due"
-                            : invoice.status}
-                      </span>
-                      {invoice.pdfUrl && (
-                        <a
-                          href={invoice.pdfUrl}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className={styles.invoiceDownload}
-                        >
-                          ↓ PDF
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            })()}
           </div>
         </div>
       )}

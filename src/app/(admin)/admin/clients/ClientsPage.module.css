@@ -50,7 +50,7 @@
 /* ── Row ── */
 .clientRow {
   display: grid;
-  grid-template-columns: 5rem 1fr 20rem 3rem;
+  grid-template-columns: 5rem 1fr auto 20rem 3rem;
   align-items: center;
   gap: 3rem;
   padding: 2rem 5rem;
@@ -109,6 +109,45 @@
   text-overflow: ellipsis;
 }
 
+/* ── Product tags ── */
+.productTags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.productTag {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.tagGreen {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.tagOrange {
+  color: #c2410c;
+  border-color: #c2410c;
+}
+
+.tagBlue {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.tagMuted {
+  color: var(--text);
+  border-color: var(--lightGray);
+}
+
+/* ── Stage ── */
 .clientStage {
   display: flex;
   align-items: center;
@@ -155,7 +194,8 @@
     gap: 1.6rem;
   }
 
-  .clientStage {
+  .clientStage,
+  .productTags {
     display: none;
   }
 }
