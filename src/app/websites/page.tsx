@@ -43,6 +43,8 @@ export default function WebsitesPage() {
         subheading='$499/month + $500 setup · Custom-built · Zero per-booking fees · Cancel anytime.'
         items={heroItems}
         copy='Built specifically for black car operators. Bookings, dispatch, payments, corporate accounts, and flight tracking — one platform, on your domain. No per-booking fees. No platform middlemen. Cancel anytime.'
+        btnText='Book Discovery Call'
+        href='/contact'
       />
       <OtherDashboards />
       <Features />

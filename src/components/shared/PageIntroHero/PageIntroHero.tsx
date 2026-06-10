@@ -5,6 +5,7 @@ import styles from "./PageIntroHero.module.css";
 import Nav from "@/components/shared/Nav/Nav";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Image, { StaticImageData } from "next/image";
+import Button from "../Button/Button";
 
 interface HeroBoxItem {
   id: number;
@@ -19,6 +20,8 @@ interface PageIntroHeroProps {
   items?: HeroBoxItem[];
   copy: string;
   src: StaticImageData;
+  btnText: string;
+  href: string;
 }
 
 export default function PageIntroHero({
@@ -28,12 +31,14 @@ export default function PageIntroHero({
   items,
   copy,
   src,
+  btnText,
+  href,
 }: PageIntroHeroProps) {
   const hasItems = items && items.length > 0;
 
   return (
     <section className={styles.container}>
-      <LayoutWrapper borderDark>
+      <LayoutWrapper>
         <div className={styles.parent}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
@@ -49,12 +54,20 @@ export default function PageIntroHero({
                 <SectionIntro
                   text={sectionIntroText}
                   background='bgBlack'
-                  color='colorWhite'
+                  color='colorYellow'
                 />
                 <h2 className={`${styles.topHeading} h2ii`}>{heading}</h2>
                 <h3 className={`${styles.heading} h6`}>{subheading}</h3>
                 <div className={styles.outro}>
                   <p className={styles.outroCopy}>{copy}</p>
+                </div>
+                <div className={styles.btnContainer}>
+                  <Button
+                    href={href}
+                    text={btnText}
+                    btnType='accent'
+                    arrow
+                  />
                 </div>
               </div>
               <div className={styles.hICB}>

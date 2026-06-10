@@ -43,6 +43,8 @@ export default function LeadsPage() {
         subheading='Three lead temperatures, delivered to your inbox every morning. Every lead scored, briefed, and paired with a ready-to-send outreach script.'
         items={heroItems}
         copy='$125/month flat. 7-day free trial. Hot, warm, and cold leads in one inbox. No per-lead fees. Cancel anytime.'
+        btnText='Start your free trial'
+        href='/dashboard/enroll/leads'
       />
       <LeadsProblem />
       <LeadsHowItWorks />

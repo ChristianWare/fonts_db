@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--accent);
+  background-color: var(--white);
 }
 
 .parent {
@@ -9,8 +9,8 @@
   flex-direction: column;
   padding: 5rem;
   width: 100%;
-  border-top: 1px solid var(--blackii);
-  border-bottom: 1px solid var(--blackii);
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
 }
 
 .dot1,
@@ -20,7 +20,7 @@
   position: absolute;
   width: 7px;
   height: 7px;
-  background-color: var(--accent);
+  background-color: var(--black);
   z-index: 1;
 }
 
@@ -220,7 +220,7 @@
   .headingImageContainer {
     margin-top: -7rem;
   }
-  
+
   .hICA {
     align-items: flex-start;
     justify-content: flex-start;

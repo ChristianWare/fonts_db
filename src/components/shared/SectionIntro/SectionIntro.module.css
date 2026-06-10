@@ -15,6 +15,10 @@
   color: var(--white);
 }
 
+.colorYellow {
+  color: var(--accent);
+}
+
 .bgBlack {
   background-color: var(--black);
 }
