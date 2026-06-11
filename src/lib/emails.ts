@@ -828,3 +828,130 @@ export async function sendCancellationConfirmedEmail({
 
   return sendEmail({ to, subject, html });
 }
+
+// ── Leads welcome (sent right after enrollment) ──
+export async function sendLeadsWelcomeEmail({
+  to,
+  name,
+  trialEndsAt,
+  amountCents,
+  cardBrand,
+  cardLast4,
+  billingDay,
+}: {
+  to: string;
+  name: string;
+  trialEndsAt: Date | null;
+  amountCents: number;
+  cardBrand: string | null;
+  cardLast4: string | null;
+  billingDay: number | null;
+}) {
+  const firstName = name.split(" ")[0];
+  const amount = formatCentsPlain(amountCents);
+  const trialEndText = trialEndsAt ? formatDate(trialEndsAt) : "in 7 days";
+  const cardText =
+    cardBrand && cardLast4
+      ? `${cardBrand.charAt(0).toUpperCase() + cardBrand.slice(1)} ending ${cardLast4}`
+      : "the card you used at signup";
+  const billingDayText = billingDay
+    ? `Day ${billingDay} of each month`
+    : "Monthly";
+
+  await sendEmail({
+    to,
+    subject: "You're in — your leads trial has started",
+    html: buildEmailHTML({
+      preheader: `Your 7-day free trial is live. First charge ${trialEndText}.`,
+      heading: "Welcome to the leads tool.",
+      body:
+        bodyText(
+          `Hi ${firstName}, you're enrolled and your 7-day free trial is live — no charge yet.`,
+        ) +
+        bodyText("Here's what you've got:") +
+        bodyText(
+          "<strong>Hot leads</strong> — events in your market within 14 days, before the organizer books transportation. <strong>Warm leads</strong> — galas, conferences, and weddings 15–90 days out. <strong>Cold leads</strong> — hotels, venues, corporate offices, and clubs in your service area for repeat business.",
+        ) +
+        bodyText(
+          "Every lead is AI-scored 0–100 and enriched with verified organizer and venue contacts, plus a strategic brief and outreach script you can send.",
+        ) +
+        bodyText(
+          "<strong>Getting started:</strong> open your leads settings, set your primary city and service radius (5–75 miles) so we only show events you can actually serve. Then check your dashboard each morning for the day's highest-scoring prospects.",
+        ) +
+        bodyText("<strong>Your billing, plainly:</strong>") +
+        bodyDetail("Free trial through", trialEndText) +
+        bodyDetail("First charge", `${amount} on ${trialEndText}`) +
+        bodyDetail("Card on file", cardText) +
+        bodyDetail("Then billed", billingDayText) +
+        bodyText(
+          `Cancel anytime before ${trialEndText} from your billing page and you won't be charged a cent.`,
+        ),
+      ctaLabel: "Set your market →",
+      ctaUrl: `${APP_URL}/dashboard/leads/settings`,
+    }),
+  });
+}
+
+// ── Payment receipt (sent on every successful charge, both products) ──
+export async function sendPaymentReceiptEmail({
+  to,
+  name,
+  productLabel,
+  invoiceNumber,
+  amountCents,
+  paidAt,
+  periodStart,
+  periodEnd,
+  hostedInvoiceUrl,
+  pdfBuffer,
+  pdfFilename,
+}: {
+  to: string;
+  name: string;
+  productLabel: string;
+  invoiceNumber: string;
+  amountCents: number;
+  paidAt: Date;
+  periodStart: Date | null;
+  periodEnd: Date | null;
+  hostedInvoiceUrl: string | null;
+  pdfBuffer: Buffer | null;
+  pdfFilename: string;
+}) {
+  const firstName = name.split(" ")[0];
+  const amount = formatCentsPlain(amountCents);
+  const paidText = formatDate(paidAt);
+  const periodText =
+    periodStart && periodEnd
+      ? `${periodStart.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })} – ${formatDate(periodEnd)}`
+      : null;
+
+  await sendEmail({
+    to,
+    subject: `Payment received — ${productLabel} (${invoiceNumber})`,
+    html: buildEmailHTML({
+      preheader: `Thanks — we received your ${amount} payment.`,
+      heading: "Payment received.",
+      body:
+        bodyText(
+          `Hi ${firstName}, thanks — your payment went through and your ${productLabel} subscription is paid and active. Your full receipt is attached as a PDF.`,
+        ) +
+        bodyDetail("Product", productLabel) +
+        bodyDetail("Invoice", invoiceNumber) +
+        bodyDetail("Amount paid", amount) +
+        bodyDetail("Date paid", paidText) +
+        (periodText ? bodyDetail("Billing period", periodText) : "") +
+        bodyText(
+          "No action needed — this is just your record of the charge. Questions about a payment? Just reply to this email.",
+        ),
+      ctaLabel: hostedInvoiceUrl ? "View invoice online →" : undefined,
+      ctaUrl: hostedInvoiceUrl ?? undefined,
+    }),
+    attachments: pdfBuffer
+      ? [{ filename: pdfFilename, content: pdfBuffer }]
+      : undefined,
+  });
+}

@@ -3,6 +3,7 @@
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import stripe from "@/lib/stripe";
+import { sendLeadsWelcomeEmail } from "@/lib/emails";
 
 const LEADS_PRICE_CENTS = 12500;
 const LEADS_TRIAL_DAYS = 7;
@@ -17,7 +18,11 @@ export async function confirmLeadsEnrollment({
 
   const profile = await db.clientProfile.findUnique({
     where: { userId: session.user.id },
-    select: { id: true, stripeCustomerId: true },
+    select: {
+      id: true,
+      stripeCustomerId: true,
+      user: { select: { name: true, email: true } },
+    },
   });
   if (!profile) return { error: "Profile not found" };
   if (!profile.stripeCustomerId) return { error: "No Stripe customer found" };
@@ -41,11 +46,17 @@ export async function confirmLeadsEnrollment({
     return { error: "You already have an active leads subscription" };
   }
 
-  // Attach the card + make it the customer default
-  await stripe.paymentMethods.attach(paymentMethodId, { customer: customerId });
+  // Attach the card + make it the customer default. The returned object
+  // carries the card brand/last4 we use in the welcome email.
+  const attachedPm = await stripe.paymentMethods.attach(paymentMethodId, {
+    customer: customerId,
+  });
   await stripe.customers.update(customerId, {
     invoice_settings: { default_payment_method: paymentMethodId },
   });
+
+  const cardBrand = attachedPm.card?.brand ?? null;
+  const cardLast4 = attachedPm.card?.last4 ?? null;
 
   // Mint the price inline (same approach as the website flow)
   const price = await stripe.prices.create({
@@ -112,6 +123,23 @@ export async function confirmLeadsEnrollment({
     create: { clientProfileId: profile.id },
     update: {},
   });
+
+  // Welcome email — never let a mail failure break enrollment.
+  if (profile.user?.email) {
+    try {
+      await sendLeadsWelcomeEmail({
+        to: profile.user.email,
+        name: profile.user.name ?? "there",
+        trialEndsAt: trialEnd,
+        amountCents: LEADS_PRICE_CENTS,
+        cardBrand,
+        cardLast4,
+        billingDay: trialEnd ? trialEnd.getDate() : null,
+      });
+    } catch (err) {
+      console.error("[confirmLeadsEnrollment] welcome email failed:", err);
+    }
+  }
 
   return { success: true };
 }

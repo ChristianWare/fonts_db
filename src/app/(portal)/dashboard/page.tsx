@@ -150,7 +150,9 @@ export default async function DashboardPage() {
             </div>
           </Link>
         ) : (
-          <div className={styles.productCard}>
+          <div
+            className={`${styles.productCard} ${styles.productCardInactive}`}
+          >
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
                 <span
@@ -231,7 +233,9 @@ export default async function DashboardPage() {
             </div>
           </Link>
         ) : (
-          <div className={styles.productCard}>
+          <div
+            className={`${styles.productCard} ${styles.productCardInactive}`}
+          >
             <div className={styles.productCardTop}>
               <div className={styles.productStatus}>
                 <span

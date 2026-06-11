@@ -8,6 +8,7 @@ import {
   sendLeadsTrialEndingEmail,
   sendPaymentFailedEmail,
   sendCancellationConfirmedEmail,
+  sendPaymentReceiptEmail,
 } from "@/lib/emails";
 
 const STATUS_MAP: Record<string, SubscriptionStatus> = {
@@ -239,7 +240,10 @@ export async function POST(req: NextRequest) {
 
         const profile = await db.clientProfile.findFirst({
           where: { stripeCustomerId: customerId },
-          select: { id: true },
+          select: {
+            id: true,
+            user: { select: { email: true, name: true } },
+          },
         });
 
         if (!profile) break;
@@ -299,6 +303,44 @@ export async function POST(req: NextRequest) {
             productType: productType ?? undefined,
           },
         });
+
+        // Branded receipt with the Stripe-generated PDF attached. Wrapped so a
+        // mail/fetch failure never fails the webhook (Stripe would retry it).
+        if (profile.user?.email) {
+          try {
+            let pdfBuffer: Buffer | null = null;
+            if (invoice.invoice_pdf) {
+              const pdfRes = await fetch(invoice.invoice_pdf);
+              if (pdfRes.ok) {
+                pdfBuffer = Buffer.from(await pdfRes.arrayBuffer());
+              }
+            }
+
+            await sendPaymentReceiptEmail({
+              to: profile.user.email,
+              name: profile.user.name ?? "there",
+              productLabel: productType
+                ? PRODUCT_LABELS[productType]
+                : "Subscription",
+              invoiceNumber,
+              amountCents: invoice.amount_paid,
+              paidAt: invoice.status_transitions?.paid_at
+                ? new Date(invoice.status_transitions.paid_at * 1000)
+                : new Date(),
+              periodStart: invoice.period_start
+                ? new Date(invoice.period_start * 1000)
+                : null,
+              periodEnd: invoice.period_end
+                ? new Date(invoice.period_end * 1000)
+                : null,
+              hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+              pdfBuffer,
+              pdfFilename: `${invoiceNumber}.pdf`,
+            });
+          } catch (err) {
+            console.error("[webhook invoice.paid] receipt email failed:", err);
+          }
+        }
 
         // Update period dates ONLY on the subscription this invoice is for —
         // scoped by stripeSubscriptionId so a leads invoice doesn't overwrite

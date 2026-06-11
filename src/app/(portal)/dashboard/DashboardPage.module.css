@@ -93,6 +93,14 @@
   background-color: var(--lightGray);
 }
 
+.productCardInactive {
+  background-color: var(--grayii);
+}
+
+.productCardInactive:hover {
+  background-color: var(--grayii);
+}
+
 /* Ghosted (inactive) state */
 .productCardGhost {
   opacity: 0.55;
