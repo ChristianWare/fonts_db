@@ -4,7 +4,6 @@ import Link from "next/link";
 import styles from "./ClientChooser.module.css";
 import DeleteClientCard from "./DeleteClientCard";
 
-
 const LEADS_PRICE_CENTS = 12500;
 
 const productMeta = {
@@ -58,11 +57,9 @@ export default async function ClientDetailPage({
           </div>
         </div>
       </div>
-
       <p className={styles.subhead}>
         Choose a product to view its details and billing.
       </p>
-
       {/* Product chooser */}
       <div className={styles.productGrid}>
         {(["WEBSITE", "LEADS"] as const).map((productType) => {
@@ -148,8 +145,10 @@ export default async function ClientDetailPage({
           );
         })}
       </div>
-
-      <DeleteClientCard clientProfileId={client.id} />
+      <DeleteClientCard
+        clientProfileId={client.id}
+        businessName={client.businessName}
+      />{" "}
     </div>
   );
 }
