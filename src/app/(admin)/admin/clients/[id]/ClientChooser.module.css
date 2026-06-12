@@ -268,3 +268,110 @@
     font-size: 2.8rem;
   }
 }
+
+/* ── Danger zone ── */
+.dangerCard {
+  margin: 0 5rem 5rem;
+  border: 1px solid #fed7d7;
+}
+
+.dangerHeading {
+  background-color: #c53030;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--GeistMono);
+  font-size: 1.6rem;
+  padding: 1rem;
+  margin: 0;
+}
+
+.dangerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 3rem;
+}
+
+.dangerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dangerLabel {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+
+.dangerDesc {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.dangerBtn {
+  flex-shrink: 0;
+  padding: 1rem 2rem;
+  border: 1px solid #c53030;
+  background: none;
+  color: #c53030;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+}
+
+.dangerConfirm {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.dangerCancelBtn {
+  padding: 1rem 2rem;
+  border: 1px solid var(--lightGray);
+  background: none;
+  color: var(--text);
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+}
+
+.dangerConfirmBtn {
+  padding: 1rem 2rem;
+  border: none;
+  background: #c53030;
+  color: #fff;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+}
+
+.dangerConfirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+  .dangerCard {
+    margin: 0 2rem 2rem;
+  }
+
+  .dangerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem;
+  }
+}

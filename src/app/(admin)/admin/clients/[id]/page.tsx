@@ -2,6 +2,8 @@ import { getClientById } from "@/actions/admin/getClientById";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "./ClientChooser.module.css";
+import DeleteClientCard from "./DeleteClientCard";
+
 
 const LEADS_PRICE_CENTS = 12500;
 
@@ -146,6 +148,8 @@ export default async function ClientDetailPage({
           );
         })}
       </div>
+
+      <DeleteClientCard clientProfileId={client.id} />
     </div>
   );
 }

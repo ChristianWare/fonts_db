@@ -8,7 +8,7 @@ import {
   sendEmailVerificationToken,
 } from "@/lib/emailVerification";
 import { generateServiceAgreement } from "@/lib/generateServiceAgreement";
-import { sendWelcomeEmail, sendAdminNewClientEmail } from "@/lib/emails";
+import { sendAdminNewClientEmail } from "@/lib/emails";
 import bcrypt from "bcryptjs";
 
 export const register = async (values: RegisterSchemaType) => {
@@ -63,9 +63,6 @@ export const register = async (values: RegisterSchemaType) => {
         "Account created but failed to send verification email. Try logging in to resend.",
     };
   }
-
-  // Welcome email to client
-  await sendWelcomeEmail({ to: email, name, businessName });
 
   // Notify admin
   if (user.clientProfile?.id) {

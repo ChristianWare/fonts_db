@@ -22,22 +22,26 @@ export async function sendWelcomeEmail({
   const firstName = name.split(" ")[0];
   await sendEmail({
     to,
-    subject: "Welcome to Fonts & Footers — your portal is ready",
+    subject: "You're approved — let's build your website",
     html: buildEmailHTML({
-      preheader: "Your client portal is ready. Let's get started.",
-      heading: "Welcome aboard.",
+      preheader: "Pay your setup fee to activate your subscription and start.",
+      heading: "You're approved.",
       body:
         bodyText(
-          `Hi ${firstName}, your Fonts & Footers client portal is now active.`,
+          `Hi ${firstName}, good news — ${businessName} is approved for your custom website. We're ready to start building.`,
         ) +
-        bodyText("Here's what to do next to get your platform built:") +
-        bodyDetail("Step 1", "Sign your service agreement") +
-        bodyDetail("Step 2", "Set up billing") +
+        bodyText(
+          "The first step is your one-time setup fee. Once that's paid, your monthly subscription activates and your build kicks off.",
+        ) +
+        bodyText("Here's the full path from here:") +
+        bodyDetail("Step 1", "Pay your setup fee to activate") +
+        bodyDetail("Step 2", "Sign your service agreement") +
         bodyDetail("Step 3", "Complete the intake questionnaire") +
         bodyDetail("Step 4", "Upload your brand assets") +
-        bodyDetail("Step 5", "Select your design"),
-      ctaLabel: "Go to your portal →",
-      ctaUrl: `${APP_URL}/dashboard`,
+        bodyDetail("Step 5", "Select your design") +
+        bodyText("Hit the button below to pay your setup fee and get started."),
+      ctaLabel: "Pay setup fee →",
+      ctaUrl: `${APP_URL}/dashboard/billing/website`,
     }),
   });
 }

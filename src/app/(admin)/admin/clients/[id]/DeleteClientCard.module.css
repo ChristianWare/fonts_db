@@ -1,0 +1,162 @@
+/* ── Card (matches the old Danger Zone look) ── */
+.card {
+  background-color: var(--white);
+  border: 1px solid #fed7d7;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0 5rem 5rem;
+  margin-top: 5rem;
+}
+
+.cardHeading {
+  background-color: #c53030;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: fit-content;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+
+.desc {
+  font-family: var(--Roboto);
+  font-size: 16px;
+  color: var(--text);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.deleteBtn {
+  flex-shrink: 0;
+  padding: 1rem 2rem;
+  border: 1px solid #c53030;
+  background: none;
+  color: #c53030;
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #c53030;
+  color: #fff;
+}
+
+/* ── Modal confirm (matches CancelSubscription) ── */
+.confirmRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4rem;
+  padding: 3rem;
+}
+
+.confirmText {
+  font-family: var(--Roboto);
+  font-size: 2rem;
+  width: 90%;
+  color: var(--black);
+  text-transform: none;
+  line-height: 1.5;
+  padding-top: 5rem;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.confirmBtn {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2rem 4rem;
+  background-color: #f44;
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.confirmBtn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.keepBtn {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2rem 4rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.keepBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 1268px) {
+  .confirmText {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    margin: 0 2rem 2rem;
+  }
+
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .confirmActions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
