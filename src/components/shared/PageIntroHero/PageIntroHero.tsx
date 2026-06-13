@@ -62,12 +62,7 @@ export default function PageIntroHero({
                   <p className={styles.outroCopy}>{copy}</p>
                 </div>
                 <div className={styles.btnContainer}>
-                  <Button
-                    href={href}
-                    text={btnText}
-                    btnType='accent'
-                    arrow
-                  />
+                  <Button href={href} text={btnText} btnType='accent' arrow />
                 </div>
               </div>
               <div className={styles.hICB}>
@@ -89,7 +84,7 @@ export default function PageIntroHero({
             {hasItems && (
               <div className={styles.bottom}>
                 {items.map((x, i) => (
-                  <div key={x.id} className={`${styles.box} bgLines`}>
+                  <div key={x.id} className={styles.box}>
                     <span className={styles.index}>
                       {String(i + 1).padStart(2, "0")}
                     </span>

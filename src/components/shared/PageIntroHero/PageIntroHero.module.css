@@ -125,7 +125,8 @@
   align-items: flex-start;
   gap: 2rem;
   padding: 3rem;
-  border: 1px solid var(--blackii);
+  border: 1px solid var(--lightGray);
+  background-color: var(--lightGrayiii);
   transition: border-color 0.2s ease;
 }
 
@@ -151,7 +152,7 @@
 }
 
 .desc {
-  color: var(--text);
+  color: var(--black);
   font-size: 1.6rem;
   line-height: 1.5;
 }
@@ -213,6 +214,13 @@
 
   .bottom {
     grid-template-columns: 1fr;
+  }
+
+  .box {
+    align-self: flex-start;
+    height: 100%;
+    position: sticky;
+    top: 90px;
   }
 }
 
