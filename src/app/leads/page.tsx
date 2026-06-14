@@ -39,7 +39,7 @@ export default function LeadsPage() {
       <PageIntroHero
         src={Img1}
         sectionIntroText='Leads Tool'
-        heading='Find your next client before your competition does.'
+        heading='Find your next client before your competition does'
         subheading='Three lead temperatures, delivered to your inbox every morning. Every lead scored, briefed, and paired with a ready-to-send outreach script.'
         items={heroItems}
         copy='$125/month flat. 7-day free trial. Hot, warm, and cold leads in one inbox. No per-lead fees. Cancel anytime.'

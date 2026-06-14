@@ -144,7 +144,7 @@ export default function AuditPage() {
       <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'
-        heading="Find out exactly what's costing you bookings — and how to fix it."
+        heading="Find out exactly what's costing you bookings — and how to fix it"
         subheading='$0 · Six-category scored audit · Full PDF report emailed to your inbox.'
         items={heroItems}
         copy='Built specifically for black car operators. The audit scores your site across six categories — speed, booking flow, SEO, trust signals, tech stack, and brand — and estimates the monthly bookings you are losing because of them. Free. No card. Result in 60 seconds.'
