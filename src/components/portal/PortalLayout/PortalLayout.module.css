@@ -372,12 +372,12 @@
 
 .navGroupLabel {
   font-family: var(--GeistMono);
-  font-size: 1.1rem;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text);
+  color: var(--white);
   padding: 0.8rem 2rem;
-  opacity: 0.5;
+  background-color: var(--black);
 }
 
 .navGroupDivider {
