@@ -5,7 +5,6 @@ import Link from "next/link";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent } from "react";
-import { createPortal } from "react-dom";
 
 type NavVariant = "white" | "black";
 
@@ -76,6 +75,9 @@ export default function Nav({
           <div className={styles.logoContainer}>
             <Logo variant={variant} />
           </div>
+
+          {isOpen && <div className={styles.overlay} onClick={closeMenu} />}
+
           <div
             className={
               isOpen ? `${styles.navItems} ${styles.active}` : styles.navItems
@@ -142,11 +144,6 @@ export default function Nav({
             </span>
           </div>
         </div>
-        {isOpen &&
-          createPortal(
-            <div className={styles.overlay} onClick={closeMenu} />,
-            document.body,
-          )}
       </nav>
     </header>
   );

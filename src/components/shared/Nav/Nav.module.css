@@ -3,6 +3,7 @@
   margin: 0 auto;
   z-index: 99999999;
   max-width: 1600px;
+  position: relative;
 }
 
 .navbar {
