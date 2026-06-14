@@ -14,17 +14,17 @@ const data = [
   {
     id: 2,
     title:
-      "Your booking experience doesn't reflect the quality of your service",
+      "You want to know exactly where your current website is costing you bookings",
   },
   {
     id: 3,
     title:
-      "You're tired of paying a platform every time a client books with you",
+      "You need a steady pipeline of corporate, event, and gala work in your market",
   },
   {
     id: 4,
     title:
-      "You want flight tracking, corporate accounts, and a real dashboard — not workarounds",
+      "You're tired of paying a platform every time a client books with you",
   },
   {
     id: 5,
@@ -47,10 +47,12 @@ export default function ParallaxArea() {
             <div className={styles.bottom}>
               <div className={styles.left}>
                 <p className={styles.copy}>
-                  We don&apos;t build websites for everyone. We build direct
-                  booking platforms for black car and limo operators who&apos;ve
-                  outgrown generic software and are ready to own their brand,
-                  their clients, and every dollar they earn.
+                  We don&apos;t build for everyone. We work with black car and
+                  limo operators who&apos;ve outgrown generic software — giving
+                  you three ways to grow: a free audit to see where you stand, a
+                  leads tool that finds the work in your market, and a custom
+                  booking platform that lets you own your brand, your clients,
+                  and every dollar you earn.
                 </p>
               </div>
               <div className={styles.right}>

@@ -9,6 +9,7 @@ import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 import WebsiteOutcomes from "@/components/WebsitesPage/WebsiteOutcomes/WebsiteOutcomes";
 import NierExamples from "@/components/WebsitesPage/NierExamples/NierExamples";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
+import ComparisonChart from "@/components/HomePage/ComparisonChart/ComparisonChart";
 
 const heroItems = [
   {
@@ -53,6 +54,7 @@ export default function WebsitesPage() {
       <NierExamples />
       <PricingPreview product='website' />
       <HowItWorks />
+      <ComparisonChart />
       <Faq />
       <ContactSection />
     </main>

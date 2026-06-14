@@ -71,7 +71,7 @@ const plans: Plan[] = [
     ],
     cta: "Get started",
     href: "/websites",
-    footnote: "First month free. We handle setup.",
+    footnote: "One time $500 set up fee.",
   },
 ];
 

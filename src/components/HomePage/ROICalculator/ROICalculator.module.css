@@ -1,14 +1,14 @@
 .container {
   background-color: var(--accent);
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--blackii);
 }
 
 .content {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   position: relative;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
 }
 
 /* ── Corner dots ── */
@@ -475,5 +475,52 @@
 
   .includedList {
     grid-template-columns: 1fr;
+  }
+}
+
+.modeQuestion {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+
+.modeSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.modeTab {
+  flex: 1;
+  padding: 1.2rem 1.6rem;
+  background: none;
+  border: 1px solid var(--black);
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.modeTabActive, .modeTab:hover  {
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--accent);
+}
+
+@media screen and (max-width: 768px) {
+  .modeTab {
+    flex: 1 1 100%;
   }
 }

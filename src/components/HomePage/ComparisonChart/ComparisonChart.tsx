@@ -10,9 +10,9 @@ import ROICalculator from "../ROICalculator/ROICalculator";
 
 type CompetitorName =
   | "Fonts & Footers"
-  | "Limo Anywhere"
-  | "Ground Alliance"
-  | "Generic Agency";
+  | "Dispatch software"
+  | "Booking marketplaces"
+  | "Template agencies";
 
 type Feature = {
   name: string;
@@ -22,9 +22,9 @@ type Feature = {
 
 const competitors: { name: CompetitorName; note: string }[] = [
   { name: "Fonts & Footers", note: "$499 / mo" },
-  { name: "Limo Anywhere", note: "Dispatch tool" },
-  { name: "Ground Alliance", note: "Marketplace" },
-  { name: "Generic Agency", note: "Template site" },
+  { name: "Dispatch software", note: "Monthly + add-ons" },
+  { name: "Booking marketplaces", note: "Per-booking cut" },
+  { name: "Template agencies", note: "Build + hosting" },
 ];
 
 const features: Feature[] = [
@@ -34,9 +34,9 @@ const features: Feature[] = [
       "A professionally designed site built entirely to your brand — not a template.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": true,
+      "Dispatch software": false,
+      "Booking marketplaces": false,
+      "Template agencies": true,
     },
   },
   {
@@ -45,9 +45,9 @@ const features: Feature[] = [
       "A fully integrated booking flow that lives on your own domain.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": true,
-      "Ground Alliance": true,
-      "Generic Agency": false,
+      "Dispatch software": true,
+      "Booking marketplaces": true,
+      "Template agencies": false,
     },
   },
   {
@@ -55,9 +55,9 @@ const features: Feature[] = [
     description: "Flat monthly rate — we never take a cut of your rides.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": true,
+      "Dispatch software": true,
+      "Booking marketplaces": false,
+      "Template agencies": true,
     },
   },
   {
@@ -66,9 +66,9 @@ const features: Feature[] = [
       "Your riders belong to you — not a platform that can change its terms tomorrow.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": true,
+      "Dispatch software": false,
+      "Booking marketplaces": false,
+      "Template agencies": true,
     },
   },
   {
@@ -77,9 +77,9 @@ const features: Feature[] = [
       "Live aviation data auto-populates bookings and adjusts pickup times on delays.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": true,
-      "Ground Alliance": false,
-      "Generic Agency": false,
+      "Dispatch software": true,
+      "Booking marketplaces": false,
+      "Template agencies": false,
     },
   },
   {
@@ -88,9 +88,9 @@ const features: Feature[] = [
       "Drivers log in, see their schedule, update trip status, and track earnings.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": true,
-      "Ground Alliance": false,
-      "Generic Agency": false,
+      "Dispatch software": true,
+      "Booking marketplaces": false,
+      "Template agencies": false,
     },
   },
   {
@@ -99,9 +99,9 @@ const features: Feature[] = [
       "Businesses apply, get approved, and book under a company account with centralized billing.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": false,
+      "Dispatch software": "Limited",
+      "Booking marketplaces": false,
+      "Template agencies": false,
     },
   },
   {
@@ -110,9 +110,9 @@ const features: Feature[] = [
       "Review pending bookings, set the final price, then confirm — all from the dashboard.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": false,
+      "Dispatch software": true,
+      "Booking marketplaces": false,
+      "Template agencies": false,
     },
   },
   {
@@ -121,9 +121,9 @@ const features: Feature[] = [
       "Riders manage trips, download receipts, and save addresses — under your brand.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": true,
-      "Generic Agency": false,
+      "Dispatch software": true,
+      "Booking marketplaces": true,
+      "Template agencies": false,
     },
   },
   {
@@ -132,9 +132,9 @@ const features: Feature[] = [
       "Hundreds of auto-generated location + service pages to capture local search traffic.",
     support: {
       "Fonts & Footers": true,
-      "Limo Anywhere": false,
-      "Ground Alliance": false,
-      "Generic Agency": false,
+      "Dispatch software": false,
+      "Booking marketplaces": false,
+      "Template agencies": false,
     },
   },
 ];
@@ -164,12 +164,13 @@ export default function ComparisonChart() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={styles.heading}>
-              The only flat-rate platform <br /> built for black car.
+              One flat rate. <br /> Everything black car needs.
             </h2>
             <p className={styles.copy}>
-              Every alternative either takes a cut of your rides, owns your
-              customers, or gives you a template. Here&apos;s how it actually
-              compares.
+              Dispatch software locks your data in their platform. Booking
+              marketplaces take a cut of every ride. Template agencies hand you
+              a pretty site with no booking engine. Here&apos;s how a
+              purpose-built platform compares.
             </p>
           </div>
 
