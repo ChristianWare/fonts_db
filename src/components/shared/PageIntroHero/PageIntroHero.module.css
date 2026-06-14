@@ -124,7 +124,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2rem;
-  padding: 3rem;
+  padding: 2rem 3rem;
   border: 1px solid var(--lightGray);
   background-color: var(--lightGrayiii);
   transition: border-color 0.2s ease;
@@ -152,9 +152,14 @@
 }
 
 .desc {
-  color: var(--black);
-  font-size: 1.6rem;
-  line-height: 1.5;
+  font-size: 16px;
+  font-family: var(--GeistMono);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  max-width: 800px;
 }
 
 .outro {
@@ -163,14 +168,16 @@
 }
 
 .outroCopy {
-  font-size: 1.6rem;
-  font-family: var(--GeistMono);
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
+  font-size: 2.2rem;
+  letter-spacing: -0.7px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 700;
   max-width: 800px;
+}
+
+.copy,
+.span {
+  color: lightgray;
 }
 
 @media screen and (max-width: 1268px) {
@@ -194,6 +201,11 @@
 
   .bottom {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .outroCopy {
+    font-size: 2rem;
+    letter-spacing: -0.6px;
   }
 }
 
@@ -220,7 +232,7 @@
     align-self: flex-start;
     height: 100%;
     position: sticky;
-    top: 90px;
+    top: 20px;
   }
 }
 

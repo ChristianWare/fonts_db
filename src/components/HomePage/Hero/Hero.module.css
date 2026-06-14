@@ -161,8 +161,8 @@
   color: var(--white);
   background-image: repeating-linear-gradient(
     45deg,
-    var(--lightGray) 0,
-    var(--lightGray) 1px,
+    var(--lightGrayV) 0,
+    var(--lightGrayV) 1px,
     transparent 0,
     transparent 50%
   );
@@ -242,6 +242,10 @@
 }
 
 @media screen and (max-width: 568px) {
+  .content {
+    gap: 5rem;
+  }
+
   .heading {
     background-size: 5px 5px;
   }
