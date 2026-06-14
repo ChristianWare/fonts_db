@@ -132,7 +132,7 @@
 
 .topCopy {
   color: var(--white);
-  font-size: 16px;
+  font-size: 1.6rem;
   line-height: 1.5;
   font-family: var(--GeistMono);
   text-transform: uppercase;
@@ -248,6 +248,7 @@
 
   .heading {
     background-size: 5px 5px;
+    width: 100%;
   }
 
   .imgContainer {

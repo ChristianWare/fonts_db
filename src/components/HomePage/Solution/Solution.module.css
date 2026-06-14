@@ -266,6 +266,7 @@
 
   .card {
     grid-template-columns: repeat(1, 1fr);
+    top: 20px;
   }
 
   .cardLeft {
