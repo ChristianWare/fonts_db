@@ -101,7 +101,6 @@ export default function Solutionii() {
                   Three solutions. One system. Built to grow your black car
                   business.
                 </h3>
-                {/*  fixes it */}
                 <p className={styles.copy}>
                   We didn&apos;t build a generic tool and point it at the
                   transportation industry. Every product was built from the
