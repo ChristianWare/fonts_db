@@ -8,6 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const FROM_ADDRESS = "Fonts & Footers <noreply@fontsandfooters.com>";
 export const ADMIN_EMAIL = "chris@fontsandfooters.com";
+export const REPLY_TO_ADDRESS = "chris@fontsandfooters.com";
 export const BRAND_DOMAIN = "fontsandfooters.com";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL?.startsWith(
   "http://localhost",
@@ -20,11 +21,13 @@ export async function sendEmail({
   subject,
   html,
   attachments,
+  replyTo,
 }: {
   to: string | string[];
   subject: string;
   html: string;
   attachments?: Array<{ filename: string; content: Buffer }>;
+  replyTo?: string;
 }) {
   try {
     await resend.emails.send({
@@ -32,6 +35,7 @@ export async function sendEmail({
       to,
       subject,
       html,
+      replyTo: replyTo ?? REPLY_TO_ADDRESS,
       ...(attachments ? { attachments } : {}),
     });
   } catch (err) {
