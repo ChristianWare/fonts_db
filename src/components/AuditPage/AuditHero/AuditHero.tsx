@@ -43,7 +43,7 @@ export default function AuditHero({
                 background='bgBlack'
               />
               <h2 className={styles.heading}>
-                Find out what&apos;s <br /> costing you bookings
+                Run your free Website audit here
               </h2>
             </div>
             <div className={styles.leftBottom}>
