@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendAuditReportEmail } from "@/lib/emails";
+import { sendAuditReportEmail, sendAdminAuditRunEmail } from "@/lib/emails";
 import { generateAuditPDF } from "@/lib/audit/generateAuditPDF";
 
 // ── Rate limiter ──────────────────────────────────────────────────────────────
@@ -1112,6 +1112,19 @@ export async function POST(req: NextRequest) {
         estimatedLostBookings,
         categories: categoriesWithFixes,
         pdfBuffer,
+      });
+
+      // Notify yourself that an audit ran
+      await sendAdminAuditRunEmail({
+        runnerName: name,
+        runnerEmail: email,
+        url: normalized,
+        score: totalScore,
+        grade,
+        estimatedLostBookings,
+        failedHighImpact,
+        platform: techStack.platform,
+        bookingPlatform: techStack.bookingPlatform,
       });
     } catch (err) {
       console.error("[audit email/pdf error]", err);

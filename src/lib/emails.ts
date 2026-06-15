@@ -207,6 +207,60 @@ export async function sendAdminNewClientEmail({
   });
 }
 
+export async function sendAdminAuditRunEmail({
+  runnerName,
+  runnerEmail,
+  url,
+  score,
+  grade,
+  estimatedLostBookings,
+  failedHighImpact,
+  platform,
+  bookingPlatform,
+}: {
+  runnerName: string;
+  runnerEmail: string;
+  url: string;
+  score: number;
+  grade: string;
+  estimatedLostBookings: number;
+  failedHighImpact: number;
+  platform: string | null;
+  bookingPlatform: string | null;
+}) {
+  const domain = (() => {
+    try {
+      return new URL(url).hostname.replace("www.", "");
+    } catch {
+      return url;
+    }
+  })();
+
+  await sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `🔍 Audit run — ${domain} scored ${grade} (${score}/100)`,
+    html: buildEmailHTML({
+      preheader: `${runnerName} (${runnerEmail}) just audited ${domain}.`,
+      heading: "Someone ran an audit.",
+      body:
+        bodyDetail("Who", runnerName) +
+        bodyDetail("Email", runnerEmail) +
+        bodyDetail("Site", domain) +
+        bodyDetail("Score", `${grade} (${score}/100)`) +
+        bodyDetail("Est. bookings lost/mo", `~${estimatedLostBookings}`) +
+        bodyDetail("High-impact fails", `${failedHighImpact}`) +
+        bodyDetail("Platform", platform ?? "Unknown") +
+        bodyDetail(
+          "Booking platform",
+          bookingPlatform ?? "None detected (direct booking)",
+        ),
+      ctaLabel: "Email them →",
+      ctaUrl: `mailto:${runnerEmail}`,
+      isAdmin: true,
+    }),
+  });
+}
+
 export async function sendAdminDocumentSignedEmail({
   clientName,
   businessName,
