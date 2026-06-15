@@ -479,3 +479,61 @@
     border-bottom: none;
   }
 }
+
+.labelInputBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.labelInputBox label {
+  padding: 1.6rem 2rem;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+  font-family: var(--GeistMono);
+  text-transform: uppercase;
+  color: var(--black);
+  width: 100%;
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
+}
+
+.labelInputBox input,
+.labelInputBox textarea {
+  height: 40px;
+  width: 100%;
+  border: none;
+  background-color: var(--accent300);
+  color: var(--black);
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: normal;
+}
+
+.labelInputBox ::placeholder {
+  color: var(--black);
+  text-transform: uppercase;
+  opacity: 0.5;
+  font-size: 16px;
+}
+
+.error {
+  font-family: var(--Roboto);
+  color: red !important;
+  padding: 1rem;
+  width: 100%;
+}
+
+.required {
+  color: var(--yellow);
+}
+
+.btnBtnContainer {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 100%;
+}
