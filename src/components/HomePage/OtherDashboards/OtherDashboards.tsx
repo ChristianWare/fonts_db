@@ -23,7 +23,7 @@ const cards: Card[] = [
   {
     id: 7,
     label: "For your drivers",
-    heading: "Your drivers will always know where to be and when.",
+    heading: "Your drivers will always know where to be and when",
     body: "No more calls to relay trip details. Every driver gets their own portal — full schedule, passenger info, real-time updates, and earnings tracking, all from their phone.",
     highlights: [
       "Full trip schedule with pickup, drop-off, passenger, and flight info",
@@ -37,7 +37,7 @@ const cards: Card[] = [
   {
     id: 8,
     label: "For your riders",
-    heading: "The kind of experience that brings clients back.",
+    heading: "The kind of experience that brings clients back",
     body: "Every rider gets a branded customer portal under your name — past trips, receipts, saved addresses, and upcoming bookings. The experience that turns a one-time ride into a regular client.",
     highlights: [
       "View all upcoming and past trips with full details",
@@ -51,7 +51,7 @@ const cards: Card[] = [
   {
     id: 9,
     label: "Built for business clients",
-    heading: "Land corporate contracts/clients and Keep them.",
+    heading: "Land corporate clients — and keep them",
     body: "Corporate clients want centralized billing, employee controls, and a booking experience that feels built for business. Your platform gives them exactly that — from the first application to the hundredth ride.",
     highlights: [
       "Online application and one-click approval from your admin dashboard",

@@ -41,9 +41,9 @@ export default function WebsitesPage() {
         src={Img1}
         sectionIntroText='Custom Built Website'
         heading='The platform that runs your whole black car business'
-        subheading='$499/month + $500 setup · Custom-built · Zero per-booking fees · Cancel anytime.'
+        subheading='$499/month + $500 setup · Custom-built · Zero per-booking fees · Cancel anytime'
         items={heroItems}
-        copy='Built specifically for black car operators. Bookings, dispatch, payments, corporate accounts, and flight tracking — one platform, on your domain. No per-booking fees. No platform middlemen. Cancel anytime.'
+        copy='Built specifically for black car and limo operators. Bookings, dispatch, payments, corporate accounts, and flight tracking — one platform, on your own domain. No per-booking fees. No platform middlemen. No agency retainer. Yours to own from day one.'
         btnText='Book Discovery Call'
         href='/contact'
       />

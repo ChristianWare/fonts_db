@@ -53,7 +53,7 @@
 
 /* Black variant for use on light backgrounds */
 .navItemBlack {
-  color: var(--black);
+  color: var(--text);
 }
 
 .navItemActive {

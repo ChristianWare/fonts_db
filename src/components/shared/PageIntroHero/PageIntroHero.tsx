@@ -44,7 +44,6 @@ export default function PageIntroHero({
           <div className={styles.dot2} />
           <div className={styles.dot3} />
           <div className={styles.dot4} />
-
           <div className={styles.content}>
             <div className={styles.topParent}>
               <Nav variant='black' hamburgerColor='hamburgerBlack' />
@@ -80,7 +79,6 @@ export default function PageIntroHero({
             <div
               className={`${styles.top} ${!hasItems ? styles.topNoBorder : ""}`}
             ></div>
-
             {hasItems && (
               <div className={styles.bottom}>
                 {items.map((x, i) => (
