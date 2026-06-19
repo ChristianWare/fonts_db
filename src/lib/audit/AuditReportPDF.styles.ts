@@ -1,565 +1,578 @@
 // lib/audit/AuditReportPDF.styles.ts
 import { StyleSheet } from "@react-pdf/renderer";
 
-const FONT = "Helvetica";
-const FONT_BOLD = "Helvetica-Bold";
-const BLACK = "#0f0f0f";
-const WHITE = "#fff";
-const ACCENT = "#ffbe00";
-const GRAY = "#666666";
-const LIGHT_GRAY = "#f5f5f5";
-const BORDER = "#e8e8e8";
-const GREEN = "#0e8e0e";
-const RED = "#ff0026";
-const ORANGE = "#d97706";
+// ── Design tokens (from the F&F design system) ──
+export const C = {
+  black: "#0f0f0f",
+  ink: "#1a1a1a",
+  white: "#ffffff",
+  accent: "#ffbe00",
+  accent300: "#ffe16c",
+  goldLine: "#b49114", // --blackii: the gold hairline on amber surfaces
+  paper: "#f7f6f3", // light page background
+  cardBorder: "#e2e0db",
+  passBg: "#eef3ee",
+  passInk: "#0e8e0e",
+  textMuted: "#6b6b6b",
+  textBody: "#2b2b2b",
+  red: "#ff0026",
+  green: "#0e8e0e",
+  orange: "#d97706",
+  gray: "#666666",
+};
 
-export const auditPdfStyles = StyleSheet.create({
-  // ── Page ──
-  // paddingTop: 40 on ALL pages — gives 40px top margin everywhere including page 1
-  // paddingBottom: 180 protects content from the absolute-positioned CTA block
-  page: {
-    fontFamily: FONT,
+const DISPLAY = "Display";
+const BODY = "Body";
+const MONO = "Mono";
+
+export const s = StyleSheet.create({
+  // ════════ PAGE SHELLS ════════
+  pageLight: {
+    fontFamily: BODY,
     fontSize: 10,
-    paddingTop: 50,
-    paddingBottom: 180,
-    backgroundColor: WHITE,
+    color: C.textBody,
+    backgroundColor: C.paper,
+    paddingTop: 48,
+    paddingBottom: 70,
+    paddingHorizontal: 44,
+  },
+  pageDark: {
+    fontFamily: BODY,
+    fontSize: 10,
+    color: C.white,
+    backgroundColor: C.black,
+    padding: 0,
   },
 
-  // ── Header ──
-  header: {
-    backgroundColor: BLACK,
-    padding: "32px 40px 28px 40px",
+  // corner square marks
+  dot: { position: "absolute", width: 6, height: 6 },
+  dotTL: { top: 18, left: 18 },
+  dotTR: { top: 18, right: 18 },
+  dotBL: { bottom: 18, left: 18 },
+  dotBR: { bottom: 18, right: 18 },
+
+  // ════════ RUNNING FOOTER (content pages) ════════
+  footer: {
+    position: "absolute",
+    bottom: 26,
+    left: 44,
+    right: 44,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginTop: -50,
+    alignItems: "center",
   },
-  headerLeft: {
-    flexDirection: "column",
-    gap: 6,
-  },
-  headerLabel: {
-    fontSize: 9,
-    fontFamily: FONT,
-    color: "rgba(255,255,255,0.4)",
+  footerText: {
+    fontFamily: MONO,
+    fontSize: 7.5,
+    letterSpacing: 0.6,
+    color: "#9a988f",
     textTransform: "uppercase",
-    letterSpacing: 1.2,
-    marginBottom: 4,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
+
+  // ════════ COVER ════════
+  coverPad: { padding: 44, height: "100%", position: "relative" },
+  coverTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  brandName: {
+    fontFamily: MONO,
+    fontSize: 11,
+    fontWeight: 700,
+    color: C.white,
+    letterSpacing: 1,
+  },
+  eyebrowRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+  eyebrowBar: { width: 4, height: 13, backgroundColor: C.accent },
+  eyebrowText: {
+    fontFamily: MONO,
+    fontSize: 10,
+    color: C.white,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
+
+  coverHeadlineWrap: { position: "relative", marginTop: 28, marginBottom: 26 },
+  coverHatch: {
+    position: "absolute",
+    left: -6,
+    top: 64,
+    width: 470,
+    height: 84,
+    backgroundColor: "#262626",
+  },
+  coverH: {
+    fontFamily: DISPLAY,
+    fontSize: 82,
+    lineHeight: 0.92,
+    letterSpacing: -1.5,
+    color: C.white,
+    textTransform: "uppercase",
+  },
+  coverHGold: { color: C.accent },
+  coverDomain: {
+    fontFamily: MONO,
+    fontSize: 15,
+    color: C.accent,
+    marginTop: 22,
+  },
+
+  coverScoreLabel: {
+    fontFamily: MONO,
+    fontSize: 9,
+    letterSpacing: 1.4,
+    color: "#7d7d7d",
+    textTransform: "uppercase",
+    marginTop: 46,
+    marginBottom: 6,
+  },
+  coverScoreRow: { flexDirection: "row", alignItems: "flex-start", gap: 18 },
+  coverScoreNum: {
+    fontFamily: DISPLAY,
+    fontSize: 74,
+    lineHeight: 0.85,
+    color: C.white,
+    letterSpacing: -2,
+  },
+  coverScoreMax: { fontFamily: MONO, fontSize: 15, color: "#7d7d7d" },
+  coverGrade: {
+    fontFamily: DISPLAY,
+    fontSize: 30,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     letterSpacing: -0.5,
   },
-  headerUrl: {
-    fontSize: 10,
-    color: "rgba(255,255,255,0.5)",
-    marginTop: 4,
-  },
-  headerRight: {
-    alignItems: "flex-end",
-  },
-  gradeBadgeLarge: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    fontSize: 40,
-    fontFamily: FONT_BOLD,
-    letterSpacing: -1,
-    lineHeight: 1,
-  },
-  scoreRow: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginTop: 6,
-    justifyContent: "flex-end",
-  },
-  scoreNum: {
-    fontSize: 32,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-    letterSpacing: -1,
-    lineHeight: 1,
-  },
-  scoreMax: {
+  coverSummary: {
+    flex: 1,
+    fontFamily: BODY,
     fontSize: 14,
-    color: "rgba(255,255,255,0.4)",
-    marginLeft: 2,
+    lineHeight: 1.4,
+    color: "#e6e6e6",
+    paddingTop: 4,
   },
 
-  // ── Summary bar ──
-  summaryBar: {
-    backgroundColor: "#1a1a1a",
-    paddingHorizontal: 40,
-    paddingVertical: 14,
-    borderLeftWidth: 4,
-    borderLeftColor: ACCENT,
-  },
-  summaryText: {
-    fontSize: 11,
-    color: "rgba(255,255,255,0.7)",
-    lineHeight: 1.5,
-  },
-
-  // ── Stats row ──
-  statsRow: {
-    flexDirection: "row",
-    backgroundColor: BLACK,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.08)",
-  },
-  statCell: {
-    flex: 1,
-    padding: "16px 20px",
-    borderRightWidth: 1,
-    borderRightColor: "rgba(255,255,255,0.08)",
-  },
-  statCellLast: {
-    flex: 1,
-    padding: "16px 20px",
-  },
-  statVal: {
-    fontSize: 22,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-    letterSpacing: -0.8,
-    lineHeight: 1,
-    marginBottom: 3,
-  },
-  statValRed: {
-    fontSize: 22,
-    fontFamily: FONT_BOLD,
-    color: RED,
-    letterSpacing: -0.8,
-    lineHeight: 1,
-    marginBottom: 3,
-  },
-  statLabel: {
-    fontSize: 8,
-    color: "rgba(255,255,255,0.35)",
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
-  },
-
-  // ── Introduction section ──
-  introSection: {
-    padding: "28px 40px 24px 40px",
-  },
-  introTitle: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: GRAY,
-    textTransform: "uppercase",
-    letterSpacing: 1.4,
-    marginBottom: 12,
-  },
-  introPara: {
-    fontSize: 10,
-    color: "#333333",
-    lineHeight: 1.7,
-    marginBottom: 14,
-  },
-  introSubhead: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-    marginBottom: 6,
-    marginTop: 4,
-  },
-  introCategoryList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: 14,
-  },
-  introCategoryPill: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-    backgroundColor: BLACK,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    marginRight: 6,
-    marginBottom: 6,
-  },
-  introImpactRow: {
-    flexDirection: "row",
-    gap: 16,
-    marginBottom: 6,
-  },
-  introImpactItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  introImpactDot: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-  },
-  introImpactLabel: {
-    fontSize: 9,
-    color: "#444444",
-  },
-  introNote: {
-    fontSize: 9,
-    color: GRAY,
-    lineHeight: 1.6,
-    borderLeftWidth: 2,
-    borderLeftColor: ACCENT,
-    paddingLeft: 10,
-    marginTop: 4,
-  },
-
-  // ── Body (starts on page 2 via break prop) ──
-  body: {
-    padding: "24px 40px 0 40px",
-  },
-  sectionTitle: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: GRAY,
-    textTransform: "uppercase",
-    letterSpacing: 1.2,
-    marginBottom: 14,
-    marginTop: 4,
-  },
-
-  // ── Checklist overview ──
-  checklistSection: {
+  coverRule: {
+    height: 1,
+    backgroundColor: "#2b2b2b",
+    marginTop: 30,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: BORDER,
   },
-  checklistSectionHeader: {
-    backgroundColor: BLACK,
-    padding: "10px 14px",
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  checklistSectionTitle: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  checklistGrid: {
+
+  coverStatsRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    padding: "8px 0",
-  },
-  checklistItem: {
-    width: "50%",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-  },
-  // ── Checklist icons: border applied DIRECTLY to Text element ──
-  // This avoids the View centering issue that caused empty boxes
-  checklistIconPass: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: GREEN,
     borderWidth: 1,
-    borderColor: GREEN,
-    paddingHorizontal: 3,
-    paddingVertical: 2,
-    marginRight: 8,
-    textAlign: "center",
-    width: 14,
+    borderColor: "#2b2b2b",
   },
-  checklistIconFail: {
-    fontSize: 8,
-    fontFamily: FONT_BOLD,
-    color: RED,
-    borderWidth: 1,
-    borderColor: RED,
-    paddingHorizontal: 3,
-    paddingVertical: 2,
-    marginRight: 8,
-    textAlign: "center",
-    width: 14,
-  },
-  checklistItemName: {
-    fontSize: 8,
-    color: "#333333",
+  coverStatCell: {
     flex: 1,
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+    borderRightWidth: 1,
+    borderRightColor: "#2b2b2b",
   },
-
-  // ── Category block — first chunk ──
-  categoryBlock: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: BORDER,
-  },
-  // ── Category block — continuation chunks ──
-  // Has a heavier top border to signal it's a new block continuing the category
-  categoryBlockContinuation: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: BORDER,
-    borderTopWidth: 2,
-    borderTopColor: BLACK,
-  },
-  categoryHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "10px 14px",
-    backgroundColor: LIGHT_GRAY,
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  categoryHeaderContinued: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "7px 14px",
-    backgroundColor: "#f0f0f0",
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  categoryHeaderContinuedLabel: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-    color: GRAY,
-    textTransform: "uppercase",
-    letterSpacing: -0.2,
-  },
-  categoryHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  categoryStatusIcon: {
-    fontSize: 12,
-    fontFamily: FONT_BOLD,
-    width: 16,
-  },
-  categoryStatusPass: {
-    color: GREEN,
-  },
-  categoryStatusFail: {
-    color: RED,
-  },
-  gradeBadgeSmall: {
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    fontSize: 10,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-  },
-  categoryLabel: {
-    fontSize: 11,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    textTransform: "uppercase",
-    letterSpacing: -0.2,
-  },
-  categoryScore: {
-    fontSize: 10,
-    color: GRAY,
-    fontFamily: FONT_BOLD,
-  },
-
-  // ── Check row ──
-  checkRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  checkRowLast: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 11,
-  },
-  checkIcon: {
-    fontSize: 10,
-    fontFamily: FONT_BOLD,
-    width: 16,
-    marginRight: 8,
-    marginTop: 1,
-  },
-  checkIconPass: {
-    color: GREEN,
-  },
-  checkIconFail: {
-    color: RED,
-  },
-  checkContent: {
-    flex: 1,
-  },
-  checkLabel: {
-    fontSize: 10,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    letterSpacing: 0.1,
-    marginBottom: 3,
-  },
-  checkWhat: {
-    fontSize: 9,
-    color: GRAY,
-    lineHeight: 1.5,
-    marginBottom: 3,
-  },
-  checkWhy: {
-    fontSize: 9,
-    color: "#444444",
-    lineHeight: 1.5,
-    marginBottom: 3,
-    fontFamily: FONT_BOLD,
-  },
-  checkPositive: {
-    fontSize: 9,
-    color: GREEN,
-    lineHeight: 1.5,
-    marginTop: 3,
-    fontFamily: FONT_BOLD,
-  },
-  checkFix: {
-    fontSize: 9,
-    color: "#7a5c00",
-    backgroundColor: "#fff8e1",
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    marginTop: 5,
-    lineHeight: 1.5,
-    borderLeftWidth: 2,
-    borderLeftColor: ACCENT,
-  },
-  impactBadge: {
-    fontSize: 7,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    marginLeft: 8,
-    marginTop: 1,
-    alignSelf: "flex-start",
-  },
-  impactHigh: {
-    backgroundColor: "rgba(255,0,38,0.1)",
-    color: RED,
-  },
-  impactMedium: {
-    backgroundColor: "rgba(215,119,6,0.1)",
-    color: ORANGE,
-  },
-  impactLow: {
-    backgroundColor: "rgba(14,142,14,0.1)",
-    color: GREEN,
-  },
-
-  // ── Written summary ──
-  auditSummarySection: {
-    marginTop: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-  },
-  auditSummaryHeader: {
-    backgroundColor: BLACK,
-    padding: "10px 14px",
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  auditSummaryHeaderTitle: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-    color: WHITE,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  auditSummaryBody: {
-    padding: "14px 18px",
-  },
-  auditSummarySubhead: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 4,
-    marginTop: 10,
-  },
-  auditSummarySubheadFirst: {
-    fontSize: 9,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 4,
-    marginTop: 0,
-  },
-  auditSummaryText: {
-    fontSize: 9,
-    color: "#333333",
-    lineHeight: 1.6,
-  },
-
-  // ── CTA — pinned to bottom of last page ──
-  ctaAbsoluteWrapper: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  logoWrap: {
-    paddingHorizontal: 40,
-    paddingBottom: 16,
-    paddingTop: 16,
-    backgroundColor: ACCENT,
-  },
-  logoImage: {
-    width: 80,
-    height: 26,
-    objectFit: "contain",
-  },
-  ctaSection: {
-    backgroundColor: ACCENT,
-    padding: "20px 40px",
-    flexDirection: "column",
-  },
-  ctaText: {
-    fontSize: 11,
-    color: BLACK,
-    lineHeight: 1.6,
+  coverStatCellLast: { flex: 1, paddingVertical: 18, paddingHorizontal: 18 },
+  coverStatVal: {
+    fontFamily: DISPLAY,
+    fontSize: 34,
+    color: C.accent,
+    lineHeight: 0.9,
     marginBottom: 8,
   },
-  ctaLink: {
-    fontSize: 12,
-    fontFamily: FONT_BOLD,
-    color: BLACK,
-    textDecoration: "underline",
-  },
-  pdfFooter: {
-    padding: "10px 40px",
-    borderTopWidth: 1,
-    borderTopColor: BORDER,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: WHITE,
-  },
-  pdfFooterText: {
+  coverStatLabel: {
+    fontFamily: MONO,
     fontSize: 8,
-    color: "rgba(0,0,0,0.3)",
-    textTransform: "uppercase",
+    color: "#8a8a8a",
     letterSpacing: 0.6,
+    textTransform: "uppercase",
+    lineHeight: 1.4,
   },
 
-  // Grade colors
-  gradeA: { backgroundColor: GREEN },
-  gradeB: { backgroundColor: "#4a8e0e" },
-  gradeC: { backgroundColor: BLACK, color: ACCENT },
-  gradeD: { backgroundColor: ORANGE },
-  gradeF: { backgroundColor: RED },
+  coverMetaRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 26,
+  },
+  coverMeta: {
+    fontFamily: MONO,
+    fontSize: 8.5,
+    color: "#7d7d7d",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  coverMetaStrong: { color: C.accent },
+
+  // ════════ SCORECARD ════════
+  scTitle: {
+    fontFamily: DISPLAY,
+    fontSize: 30,
+    color: C.black,
+    textTransform: "uppercase",
+    letterSpacing: -0.8,
+    marginBottom: 12,
+  },
+  scIntro: {
+    fontFamily: BODY,
+    fontSize: 10.5,
+    lineHeight: 1.55,
+    color: C.textBody,
+    marginBottom: 18,
+    maxWidth: 470,
+  },
+  legendRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 22,
+  },
+  legendItem: {
+    fontFamily: MONO,
+    fontSize: 7.5,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+  },
+
+  scRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: C.cardBorder,
+    backgroundColor: C.white,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  scIndex: {
+    fontFamily: MONO,
+    fontSize: 11,
+    color: C.textMuted,
+    width: 30,
+  },
+  scLabel: {
+    fontFamily: DISPLAY,
+    fontSize: 16,
+    color: C.black,
+    textTransform: "uppercase",
+    letterSpacing: -0.3,
+    flex: 1,
+  },
+  scStatus: {
+    fontFamily: MONO,
+    fontSize: 8,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    color: C.textMuted,
+    marginRight: 16,
+  },
+  scScore: {
+    fontFamily: MONO,
+    fontSize: 11,
+    color: C.textMuted,
+    width: 56,
+    textAlign: "right",
+    marginRight: 10,
+  },
+
+  // ════════ CATEGORY PAGE ════════
+  catHeadRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  catKicker: {
+    fontFamily: MONO,
+    fontSize: 9,
+    letterSpacing: 1.2,
+    color: C.textMuted,
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  catTitle: {
+    fontFamily: DISPLAY,
+    fontSize: 34,
+    color: C.black,
+    textTransform: "uppercase",
+    letterSpacing: -1,
+    lineHeight: 0.95,
+  },
+  catTitleCont: {
+    fontFamily: MONO,
+    fontSize: 11,
+    color: C.textMuted,
+    letterSpacing: 1,
+  },
+  catSubtitle: {
+    fontFamily: BODY,
+    fontSize: 11,
+    color: C.textMuted,
+    marginTop: 8,
+    maxWidth: 360,
+    lineHeight: 1.4,
+  },
+  catScoreWrap: { flexDirection: "row", alignItems: "center", gap: 8 },
+  catScoreNum: {
+    fontFamily: DISPLAY,
+    fontSize: 24,
+    color: C.black,
+    letterSpacing: -0.5,
+  },
+  catScoreMax: { fontFamily: MONO, fontSize: 10, color: C.textMuted },
+  catGradeBadge: {
+    fontFamily: DISPLAY,
+    fontSize: 15,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    marginLeft: 4,
+  },
+  catRule: {
+    height: 3,
+    backgroundColor: C.black,
+    marginTop: 16,
+    marginBottom: 22,
+  },
+
+  // check card
+  card: {
+    borderWidth: 1,
+    borderColor: C.cardBorder,
+    backgroundColor: C.white,
+    marginBottom: 14,
+    flexDirection: "row",
+  },
+  cardAccent: { width: 4 },
+  cardBody: { flex: 1, padding: 14 },
+  cardTopRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 7,
+  },
+  cardTopLeft: { flexDirection: "row", alignItems: "center", gap: 9, flex: 1 },
+  cardLabel: {
+    fontFamily: MONO,
+    fontSize: 10.5,
+    fontWeight: 700,
+    color: C.black,
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
+  },
+  cardWhy: {
+    fontFamily: BODY,
+    fontSize: 9.5,
+    lineHeight: 1.5,
+    color: C.textMuted,
+  },
+
+  impactBadge: {
+    fontFamily: MONO,
+    fontSize: 7,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+  },
+  impactHigh: { backgroundColor: C.red, color: C.white },
+  impactMedium: { backgroundColor: C.accent, color: C.black },
+  impactLow: { backgroundColor: "#e5e5e5", color: "#555" },
+
+  // fix box (amber)
+  fixBox: {
+    backgroundColor: C.accent,
+    paddingVertical: 11,
+    paddingHorizontal: 13,
+    marginTop: 9,
+  },
+  fixLabel: {
+    fontFamily: MONO,
+    fontSize: 8,
+    fontWeight: 700,
+    color: C.black,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  fixText: { fontFamily: BODY, fontSize: 9.5, lineHeight: 1.5, color: C.black },
+
+  // passing box (green tint)
+  passBox: {
+    backgroundColor: C.passBg,
+    paddingVertical: 11,
+    paddingHorizontal: 13,
+    marginTop: 9,
+  },
+  passLabel: {
+    fontFamily: MONO,
+    fontSize: 8,
+    fontWeight: 700,
+    color: C.passInk,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  passText: {
+    fontFamily: BODY,
+    fontSize: 9.5,
+    lineHeight: 1.5,
+    color: C.textBody,
+  },
+
+  // ════════ ROADMAP ════════
+  rmTwoCol: { flexDirection: "row", gap: 14, marginBottom: 20 },
+  rmCol: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: C.cardBorder,
+    backgroundColor: C.white,
+    padding: 16,
+  },
+  rmColHead: {
+    fontFamily: MONO,
+    fontSize: 8.5,
+    fontWeight: 700,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: C.black,
+    marginBottom: 8,
+  },
+  rmColText: {
+    fontFamily: BODY,
+    fontSize: 10,
+    lineHeight: 1.55,
+    color: C.textBody,
+  },
+  rmStep: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 14,
+    alignItems: "flex-start",
+  },
+  rmStepNum: {
+    fontFamily: DISPLAY,
+    fontSize: 22,
+    color: C.accent,
+    width: 26,
+    lineHeight: 1,
+  },
+  rmStepTitle: {
+    fontFamily: MONO,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+    color: C.black,
+    marginBottom: 3,
+  },
+  rmStepText: {
+    fontFamily: BODY,
+    fontSize: 9.5,
+    lineHeight: 1.5,
+    color: C.textBody,
+  },
+  rmImpact: {
+    backgroundColor: C.black,
+    padding: 16,
+    marginTop: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: C.accent,
+  },
+  rmImpactLabel: {
+    fontFamily: MONO,
+    fontSize: 8,
+    fontWeight: 700,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: C.accent,
+    marginBottom: 7,
+  },
+  rmImpactText: {
+    fontFamily: BODY,
+    fontSize: 10,
+    lineHeight: 1.6,
+    color: "#e6e6e6",
+  },
+
+  // ════════ CLOSING ════════
+  closePad: { padding: 44, height: "100%", position: "relative" },
+  closeH: {
+    fontFamily: DISPLAY,
+    fontSize: 58,
+    lineHeight: 0.95,
+    letterSpacing: -1.2,
+    color: C.white,
+    textTransform: "uppercase",
+    marginTop: 30,
+  },
+  closeHGold: { color: C.accent },
+  closeBody: {
+    fontFamily: BODY,
+    fontSize: 13,
+    lineHeight: 1.55,
+    color: "#d6d6d6",
+    maxWidth: 430,
+    marginTop: 26,
+  },
+  ctaBtn: {
+    backgroundColor: C.accent,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 20,
+    paddingHorizontal: 22,
+    marginTop: 30,
+    width: 360,
+  },
+  ctaBtnText: {
+    fontFamily: MONO,
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: C.black,
+  },
+  ctaArrow: {
+    width: 26,
+    height: 26,
+    backgroundColor: C.black,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeMetaRow: {
+    position: "absolute",
+    bottom: 44,
+    left: 44,
+    right: 44,
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderTopColor: "#2b2b2b",
+    borderBottomWidth: 1,
+    borderBottomColor: "#2b2b2b",
+  },
+  closeMetaCell: {
+    flex: 1,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    borderRightWidth: 1,
+    borderRightColor: "#2b2b2b",
+  },
+  closeMetaCellLast: { flex: 1, paddingVertical: 18, paddingHorizontal: 16 },
+  closeMetaLabel: {
+    fontFamily: MONO,
+    fontSize: 8,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    color: "#7d7d7d",
+    marginBottom: 6,
+  },
+  closeMetaVal: { fontFamily: MONO, fontSize: 10, color: C.white },
+
+  // grade badge colors
+  gradeA: { backgroundColor: C.green, color: C.white },
+  gradeB: { backgroundColor: "#4a8e0e", color: C.white },
+  gradeC: { backgroundColor: C.accent, color: C.black },
+  gradeD: { backgroundColor: C.orange, color: C.white },
+  gradeF: { backgroundColor: C.red, color: C.white },
 });

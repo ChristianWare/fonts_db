@@ -472,7 +472,7 @@ Respond ONLY with a valid JSON object where each key is the check id and each va
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
         max_tokens: 1200,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -517,8 +517,10 @@ function buildCategories(
     | number
     | undefined;
   const mobileScore =
-    ((psData?.categories as Record<string, Record<string, unknown>>)
-      ?.performance?.score as number | undefined) ?? null;
+    ((
+      (psData?.lighthouseResult as Record<string, unknown>)
+        ?.categories as Record<string, Record<string, unknown>>
+    )?.performance?.score as number | undefined) ?? null;
 
   const perfChecks: Check[] = [
     {

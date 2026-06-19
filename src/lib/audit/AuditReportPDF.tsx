@@ -1,9 +1,22 @@
 /* eslint-disable jsx-a11y/alt-text */
 // lib/audit/AuditReportPDF.tsx
-import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
-import { auditPdfStyles as s } from "./AuditReportPDF.styles";
-// import LogoImg from "../../../public/logos/fnf_logo_black.png";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  Image,
+  Svg,
+  Path,
+  Rect,
+  StyleSheet,
+} from "@react-pdf/renderer";
+import { s, C } from "./AuditReportPDF.styles";
+import { registerAuditFonts } from "./fonts";
 
+registerAuditFonts();
+
+// ── Types ──
 interface Check {
   id: string;
   label: string;
@@ -12,7 +25,6 @@ interface Check {
   fix?: string;
   impact: "high" | "medium" | "low";
 }
-
 interface Category {
   id: string;
   label: string;
@@ -20,7 +32,19 @@ interface Category {
   score: number;
   checks: Check[];
 }
-
+interface DesignSwatch {
+  hex: string;
+  role: string; // e.g. "Primary surface", "Accent", "Text"
+}
+interface DesignRead {
+  screenshot?: string; // hosted URL or data URL of the homepage screenshot
+  palette: DesignSwatch[]; // 4–6 swatches, most prominent first
+  headingFont: string;
+  bodyFont: string;
+  fontNote: string; // one-line read on the typography
+  readToday: string; // "On the site today" paragraph
+  premiumDirection: string; // "A premium direction" paragraph
+}
 interface AuditReportPDFProps {
   url: string;
   score: number;
@@ -31,315 +55,450 @@ interface AuditReportPDFProps {
   estimatedLostBookings: number;
   categories: Category[];
   firstName?: string;
+  /** Optional: only set when you have a date string; defaults to today */
+  reportDate?: string;
+  /** Optional: the auto design read (screenshot → Claude vision). Page renders only when present. */
+  design?: DesignRead;
 }
 
-// ── Check descriptions ────────────────────────────────────────────────────────
+// ── Check copy (the "why it matters" + passing lines) ──
 const CHECK_INFO: Record<
   string,
-  { name: string; what: string; why: string; positive: string }
+  { name: string; why: string; positive: string }
 > = {
   speed: {
     name: "Page Speed Score",
-    what: "Google scores your website's loading speed on mobile devices from 0 to 100.",
-    why: "Why it matters: Most limo bookings happen on phones. A slow site causes visitors to leave before they ever reach your booking form — typically within 3 seconds.",
+    why: "Most limo bookings happen on a phone. A slow site loses the visitor within about three seconds — before they ever reach your booking form.",
     positive:
       "Your site loads fast on mobile — visitors stay longer and are more likely to complete a booking.",
   },
   fcp: {
     name: "First Contentful Paint",
-    what: "The time it takes for the first piece of content — text, image, or logo — to appear on screen after someone opens your site.",
-    why: "Why it matters: If nothing loads within a second or two, visitors assume the site is broken and hit the back button.",
+    why: "If nothing appears in the first second or two, visitors assume the site is broken and hit the back button.",
     positive:
-      "Your content appears quickly on load — visitors see your site right away, which reduces bounce rate.",
+      "Your content appears quickly on load, which reduces bounce rate.",
   },
   lcp: {
     name: "Largest Contentful Paint",
-    what: "The time it takes for the main content on your page — typically your hero image or headline — to fully load.",
-    why: "Why it matters: This is Google's top performance metric and directly affects where you rank in search results.",
+    why: "This is Google's top performance metric and it directly affects where you rank in search results.",
     positive:
-      "Your main content loads in a reasonable time — this positively affects your Google search rankings.",
+      "Your main content renders in a reasonable time, which helps your rankings.",
   },
   form: {
     name: "Online Booking Form",
-    what: "Whether your site has a form or button that lets visitors request or complete a booking online without calling.",
-    why: "Why it matters: Operators without online booking lose every visitor who won't pick up a phone — which is the majority of modern customers.",
+    why: "Operators without online booking lose every visitor who won't pick up a phone — the majority of modern customers.",
     positive:
-      "You have online booking capability — visitors can take action without calling, which significantly increases conversion.",
+      "Visitors can act without calling, a real conversion advantage over operators who force a phone call first.",
   },
   quote: {
     name: "Instant Quote",
-    what: "Whether visitors can get a price estimate directly on your site without having to call first.",
-    why: "Why it matters: People make booking decisions based on price. Without a visible number, most visitors move on to a competitor who shows one.",
+    why: "People decide based on price. With no visible number, most visitors move on to a competitor who shows one.",
     positive:
-      "You offer pricing or quoting on your site — this gives visitors the confidence to book rather than shop around.",
+      "You surface pricing or quoting on the site, giving visitors the confidence to book rather than shop around.",
   },
   direct: {
     name: "Direct Booking",
-    what: "Whether your reservations go directly to you or are processed through a third-party platform that charges per-booking fees.",
-    why: "Why it matters: Third-party platforms take a cut of every ride. Over the course of a year, that adds up to thousands of dollars leaving your business.",
+    why: "Third-party platforms take a cut of every ride — over a year that's thousands of dollars leaving the business.",
     positive:
-      "Your bookings appear to go directly to you — you're keeping 100% of each ride instead of paying platform fees.",
+      "Your reservations go directly to you. You're keeping 100% of every ride instead of paying platform fees.",
   },
   mobilebook: {
     name: "Mobile Booking Experience",
-    what: "Whether the booking process works properly and looks good on a smartphone screen.",
-    why: "Why it matters: Over 70% of transportation searches happen on mobile. A booking form that doesn't work on phones loses most of your potential customers.",
+    why: "Over 70% of transportation searches happen on mobile. A form that breaks on phones loses most potential customers.",
     positive:
-      "Your booking functionality is accessible on mobile — you're capturing the majority of visitors browsing on their phones.",
+      "Your booking flow works on a phone screen, so you're capturing the majority of mobile visitors.",
   },
   title: {
     name: "Page Title",
-    what: "The title that appears in the browser tab and as the headline in Google search results.",
-    why: "Why it matters: Without a page title, Google has no idea what your page is about and will not rank it for any relevant searches.",
+    why: "Without a title tag, Google has no idea what your page is about and won't rank it for anything.",
     positive:
-      "Your page has a title tag — a foundational SEO requirement that helps Google understand and rank your site.",
+      "Your page has a title tag — the foundational SEO signal Google needs to understand and rank you.",
   },
   meta: {
     name: "Meta Description",
-    what: "The short description that appears under your business name in Google search results.",
-    why: "Why it matters: A specific, compelling meta description increases the number of people who click your listing over a competitor's.",
+    why: "A specific, compelling description increases how many people click your listing over a competitor's.",
     positive:
-      "You have a meta description — this helps your Google listing stand out and encourages people to click through.",
+      "Present — this helps your Google listing stand out and earns more click-throughs.",
   },
   h1: {
     name: "H1 Heading",
-    what: "The primary heading on your homepage — the first large text a visitor reads when they arrive.",
-    why: "Why it matters: Google uses the H1 tag to understand what your page is about. It is one of the most basic and important SEO signals on any webpage.",
+    why: "Google uses the H1 to understand the page. It's one of the most basic, important on-page signals.",
     positive:
-      "Your page has an H1 heading — this tells both visitors and Google clearly what your page is about.",
+      "Your page has a clear H1 that tells both visitors and Google what it's about.",
   },
   traffic: {
     name: "Organic Keyword Traffic",
-    what: "An estimate of how many people find your site through Google each month without paid advertising.",
-    why: "Why it matters: Organic traffic is free, compounds over time, and is the most valuable long-term source of bookings for any transportation business.",
+    why: "Organic traffic is free, compounds over time, and is the most valuable long-term source of bookings.",
     positive:
-      "Your site is getting meaningful organic traffic from Google — people are finding you without paid ads, which means your SEO is working.",
+      "Your site is getting meaningful organic traffic — people are finding you without paid ads.",
   },
   geo: {
     name: "Location Keywords",
-    what: "Whether your homepage includes the name of the city or region you serve.",
-    why: "Why it matters: Searches like 'black car service Phoenix' are your highest-converting traffic source. Without location keywords, you will not rank for them.",
+    why: "Searches like \u201cblack car service [your city]\u201d are your highest-converting traffic. Without the location, you can't rank for them.",
     positive:
-      "Your homepage includes location keywords — this helps you appear in local searches from potential clients in your service area.",
+      "Your homepage includes location keywords, which helps you appear in local searches.",
   },
   sitemap: {
     name: "XML Sitemap",
-    what: "A file at yoursite.com/sitemap.xml that lists every page on your website so search engines can find and index them all.",
-    why: "Why it matters: Without a sitemap, Google may miss pages on your site entirely — meaning those pages will never appear in search results.",
+    why: "Without a sitemap, Google can miss pages entirely — meaning they never appear in search.",
     positive:
-      "Your site has an XML sitemap — Google can find and index all of your pages efficiently.",
+      "Present — Google can find and index all of your pages efficiently.",
   },
   robots: {
     name: "Robots.txt File",
-    what: "A file at yoursite.com/robots.txt that tells search engine crawlers which pages they are allowed to visit.",
-    why: "Why it matters: A missing or misconfigured robots.txt can accidentally block Google from crawling your entire site.",
+    why: "A misconfigured robots.txt can accidentally block Google from crawling your whole site.",
     positive:
-      "Your robots.txt file is present — search engine crawlers can navigate your site correctly.",
+      "Present and correctly configured — crawlers can navigate your site.",
   },
   ssl: {
     name: "SSL Certificate (HTTPS)",
-    what: "The security certificate that displays the padlock icon in your browser and places https:// in your web address.",
-    why: "Why it matters: Google penalizes sites without SSL. Visitors who see a 'Not Secure' warning in their browser will leave immediately.",
+    why: "Google penalizes sites without SSL, and a \u201cNot Secure\u201d warning makes visitors leave immediately.",
     positive:
-      "Your site is secured with HTTPS — visitors see a padlock in their browser, which builds immediate trust.",
+      "Secured with HTTPS — visitors see the padlock, which builds immediate trust.",
   },
   phone: {
     name: "Phone Number Visible",
-    what: "Whether a phone number is clearly displayed on your homepage without any scrolling required.",
-    why: "Why it matters: Corporate clients and first-time bookers often want to call before committing. A hard-to-find phone number loses those customers.",
+    why: "Corporate clients and first-time bookers often want to call first. A hidden number loses them.",
     positive:
-      "Your phone number is visible on the page — corporate clients and first-time bookers can reach you immediately.",
+      "Your phone number is visible without scrolling — bookers can reach you instantly.",
   },
   cta: {
     name: "Call to Action (CTA)",
-    what: "A prominent button or link that tells visitors exactly what to do next — such as Book Now, Get a Quote, or Reserve.",
-    why: "Why it matters: Without a clear next step visible above the fold, visitors leave without taking any action regardless of how good your service is.",
+    why: "With no clear next step above the fold, visitors leave without acting no matter how good the service is.",
     positive:
-      "You have a clear call to action on your page — visitors know exactly what to do next, which drives bookings.",
+      "You have a clear booking call-to-action — visitors know exactly what to do next.",
   },
   reviews: {
-    name: "Reviews and Social Proof",
-    what: "Whether your site displays testimonials, star ratings, or customer reviews from real clients.",
-    why: "Why it matters: 84% of people trust online reviews as much as a personal recommendation. Operators without visible reviews lose trust before a visitor reads anything.",
+    name: "Reviews & Social Proof",
+    why: "84% of people trust online reviews as much as a personal recommendation.",
     positive:
-      "You have reviews or testimonials visible — this builds immediate credibility with new visitors who don't know your business yet.",
+      "Testimonials are visible, which builds credibility with visitors who don't know you yet.",
   },
   fleet: {
-    name: "Fleet or Vehicle Showcase",
-    what: "A dedicated section or page showing photos and details of the vehicles you offer.",
-    why: "Why it matters: Clients want to see what they are booking before they commit. A fleet page builds confidence and directly increases conversion rates.",
+    name: "Fleet / Vehicle Showcase",
+    why: "Clients want to see what they're booking. A fleet section builds confidence and lifts conversion.",
     positive:
-      "You showcase your fleet or vehicles — clients can see what they're booking, which builds confidence and increases conversions.",
+      "You showcase your vehicles, so clients can see what they're booking before they commit.",
   },
   platform: {
     name: "Site Platform",
-    what: "The technology or content management system used to build your website — such as WordPress, Wix, Squarespace, or a custom framework.",
-    why: "Why it matters: Some platforms severely limit your ability to customize booking flows, optimize page speed, and control your SEO — all of which cost you bookings.",
+    why: "Some platforms limit your ability to customize booking flows, page speed, and SEO.",
     positive:
-      "Your site is built on a capable platform — this gives you the technical flexibility to optimize your booking experience and SEO.",
+      "Built on a capable platform — you have the flexibility to optimize the booking experience and SEO.",
   },
   bookingplatform: {
     name: "Third-Party Booking Platform",
-    what: "Whether your site uses an external service to handle reservations rather than taking bookings directly.",
-    why: "Why it matters: Third-party booking platforms charge a fee on every single booking. Over a year, this adds up to thousands of dollars that could stay in your business.",
+    why: "Third-party processors charge a fee on every booking — thousands a year that could stay in your business.",
     positive:
-      "No third-party booking platform was detected — you appear to be taking direct bookings and keeping 100% of your revenue.",
+      "None detected — you appear to take direct bookings and keep 100% of your revenue.",
   },
   analytics: {
     name: "Web Analytics",
-    what: "Tools installed on your site that track who visits, where they came from, and what actions they take.",
-    why: "Why it matters: Without analytics, you have no way to know which marketing channels are working, where visitors drop off, or how many people leave without booking.",
+    why: "Without analytics you can't see which channels work, where visitors drop off, or how many leave without booking.",
     positive:
-      "You have web analytics installed — you can see where your visitors come from and how they behave, giving you data to make smart improvements.",
+      "Analytics is installed — you can see where visitors come from and how they behave.",
   },
   schema: {
     name: "Schema Markup",
-    what: "Structured data code added to your site that helps Google understand your business type, location, and services.",
-    why: "Why it matters: Schema markup directly improves how your business appears in local search results and can enable rich results like star ratings within Google.",
+    why: "Schema improves how you appear in local search and can enable rich results like star ratings.",
     positive:
-      "Your site has schema markup — Google can better understand your business type and location, which helps you appear in local searches.",
+      "Present — Google can better understand your business type and location for local search.",
   },
   sociallinks: {
     name: "Social Media Links",
-    what: "Links on your website pointing to your business profiles on platforms like Instagram, Facebook, or LinkedIn.",
-    why: "Why it matters: Social links give potential clients additional ways to verify your legitimacy and see your work before they commit to a booking.",
+    why: "Social links give clients another way to verify you're legitimate before they book.",
     positive:
-      "You link to your social media profiles — this gives visitors additional ways to verify your business and build trust.",
+      "You link to active social profiles — another trust signal for visitors.",
   },
   favicon: {
     name: "Favicon",
-    what: "The small icon that appears in the browser tab next to your website name when someone has your site open.",
-    why: "Why it matters: A missing favicon signals an unfinished site. It erodes trust before a visitor has read a single word.",
+    why: "A missing favicon signals an unfinished site and erodes trust before a word is read.",
     positive:
-      "Your site has a favicon — this small detail signals a polished, professionally maintained website.",
+      "Present — a small detail that signals a polished, maintained site.",
   },
   copyright: {
     name: "Copyright Year",
-    what: "The year displayed in the copyright notice in your website footer.",
-    why: "Why it matters: An outdated copyright year signals to both visitors and search engines that the site is not being actively maintained.",
+    why: "An outdated year tells visitors and search engines the site isn't actively maintained.",
     positive:
-      "Your copyright year is current — this signals to visitors and Google that your site is actively maintained.",
+      "Current — signals to visitors and Google that your site is actively maintained.",
   },
   viewport: {
     name: "Mobile Viewport",
-    what: "A meta tag that tells browsers how to scale and display your website correctly on phones and tablets.",
-    why: "Why it matters: Without this tag, your site renders as a shrunken desktop version on mobile devices — making text tiny, buttons untappable, and forms impossible to fill out.",
-    positive:
-      "Your site has a mobile viewport tag — it is configured to display correctly across phones and tablets, giving mobile visitors a proper experience.",
+    why: "Without this tag, your site renders as a shrunken desktop version — tiny text, untappable buttons.",
+    positive: "Configured to display correctly across phones and tablets.",
   },
   heroimages: {
     name: "Real Homepage Imagery",
-    what: "Whether your homepage features actual photographs — of your fleet, drivers, or service — rather than just text, icons, or no images at all.",
-    why: "Why it matters: Premium transportation clients make emotional decisions before they book. A homepage with no real photography signals that there is no real brand behind the service.",
+    why: "Premium clients make emotional decisions before they book. No real photography signals no real brand.",
     positive:
-      "Your homepage has real imagery — visual content makes a strong first impression and helps clients connect with your brand before they ever call or book.",
+      "Your homepage uses real imagery, which makes a strong first impression.",
   },
   stockphotos: {
     name: "Original Photography",
-    what: "Whether your site uses original photos of your actual operation or generic stock images from services like Shutterstock or Getty Images.",
-    why: "Why it matters: Clients booking a premium black car service want to see your actual vehicles and team. Stock photos of anonymous sedans signal that you have no real brand identity worth investing in.",
+    why: "Clients booking premium black car want to see your actual vehicles, not anonymous stock sedans.",
     positive:
-      "No stock photo services detected — your imagery appears to be original, which builds authenticity and gives clients a genuine sense of what your operation looks like.",
+      "No stock-photo services detected — your imagery reads as authentic and specific.",
   },
   defaulttheme: {
     name: "Custom Design",
-    what: "Whether your site uses a default, out-of-the-box theme or has been designed and customized to reflect your specific brand.",
-    why: "Why it matters: Default WordPress and website builder themes make your site look identical to thousands of other small businesses. For a premium service, your website should visually communicate the quality of your offering.",
+    why: "Default themes make you look identical to thousands of small businesses. Premium service needs a premium look.",
     positive:
-      "Your site appears to use a custom or heavily customized design — this helps you stand apart from competitors running uncustomized templates.",
+      "Your site appears custom or heavily customized, which helps you stand apart from template sites.",
   },
   fontoverload: {
     name: "Typography Discipline",
-    what: "The number of different font families your homepage loads. Well-designed sites typically use one or two fonts consistently throughout.",
-    why: "Why it matters: Loading multiple font families slows your page and creates a visually inconsistent experience that feels DIY and amateurish to discerning corporate clients.",
+    why: "Loading many font families slows the page and feels DIY to discerning corporate clients.",
     positive:
-      "Your typography appears clean and disciplined — a focused font palette contributes to a professional, cohesive visual identity across your site.",
+      "A focused, disciplined font count reads professional and cohesive across the site.",
   },
   inlinestyles: {
     name: "Design System Quality",
-    what: "Whether your site uses a consistent design system or relies heavily on inline styles — a pattern common in template-built and page-builder sites.",
-    why: "Why it matters: Excessive inline styles indicate a site assembled without design discipline, which typically results in visual inconsistency across pages and a poor experience on different screen sizes.",
+    why: "Excessive inline styles signal a site assembled without design discipline.",
     positive:
-      "Your site's code structure looks clean with no excessive inline styling — this suggests a more purposeful, well-built design system underneath.",
+      "Clean code structure with no excessive inline styling — a purposeful, well-built foundation.",
   },
 };
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function gradeStyle(grade: string) {
-  switch (grade) {
-    case "A":
-      return s.gradeA;
-    case "B":
-      return s.gradeB;
-    case "C":
-      return s.gradeC;
-    case "D":
-      return s.gradeD;
-    default:
-      return s.gradeF;
-  }
+// ── Helpers ──
+function gradeStyle(g: string) {
+  return g === "A"
+    ? s.gradeA
+    : g === "B"
+      ? s.gradeB
+      : g === "C"
+        ? s.gradeC
+        : g === "D"
+          ? s.gradeD
+          : s.gradeF;
+}
+function impactStyle(i: string) {
+  return i === "high"
+    ? s.impactHigh
+    : i === "medium"
+      ? s.impactMedium
+      : s.impactLow;
+}
+function info(chk: Check) {
+  return (
+    CHECK_INFO[chk.id] ?? {
+      name: chk.label,
+      why: chk.message,
+      positive: chk.message,
+    }
+  );
 }
 
-function impactStyle(impact: string) {
-  if (impact === "high") return s.impactHigh;
-  if (impact === "medium") return s.impactMedium;
-  return s.impactLow;
+// ── check / cross marks ──
+function Mark({ passed }: { passed: boolean }) {
+  return (
+    <Svg width={15} height={15} viewBox='0 0 15 15'>
+      <Rect
+        x={0}
+        y={0}
+        width={15}
+        height={15}
+        rx={2}
+        fill={passed ? C.green : C.red}
+      />
+      {passed ? (
+        <Path
+          d='M3.5 7.8 L6.2 10.5 L11.5 4.5'
+          stroke='#fff'
+          strokeWidth={1.8}
+          fill='none'
+        />
+      ) : (
+        <Path
+          d='M4 4 L11 11 M11 4 L4 11'
+          stroke='#fff'
+          strokeWidth={1.8}
+          fill='none'
+        />
+      )}
+    </Svg>
+  );
 }
 
-// ── Written summary ───────────────────────────────────────────────────────────
-function buildWrittenSummary(categories: Category[], domain: string) {
-  const allChecks = categories.flatMap((c) => c.checks);
-  const failingHigh = allChecks.filter((c) => !c.passed && c.impact === "high");
-  const passingHigh = allChecks.filter((c) => c.passed && c.impact === "high");
-  const weakCategories = [...categories]
-    .filter((c) => c.score < 75)
-    .sort((a, b) => a.score - b.score);
-  const strongCategories = categories.filter((c) => c.score >= 75);
-  const strengthNames = passingHigh
-    .slice(0, 3)
-    .map((c) => (CHECK_INFO[c.id]?.name ?? c.label).toLowerCase());
-  const weakNames = failingHigh
-    .slice(0, 3)
-    .map((c) => (CHECK_INFO[c.id]?.name ?? c.label).toLowerCase());
-  const weakestCat = weakCategories[0];
-  const strongCatNames = strongCategories.map((c) => c.label.toLowerCase());
-
-  let strengths = "";
-  if (strengthNames.length >= 2) {
-    strengths = `${domain} has a solid foundation in several key areas. ${strengthNames
-      .slice(0, 2)
-      .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
-      .join(
-        " and ",
-      )} are working in your favor — these are the signals that build trust with corporate and repeat clients and support long-term organic growth. ${strongCatNames.length > 0 ? `Your ${strongCatNames[0]} category scored particularly well, which puts you ahead of many operators in this space.` : ""}`;
-  } else if (strengthNames.length === 1) {
-    strengths = `${domain} performs well in ${strengthNames[0]}. This gives you a competitive foundation to build from. The goal now is to shore up the weaker areas so your entire site is working as hard as your best-performing section.`;
-  } else {
-    strengths = `This audit identified significant opportunities for improvement across all key areas of your site. The good news — every issue found in this report has a clear, documented fix, and none of them require rebuilding your site from scratch.`;
-  }
-
-  let improvements = "";
-  if (weakNames.length >= 2) {
-    improvements = `The highest-priority improvements are ${weakNames[0]} and ${weakNames[1]}${weakNames.length >= 3 ? `, along with ${weakNames[2]}` : ""}. These are high-impact issues that are actively costing you bookings every week. Each has a specific, actionable fix outlined in this report. Addressing them in order — starting with the highest-impact items first — will produce the most significant results in the shortest time.`;
-  } else if (weakNames.length === 1) {
-    improvements = `The top priority improvement is ${weakNames[0]}. This is a high-impact issue with a clear fix outlined in this report. Addressing it quickly should produce a noticeable improvement in your booking conversion rate.`;
-  } else {
-    improvements = `No critical high-impact issues were found. Focus on the medium-priority improvements identified in this report to continue optimizing your site and widening your competitive lead.`;
-  }
-
-  let impact = "";
-  if (weakestCat && failingHigh.length > 0) {
-    impact = `Based on the ${failingHigh.length} high-impact failing check${failingHigh.length !== 1 ? "s" : ""} identified in this report, your site is estimated to be losing approximately ${failingHigh.length * 3} potential bookings per month. Your ${weakestCat.label.toLowerCase()} category scored ${weakestCat.score}/100 and represents your single biggest opportunity for improvement. A focused effort on the fixes outlined in this report could meaningfully increase your monthly booking volume within 60 to 90 days without any additional ad spend.`;
-  } else if (failingHigh.length === 0) {
-    impact = `Your site is in strong shape with no critical high-impact issues identified. The remaining improvements in this report are refinements that will help you maintain your competitive advantage and incrementally increase conversions over time.`;
-  } else {
-    impact = `Addressing the improvements outlined in this report has the potential to meaningfully increase your monthly booking volume. The fixes are targeted and specific — you do not need to rebuild your site. Even resolving two or three of the highest-impact items could produce measurable results within 30 to 60 days.`;
-  }
-
-  return { strengths, improvements, impact };
+function CornerDots({ color }: { color: string }) {
+  return (
+    <>
+      <View style={[s.dot, s.dotTL, { backgroundColor: color }]} />
+      <View style={[s.dot, s.dotTR, { backgroundColor: color }]} />
+      <View style={[s.dot, s.dotBL, { backgroundColor: color }]} />
+      <View style={[s.dot, s.dotBR, { backgroundColor: color }]} />
+    </>
+  );
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+function RunningFooter({ domain }: { domain: string }) {
+  return (
+    <View style={s.footer} fixed>
+      <Text style={s.footerText}>{domain}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        <Text style={s.footerText}>Fonts &amp; Footers — Website Audit</Text>
+      </View>
+    </View>
+  );
+}
+
+// ── Subtitle per category (data-driven) ──
+function catSubtitle(cat: Category, lowestId: string): string {
+  if (cat.score === 100)
+    return "Clean sweep — every check in this category is passing. You're ahead here.";
+  if (cat.id === lowestId)
+    return "Your single biggest opportunity. This is where bookings are quietly bleeding out.";
+  if (cat.score < 60)
+    return "Some high-impact gaps here are actively costing you bookings.";
+  return "The fundamentals are in place, with a few gaps worth closing.";
+}
+
+// ════════════════════════════════════════════════════════════
+// ── Design-read page (auto "does it look premium?") ──
+const dr = StyleSheet.create({
+  shot: {
+    width: "100%",
+    height: 150,
+    objectFit: "cover",
+    objectPosition: "top",
+  },
+  shotFrame: { borderWidth: 1, borderColor: C.cardBorder, marginBottom: 22 },
+  sectionLabel: {
+    fontFamily: "Mono",
+    fontSize: 10,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    color: C.textMuted,
+    marginBottom: 10,
+  },
+  swatchRow: { flexDirection: "row", gap: 8, marginBottom: 26 },
+  swatch: { flex: 1 },
+  chip: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: C.cardBorder,
+    marginBottom: 6,
+  },
+  hex: {
+    fontFamily: "Mono",
+    fontSize: 8.5,
+    color: C.textBody,
+    letterSpacing: 0.3,
+  },
+  role: {
+    fontFamily: "Body",
+    fontSize: 8,
+    color: C.textMuted,
+    marginTop: 2,
+    lineHeight: 1.3,
+  },
+  typeRow: { flexDirection: "row", gap: 48, marginBottom: 10 },
+  typeKey: {
+    fontFamily: "Mono",
+    fontSize: 8.5,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: C.textMuted,
+    marginBottom: 3,
+  },
+  typeVal: {
+    fontFamily: "Display",
+    fontSize: 22,
+    color: C.black,
+    textTransform: "uppercase",
+  },
+  fontNote: {
+    fontFamily: "Body",
+    fontSize: 9.5,
+    lineHeight: 1.5,
+    color: C.textMuted,
+    marginBottom: 26,
+    maxWidth: 470,
+  },
+  readGrid: { flexDirection: "row", gap: 14 },
+  readBlock: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: C.cardBorder,
+    padding: 16,
+    backgroundColor: C.white,
+  },
+  readBlockAmber: { backgroundColor: C.accent, borderColor: C.goldLine },
+  readHead: {
+    fontFamily: "Mono",
+    fontSize: 9,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: C.black,
+    marginBottom: 8,
+  },
+  readText: {
+    fontFamily: "Body",
+    fontSize: 9.5,
+    lineHeight: 1.5,
+    color: C.textBody,
+  },
+});
+
+function DesignReadPage({
+  design,
+  domain,
+}: {
+  design: DesignRead;
+  domain: string;
+}) {
+  return (
+    <Page size='A4' style={s.pageLight}>
+      <CornerDots color={C.black} />
+      <Text style={s.catKicker}>Brand &amp; Design — A Closer Look</Text>
+      <Text style={s.scTitle}>Does It Look Premium?</Text>
+      <View style={{ height: 16 }} />
+
+      {design.screenshot ? (
+        <View style={dr.shotFrame}>
+          <Image src={design.screenshot} style={dr.shot} />
+        </View>
+      ) : null}
+
+      <Text style={dr.sectionLabel}>The Palette On Your Site</Text>
+      <View style={dr.swatchRow}>
+        {design.palette.slice(0, 6).map((sw, i) => (
+          <View key={i} style={dr.swatch}>
+            <View style={[dr.chip, { backgroundColor: sw.hex }]} />
+            <Text style={dr.hex}>{sw.hex.toUpperCase()}</Text>
+            <Text style={dr.role}>{sw.role}</Text>
+          </View>
+        ))}
+      </View>
+
+      <Text style={dr.sectionLabel}>The Type</Text>
+      <View style={dr.typeRow}>
+        <View>
+          <Text style={dr.typeKey}>Headings</Text>
+          <Text style={dr.typeVal}>{design.headingFont}</Text>
+        </View>
+        <View>
+          <Text style={dr.typeKey}>Body</Text>
+          <Text style={dr.typeVal}>{design.bodyFont}</Text>
+        </View>
+      </View>
+      <Text style={dr.fontNote}>{design.fontNote}</Text>
+
+      <View style={dr.readGrid}>
+        <View style={dr.readBlock}>
+          <Text style={dr.readHead}>On The Site Today</Text>
+          <Text style={dr.readText}>{design.readToday}</Text>
+        </View>
+        <View style={[dr.readBlock, dr.readBlockAmber]}>
+          <Text style={dr.readHead}>A Premium Direction</Text>
+          <Text style={dr.readText}>{design.premiumDirection}</Text>
+        </View>
+      </View>
+
+      <RunningFooter domain={domain} />
+    </Page>
+  );
+}
+
 export default function AuditReportPDF({
   url,
   score,
@@ -350,327 +509,371 @@ export default function AuditReportPDF({
   estimatedLostBookings,
   categories,
   firstName,
+  reportDate,
+  design,
 }: AuditReportPDFProps) {
   const domain = (() => {
     try {
-      return new URL(url).hostname;
+      return new URL(url).hostname.replace("www.", "");
     } catch {
       return url;
     }
   })();
+  const name =
+    firstName && firstName !== "there" ? firstName.toUpperCase() : null;
+  const date =
+    reportDate ??
+    new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
+  const lowestId =
+    [...categories].sort((a, b) => a.score - b.score)[0]?.id ?? "";
   const allChecks = categories.flatMap((c) => c.checks);
-  const { strengths, improvements, impact } = buildWrittenSummary(
-    categories,
-    domain,
-  );
-  const name = firstName && firstName !== "there" ? firstName : null;
+  const failingHigh = allChecks.filter((c) => !c.passed && c.impact === "high");
+  const weak = [...categories]
+    .filter((c) => c.score < 100)
+    .sort((a, b) => a.score - b.score);
+  const strongLabels = categories
+    .filter((c) => c.score === 100)
+    .map((c) => c.label.toLowerCase());
 
   return (
     <Document>
-      <Page size='A4' style={s.page}>
-        {/* ═══════════════════════════════════════════
-            PAGE 1 — Header + Introduction
-        ═══════════════════════════════════════════ */}
+      {/* ════════ COVER ════════ */}
+      <Page size='A4' style={s.pageDark}>
+        <View style={s.coverPad}>
+          <CornerDots color={C.white} />
+          <View style={s.coverTopRow}>
+            <View style={s.brandRow}>
+              <Text style={s.brandName}>FONTS &amp; FOOTERS</Text>
+            </View>
+            <View style={s.eyebrowRow}>
+              <View style={s.eyebrowBar} />
+              <Text style={s.eyebrowText}>Free Website Audit</Text>
+            </View>
+          </View>
 
-        <View style={s.header}>
-          <View style={s.headerLeft}>
-            <Text style={s.headerLabel}>
-              Free Website Audit — Fonts & Footers
+          <View style={s.coverHeadlineWrap}>
+            <View style={s.coverHatch} />
+            <Text style={s.coverH}>YOUR</Text>
+            <Text style={[s.coverH, s.coverHGold]}>WEBSITE</Text>
+            <Text style={s.coverH}>AUDIT.</Text>
+            <Text style={s.coverDomain}>{domain}</Text>
+          </View>
+
+          <Text style={s.coverScoreLabel}>Overall Score</Text>
+          <View style={s.coverScoreRow}>
+            <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+              <Text style={s.coverScoreNum}>{score}</Text>
+              <Text style={s.coverScoreMax}>/100</Text>
+            </View>
+            <Text style={[s.coverGrade, gradeStyle(grade)]}>{grade}</Text>
+            <Text style={s.coverSummary}>{summary}</Text>
+          </View>
+
+          <View style={s.coverRule} />
+
+          <View style={s.coverStatsRow}>
+            <View style={s.coverStatCell}>
+              <Text style={s.coverStatVal}>~{monthlyVisitors}</Text>
+              <Text style={s.coverStatLabel}>Monthly organic visitors</Text>
+            </View>
+            <View style={s.coverStatCell}>
+              <Text style={s.coverStatVal}>{keywordsRanking}</Text>
+              <Text style={s.coverStatLabel}>Keywords ranking on Google</Text>
+            </View>
+            <View style={s.coverStatCellLast}>
+              <Text style={s.coverStatVal}>~{estimatedLostBookings}</Text>
+              <Text style={s.coverStatLabel}>
+                Estimated bookings lost / month
+              </Text>
+            </View>
+          </View>
+
+          <View style={s.coverMetaRow}>
+            <Text style={s.coverMeta}>
+              Prepared for{" "}
+              <Text style={s.coverMetaStrong}>{name ?? "you"}</Text>
             </Text>
-            <Text style={s.headerTitle}>Your full audit report.</Text>
-            <Text style={s.headerUrl}>{domain}</Text>
-          </View>
-          <View style={s.headerRight}>
-            <Text style={[s.gradeBadgeLarge, gradeStyle(grade)]}>{grade}</Text>
-            <View style={s.scoreRow}>
-              <Text style={s.scoreNum}>{score}</Text>
-              <Text style={s.scoreMax}>/100</Text>
-            </View>
+            <Text style={s.coverMeta}>{date}</Text>
+            <Text style={s.coverMeta}>fontsandfooters.com/audit</Text>
           </View>
         </View>
+      </Page>
 
-        <View style={s.summaryBar}>
-          <Text style={s.summaryText}>{summary}</Text>
-        </View>
+      {/* ════════ SCORECARD ════════ */}
+      <Page size='A4' style={s.pageLight}>
+        <CornerDots color={C.black} />
+        <Text style={s.scTitle}>
+          The Scorecard: {score}/100 ({grade})
+        </Text>
+        <Text style={s.scIntro}>
+          {name ? `Hi ${name} — we` : "We"} analyzed {domain} across six
+          categories that decide whether you rank on Google and turn visitors
+          into paying clients. Each check is marked passing or failing, with an
+          impact rating showing what it costs you in bookings. Every failing
+          check comes with a specific fix written for your site — not generic
+          advice.
+        </Text>
 
-        <View style={s.statsRow}>
-          <View style={s.statCell}>
-            <Text style={s.statVal}>~ {monthlyVisitors}</Text>
-            <Text style={s.statLabel}>Monthly organic visitors</Text>
-          </View>
-          <View style={s.statCell}>
-            <Text style={s.statVal}>{keywordsRanking}</Text>
-            <Text style={s.statLabel}>Keywords ranking</Text>
-          </View>
-          <View style={s.statCellLast}>
-            <Text style={s.statValRed}>~ {estimatedLostBookings}</Text>
-            <Text style={s.statLabel}>Est. bookings lost/month</Text>
-          </View>
-        </View>
-
-        <View style={s.introSection}>
-          <Text style={s.introTitle}>About This Report</Text>
-          <Text style={s.introPara}>
-            {name ? `Hi ${name}, this` : "This"} report was generated by Fonts &
-            Footers — a web agency that builds custom booking websites
-            exclusively for black car and limousine operators. Your website was
-            analyzed across 6 categories covering every factor that directly
-            affects your ability to rank on Google and convert visitors into
-            paying clients.
+        <View style={s.legendRow}>
+          <Text
+            style={[
+              s.legendItem,
+              { backgroundColor: C.passBg, color: C.passInk },
+            ]}
+          >
+            Passing
           </Text>
-          <Text style={s.introSubhead}>What We Checked</Text>
-          <View style={s.introCategoryList}>
-            {[
-              "Page Performance",
-              "Booking Capability",
-              "SEO & Keyword Traffic",
-              "Trust & Conversion",
-              "Tech Stack",
-              "Brand & Design",
-            ].map((cat) => (
-              <Text key={cat} style={s.introCategoryPill}>
-                {cat}
-              </Text>
-            ))}
-          </View>
-          <Text style={s.introSubhead}>How To Read This Report</Text>
-          <Text style={s.introPara}>
-            Each check is marked passing (✓) or failing (✗) alongside an impact
-            rating indicating how significantly that issue is costing you in
-            potential bookings.
+          <Text
+            style={[s.legendItem, { backgroundColor: "#fdeaea", color: C.red }]}
+          >
+            Needs a fix
           </Text>
-          <View style={s.introImpactRow}>
-            {/* <Image
-              src='https://fontsandfooters.com/logos/fnf_logo_black.png'
-              style={s.logoImage}
-            /> */}
-            <View style={s.introImpactItem}>
-              <Text style={[s.introImpactDot, { color: "#ff0026" }]}>●</Text>
-              <Text style={s.introImpactLabel}>
-                HIGH — Directly losing bookings right now
-              </Text>
-            </View>
-            <View style={s.introImpactItem}>
-              <Text style={[s.introImpactDot, { color: "#d97706" }]}>●</Text>
-              <Text style={s.introImpactLabel}>
-                MEDIUM — Limiting your growth
-              </Text>
-            </View>
-            <View style={s.introImpactItem}>
-              <Text style={[s.introImpactDot, { color: "#0e8e0e" }]}>●</Text>
-              <Text style={s.introImpactLabel}>
-                LOW — Worth addressing over time
-              </Text>
-            </View>
-          </View>
-          <Text style={s.introNote}>
-            For every failing check, this report includes a personalized fix
-            recommendation generated specifically for {domain} based on your
-            site&apos;s actual data — not generic advice.
+          <Text style={[s.legendItem, s.impactHigh]}>
+            High · losing bookings now
+          </Text>
+          <Text style={[s.legendItem, s.impactMedium]}>
+            Medium · limiting growth
+          </Text>
+          <Text style={[s.legendItem, s.impactLow]}>
+            Low · worth addressing
           </Text>
         </View>
 
-        {/* ═══════════════════════════════════════════
-            PAGE 2+ — Full Breakdown
-            break prop forces this to start on a new page
-        ═══════════════════════════════════════════ */}
-        <View break style={s.body}>
-          <Text style={s.sectionTitle}>Full Breakdown</Text>
-
-          {/* Checklist overview */}
-          <View style={s.checklistSection} wrap={false}>
-            <View style={s.checklistSectionHeader}>
-              <Text style={s.checklistSectionTitle}>
-                Audit Checklist Overview
+        {categories.map((cat, i) => {
+          const fails = cat.checks.filter((c) => !c.passed).length;
+          return (
+            <View style={s.scRow} key={cat.id}>
+              <Text style={s.scIndex}>{String(i + 1).padStart(2, "0")}</Text>
+              <Text style={s.scLabel}>{cat.label}</Text>
+              <Text style={s.scStatus}>
+                {fails === 0
+                  ? "All checks passing"
+                  : `${fails} issue${fails !== 1 ? "s" : ""} to fix`}
+              </Text>
+              <Text style={s.scScore}>{cat.score}/100</Text>
+              <Text style={[s.catGradeBadge, gradeStyle(cat.grade)]}>
+                {cat.grade}
               </Text>
             </View>
-            <View style={s.checklistGrid}>
-              {allChecks.map((chk) => (
-                <View key={chk.id} style={s.checklistItem}>
-                  {/*
-                    CHECKLIST ICONS: border applied directly to Text element.
-                    This avoids the View centering issue that caused empty boxes.
-                    Green border + green text = pass ✓
-                    Red border + red text = fail ✗
-                  */}
-                  <Text
-                    style={
-                      chk.passed ? s.checklistIconPass : s.checklistIconFail
-                    }
-                  >
-                    {chk.passed ? "✓" : "✗"}
-                  </Text>
-                  <Text style={s.checklistItemName}>
-                    {CHECK_INFO[chk.id]?.name ?? chk.label}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </View>
+          );
+        })}
+        <RunningFooter domain={domain} />
+      </Page>
 
-          {/* Categories — split into chunks of 4 checks max
-              CRITICAL: wrap={false} is on the CHUNK VIEW, not individual rows.
-              This means the header + its checks always move together as one unit.
-              A header can NEVER be stranded alone creating white space. */}
-          {categories.map((cat) => {
-            const categoryPassing = cat.score >= 75;
-
-            // Split checks into max-4 chunks
-            const chunks: Check[][] = [];
-            for (let i = 0; i < cat.checks.length; i += 4) {
-              chunks.push(cat.checks.slice(i, i + 4));
-            }
-
-            return chunks.map((chunk, chunkIdx) => {
-              const isFirstChunk = chunkIdx === 0;
-              const isLastChunk = chunkIdx === chunks.length - 1;
-
-              return (
-                // wrap={false} on the entire chunk keeps header + checks together.
-                // If it doesn't fit on the current page, the WHOLE chunk moves to
-                // the next page — the header is never left stranded with white space below it.
+      {/* ════════ CATEGORY PAGES ════════ */}
+      {categories.map((cat, ci) => {
+        // chunk checks so a header is never stranded; ~3 cards per page
+        const chunks: Check[][] = [];
+        for (let i = 0; i < cat.checks.length; i += 3)
+          chunks.push(cat.checks.slice(i, i + 3));
+        return chunks.map((chunk, chunkIdx) => (
+          <Page size='A4' style={s.pageLight} key={`${cat.id}-${chunkIdx}`}>
+            <CornerDots color={C.black} />
+            <View style={s.catHeadRow}>
+              <View style={{ flex: 1 }}>
+                <Text style={s.catKicker}>
+                  {String(ci + 1).padStart(2, "0")} / Category
+                </Text>
                 <View
-                  key={`${cat.id}-chunk-${chunkIdx}`}
-                  style={
-                    isFirstChunk ? s.categoryBlock : s.categoryBlockContinuation
-                  }
-                  wrap={false}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "flex-end",
+                    gap: 8,
+                  }}
                 >
-                  {/* Full category header — first chunk only */}
-                  {isFirstChunk && (
-                    <View style={s.categoryHeader}>
-                      <View style={s.categoryHeaderLeft}>
-                        <Text
-                          style={[
-                            s.categoryStatusIcon,
-                            categoryPassing
-                              ? s.categoryStatusPass
-                              : s.categoryStatusFail,
-                          ]}
-                        >
-                          {categoryPassing ? "✓" : "✗"}
-                        </Text>
-                        <Text
-                          style={[s.gradeBadgeSmall, gradeStyle(cat.grade)]}
-                        >
-                          {cat.grade}
-                        </Text>
-                        <Text style={s.categoryLabel}>{cat.label}</Text>
-                      </View>
-                      <Text style={s.categoryScore}>{cat.score}/100</Text>
-                    </View>
+                  <Text style={s.catTitle}>{cat.label}</Text>
+                  {chunkIdx > 0 ? (
+                    <Text style={s.catTitleCont}>CONTINUED</Text>
+                  ) : (
+                    <Text> </Text>
                   )}
+                </View>
+                {chunkIdx === 0 ? (
+                  <Text style={s.catSubtitle}>
+                    {catSubtitle(cat, lowestId)}
+                  </Text>
+                ) : (
+                  <Text> </Text>
+                )}
+              </View>
+              <View style={s.catScoreWrap}>
+                <Text style={s.catScoreNum}>{cat.score}</Text>
+                <Text style={s.catScoreMax}>/100</Text>
+                <Text style={[s.catGradeBadge, gradeStyle(cat.grade)]}>
+                  {cat.grade}
+                </Text>
+              </View>
+            </View>
+            <View style={s.catRule} />
 
-                  {/* Continuation header — subsequent chunks only */}
-                  {!isFirstChunk && (
-                    <View style={s.categoryHeaderContinued}>
-                      <Text style={s.categoryHeaderContinuedLabel}>
-                        {cat.label} (continued)
+            {chunk.map((chk) => {
+              const ci2 = info(chk);
+              return (
+                <View style={s.card} key={chk.id} wrap={false}>
+                  <View
+                    style={[
+                      s.cardAccent,
+                      { backgroundColor: chk.passed ? C.green : C.red },
+                    ]}
+                  />
+                  <View style={s.cardBody}>
+                    <View style={s.cardTopRow}>
+                      <View style={s.cardTopLeft}>
+                        <Mark passed={chk.passed} />
+                        <Text style={s.cardLabel}>{ci2.name}</Text>
+                      </View>
+                      <Text style={[s.impactBadge, impactStyle(chk.impact)]}>
+                        {chk.impact}
                       </Text>
-                      <Text style={s.categoryScore}>{cat.score}/100</Text>
                     </View>
-                  )}
-
-                  {/* Check rows — no wrap={false} needed here since the
-                      chunk view handles keeping everything together */}
-                  {chunk.map((chk, idx) => {
-                    const isLastInChunk = idx === chunk.length - 1;
-                    const isLastInCategory = isLastChunk && isLastInChunk;
-                    const info = CHECK_INFO[chk.id];
-
-                    return (
-                      <View
-                        key={chk.id}
-                        style={
-                          isLastInChunk && isLastInCategory
-                            ? s.checkRowLast
-                            : s.checkRow
-                        }
-                      >
-                        <Text
-                          style={[
-                            s.checkIcon,
-                            chk.passed ? s.checkIconPass : s.checkIconFail,
-                          ]}
-                        >
-                          {chk.passed ? "✓" : "✗"}
-                        </Text>
-                        <View style={s.checkContent}>
-                          <Text style={s.checkLabel}>
-                            {info?.name ?? chk.label}
-                          </Text>
-                          {info?.what && (
-                            <Text style={s.checkWhat}>{info.what}</Text>
-                          )}
-                          {info?.why && (
-                            <Text style={s.checkWhy}>{info.why}</Text>
-                          )}
-                          {chk.passed && info?.positive && (
-                            <Text style={s.checkPositive}>
-                              ✓ {info.positive}
-                            </Text>
-                          )}
-                          {!chk.passed && chk.fix && (
-                            <Text style={s.checkFix}>
-                              → How to fix it: {chk.fix}
-                            </Text>
-                          )}
-                        </View>
-                        <Text style={[s.impactBadge, impactStyle(chk.impact)]}>
-                          {chk.impact}
-                        </Text>
+                    <Text style={s.cardWhy}>{ci2.why}</Text>
+                    {chk.passed ? (
+                      <View style={s.passBox}>
+                        <Text style={s.passLabel}>Passing</Text>
+                        <Text style={s.passText}>{ci2.positive}</Text>
                       </View>
-                    );
-                  })}
+                    ) : (
+                      <View style={s.fixBox}>
+                        <Text style={s.fixLabel}>The Fix</Text>
+                        <Text style={s.fixText}>{chk.fix ?? chk.message}</Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
               );
-            });
-          })}
+            })}
+            <RunningFooter domain={domain} />
+          </Page>
+        ));
+      })}
 
-          {/* Written summary */}
-          <View style={s.auditSummarySection} wrap={false}>
-            <View style={s.auditSummaryHeader}>
-              <Text style={s.auditSummaryHeaderTitle}>
-                Summary & Recommendations
-              </Text>
-            </View>
-            <View style={s.auditSummaryBody}>
-              <Text style={s.auditSummarySubheadFirst}>
-                What you&apos;re doing well
-              </Text>
-              <Text style={s.auditSummaryText}>{strengths}</Text>
-              <Text style={s.auditSummarySubhead}>What needs improvement</Text>
-              <Text style={s.auditSummaryText}>{improvements}</Text>
-              <Text style={s.auditSummarySubhead}>Expected impact</Text>
-              <Text style={s.auditSummaryText}>{impact}</Text>
-            </View>
+      {/* ════════ DESIGN READ (auto) ════════ */}
+      {design ? <DesignReadPage design={design} domain={domain} /> : null}
+
+      {/* ════════ ROADMAP ════════ */}
+      <Page size='A4' style={s.pageLight}>
+        <CornerDots color={C.black} />
+        <Text style={s.catKicker}>Summary &amp; Recommendations</Text>
+        <Text style={s.scTitle}>What To Do, In Order.</Text>
+        <View style={{ height: 18 }} />
+
+        <View style={s.rmTwoCol}>
+          <View style={s.rmCol}>
+            <Text style={s.rmColHead}>What you&apos;re doing well</Text>
+            <Text style={s.rmColText}>
+              {strongLabels.length > 0
+                ? `Your ${strongLabels.slice(0, 3).join(", ")} ${strongLabels.length === 1 ? "category" : "categories"} scored a perfect 100. That puts you ahead of most operators in this space and gives a strong base to build on.`
+                : "This audit found a clear, fixable list of improvements. None of them require rebuilding your site from scratch."}
+            </Text>
+          </View>
+          <View style={s.rmCol}>
+            <Text style={s.rmColHead}>What&apos;s costing you bookings</Text>
+            <Text style={s.rmColText}>
+              {failingHigh.length > 0
+                ? `${failingHigh.length} high-impact check${failingHigh.length !== 1 ? "s are" : " is"} actively losing you business — concentrated in ${weak
+                    .slice(0, 2)
+                    .map((c) => c.label.toLowerCase())
+                    .join(" and ")}.`
+                : "No critical high-impact issues — the remaining items are refinements that widen your lead."}
+            </Text>
           </View>
         </View>
 
-        {/* CTA — pinned to bottom of every page via absolute positioning */}
-        <View style={s.ctaAbsoluteWrapper}>
-          <View style={s.ctaSection}>
-            <View style={s.logoWrap}>
-              <Image
-                src='https://fontsandfooters.com/logos/fnf_logo_black.png'
-                style={s.logoImage}
-              />
+        {weak.slice(0, 3).map((cat, i) => (
+          <View style={s.rmStep} key={cat.id}>
+            <Text style={s.rmStepNum}>{i + 1}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={s.rmStepTitle}>{cat.label}</Text>
+              <Text style={s.rmStepText}>
+                {cat.checks
+                  .filter((c) => !c.passed)
+                  .map((c) => info(c).name)
+                  .slice(0, 3)
+                  .join(", ") ||
+                  "Tighten the remaining medium and low items in this category."}
+                {cat.checks.some((c) => !c.passed)
+                  ? " — the fixes are detailed on the category pages above."
+                  : ""}
+              </Text>
             </View>
-            <Text style={s.ctaText}>
-              Want us to walk you through these results? Book a free 15-minute
-              call and we&apos;ll show you the 2–3 things costing you the most
-              rides.
-            </Text>
-            <Text style={s.ctaLink}>
-              calendly.com/chris-fontsandfooters/30min
-            </Text>
           </View>
-          <View style={s.pdfFooter}>
-            <Text style={s.pdfFooterText}>
-              Audit generated by Fonts & Footers — fontsandfooters.com/audit
-            </Text>
-            <Text style={s.pdfFooterText}>{domain}</Text>
+        ))}
+
+        <View style={s.rmImpact}>
+          <Text style={s.rmImpactLabel}>Expected Impact</Text>
+          <Text style={s.rmImpactText}>
+            Across the {failingHigh.length} high-impact failing check
+            {failingHigh.length !== 1 ? "s" : ""}, your site is estimated to be
+            losing about {estimatedLostBookings} potential bookings a month. A
+            focused effort on the fixes above — starting with the highest-impact
+            items — could meaningfully raise your monthly booking volume within
+            60 to 90 days, with no additional ad spend.
+          </Text>
+        </View>
+        <RunningFooter domain={domain} />
+      </Page>
+
+      {/* ════════ CLOSING ════════ */}
+      <Page size='A4' style={s.pageDark}>
+        <View style={s.closePad}>
+          <CornerDots color={C.white} />
+          <View style={s.coverTopRow}>
+            <View style={s.brandRow}>
+              <Text style={s.brandName}>FONTS &amp; FOOTERS</Text>
+            </View>
+            <View style={s.eyebrowRow}>
+              <View style={s.eyebrowBar} />
+              <Text style={s.eyebrowText}>The Fix</Text>
+            </View>
+          </View>
+
+          <Text style={s.closeH}>
+            EVERY ISSUE{"\n"}IN THIS REPORT{"\n"}
+            <Text style={s.closeHGold}>IS FIXABLE.</Text>
+          </Text>
+
+          <Text style={s.closeBody}>
+            Fonts &amp; Footers builds direct-booking websites and growth tools
+            exclusively for black car &amp; limo operators. We don&apos;t hand you a
+            list of problems and walk away — we fix them, on a site built for
+            how your clients actually book.
+          </Text>
+
+          <View style={s.ctaBtn}>
+            <Text style={s.ctaBtnText}>Book a 20-minute walkthrough</Text>
+            <View style={s.ctaArrow}>
+              <Svg width={14} height={14} viewBox='0 0 24 24'>
+                <Path
+                  d='M5 12 H19 M13 6 L19 12 L13 18'
+                  stroke='#fff'
+                  strokeWidth={2.5}
+                  fill='none'
+                />
+              </Svg>
+            </View>
+          </View>
+
+          <View style={s.closeMetaRow}>
+            <View style={s.closeMetaCell}>
+              <Text style={s.closeMetaLabel}>Audit by</Text>
+              <Text style={s.closeMetaVal}>Fonts &amp; Footers</Text>
+            </View>
+            <View style={s.closeMetaCell}>
+              <Text style={s.closeMetaLabel}>For</Text>
+              <Text style={s.closeMetaVal}>
+                {name ? `${name} — ` : ""}
+                {domain}
+              </Text>
+            </View>
+            <View style={s.closeMetaCellLast}>
+              <Text style={s.closeMetaLabel}>Online</Text>
+              <Text style={s.closeMetaVal}>fontsandfooters.com/contact</Text>
+            </View>
           </View>
         </View>
       </Page>
