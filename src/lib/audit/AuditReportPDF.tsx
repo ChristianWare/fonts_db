@@ -361,7 +361,7 @@ const dr = StyleSheet.create({
     objectFit: "cover",
     objectPosition: "top",
   },
-  shotFrame: { borderWidth: 1, borderColor: C.cardBorder, marginBottom: 22 },
+  shotFrame: { borderWidth: 1, borderColor: C.cardBorder, marginBottom: 8 },
   sectionLabel: {
     fontFamily: "Mono",
     fontSize: 10,
@@ -391,7 +391,8 @@ const dr = StyleSheet.create({
     marginTop: 2,
     lineHeight: 1.3,
   },
-  typeRow: { flexDirection: "row", gap: 48, marginBottom: 10 },
+  typeRow: { flexDirection: "row", gap: 24, marginBottom: 12 },
+  typeCol: { flex: 1 },
   typeKey: {
     fontFamily: "Mono",
     fontSize: 8.5,
@@ -402,7 +403,8 @@ const dr = StyleSheet.create({
   },
   typeVal: {
     fontFamily: "Display",
-    fontSize: 22,
+    fontSize: 16,
+    lineHeight: 1.05,
     color: C.black,
     textTransform: "uppercase",
   },
@@ -453,13 +455,14 @@ function DesignReadPage({
       <Text style={s.scTitle}>Does It Look Premium?</Text>
       <View style={{ height: 16 }} />
 
+      <Text style={dr.sectionLabel}>
+        Your Homepage &amp; The Colors It&apos;s Built On
+      </Text>
       {design.screenshot ? (
         <View style={dr.shotFrame}>
           <Image src={design.screenshot} style={dr.shot} />
         </View>
       ) : null}
-
-      <Text style={dr.sectionLabel}>The Palette On Your Site</Text>
       <View style={dr.swatchRow}>
         {design.palette.slice(0, 6).map((sw, i) => (
           <View key={i} style={dr.swatch}>
@@ -472,18 +475,18 @@ function DesignReadPage({
 
       <Text style={dr.sectionLabel}>The Type</Text>
       <View style={dr.typeRow}>
-        <View>
+        <View style={dr.typeCol}>
           <Text style={dr.typeKey}>Headings</Text>
           <Text style={dr.typeVal}>{design.headingFont}</Text>
         </View>
-        <View>
+        <View style={dr.typeCol}>
           <Text style={dr.typeKey}>Body</Text>
           <Text style={dr.typeVal}>{design.bodyFont}</Text>
         </View>
       </View>
       <Text style={dr.fontNote}>{design.fontNote}</Text>
 
-      <View style={dr.readGrid}>
+      <View style={dr.readGrid} wrap={false}>
         <View style={dr.readBlock}>
           <Text style={dr.readHead}>On The Site Today</Text>
           <Text style={dr.readText}>{design.readToday}</Text>

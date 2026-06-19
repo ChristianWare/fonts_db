@@ -488,6 +488,132 @@ Respond ONLY with a valid JSON object where each key is the check id and each va
   }
 }
 
+// ── Screenshot + Claude vision: the auto "design read" ──────────────────────────
+interface DesignRead {
+  screenshot?: string;
+  palette: { hex: string; role: string }[];
+  headingFont: string;
+  bodyFont: string;
+  fontNote: string;
+  readToday: string;
+  premiumDirection: string;
+}
+
+// One viewport (hero) screenshot, returned as a base64 buffer so it serves BOTH
+// the vision call and the PDF — a single capture, no second fetch.
+async function fetchScreenshot(
+  url: string,
+): Promise<{ base64: string; mime: string } | null> {
+  const key = process.env.SCREENSHOT_API_KEY;
+  if (!key) return null;
+  const params = new URLSearchParams({
+    access_key: key,
+    url,
+    format: "jpg",
+    full_page: "false", // hero/viewport only, not the whole page
+    viewport_width: "1280",
+    viewport_height: "800",
+    image_quality: "80",
+    block_ads: "true",
+    block_cookie_banners: "true",
+    block_trackers: "true",
+    cache: "true",
+    cache_ttl: "86400",
+  });
+  try {
+    const res = await fetch(`https://api.screenshotone.com/take?${params}`, {
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) {
+      const body = await res.text(); // ScreenshotOne's exact error reason
+      console.error("[detectBrand] screenshot failed", res.status, body);
+      return null;
+    }
+    const buf = Buffer.from(await res.arrayBuffer());
+    return { base64: buf.toString("base64"), mime: "image/jpeg" };
+  } catch (err) {
+    console.error("[detectBrand] screenshot error", err);
+    return null;
+  }
+}
+
+async function detectBrand(url: string): Promise<DesignRead | null> {
+  const shot = await fetchScreenshot(url);
+  if (!shot) return null;
+
+  const prompt = `You are a senior brand designer reviewing the homepage of a black car / limousine company for a premium-positioning audit. Judge it the way a luxury brand designer would.
+
+Return ONLY a JSON object (no markdown, no backticks, no preamble) with exactly these keys:
+{
+  "palette": [ { "hex": "#rrggbb", "role": "short role — descriptive name" } ],  // the 4-6 most prominent colors actually used on the page, most dominant first, real observed hex values. Role examples: "Primary surface", "Accent", "Text", "Background".
+  "headingFont": "the heading typeface NAME ONLY, 1-3 words max (e.g. 'Playfair Display'). If you can't name it exactly, a short 2-word label like 'High-contrast serif'. NEVER a full sentence or description — the descriptive read goes in fontNote.",
+  "bodyFont": "the body typeface NAME ONLY, 1-3 words max (e.g. 'Open Sans'). If unsure, a short label like 'Neutral sans'. NEVER a full sentence.",
+  "fontNote": "one honest sentence on whether the type pairing reads premium for luxury transport",
+  "readToday": "2-3 sentences: what the current colors/design communicate right now, honestly, to a client deciding whether to trust them with an airport run or wedding",
+  "premiumDirection": "2-3 sentences: a specific, concrete design direction that would read more premium (reference colors, contrast, restraint)"
+}
+
+Be specific and honest. If the design is genuinely strong, say so — do not invent problems that aren't there.`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY ?? "",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1200,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: shot.mime,
+                  data: shot.base64,
+                },
+              },
+              { type: "text", text: prompt },
+            ],
+          },
+        ],
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || data?.type === "error") {
+      console.error(
+        "[detectBrand] vision API error",
+        res.status,
+        data?.error ?? data,
+      );
+      return null;
+    }
+    const text = data?.content?.[0]?.text ?? "";
+    if (!text.trim()) {
+      console.error("[detectBrand] empty completion");
+      return null;
+    }
+    const clean = text.replace(/```json|```/g, "").trim();
+    let parsed: Omit<DesignRead, "screenshot">;
+    try {
+      parsed = JSON.parse(clean);
+    } catch {
+      console.error("[detectBrand] non-JSON response:", clean.slice(0, 300));
+      return null;
+    }
+    // reuse the same capture as the PDF's screenshot, as a data URL
+    return { ...parsed, screenshot: `data:${shot.mime};base64,${shot.base64}` };
+  } catch (err) {
+    console.error("[detectBrand] error", err);
+    return null;
+  }
+}
+
 // ── Build categories ──────────────────────────────────────────────────────────
 function buildCategories(
   html: string,
@@ -1048,18 +1174,25 @@ export async function POST(req: NextRequest) {
       .flatMap((c) => c.checks)
       .filter((c) => !c.passed);
 
-    let fixes: Record<string, string> = {};
-    try {
-      fixes = await generateFixes(domain, failingChecks, {
+    // Run the AI fixes and the screenshot/vision "design read" in parallel.
+    // Both happen only after the limo-site gate, so non-limo sites never burn a
+    // screenshot or vision call. Each fails soft and never breaks the audit.
+    const [fixes, design] = await Promise.all([
+      generateFixes(domain, failingChecks, {
         mobileScore,
         monthlyVisitors: seoData.monthlyVisitors,
         keywordsRanking: seoData.keywordsRanking,
         platform: techStack.platform,
         bookingPlatform: techStack.bookingPlatform,
-      });
-    } catch (err) {
-      console.error("[generateFixes error]", err);
-    }
+      }).catch((err) => {
+        console.error("[generateFixes error]", err);
+        return {} as Record<string, string>;
+      }),
+      detectBrand(normalized).catch((err) => {
+        console.error("[detectBrand error]", err);
+        return null;
+      }),
+    ]);
 
     const categoriesWithFixes = categories.map((cat) => ({
       ...cat,
@@ -1097,6 +1230,7 @@ export async function POST(req: NextRequest) {
       estimatedLostBookings,
       categories: categoriesWithFixes,
       firstName: name,
+      ...(design ? { design } : {}),
     };
 
     // Generate PDF and send email — awaited so Vercel doesn't kill it early
