@@ -230,6 +230,7 @@ export default async function PlacePage({
     rating: lead.rating,
     reviewCount: lead.reviewCount,
     status: lead.status,
+    estimatedValue: lead.estimatedValue,
     notes: lead.notes,
     isDraft: lead.isDraft,
     strategicBrief: lead.strategicBrief,

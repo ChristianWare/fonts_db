@@ -20,6 +20,7 @@ type Body = {
   snoozeUntil?: string | null;
   isFavorite?: boolean;
   isDraft?: boolean;
+  estimatedValue?: number | null;
 };
 
 export async function PATCH(
@@ -81,6 +82,26 @@ export async function PATCH(
     }
   }
 
+  // estimatedValue — what this booking/account is worth. Drives the ROI
+  // dashboard. Accepts a non-negative integer (dollars) or null to clear.
+  let estimatedValueForActivity: number | null | undefined;
+  if (body.estimatedValue !== undefined) {
+    if (body.estimatedValue === null) {
+      data.estimatedValue = null;
+      estimatedValueForActivity = null;
+    } else {
+      const v = Math.round(Number(body.estimatedValue));
+      if (!Number.isFinite(v) || v < 0) {
+        return NextResponse.json(
+          { error: "estimatedValue must be a non-negative number" },
+          { status: 400 },
+        );
+      }
+      data.estimatedValue = v;
+      estimatedValueForActivity = v;
+    }
+  }
+
   if (body.notes !== undefined) {
     data.notes = body.notes || null;
   }
@@ -107,13 +128,29 @@ export async function PATCH(
   const updated = await db.savedLead.update({ where: { id }, data });
 
   if (statusChanged && newStatus) {
+    const wonWithValue =
+      newStatus === "WON" &&
+      typeof estimatedValueForActivity === "number" &&
+      estimatedValueForActivity > 0;
+    const description = wonWithValue
+      ? `Marked Won — est. $${estimatedValueForActivity!.toLocaleString(
+          "en-US",
+        )}`
+      : `Status changed from ${lead.status} to ${newStatus}`;
+
     await db.leadActivity.create({
       data: {
         savedLeadId: id,
         clientProfileId: profile.id,
-        activityType: "STATUS_CHANGED",
-        description: `Status changed from ${lead.status} to ${newStatus}`,
-        metadata: { from: lead.status, to: newStatus },
+        activityType: newStatus === "WON" ? "WON" : "STATUS_CHANGED",
+        description,
+        metadata: {
+          from: lead.status,
+          to: newStatus,
+          ...(estimatedValueForActivity != null
+            ? { estimatedValue: estimatedValueForActivity }
+            : {}),
+        },
       },
     });
   }

@@ -1,0 +1,109 @@
+/* MarkWonButton.module.css — brand tokens from globals.css */
+
+.wonBtn {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  padding: 1rem 1.6rem;
+  border: none;
+  background: var(--green, #0e8e0e);
+  color: var(--white, #fff);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.wonBtn:hover {
+  opacity: 0.9;
+}
+
+.editLink {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  background: none;
+  border: none;
+  color: var(--lightBlack, #8f7f7f);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.popover {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.6rem;
+  border: 1px solid var(--lightGray, #b4b0b080);
+  background: var(--white, #fff);
+  max-width: 30rem;
+}
+
+.label {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: var(--black, #0f0f0f);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--black, #0f0f0f);
+}
+
+.dollar {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-weight: 700;
+  padding: 0 1rem;
+  color: var(--black, #0f0f0f);
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 1rem 1rem 1rem 0;
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--black, #0f0f0f);
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.cancelBtn,
+.confirmBtn {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  padding: 0.9rem 1.4rem;
+  border: none;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  background: var(--lightGrayii, #fafafa);
+  border: 1px solid var(--lightGray, #b4b0b080);
+  color: var(--black, #0f0f0f);
+}
+
+.confirmBtn {
+  background: var(--green, #0e8e0e);
+  color: var(--white, #fff);
+}
+
+.confirmBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.note {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-size: 1.1rem;
+  color: var(--lightBlack, #8f7f7f);
+}

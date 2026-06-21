@@ -18,6 +18,11 @@ import {
 import { runOnDemandScrape } from "@/lib/leads/onDemandScrape";
 import { computeColdScore } from "@/lib/leads/coldScore";
 import { generateColdScoreReasoning } from "@/lib/leads/coldScoreReasoning";
+import { isRecurringCategory } from "@/lib/leads/recurringAccounts";
+import {
+  readSignals,
+  backfillSignals,
+} from "@/lib/leads/transportPartnerSignal";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel Pro — needed for after() background work
@@ -543,6 +548,10 @@ export async function POST(req: NextRequest) {
         ]),
       );
 
+      // Read cached transport-partner signals for these places (shared cache,
+      // keyed by googlePlaceId). Missing = not yet checked → null.
+      const partnerSignals = await readSignals(placeIds);
+
       coldResults = allPlaces.map((r) => {
         const saved = savedMap.get(r.placeId);
         const savedState = !saved
@@ -566,6 +575,8 @@ export async function POST(req: NextRequest) {
           serviceRadiusMiles: radiusMiles,
         });
 
+        const sig = partnerSignals.get(r.placeId);
+
         return {
           ...r,
           temperature: "cold" as const,
@@ -574,8 +585,23 @@ export async function POST(req: NextRequest) {
           contactReady: false,
           aiScore: scoreBreakdown.total,
           aiScoreReasoning: generateColdScoreReasoning(scoreBreakdown),
+          // --- Lead-quality filters (Feature #6, phase 1) ---
+          isRecurring: isRecurringCategory(r.category),
+          hasTransportPartner: sig?.hasPartner ?? null,
+          partnerEvidence: sig?.evidence ?? null,
         };
       });
+
+      // Warm the shared signal cache in the background for any place we don't
+      // have (or whose check is stale). Runs after the response is sent.
+      after(() =>
+        backfillSignals(
+          allPlaces.map((p) => ({
+            placeId: p.placeId,
+            website: p.website ?? null,
+          })),
+        ),
+      );
     } catch (err) {
       console.error("Cold search failed", err);
     }

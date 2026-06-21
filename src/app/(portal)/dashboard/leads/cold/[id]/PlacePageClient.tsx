@@ -17,6 +17,7 @@ import type { LeadPriorityResult } from "@/lib/leadPriority";
 import type { SeasonalGuidance } from "@/lib/leadSeasonality";
 import Modal from "@/components/shared/Modal/Modal";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
+import MarkWonButton from "./MarkWonButton";
 
 type LeadStatus =
   | "NEW"
@@ -101,6 +102,7 @@ type SerializedLead = {
   rating: number | null;
   reviewCount: number | null;
   status: LeadStatus;
+  estimatedValue: number | null;
   notes: string | null;
   isDraft: boolean;
   strategicBrief: string | null;
@@ -1246,8 +1248,6 @@ export default function PlacePageClient({
             <RecommendedMoveCard suggestion={nextMove} />
           </AccordionSection>
 
-        
-
           {/* WHO TO CONTACT */}
           <AccordionSection
             sectionKey='whoToContact'
@@ -1593,6 +1593,14 @@ export default function PlacePageClient({
                   Mark contacted
                 </button>
               )}
+
+              <div className={detailStyles.sidebarGroup}>
+                <MarkWonButton
+                  leadId={lead.id}
+                  initialValue={lead.estimatedValue ?? null}
+                  alreadyWon={lead.status === "WON"}
+                />
+              </div>
 
               <div className={detailStyles.sidebarGroup}>
                 <label className={detailStyles.sidebarLabel}>

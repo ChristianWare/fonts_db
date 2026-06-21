@@ -85,7 +85,7 @@ const MIN_SCORE_OPTIONS: Array<{ value: number; label: string }> = [
   { value: 85, label: "85+ (top)" },
 ];
 
-const STORAGE_KEY = "leadSearch:state:v13";
+const STORAGE_KEY = "leadSearch:state:v14";
 const DEFAULT_MIN_SCORE = 0;
 
 type StoredState = {
@@ -100,6 +100,8 @@ type StoredState = {
   searchedCategories: string[];
   results: SearchResult[];
   currentPage: number;
+  recurringOnly: boolean;
+  openOnly: boolean;
 };
 
 function loadStored(): StoredState | null {
@@ -193,6 +195,10 @@ export default function LeadSearchForm() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // --- Lead-quality filters (Feature #6, phase 1), cold-only ---
+  const [recurringOnly, setRecurringOnly] = useState(false);
+  const [openOnly, setOpenOnly] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingPlaceIds, setPendingPlaceIds] = useState<Set<string>>(
@@ -222,6 +228,8 @@ export default function LeadSearchForm() {
       setSearchedCategories(stored.searchedCategories);
       setResults(stored.results ?? []);
       setCurrentPage(stored.currentPage ?? 1);
+      setRecurringOnly(stored.recurringOnly ?? false);
+      setOpenOnly(stored.openOnly ?? false);
       setHasSearched(true);
     }
     hydrated.current = true;
@@ -242,6 +250,8 @@ export default function LeadSearchForm() {
       searchedCategories,
       results,
       currentPage,
+      recurringOnly,
+      openOnly,
     });
   }, [
     selectedTemperature,
@@ -255,6 +265,8 @@ export default function LeadSearchForm() {
     searchedCategories,
     results,
     currentPage,
+    recurringOnly,
+    openOnly,
     hasSearched,
   ]);
 
@@ -268,7 +280,7 @@ export default function LeadSearchForm() {
   useEffect(() => {
     if (!hydrated.current) return;
     setCurrentPage(1);
-  }, [contactReadyOnly, minScore, headerSort]);
+  }, [contactReadyOnly, minScore, headerSort, recurringOnly, openOnly]);
 
   useEffect(() => {
     if (!scrapePhase) return;
@@ -566,12 +578,34 @@ export default function LeadSearchForm() {
 
     sorted = sorted.filter((r) => resultPassesScoreFilter(r, minScore));
 
+    // --- cold-only lead-quality filters (Feature #6, phase 1) ---
+    if (searchedTemperature === "cold") {
+      if (recurringOnly) {
+        sorted = sorted.filter(
+          (r) => r.temperature === "cold" && r.isRecurring,
+        );
+      }
+      if (openOnly) {
+        sorted = sorted.filter(
+          (r) => r.temperature === "cold" && r.hasTransportPartner === false,
+        );
+      }
+    }
+
     if (headerSort) {
       sorted = applyHeaderSort(sorted, headerSort);
     }
 
     return sorted;
-  }, [results, contactReadyOnly, minScore, searchedTemperature, headerSort]);
+  }, [
+    results,
+    contactReadyOnly,
+    minScore,
+    searchedTemperature,
+    headerSort,
+    recurringOnly,
+    openOnly,
+  ]);
 
   const readyCount = useMemo(
     () => results.filter((r) => r.contactReady).length,
@@ -1041,6 +1075,40 @@ export default function LeadSearchForm() {
                 </div>
               )}
 
+              {searchedTemperature === "cold" && (
+                <>
+                  <div className={styles.filterControl}>
+                    <label className={styles.filterControlLabel}>
+                      Recurring
+                    </label>
+                    <button
+                      type='button'
+                      onClick={() => setRecurringOnly(!recurringOnly)}
+                      className={`${styles.filterControlToggle} ${
+                        recurringOnly ? styles.filterControlToggleOn : ""
+                      }`}
+                    >
+                      {recurringOnly ? "On" : "Off"}
+                    </button>
+                  </div>
+
+                  <div className={styles.filterControl}>
+                    <label className={styles.filterControlLabel}>
+                      Open only
+                    </label>
+                    <button
+                      type='button'
+                      onClick={() => setOpenOnly(!openOnly)}
+                      className={`${styles.filterControlToggle} ${
+                        openOnly ? styles.filterControlToggleOn : ""
+                      }`}
+                    >
+                      {openOnly ? "On" : "Off"}
+                    </button>
+                  </div>
+                </>
+              )}
+
               <div className={styles.filterControl}>
                 <label htmlFor='sortBy' className={styles.filterControlLabel}>
                   Sort
@@ -1090,6 +1158,9 @@ export default function LeadSearchForm() {
                 score above
                 {searchedTemperature !== "cold" && contactReadyOnly
                   ? ' or turn off "Ready only"'
+                  : ""}
+                {searchedTemperature === "cold" && (recurringOnly || openOnly)
+                  ? ' or turn off "Recurring" / "Open only"'
                   : ""}{" "}
                 to see them.
               </p>

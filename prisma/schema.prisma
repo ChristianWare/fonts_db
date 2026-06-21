@@ -1084,3 +1084,12 @@ model HotLeadAlert {
   @@index([clientProfileId])
   @@index([sentAt])
 }
+
+model PlaceTransportSignal {
+  googlePlaceId String   @id
+  hasPartner    Boolean? // null = unknown (no website / unreadable site)
+  evidence      String?  @db.Text
+  checkedAt     DateTime @default(now())
+
+  @@index([checkedAt])
+}

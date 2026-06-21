@@ -123,6 +123,20 @@ export default function LeadRow({ result, isPending, onSave, index }: Props) {
           {typeof result.aiScore === "number" && result.aiScore >= 85 && (
             <span className={styles.topMatchBadge}>⭐ Top Match</span>
           )}
+
+          {/* --- Lead-quality badges (cold only) --- */}
+          {result.temperature === "cold" && result.isRecurring && (
+            <span className={styles.badgeRecurring}>Recurring</span>
+          )}
+          {result.temperature === "cold" &&
+            result.hasTransportPartner === false && (
+              <span className={styles.badgeOpen}>No partner</span>
+            )}
+          {result.temperature === "cold" &&
+            result.hasTransportPartner === true && (
+              <span className={styles.badgeHasPartner}>Has partner</span>
+            )}
+
           {timeLeftBadge && (
             <span
               className={`${styles.scoreBadge} ${timeLeftBadge.urgencyClass}`}

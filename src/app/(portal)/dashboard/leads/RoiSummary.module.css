@@ -1,0 +1,117 @@
+/* RoiSummary.module.css — uses the global brand tokens from globals.css
+   (--accent #ffbe00, --black, --blackii gold rule, Geist Mono labels). */
+
+.wrap {
+  margin: 2.4rem 0 3.2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.sectionNumber {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+  color: var(--lightBlack, #8f7f7f);
+}
+
+.sectionHeading {
+  font-family: var(--RobotoFlexii, "Roboto Flex", sans-serif);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 2.4rem;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6rem;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 2rem;
+  border: 1px solid var(--lightGray, #b4b0b080);
+  background: var(--lightGrayii, #fafafa);
+}
+
+/* square corner mark — the F&F signature */
+.stat::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  background: var(--black, #0f0f0f);
+}
+
+.statHighlight {
+  background: var(--accent, #ffbe00);
+  border-color: var(--blackii, #b49114);
+}
+
+.statHighlight::after {
+  background: var(--black, #0f0f0f);
+}
+
+.statLabel {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--lightBlack, #8f7f7f);
+}
+
+.statHighlight .statLabel {
+  color: var(--black, #0f0f0f);
+}
+
+.statValue {
+  font-family: var(--RobotoFlexii, "Roboto Flex", sans-serif);
+  font-weight: 700;
+  font-size: 3.6rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--black, #0f0f0f);
+}
+
+.statSub {
+  font-family: var(--GeistMono, "Geist Mono", monospace);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: var(--lightBlack, #8f7f7f);
+}
+
+.statHighlight .statSub {
+  color: var(--black, #0f0f0f);
+  opacity: 0.8;
+}
+
+.hint {
+  margin-top: 1.6rem;
+  font-family: var(--Roboto, "Roboto", sans-serif);
+  font-size: 1.4rem;
+  color: var(--text, #0f0f0f99);
+}

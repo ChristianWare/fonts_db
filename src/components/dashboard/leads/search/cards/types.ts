@@ -18,6 +18,10 @@ export type ColdLeadResult = {
   contactReady: boolean;
   aiScore: number | null;
   aiScoreReasoning: string | null;
+  // --- Lead-quality filters (Feature #6, phase 1) ---
+  isRecurring: boolean;
+  hasTransportPartner: boolean | null; // null = not yet checked
+  partnerEvidence: string | null;
 };
 
 export type WarmLeadResult = {

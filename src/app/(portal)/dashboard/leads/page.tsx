@@ -7,6 +7,7 @@ import { getProductAccess } from "@/lib/subscriptions";
 import { LeadStatus } from "@prisma/client";
 import OnboardingModal from "./OnboardingModal";
 import styles from "./LeadsPage.module.css";
+import RoiSummary from "./RoiSummary";
 
 export const dynamic = "force-dynamic";
 
@@ -200,6 +201,8 @@ export default async function LeadsPage({
 
       {onboardingComplete && (
         <div className={styles.body}>
+          <RoiSummary clientProfileId={profile.id} />
+
           <section className={styles.marketCard}>
             <div>
               <p className={styles.marketLabel}>Your market</p>
