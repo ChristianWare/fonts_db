@@ -1,19 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "../../../../../auth";
 import { db } from "@/lib/db";
 import { getProductAccess } from "@/lib/subscriptions";
-import { LeadStatus } from "@prisma/client";
+import { getLeadsHomeData } from "@/lib/leads/getLeadsHomeData";
 import OnboardingModal from "./OnboardingModal";
-import styles from "./LeadsPage.module.css";
 import RoiSummary from "./RoiSummary";
+import styles from "./LeadsPage.module.css";
 
 export const dynamic = "force-dynamic";
 
-const HOT_THRESHOLD_DAYS = 14;
-
-export default async function LeadsPage({
+export default async function LeadsHomePage({
   searchParams,
 }: {
   searchParams: Promise<{ welcome?: string }>;
@@ -33,183 +30,29 @@ export default async function LeadsPage({
     redirect("/dashboard/enroll/leads");
   }
 
-  const now = new Date();
-  const endOfToday = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    23,
-    59,
-    59,
-    999,
-  );
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const fourteenDaysOut = new Date(
-    now.getTime() + HOT_THRESHOLD_DAYS * 24 * 60 * 60 * 1000,
-  );
-
-  // Need settings first to query market-scoped hot events
-  const settings = await db.leadsSettings.findUnique({
-    where: { clientProfileId: profile.id },
-  });
-
-  const [
-    snoozesDueToday,
-    nextActionsDueToday,
-    staleNewLeads,
-    newThisWeek,
-    pipelineGroups,
-    wonThisMonth,
-    hotMarketEvents,
-  ] = await Promise.all([
-    db.savedLead.findMany({
-      where: {
-        clientProfileId: profile.id,
-        status: "SNOOZED",
-        snoozeUntil: { lte: endOfToday },
-      },
-      orderBy: { snoozeUntil: "asc" },
-      take: 10,
-      select: {
-        id: true,
-        businessName: true,
-        leadType: true,
-        snoozeUntil: true,
-        googlePlaceId: true,
-        category: true,
-      },
-    }),
-    db.savedLead.findMany({
-      where: {
-        clientProfileId: profile.id,
-        nextActionAt: { lte: endOfToday },
-        status: { notIn: ["WON", "DEAD"] },
-      },
-      orderBy: { nextActionAt: "asc" },
-      take: 10,
-      select: {
-        id: true,
-        businessName: true,
-        leadType: true,
-        nextActionAt: true,
-        nextActionNote: true,
-        googlePlaceId: true,
-        category: true,
-      },
-    }),
-    db.savedLead.findMany({
-      where: {
-        clientProfileId: profile.id,
-        status: "NEW",
-        createdAt: { lt: sevenDaysAgo },
-        lastContactedAt: null,
-      },
-      orderBy: { createdAt: "asc" },
-      take: 10,
-      select: {
-        id: true,
-        businessName: true,
-        leadType: true,
-        createdAt: true,
-        googlePlaceId: true,
-        category: true,
-      },
-    }),
-    db.savedLead.count({
-      where: {
-        clientProfileId: profile.id,
-        createdAt: { gte: sevenDaysAgo },
-      },
-    }),
-    db.savedLead.groupBy({
-      by: ["status"],
-      where: { clientProfileId: profile.id },
-      _count: { _all: true },
-    }),
-    db.savedLead.count({
-      where: {
-        clientProfileId: profile.id,
-        status: "WON",
-        wonAt: { gte: startOfMonth },
-      },
-    }),
-    // === HOT IN MARKET (chunk 6) ===
-    // Eventbrite events ≤14 days out, scoped to operator's market.
-    // Shown as urgent opportunities on the daily home.
-    settings?.primaryCity && settings?.primaryState
-      ? db.eventbriteEvent.findMany({
-          where: {
-            marketCity: {
-              equals: settings.primaryCity,
-              mode: "insensitive",
-            },
-            marketState: {
-              equals: settings.primaryState,
-              mode: "insensitive",
-            },
-            eventDate: { gte: now, lte: fourteenDaysOut },
-          },
-          orderBy: [{ aiScore: "desc" }, { eventDate: "asc" }],
-          take: 5,
-          select: {
-            eventbriteId: true,
-            eventName: true,
-            eventDate: true,
-            venueName: true,
-            aiScore: true,
-            isCorporate: true,
-            aiCategory: true,
-            expectedAttendance: true,
-          },
-        })
-      : Promise.resolve([]),
-  ]);
-
-  const validSnoozes = snoozesDueToday.filter((l) => l.googlePlaceId);
-  const validNextActions = nextActionsDueToday.filter((l) => l.googlePlaceId);
-  const validStaleLeads = staleNewLeads.filter((l) => l.googlePlaceId);
-
-  const onboardingComplete = !!settings?.onboardingCompletedAt;
   const { welcome } = await searchParams;
-
-  const savedCount = pipelineGroups.reduce((sum, g) => sum + g._count._all, 0);
-
-  const countByStatus = (status: LeadStatus) =>
-    pipelineGroups.find((g) => g.status === status)?._count._all ?? 0;
-
-  const attentionCount =
-    validSnoozes.length + validNextActions.length + validStaleLeads.length;
-
-  const daysSince = (d: Date) =>
-    Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-
-  const daysUntil = (d: Date) =>
-    Math.max(
-      0,
-      Math.floor((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-    );
+  const data = await getLeadsHomeData(profile.id);
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <p className={styles.eyebrow}>Fonts &amp; Footers — Leads</p>
-        <h1 className={`${styles.heading} h2`}>Lead Feed</h1>
+        <h1 className={`${styles.heading} h2`}>Today</h1>
       </div>
 
-      {!onboardingComplete && <OnboardingModal welcomeFlow={!!welcome} />}
+      {/* SETUP — onboarding not finished: one job, set the market */}
+      {data.state === "SETUP" && <OnboardingModal welcomeFlow={!!welcome} />}
 
-      {onboardingComplete && (
+      {data.state !== "SETUP" && (
         <div className={styles.body}>
-          <RoiSummary clientProfileId={profile.id} />
-
+          {/* M9 — Market card (both states) */}
           <section className={styles.marketCard}>
             <div>
               <p className={styles.marketLabel}>Your market</p>
               <p className={styles.marketValue}>
-                {settings?.primaryCity}, {settings?.primaryState}
+                {data.market?.city}, {data.market?.state}
                 <span className={styles.marketRadius}>
-                  &nbsp;· {settings?.serviceRadiusMiles}-mile radius
+                  &nbsp;· {data.market?.radiusMiles}-mile radius
                 </span>
               </p>
             </div>
@@ -218,153 +61,89 @@ export default async function LeadsPage({
             </Link>
           </section>
 
-          {/* === HOT IN MARKET (chunk 6) === */}
-          {hotMarketEvents.length > 0 && (
+          {/* HOT IN MARKET — urgent; shown in both states when present */}
+          {data.hotMarketEvents.length > 0 && (
             <section className={styles.attentionCard}>
               <div className={styles.sectionHeader}>
                 <p className={styles.sectionEyebrow}>🔥 Hot in your market</p>
                 <h2 className={styles.sectionTitle}>
-                  Events happening in the next 14 days
+                  Events in the next 14 days
                 </h2>
                 <span className={styles.attentionCount}>
-                  {hotMarketEvents.length}
+                  {data.hotMarketEvents.length}
                 </span>
               </div>
-              <div className={styles.attentionLists}>
-                <div className={styles.attentionGroup}>
-                  <p className={styles.attentionGroupLabel}>
-                    Respond now — organizers are finalizing logistics
-                  </p>
-                  <ul className={styles.attentionList}>
-                    {hotMarketEvents.map((e) => {
-                      const days = daysUntil(e.eventDate);
-                      const meta = [
-                        days === 0
-                          ? "Today"
-                          : days === 1
-                            ? "Tomorrow"
-                            : `${days} days away`,
-                        e.venueName,
-                        e.isCorporate ? "Corporate" : null,
-                        e.aiScore != null ? `score ${e.aiScore}` : null,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ");
-                      return (
-                        <li key={e.eventbriteId}>
-                          <Link
-                            href={`/dashboard/leads/hot/${e.eventbriteId}`}
-                            className={styles.attentionItem}
-                          >
-                            <span className={styles.attentionName}>
-                              {e.eventName}
-                            </span>
-                            <span className={styles.attentionMeta}>{meta}</span>
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
+              <ul className={styles.attentionList}>
+                {data.hotMarketEvents.map((e) => {
+                  const meta = [
+                    e.daysUntil === 0
+                      ? "Today"
+                      : e.daysUntil === 1
+                        ? "Tomorrow"
+                        : `${e.daysUntil} days away`,
+                    e.venueName,
+                    e.isCorporate ? "Corporate" : null,
+                    e.aiScore != null ? `score ${e.aiScore}` : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ");
+                  return (
+                    <li key={e.eventbriteId}>
+                      <Link
+                        href={`/dashboard/leads/hot/${e.eventbriteId}`}
+                        className={styles.attentionItem}
+                      >
+                        <span className={styles.attentionName}>
+                          {e.eventName}
+                        </span>
+                        <span className={styles.attentionMeta}>{meta}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </section>
           )}
 
-          {savedCount > 0 ? (
+          {data.state === "ESTABLISHED" ? (
             <>
+              {/* M1 — THIS WEEK / NEXT MOVES (hero) */}
               <section className={styles.attentionCard}>
                 <div className={styles.sectionHeader}>
-                  <p className={styles.sectionEyebrow}>Today</p>
-                  <h2 className={styles.sectionTitle}>Needs your attention</h2>
-                  {attentionCount > 0 && (
+                  <p className={styles.sectionEyebrow}>This week</p>
+                  <h2 className={styles.sectionTitle}>Your next moves</h2>
+                  {data.nextMoves.length > 0 && (
                     <span className={styles.attentionCount}>
-                      {attentionCount}
+                      {data.nextMoves.length}
                     </span>
                   )}
                 </div>
-
-                {attentionCount === 0 ? (
-                  <p className={styles.allCaughtUp}>All caught up.</p>
+                {data.nextMoves.length === 0 ? (
+                  <p className={styles.allCaughtUp}>
+                    All caught up. Pull fresh leads or work your pipeline below.
+                  </p>
                 ) : (
-                  <div className={styles.attentionLists}>
-                    {validSnoozes.length > 0 && (
-                      <div className={styles.attentionGroup}>
-                        <p className={styles.attentionGroupLabel}>
-                          Snoozed leads ready ({validSnoozes.length})
-                        </p>
-                        <ul className={styles.attentionList}>
-                          {validSnoozes.map((l) => (
-                            <li key={l.id}>
-                              <Link
-                                href={`/dashboard/leads/cold/${l.googlePlaceId}?category=${l.category}`}
-                                className={styles.attentionItem}
-                              >
-                                <span className={styles.attentionName}>
-                                  {l.businessName ?? "Unnamed lead"}
-                                </span>
-                                <span className={styles.attentionMeta}>
-                                  Snooze ended
-                                </span>
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {validNextActions.length > 0 && (
-                      <div className={styles.attentionGroup}>
-                        <p className={styles.attentionGroupLabel}>
-                          Next actions due ({validNextActions.length})
-                        </p>
-                        <ul className={styles.attentionList}>
-                          {validNextActions.map((l) => (
-                            <li key={l.id}>
-                              <Link
-                                href={`/dashboard/leads/cold/${l.googlePlaceId}?category=${l.category}`}
-                                className={styles.attentionItem}
-                              >
-                                <span className={styles.attentionName}>
-                                  {l.businessName ?? "Unnamed lead"}
-                                </span>
-                                <span className={styles.attentionMeta}>
-                                  {l.nextActionNote ?? "Follow up"}
-                                </span>
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* {validStaleLeads.length > 0 && (
-                      <div className={styles.attentionGroup}>
-                        <p className={styles.attentionGroupLabel}>
-                          Untouched for 7+ days ({validStaleLeads.length})
-                        </p>
-                        <ul className={styles.attentionList}>
-                          {validStaleLeads.map((l) => (
-                            <li key={l.id}>
-                              <Link
-                                href={`/dashboard/leads/cold/${l.googlePlaceId}?category=${l.category}`}
-                                className={styles.attentionItem}
-                              >
-                                <span className={styles.attentionName}>
-                                  {l.businessName ?? "Unnamed lead"}
-                                </span>
-                                <span className={styles.attentionMeta}>
-                                  Saved {daysSince(l.createdAt)} days ago
-                                </span>
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )} */}
-                  </div>
+                  <ul className={styles.attentionList}>
+                    {data.nextMoves.map((m) => (
+                      <li key={m.id}>
+                        <Link href={m.href} className={styles.attentionItem}>
+                          <span className={styles.attentionName}>
+                            {m.businessName}
+                          </span>
+                          <span className={styles.attentionMeta}>
+                            {m.reason}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </section>
 
+              {/* M2 — ROI (returns null until something is Won with a value) */}
+              <RoiSummary clientProfileId={profile.id} />
+
+              {/* M6 — PIPELINE STRIP */}
               <section className={styles.pipelineCard}>
                 <div className={styles.sectionHeader}>
                   <p className={styles.sectionEyebrow}>Pipeline</p>
@@ -378,7 +157,7 @@ export default async function LeadsPage({
                     className={styles.pipelineStat}
                   >
                     <span className={styles.pipelineCount}>
-                      {countByStatus("NEW")}
+                      {data.pipeline.new}
                     </span>
                     <span className={styles.pipelineLabel}>New</span>
                   </Link>
@@ -387,7 +166,7 @@ export default async function LeadsPage({
                     className={styles.pipelineStat}
                   >
                     <span className={styles.pipelineCount}>
-                      {countByStatus("CONTACTED")}
+                      {data.pipeline.contacted}
                     </span>
                     <span className={styles.pipelineLabel}>Contacted</span>
                   </Link>
@@ -396,7 +175,7 @@ export default async function LeadsPage({
                     className={styles.pipelineStat}
                   >
                     <span className={styles.pipelineCount}>
-                      {countByStatus("NURTURING")}
+                      {data.pipeline.nurturing}
                     </span>
                     <span className={styles.pipelineLabel}>Nurturing</span>
                   </Link>
@@ -404,16 +183,19 @@ export default async function LeadsPage({
                     href='/dashboard/leads/saved?status=WON'
                     className={styles.pipelineStat}
                   >
-                    <span className={styles.pipelineCount}>{wonThisMonth}</span>
+                    <span className={styles.pipelineCount}>
+                      {data.pipeline.wonThisMonth}
+                    </span>
                     <span className={styles.pipelineLabel}>Won this month</span>
                   </Link>
                 </div>
                 <div className={styles.pipelineFooter}>
                   <p className={styles.pipelineFooterText}>
-                    {newThisWeek > 0 ? (
+                    {data.pipeline.newThisWeek > 0 ? (
                       <>
-                        <strong>{newThisWeek}</strong> new lead
-                        {newThisWeek === 1 ? "" : "s"} saved in the last 7 days
+                        <strong>{data.pipeline.newThisWeek}</strong> new lead
+                        {data.pipeline.newThisWeek === 1 ? "" : "s"} saved in
+                        the last 7 days
                       </>
                     ) : (
                       <>No new leads saved this week — try a new search.</>
@@ -428,7 +210,7 @@ export default async function LeadsPage({
                 </div>
               </section>
 
-              {/* === EXPLORE (chunk 6: Hot + Warm now LIVE) === */}
+              {/* FIND MORE */}
               <section className={styles.exploreSection}>
                 <div className={styles.sectionHeader}>
                   <p className={styles.sectionEyebrow}>Find more</p>
@@ -471,8 +253,23 @@ export default async function LeadsPage({
               </section>
             </>
           ) : (
+            /* TRIAL_EMPTY — market set, nothing saved yet. Phase 1: nudge +
+               explore. The live "your market right now" snapshot is Phase 2. */
             <>
-              {/* First-time empty state — explainer cards. Updated copy. */}
+              <section className={styles.attentionCard}>
+                <div className={styles.sectionHeader}>
+                  <p className={styles.sectionEyebrow}>Start here</p>
+                  <h2 className={styles.sectionTitle}>
+                    Your market is set — pull your first leads
+                  </h2>
+                </div>
+                <p className={styles.allCaughtUp}>
+                  Run a search to see what&apos;s in{" "}
+                  {data.market?.city ?? "your market"} right now, then save your
+                  first lead to start your pipeline.
+                </p>
+              </section>
+
               <section className={styles.feedCard}>
                 <div className={styles.feedHeader}>
                   <span className={styles.statusBadgeLive}>Live</span>
@@ -480,8 +277,7 @@ export default async function LeadsPage({
                 </div>
                 <p className={styles.feedDesc}>
                   Events happening in the next 14 days in your market —
-                  organizers are finalizing transportation right now. Respond
-                  today to beat competitors.
+                  organizers are finalizing transportation right now.
                 </p>
                 <Link href='/dashboard/leads/search' className={styles.feedCta}>
                   See hot leads →
@@ -494,9 +290,8 @@ export default async function LeadsPage({
                   <h2 className={styles.feedTitle}>Warm Leads</h2>
                 </div>
                 <p className={styles.feedDesc}>
-                  Events 15-90 days out in your market — pitch organizers before
-                  they finalize transport vendors. Includes full enrichment with
-                  venue and organizer contacts.
+                  Events 15-90 days out — pitch organizers before they finalize
+                  transport vendors.
                 </p>
                 <Link href='/dashboard/leads/search' className={styles.feedCta}>
                   See warm leads →
@@ -509,9 +304,8 @@ export default async function LeadsPage({
                   <h2 className={styles.feedTitle}>Cold Leads</h2>
                 </div>
                 <p className={styles.feedDesc}>
-                  Search businesses that match your ideal customer profile —
-                  wedding venues, hotels, law firms, country clubs, corporate
-                  offices.
+                  Search businesses that match your ICP — wedding venues,
+                  hotels, law firms, country clubs, corporate offices.
                 </p>
                 <Link href='/dashboard/leads/search' className={styles.feedCta}>
                   Search for leads →
