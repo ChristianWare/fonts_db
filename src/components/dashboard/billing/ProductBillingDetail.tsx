@@ -61,7 +61,6 @@ export default async function ProductBillingDetail({
   const isPastDue = sub?.status === "PAST_DUE";
   const isCancelled = sub?.status === "CANCELLED";
   const accessSub = isActive || isPastDue || inTrial;
-  const isBeta = sub?.planAmountCents === 0 && accessSub;
 
   // Leads runs a 7-day trial; trial start = trial end minus the trial length.
   const LEADS_TRIAL_DAYS = 7;
@@ -141,10 +140,14 @@ export default async function ProductBillingDetail({
               ? "Paused"
               : "Not Enrolled";
 
-  const priceText = isBeta
-    ? "Free"
-    : productType === "WEBSITE"
-      ? `${formatCents(monthlyAmountCents)}/mo`
+  // Website: prefer what Stripe actually bills (planAmountCents, synced by
+  // the webhook), then the amount stamped at enrollment, then the admin-set
+  // profile rate. A 0 on a website sub is stale data, never a real price.
+  const priceText =
+    productType === "WEBSITE"
+      ? `${formatCents(
+          sub?.planAmountCents || sub?.monthlyAmountCents || monthlyAmountCents,
+        )}/mo`
       : sub
         ? `${formatCents(sub.planAmountCents)}/mo`
         : `${formatCents(LEADS_PRICE_CENTS)}/mo`;
@@ -192,14 +195,6 @@ export default async function ProductBillingDetail({
               </p>
             ) : (
               <div className={styles.cardDetails}>
-                {isBeta && (
-                  <div className={styles.cardDetailRow}>
-                    <span className={styles.cardDetailLabel}>Plan</span>
-                    <span className={styles.cardDetailValue}>
-                      Beta access — free
-                    </span>
-                  </div>
-                )}
                 {inTrial && sub?.trialEndsAt && (
                   <>
                     {trialStart && (
@@ -218,7 +213,7 @@ export default async function ProductBillingDetail({
                         {format(new Date(sub.trialEndsAt), "MMM d, yyyy")}
                       </span>
                     </div>
-                    {!isBeta && !sub.cancelAtPeriodEnd && (
+                    {!sub.cancelAtPeriodEnd && (
                       <>
                         <div className={styles.cardDetailRow}>
                           <span className={styles.cardDetailLabel}>

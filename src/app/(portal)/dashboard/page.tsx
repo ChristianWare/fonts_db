@@ -37,6 +37,31 @@ export default async function DashboardPage() {
     (!!websiteSub || onboardingStage !== "REGISTERED") &&
     !setupFeePaid;
 
+  // Pricing — the admin can set custom rates per client, so never hardcode.
+  // Active subs show what Stripe actually bills (planAmountCents, synced by
+  // the webhook). Pending / not-yet-enrolled website states show the rate the
+  // admin set on the profile (defaults to $499). Leads has no per-profile
+  // rate, so it falls back to the $125 list price.
+  const leadsSub =
+    profile?.subscriptions?.find((s) => s.productType === "LEADS") ?? null;
+
+  const fmtMonthly = (cents: number) =>
+    `${new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(cents / 100)}/mo`;
+
+  const websitePrice = fmtMonthly(
+    websiteSub?.planAmountCents ||
+      websiteSub?.monthlyAmountCents ||
+      profile?.monthlyAmountCents ||
+      49900,
+  );
+  const leadsPrice = fmtMonthly(
+    leadsSub?.planAmountCents || leadsSub?.monthlyAmountCents || 12500,
+  );
+
   return (
     <div className={styles.page}>
       {/* ── Header ── */}
@@ -68,7 +93,7 @@ export default async function DashboardPage() {
                   {isLive ? "Live" : "In Progress"}
                 </span>
               </div>
-              <span className={styles.productPrice}>$499/mo</span>
+              <span className={styles.productPrice}>{websitePrice}</span>
             </div>
             <div className={styles.productCardMain}>
               <span className={styles.productLabel}>Product 01</span>
@@ -120,7 +145,7 @@ export default async function DashboardPage() {
                 />
                 <span className={styles.statusLabel}>Payment Needed</span>
               </div>
-              <span className={styles.productPrice}>$499/mo</span>
+              <span className={styles.productPrice}>{websitePrice}</span>
             </div>
             <div className={styles.productCardMain}>
               <span className={styles.productLabel}>Product 01</span>
@@ -160,7 +185,7 @@ export default async function DashboardPage() {
                 />
                 <span className={styles.statusLabel}>Not Enrolled</span>
               </div>
-              <span className={styles.productPrice}>$499/mo</span>
+              <span className={styles.productPrice}>{websitePrice}</span>
             </div>
             <div className={styles.productCardMain}>
               <span className={styles.productLabel}>Product 01</span>
@@ -203,7 +228,7 @@ export default async function DashboardPage() {
                 <span className={styles.statusDot} />
                 <span className={styles.statusLabel}>Active</span>
               </div>
-              <span className={styles.productPrice}>$125/mo</span>
+              <span className={styles.productPrice}>{leadsPrice}</span>
             </div>
             <div className={styles.productCardMain}>
               <span className={styles.productLabel}>Product 02</span>
@@ -243,7 +268,7 @@ export default async function DashboardPage() {
                 />
                 <span className={styles.statusLabel}>Not Enrolled</span>
               </div>
-              <span className={styles.productPrice}>$125/mo</span>
+              <span className={styles.productPrice}>{leadsPrice}</span>
             </div>
             <div className={styles.productCardMain}>
               <span className={styles.productLabel}>Product 02</span>

@@ -46,7 +46,6 @@ export default async function BillingPage() {
           const isPastDue = sub?.status === "PAST_DUE";
           const isCancelled = sub?.status === "CANCELLED";
           const accessSub = isActive || isPastDue || inTrial;
-          const isBeta = sub?.planAmountCents === 0 && accessSub;
 
           const websiteMidSetup =
             productType === "WEBSITE" &&
@@ -79,10 +78,13 @@ export default async function BillingPage() {
             statusText = "Cancelled";
           }
 
-          const priceText = isBeta
-            ? "Free"
-            : productType === "WEBSITE"
-              ? `${formatCents(monthlyAmountCents)}/mo`
+          const priceText =
+            productType === "WEBSITE"
+              ? `${formatCents(
+                  sub?.planAmountCents ||
+                    sub?.monthlyAmountCents ||
+                    monthlyAmountCents,
+                )}/mo`
               : sub
                 ? `${formatCents(sub.planAmountCents)}/mo`
                 : `${formatCents(LEADS_PRICE_CENTS)}/mo`;

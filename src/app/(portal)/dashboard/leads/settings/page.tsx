@@ -33,8 +33,10 @@ export default async function LeadsSettingsPage() {
     getSubscription(profile.id, "LEADS"),
   ]);
 
-  // Beta access = subscription exists but no Stripe ID (created via beta path)
-  const isBeta = !!subscription && !subscription.stripeSubscriptionId;
+  // Subs created without a Stripe subscription (e.g. comped accounts) can't
+  // be cancelled at period end — cancelling removes access immediately.
+  const cancelsImmediately =
+    !!subscription && !subscription.stripeSubscriptionId;
   const statusLabel = subscription?.status ?? "INACTIVE";
 
   const canCancel =
@@ -60,7 +62,6 @@ export default async function LeadsSettingsPage() {
                 <p className={styles.statusValue}>{statusLabel}</p>
               </div>
               <div className={styles.badges}>
-                {isBeta && <span className={styles.badge}>Beta Access</span>}
                 {access.leadsInTrial && access.leadsTrialEndsAt && (
                   <span className={styles.badge}>
                     Trial ends {access.leadsTrialEndsAt.toLocaleDateString()}
@@ -91,7 +92,7 @@ export default async function LeadsSettingsPage() {
             <h2 className={styles.sectionTitle}>Cancel Subscription</h2>
             <div className={styles.dangerCard}>
               <p className={styles.dangerDesc}>
-                {isBeta
+                {cancelsImmediately
                   ? "Cancelling immediately removes your access to the leads tool. Your saved settings stick around in case you decide to re-enroll later."
                   : "Cancelling stops your subscription at the end of your current billing period — you keep access until then, and your saved settings stick around in case you re-enroll later."}
               </p>
