@@ -287,6 +287,11 @@ model ClientProfile {
   // Internal admin notes (never visible to client)
   internalNotes String? @db.Text
 
+  // Per-client custom intake questions (JSON matching QuestionSection[]).
+  // When set, this client's questionnaire renders these instead of the
+  // default black-car question set. Null = use the default.
+  customQuestionnaire Json?
+
   // Stripe customer (one per client across all products)
   stripeCustomerId     String? @unique
   // NOTE: stripeSubscriptionId is legacy — kept for backwards compat with

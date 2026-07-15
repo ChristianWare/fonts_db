@@ -293,17 +293,20 @@ export async function sendAdminQuestionnaireSubmittedEmail({
   clientName,
   businessName,
   clientProfileId,
+  isUpdate = false,
 }: {
   clientName: string;
   businessName: string;
   clientProfileId: string;
+  isUpdate?: boolean;
 }) {
+  const verb = isUpdate ? "updated" : "submitted";
   await sendEmail({
     to: ADMIN_EMAIL,
-    subject: `Questionnaire submitted — ${businessName}`,
+    subject: `Questionnaire ${verb} — ${businessName}`,
     html: buildEmailHTML({
-      preheader: `${clientName} submitted their intake questionnaire.`,
-      heading: "Questionnaire submitted.",
+      preheader: `${clientName} ${verb} their intake questionnaire.`,
+      heading: `Questionnaire ${verb}.`,
       body:
         bodyDetail("Client", clientName) + bodyDetail("Business", businessName),
       ctaLabel: "View responses →",

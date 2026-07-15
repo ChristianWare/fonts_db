@@ -3,13 +3,7 @@
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import { sendAdminQuestionnaireSubmittedEmail } from "@/lib/emails";
-
-const lockedStages = [
-  "ASSETS_PENDING",
-  "ASSETS_UPLOADED",
-  "DESIGN_REVIEW",
-  "SITE_LIVE",
-];
+import { QUESTIONNAIRE_LOCKED_STAGES } from "@/lib/questionnaire.config";
 
 export const saveQuestionnaire = async (
   answers: Record<string, string | string[]>,
@@ -25,11 +19,13 @@ export const saveQuestionnaire = async (
 
   if (!profile) return { error: "Profile not found" };
 
-  if (lockedStages.includes(profile.onboardingStage)) {
+  if (QUESTIONNAIRE_LOCKED_STAGES.includes(profile.onboardingStage)) {
     return {
       error: "Your questionnaire is locked while your site is in progress.",
     };
   }
+
+  const isFirstSubmission = !profile.questionnaire?.submittedAt;
 
   const data = {
     answers,
@@ -54,6 +50,7 @@ export const saveQuestionnaire = async (
       clientName: profile.user.name ?? "Client",
       businessName: profile.businessName,
       clientProfileId: profile.id,
+      isUpdate: !isFirstSubmission,
     });
   }
 

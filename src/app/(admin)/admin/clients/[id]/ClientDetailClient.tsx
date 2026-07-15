@@ -10,7 +10,8 @@ import { format } from "date-fns";
 import { advanceClientStage } from "@/actions/admin/advanceClientStage";
 import { getCloudinarySignature } from "@/actions/client/getCloudinarySignature";
 import { uploadDocumentToClient } from "@/actions/admin/uploadDocumentToClient";
-import { questionnaireSections } from "@/lib/questionnaire.config";
+import { resolveQuestionnaireSections } from "@/lib/customQuestionnaire";
+import { setCustomQuestionnaire } from "@/actions/admin/setCustomQuestionnaire";
 import DesignOptionsTab from "./DesignOptionsTab";
 import BlueprintTab from "./BlueprintTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
@@ -104,6 +105,21 @@ export default function ClientDetailClient({
   );
   const [assetsSkipped, setAssetsSkipped] = useState(client.assetsSkipped);
 
+  // ── Custom questionnaire (per-client question set) ────────────────────────
+  const questionsInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingQuestions, setUploadingQuestions] = useState(false);
+  const [revertingQuestions, setRevertingQuestions] = useState(false);
+  const [questionsError, setQuestionsError] = useState<string | null>(null);
+  const customQuestionnaireRaw = (client as any).customQuestionnaire ?? null;
+  const hasCustomQuestionnaire = !!customQuestionnaireRaw;
+  const effectiveSections = resolveQuestionnaireSections(
+    customQuestionnaireRaw,
+  );
+  const effectiveQuestionCount = effectiveSections.reduce(
+    (n, s) => n + s.questions.length,
+    0,
+  );
+
   // Website is "approved" once the admin has advanced them past REGISTERED.
   // Before that, the only relevant action is approving them.
   const websiteApproved = client.onboardingStage !== "REGISTERED";
@@ -181,6 +197,64 @@ export default function ClientDetailClient({
       setDocError("Something went wrong.");
     }
     setUploadingDoc(false);
+  };
+
+  const handleQuestionsUpload = async (file: File) => {
+    setQuestionsError(null);
+    setUploadingQuestions(true);
+    try {
+      const text = await file.text();
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        setQuestionsError("That file isn't valid JSON.");
+        setUploadingQuestions(false);
+        return;
+      }
+      const result = await setCustomQuestionnaire({
+        clientProfileId: client.id,
+        sections: parsed,
+      });
+      if (result?.error) {
+        setQuestionsError(result.error);
+      } else {
+        toast.success(
+          `Custom questionnaire set — ${result.sectionCount} sections, ${result.questionCount} questions.`,
+        );
+        router.refresh();
+      }
+    } catch {
+      setQuestionsError("Something went wrong.");
+    }
+    setUploadingQuestions(false);
+  };
+
+  const handleRevertQuestions = async () => {
+    setRevertingQuestions(true);
+    const result = await setCustomQuestionnaire({
+      clientProfileId: client.id,
+      sections: null,
+    });
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Reverted to the default questionnaire.");
+      router.refresh();
+    }
+    setRevertingQuestions(false);
+  };
+
+  const downloadQuestionnaireTemplate = () => {
+    const blob = new Blob([JSON.stringify(effectiveSections, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "questionnaire-template.json";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   // ── Derived state ─────────────────────────────────────────────────────────
@@ -1046,6 +1120,65 @@ export default function ClientDetailClient({
       {activeTab === "questionnaire" && (
         <div className={styles.tabContent}>
           <div className={styles.card}>
+            <h3 className={styles.cardHeading}>Question Set</h3>
+            <p className={styles.cardDesc}>
+              {hasCustomQuestionnaire
+                ? `This client has a custom questionnaire — ${effectiveSections.length} section${effectiveSections.length === 1 ? "" : "s"}, ${effectiveQuestionCount} questions. Upload a new JSON file to replace it, or revert to the default black car set.`
+                : "This client sees the default black car questionnaire. Upload a JSON file of custom questions to replace it for this client only — useful for clients outside the black car space."}
+            </p>
+            {client.questionnaire?.submittedAt && (
+              <p className={styles.cardDesc} style={{ color: "#c05621" }}>
+                Heads up: this client already submitted answers. If you replace
+                the questions, answers to removed questions will still be kept
+                and shown under &ldquo;Other Answers&rdquo; below.
+              </p>
+            )}
+            {questionsError && (
+              <div className={styles.errorBanner}>{questionsError}</div>
+            )}
+            <input
+              ref={questionsInputRef}
+              type='file'
+              className={styles.hiddenInput}
+              accept='.json,application/json'
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleQuestionsUpload(file);
+                e.target.value = "";
+              }}
+            />
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+              <button
+                onClick={() => questionsInputRef.current?.click()}
+                className={styles.uploadBtn}
+                disabled={uploadingQuestions}
+              >
+                {uploadingQuestions
+                  ? "Uploading..."
+                  : hasCustomQuestionnaire
+                    ? "Replace custom questions (.json)"
+                    : "Upload custom questions (.json)"}
+              </button>
+              <button
+                onClick={downloadQuestionnaireTemplate}
+                className={styles.uploadBtn}
+                disabled={uploadingQuestions}
+              >
+                Download current set as template
+              </button>
+              {hasCustomQuestionnaire && (
+                <button
+                  onClick={handleRevertQuestions}
+                  className={styles.uploadBtn}
+                  disabled={revertingQuestions}
+                >
+                  {revertingQuestions ? "Reverting..." : "Revert to default"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.card}>
             <h3 className={styles.cardHeading}>Questionnaire Responses</h3>
             {!client.questionnaire ? (
               <p className={styles.emptyText}>
@@ -1068,7 +1201,7 @@ export default function ClientDetailClient({
 
           {client.questionnaire?.submittedAt &&
             answers &&
-            questionnaireSections.map((section) => {
+            effectiveSections.map((section) => {
               const sectionAnswers = section.questions.filter(
                 (q) =>
                   answers[q.id] !== undefined &&
@@ -1098,6 +1231,40 @@ export default function ClientDetailClient({
                 </div>
               );
             })}
+
+          {client.questionnaire?.submittedAt &&
+            answers &&
+            (() => {
+              const knownIds = new Set(
+                effectiveSections.flatMap((s) => s.questions.map((q) => q.id)),
+              );
+              const orphaned = Object.entries(answers).filter(
+                ([id, val]) =>
+                  !knownIds.has(id) &&
+                  val !== "" &&
+                  !(Array.isArray(val) && (val as string[]).length === 0),
+              );
+              if (orphaned.length === 0) return null;
+              return (
+                <div className={styles.card}>
+                  <h3 className={styles.cardHeading}>Other Answers</h3>
+                  <p className={styles.cardDesc}>
+                    Answers to questions that are no longer part of this
+                    client&apos;s questionnaire.
+                  </p>
+                  <div className={styles.answerList}>
+                    {orphaned.map(([id, val]) => (
+                      <div key={id} className={styles.answerRow}>
+                        <span className={styles.answerKey}>{id}</span>
+                        <span className={styles.answerValue}>
+                          {Array.isArray(val) ? val.join(", ") : String(val)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
         </div>
       )}
 

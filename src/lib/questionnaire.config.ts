@@ -1179,3 +1179,15 @@ export const questionnaireSections: QuestionSection[] = [
     ],
   },
 ];
+
+// Stages where the questionnaire is locked for client edits — the build is
+// underway, so the answers are frozen as build inputs. Both the questionnaire
+// page (UI state) and saveQuestionnaire (server enforcement) read this list.
+// Want clients to be able to edit for longer? Remove stages from here.
+export const QUESTIONNAIRE_LOCKED_STAGES: string[] = [
+  "ASSETS_PENDING",
+  "ASSETS_UPLOADED",
+  "DESIGN_SELECTION",
+  "DESIGN_REVIEW",
+  "SITE_LIVE",
+];

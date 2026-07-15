@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { questionnaireSections } from "@/lib/questionnaire.config";
+import type { QuestionSection } from "@/lib/questionnaire.config";
 import { saveQuestionnaire } from "@/actions/client/saveQuestionnaire";
 import { useRouter } from "next/navigation";
 import styles from "./QuestionnaireClient.module.css";
@@ -89,10 +89,11 @@ function hasAnswer(value: string | string[] | undefined): boolean {
 
 // Returns the label of the first unanswered required visible question, or null if all good
 function validateSection(
+  sections: QuestionSection[],
   sectionIndex: number,
   answers: Answers,
 ): string | null {
-  const section = questionnaireSections[sectionIndex];
+  const section = sections[sectionIndex];
   const visibleRequired = section.questions.filter(
     (q) => q.required && shouldShowQuestion(q.id, answers),
   );
@@ -109,10 +110,12 @@ export default function QuestionnaireClient({
   isSubmitted,
   isLocked,
   savedAnswers,
+  sections,
 }: {
   isSubmitted: boolean;
   isLocked: boolean;
   savedAnswers: Answers;
+  sections: QuestionSection[];
 }) {
   const router = useRouter();
   const [currentSection, setCurrentSection] = useState(0);
@@ -122,8 +125,8 @@ export default function QuestionnaireClient({
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(!isSubmitted);
 
-  const totalSections = questionnaireSections.length;
-  const section = questionnaireSections[currentSection];
+  const totalSections = sections.length;
+  const section = sections[currentSection];
   const isLast = currentSection === totalSections - 1;
   const progress = ((currentSection + 1) / totalSections) * 100;
 
@@ -153,7 +156,7 @@ export default function QuestionnaireClient({
   };
 
   const handleNext = async () => {
-    const validationError = validateSection(currentSection, answers);
+    const validationError = validateSection(sections, currentSection, answers);
     if (validationError) {
       setError(validationError);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -175,7 +178,7 @@ export default function QuestionnaireClient({
   };
 
   const handleSubmit = async () => {
-    const validationError = validateSection(currentSection, answers);
+    const validationError = validateSection(sections, currentSection, answers);
     if (validationError) {
       setError(validationError);
       return;
@@ -245,7 +248,7 @@ export default function QuestionnaireClient({
         )}
 
         <div className={styles.readOnlyList}>
-          {questionnaireSections.map((sec) => {
+          {sections.map((sec) => {
             // Show every question whose conditional rules allow it to display,
             // whether or not it's been answered.
             const visibleQuestions = sec.questions.filter((q) =>
