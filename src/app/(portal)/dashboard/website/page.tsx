@@ -72,8 +72,8 @@ export default async function DashboardPage() {
       href: "/dashboard/billing",
       completed: billingActive,
       completedAt:
-        billingActive && profile?.subscription?.currentPeriodStart
-          ? new Date(profile.subscription.currentPeriodStart)
+        billingActive && profile?.subscription?.createdAt
+          ? new Date(profile.subscription.createdAt)
           : null,
     },
     {
@@ -102,7 +102,9 @@ export default async function DashboardPage() {
           ? "Blueprint fully approved. We have everything we need to build."
           : `Review and approve your website blueprint — ${blueprintStatus.approvedSections} of ${blueprintStatus.totalSections} sections approved.`
         : "Once you complete your questionnaire, we'll prepare your website blueprint for your review.",
-      href: blueprintStatus.hasBlueprint ? "/dashboard/website/blueprint" : null,
+      href: blueprintStatus.hasBlueprint
+        ? "/dashboard/website/blueprint"
+        : null,
       completed: blueprintStatus.isFullyApproved,
       completedAt: null,
     },
@@ -141,7 +143,9 @@ export default async function DashboardPage() {
       desc: blueprintStatus.hasBlueprint
         ? "Your sitemap and page-by-page copy plan is ready for review."
         : "Once you complete your questionnaire, we'll publish your website blueprint.",
-      href: blueprintStatus.hasBlueprint ? "/dashboard/website/blueprint" : null,
+      href: blueprintStatus.hasBlueprint
+        ? "/dashboard/website/blueprint"
+        : null,
       completed: blueprintStatus.isFullyApproved,
       active: blueprintStatus.hasBlueprint,
     },

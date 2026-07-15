@@ -131,7 +131,7 @@ export default async function DocumentsPage() {
                   {/* Sign button */}
                   {needsSignature && (
                     <a
-                      href={`/dashboard/documents/${doc.id}/sign`}
+                      href={`/dashboard/website/documents/${doc.id}/sign`}
                       className={styles.signBtn}
                     >
                       Sign now

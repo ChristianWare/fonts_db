@@ -69,7 +69,7 @@ export async function sendDocumentReadyEmail({
           `Hi ${firstName}, a document has been added to your portal and requires your signature.`,
         ) + bodyDetail("Document", documentTitle),
       ctaLabel: "Sign document →",
-      ctaUrl: `${APP_URL}/dashboard/documents/${documentId}/sign`,
+      ctaUrl: `${APP_URL}/dashboard/website/documents/${documentId}/sign`,
     }),
   });
 }

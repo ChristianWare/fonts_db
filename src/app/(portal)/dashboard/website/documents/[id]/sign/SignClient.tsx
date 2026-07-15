@@ -41,7 +41,7 @@ export default function SignClient({ document }: { document: Document }) {
       return;
     }
 
-    window.location.href = "/dashboard/documents?signed=true";
+    window.location.href = "/dashboard/website/documents?signed=true";
   };
 
   return (
@@ -49,7 +49,7 @@ export default function SignClient({ document }: { document: Document }) {
       {/* Header */}
       <div className={styles.header}>
         <button
-          onClick={() => router.push("/dashboard/documents")}
+          onClick={() => router.push("/dashboard/website/documents")}
           className={styles.backBtn}
         >
           ← Documents
@@ -105,8 +105,8 @@ export default function SignClient({ document }: { document: Document }) {
           <h2 className={styles.signHeading}>Sign This Document</h2>
           <p className={styles.signDesc}>
             Read the document above carefully. By checking the box and clicking
-            &ldquo;Sign Document&rdquo; you are providing your legally binding electronic
-            signature.
+            &ldquo;Sign Document&rdquo; you are providing your legally binding
+            electronic signature.
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function SignClient({ document }: { document: Document }) {
 
         <div className={styles.signActions}>
           <button
-            onClick={() => router.push("/dashboard/documents")}
+            onClick={() => router.push("/dashboard/website/documents")}
             className={styles.cancelBtn}
           >
             Cancel

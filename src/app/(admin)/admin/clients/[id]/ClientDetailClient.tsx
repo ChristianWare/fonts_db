@@ -252,8 +252,8 @@ export default function ClientDetailClient({
         : "Client has not yet enrolled in billing.",
       completed: billingActive,
       completedAt:
-        billingActive && websiteSubscription?.currentPeriodStart
-          ? new Date(websiteSubscription.currentPeriodStart)
+        billingActive && websiteSubscription?.createdAt
+          ? new Date(websiteSubscription.createdAt)
           : null,
     },
     {

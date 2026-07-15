@@ -14,13 +14,13 @@ export default async function SignDocumentPage({
 
   const document = profile.documents.find((d) => d.id === id && d.visible);
 
-  if (!document) redirect("/dashboard/documents");
+  if (!document) redirect("/dashboard/website/documents");
 
   // Already signed — nothing to do
-  if (document.status === "SIGNED") redirect("/dashboard/documents");
+  if (document.status === "SIGNED") redirect("/dashboard/website/documents");
 
   // Doesn't need a signature — nothing to do
-  if (!document.requiresSignature) redirect("/dashboard/documents");
+  if (!document.requiresSignature) redirect("/dashboard/website/documents");
 
   return <SignClient document={document} />;
 }
