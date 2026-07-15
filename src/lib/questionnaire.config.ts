@@ -76,6 +76,17 @@ export const questionnaireSections: QuestionSection[] = [
         helpText: "This will be added to your list of services on the site.",
       },
       {
+        id: "service_details_top",
+        label:
+          "For your 2-3 most important services, describe each in a few sentences: what's included, who typically books it, and anything you do differently.",
+        type: "textarea",
+        placeholder:
+          "e.g. Airport transfers: we track every flight, include 45 minutes of wait time, and the driver texts when they're curbside. Corporate: the same 3 senior drivers handle all runs for consistency...",
+        required: true,
+        helpText:
+          "Each service you offer gets its own page on your site. This is the raw material for that copy — specifics beat adjectives every time.",
+      },
+      {
         id: "operates_247",
         label: "Do you operate 24/7?",
         type: "radio",
@@ -260,6 +271,16 @@ export const questionnaireSections: QuestionSection[] = [
         required: true,
       },
       {
+        id: "booking_notification_destination",
+        label:
+          "Where should new booking notifications be sent? (This can be different from your public contact info.)",
+        type: "text",
+        placeholder: "e.g. dispatch@eliteblackcar.com, and text (602) 555-0143",
+        required: true,
+        helpText:
+          "Every online booking pings this email and/or phone number the moment it comes in.",
+      },
+      {
         id: "show_address",
         label: "Do you want to display a physical address on the site?",
         type: "radio",
@@ -353,6 +374,17 @@ export const questionnaireSections: QuestionSection[] = [
         required: true,
         helpText:
           "Be as specific as possible — this helps us build accurate coverage maps and booking radius logic.",
+      },
+      {
+        id: "priority_cities",
+        label:
+          "Which 3-5 cities or areas do most of your bookings come from today?",
+        type: "textarea",
+        placeholder:
+          "e.g. Scottsdale and Paradise Valley are about 60% of our business, then Phoenix, Tempe, and airport runs from all over the Valley",
+        required: true,
+        helpText:
+          "We build a dedicated page for every city you serve — this tells us which ones to build first and feature most prominently.",
       },
       {
         id: "out_of_state",
@@ -465,6 +497,28 @@ export const questionnaireSections: QuestionSection[] = [
         required: false,
       },
       {
+        id: "corporate_accounts_offered",
+        label: "Do you offer corporate accounts?",
+        type: "radio",
+        options: [
+          "Yes — with monthly invoicing / net terms",
+          "Yes — card on file, no invoicing",
+          "Not yet, but I'd like to",
+          "No",
+        ],
+        required: true,
+        helpText:
+          "If yes, we'll build a dedicated corporate accounts page with an account request form — these are typically an operator's highest-value clients.",
+      },
+      {
+        id: "corporate_accounts_details",
+        label: "If yes, how do corporate accounts work with you today?",
+        type: "textarea",
+        placeholder:
+          "e.g. Net-30 invoicing, a dedicated booking email their assistants use, monthly ride summaries, priority dispatch",
+        required: false,
+      },
+      {
         id: "booking_volume",
         label: "How many bookings do you handle per month on average?",
         type: "select",
@@ -491,6 +545,38 @@ export const questionnaireSections: QuestionSection[] = [
           "Hybrid — depends on service type",
         ],
         required: true,
+      },
+      {
+        id: "rate_card",
+        label:
+          "Paste your current rates or price list — whatever format you have.",
+        type: "textarea",
+        placeholder:
+          "e.g. PHX airport to Scottsdale: $95 sedan / $120 SUV. Hourly: $85/hr sedan, 3-hour minimum. Point-to-point: $3.50/mile, $75 minimum",
+        required: false,
+        helpText:
+          "It doesn't need to be polished. We'll map your exact fare logic together on the kickoff call — having your real numbers up front makes that call twice as fast.",
+      },
+      {
+        id: "hourly_minimum",
+        label: "If you offer hourly service, what is your minimum booking?",
+        type: "select",
+        options: ["No minimum", "2 hours", "3 hours", "4 hours", "5+ hours"],
+        required: false,
+      },
+      {
+        id: "payment_methods",
+        label: "Which payment methods do you accept?",
+        type: "multiselect",
+        options: [
+          "Credit / debit cards",
+          "Cash",
+          "Corporate invoicing / net terms",
+          "Zelle / Venmo / Cash App",
+          "Checks",
+        ],
+        required: true,
+        helpText: "Displayed in your FAQ and used to configure your checkout.",
       },
       {
         id: "deposit_required",
@@ -582,6 +668,34 @@ export const questionnaireSections: QuestionSection[] = [
         required: true,
         helpText:
           "One vehicle per line. Include passenger capacity so we can enforce limits at booking.",
+      },
+      {
+        id: "vehicle_amenities",
+        label: "What amenities come standard in your vehicles?",
+        type: "multiselect",
+        options: [
+          "Bottled water",
+          "Phone chargers",
+          "WiFi",
+          "Leather interior",
+          "Privacy partition",
+          "Umbrellas",
+          "Booster / child seats available",
+          "Other",
+        ],
+        required: true,
+        helpText:
+          "Amenities go on your fleet pages — they're what separate premium positioning from a ride quote.",
+      },
+      {
+        id: "luggage_capacity",
+        label: "Roughly how much luggage fits in each vehicle type?",
+        type: "textarea",
+        placeholder:
+          "e.g. Sedan: 3 large bags. Escalade: 6 large bags plus carry-ons. Sprinter: 12+ bags",
+        required: false,
+        helpText:
+          "Airport travelers ask this constantly — showing it at booking prevents a family of five with skis from booking a sedan.",
       },
       {
         id: "vehicle_selection_style",
@@ -718,6 +832,20 @@ export const questionnaireSections: QuestionSection[] = [
         required: false,
         helpText:
           "This helps us baseline what success looks like after the new site launches.",
+      },
+      {
+        id: "analytics_access",
+        label:
+          "Is Google Analytics or Google Search Console set up on your current site?",
+        type: "radio",
+        options: [
+          "Yes — and I have login access",
+          "Yes — but someone else controls it",
+          "No / not sure",
+        ],
+        required: false,
+        helpText:
+          "If it exists, we'll pull your real search data to protect your rankings during migration and baseline your before-and-after.",
       },
       {
         id: "domain_control",
@@ -886,6 +1014,14 @@ export const questionnaireSections: QuestionSection[] = [
         type: "text",
         placeholder: "Premium, professional, reliable",
         required: true,
+      },
+      {
+        id: "tagline",
+        label: "Do you have a tagline or slogan customers already know?",
+        type: "text",
+        placeholder:
+          "e.g. Arrive like you mean it — or leave blank and we'll write one",
+        required: false,
       },
       {
         id: "words_to_avoid",
