@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,27 @@ import { RegisterSchema, RegisterSchemaType } from "@/schemas/RegisterSchema";
 import { register as registerUser } from "@/actions/auth/register";
 import styles from "./RegisterPage.module.css";
 import Check from "@/components/shared/Check/Check";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+type TurnstileAPI = {
+  render: (
+    el: HTMLElement,
+    opts: {
+      sitekey: string;
+      callback: (token: string) => void;
+      "expired-callback"?: () => void;
+      "error-callback"?: () => void;
+    },
+  ) => string;
+};
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileAPI;
+    __ffTurnstileOnload?: () => void;
+  }
+}
 
 function EyeIcon() {
   return (
@@ -63,6 +84,43 @@ export default function RegisterPage() {
     }
   }, [status, router]);
 
+  // ── Cloudflare Turnstile (bot protection) ────────────────────────────
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileRendered = useRef(false);
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+
+    const renderWidget = () => {
+      if (
+        !window.turnstile ||
+        !turnstileRef.current ||
+        turnstileRendered.current
+      )
+        return;
+      turnstileRendered.current = true;
+      window.turnstile.render(turnstileRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token: string) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(null),
+        "error-callback": () => setTurnstileToken(null),
+      });
+    };
+
+    if (window.turnstile) {
+      renderWidget();
+      return;
+    }
+
+    window.__ffTurnstileOnload = renderWidget;
+    const script = document.createElement("script");
+    script.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=__ffTurnstileOnload";
+    script.async = true;
+    document.head.appendChild(script);
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -76,7 +134,13 @@ export default function RegisterPage() {
     setSuccess(null);
     setLoading(true);
 
-    const result = await registerUser(values);
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setError("Please wait for the verification check to complete.");
+      setLoading(false);
+      return;
+    }
+
+    const result = await registerUser(values, turnstileToken ?? undefined);
 
     if (result?.error) {
       setError(result.error);
@@ -141,7 +205,6 @@ export default function RegisterPage() {
           {success ? (
             <div className={styles.successState}>
               <div className={styles.successIcon}>
-                
                 <Check />
               </div>
               <h3 className={styles.successHeading}>Check your email</h3>
@@ -294,6 +357,10 @@ export default function RegisterPage() {
                     )}
                   </div>
                 </div>
+
+                {TURNSTILE_SITE_KEY && (
+                  <div ref={turnstileRef} style={{ marginBottom: "1.6rem" }} />
+                )}
 
                 {error && (
                   <div className={styles.errorBanner}>

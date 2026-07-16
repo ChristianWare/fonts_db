@@ -7,13 +7,23 @@ import {
   generateEmailVerificationToken,
   sendEmailVerificationToken,
 } from "@/lib/emailVerification";
-import { generateServiceAgreement } from "@/lib/generateServiceAgreement";
-import { sendAdminNewClientEmail } from "@/lib/emails";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import bcrypt from "bcryptjs";
 
-export const register = async (values: RegisterSchemaType) => {
+export const register = async (
+  values: RegisterSchemaType,
+  turnstileToken?: string,
+) => {
   const validated = RegisterSchema.safeParse(values);
   if (!validated.success) return { error: "Invalid fields" };
+
+  // Bot protection — verify the Turnstile token before touching the DB.
+  const turnstile = await verifyTurnstileToken(turnstileToken);
+  if (!turnstile.success) {
+    return {
+      error: "Human verification failed. Please refresh and try again.",
+    };
+  }
 
   const { name, businessName, email, password, website } = validated.data;
 
@@ -39,18 +49,9 @@ export const register = async (values: RegisterSchemaType) => {
     include: { clientProfile: true },
   });
 
-  if (user.clientProfile?.id) {
-    const agreementResult = await generateServiceAgreement(
-      user.clientProfile.id,
-    );
-    if ("error" in agreementResult) {
-      console.error(
-        "[register] Agreement generation failed:",
-        agreementResult.error,
-      );
-    }
-  }
-
+  // NOTE: the service agreement + admin "new client" email now happen at
+  // email verification (see verify-email.ts), so bot signups that slip
+  // through never generate PDFs or ping the admin inbox.
   const token = await generateEmailVerificationToken(email);
   const emailResult = await sendEmailVerificationToken(
     token.email,
@@ -62,16 +63,6 @@ export const register = async (values: RegisterSchemaType) => {
       error:
         "Account created but failed to send verification email. Try logging in to resend.",
     };
-  }
-
-  // Notify admin
-  if (user.clientProfile?.id) {
-    await sendAdminNewClientEmail({
-      clientName: name,
-      businessName,
-      email,
-      clientProfileId: user.clientProfile.id,
-    });
   }
 
   return { success: "Account created! Please check your email to verify." };
