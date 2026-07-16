@@ -279,8 +279,28 @@
 ================================================================ */
 
 .gallery {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media screen and (max-width: 1268px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 5rem;
+    margin-top: 5rem;
+  }
+
+  .optionHeader {
+      border-top: 1px solid var(--lightGray);
+
+  }
 }
 
 .optionCard {
@@ -289,9 +309,9 @@
   transition: background-color 0.15s ease;
 }
 
-.optionCard:last-child {
+/* .optionCard:last-child {
   border-bottom: none;
-}
+} */
 
 .optionActive {
   background-color: var(--lightlightGrayi);
@@ -374,10 +394,16 @@
 .preview {
   position: relative;
   width: 100%;
-  height: 320px;
+  height: 600px;
   overflow: hidden;
   cursor: pointer;
   border-bottom: 1px solid var(--lightGray);
+}
+
+@media screen and (max-width: 768px) {
+  .preview {
+    height: 320px;
+  }
 }
 
 .previewImage {
