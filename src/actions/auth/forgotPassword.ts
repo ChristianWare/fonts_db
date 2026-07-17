@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { Resend } from "resend";
 import crypto from "crypto";
+import { APP_URL, FROM_ADDRESS } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -34,10 +35,10 @@ export async function forgotPassword(email: string) {
     },
   });
 
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+  const resetUrl = `${APP_URL}/reset-password?token=${token}`;
 
   await resend.emails.send({
-    from: "Fonts & Footers <onboarding@resend.dev>",
+    from: FROM_ADDRESS,
     to: user.email,
     subject: "Reset your password",
     html: `
