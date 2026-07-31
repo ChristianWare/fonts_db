@@ -83,7 +83,7 @@
 
 .imgContainer,
 .imgContainerii {
-position: relative;
+  position: relative;
   width: 100%;
 }
 
@@ -125,14 +125,14 @@ position: relative;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 2rem;
+  gap: 3rem;
   width: 100%;
   margin-top: auto;
 }
 
 .topCopy {
   color: var(--white);
-  font-size: 1.6rem;
+  font-size: 14px;
   line-height: 1.5;
   font-family: var(--GeistMono);
   text-transform: uppercase;
@@ -159,22 +159,19 @@ position: relative;
 
 .heading {
   color: var(--white);
-
 }
 
 .copyBtnContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 60%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  max-width: 900px;
   gap: 3rem;
 }
 
 .copy,
 .span {
   color: lightgray;
-  font-size: 2.2rem;
+  font-size: 2rem;
   letter-spacing: -0.7px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -185,9 +182,7 @@ position: relative;
 }
 
 .btnContainer {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  width: 100%;
 }
 
 @media screen and (max-width: 1268px) {
@@ -203,11 +198,6 @@ position: relative;
     gap: 10rem;
   }
 
-  .copyBtnContainer {
-    width: 100%;
-    margin-top: 3rem;
-  }
-
   .topCopy {
     margin-bottom: 1rem;
   }
@@ -216,6 +206,13 @@ position: relative;
   .span {
     font-size: 1.9rem;
     letter-spacing: -0.6px;
+  }
+}
+
+@media screen and (max-width: 968px) {
+  .copyBtnContainer {
+    max-width: 500px;
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 
@@ -249,7 +246,6 @@ position: relative;
   .imgContainerii {
     display: block;
     height: 400px;
-    
   }
 
   .overlay {
