@@ -6,7 +6,7 @@
   font-family: var(--GeistMono);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 1.6rem;
+  font-size: 14px;
   transition: all 0.2s ease-in-out;
   white-space: nowrap;
   cursor: pointer;
@@ -71,12 +71,14 @@
   padding: 1.5rem 2rem;
   background-color: var(--white);
   color: var(--black);
+  font-size: 12px;
 }
 
 .navYellow {
   padding: 1.5rem 2rem;
   background-color: var(--accent);
   color: var(--black);
+  font-size: 12px;
 }
 
 .arrowContainer {

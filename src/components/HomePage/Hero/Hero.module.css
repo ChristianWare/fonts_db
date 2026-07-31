@@ -83,7 +83,7 @@
 
 .imgContainer,
 .imgContainerii {
-  position: relative;
+position: relative;
   width: 100%;
 }
 
@@ -159,16 +159,7 @@
 
 .heading {
   color: var(--white);
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--lightGrayV) 0,
-    var(--lightGrayV) 1px,
-    transparent 0,
-    transparent 50%
-  );
-  background-size: 5px 5px;
-  padding: 1rem 2rem;
-  padding-top: 2rem;
+
 }
 
 .copyBtnContainer {
@@ -257,7 +248,8 @@
 
   .imgContainerii {
     display: block;
-    height: 300px;
+    height: 400px;
+    
   }
 
   .overlay {

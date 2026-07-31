@@ -33,13 +33,16 @@ export default function Hero() {
             </div>
             <div className={styles.bottom}>
               <div className={styles.topCopy}>
-                What we offer exclusively to{" "}
-                <span className={styles.accent}>
-                  black car & limo companies:
-                </span>
+                Audits. Leads.
+                <span className={styles.accent}> Websites.</span>
               </div>
               <h1 className={styles.heading}>
-                Audits. Leads. <br /> Websites.
+                {/* Audits. Leads. <br /> Websites. */}
+                {/* Black Car & Limo Operators */}
+                {/* Black Car & Limo Operators <br /> */}
+                {/* Black Car & limo <br /> Growth Solutions */}
+                Expand your
+                <br /> Chauffeur Business
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
@@ -58,12 +61,12 @@ export default function Hero() {
                     btnType='accent'
                     arrow
                   />
-                  <Button
+                  {/* <Button
                     href='/leads'
                     text='Get leads to your market'
                     btnType='white'
                     arrow
-                  />
+                  /> */}
                 </div>
               </div>
               <div className={styles.imgContainerii}>

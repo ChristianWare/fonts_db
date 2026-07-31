@@ -75,7 +75,7 @@ h6 {
 h1,
 .h1 {
   font-family: var(--RobotoFlexii);
-  font-size: 14rem;
+  font-size: 12rem;
   /* font-size: 8.6vw; */
   letter-spacing: -2.8px;
   font-weight: 400;
@@ -336,7 +336,7 @@ textarea:focus {
   .h1,
   h1,
   .h2ii {
-    font-size: 5.5rem;
+    font-size: 45px;
     letter-spacing: -0.9px;
   }
 
