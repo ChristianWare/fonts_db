@@ -21,9 +21,9 @@
 }
 
 .text {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-family: var(--GeistMono);
-  line-height: 0.9em;
+  line-height: 0;
   text-transform: uppercase;
 }
 
