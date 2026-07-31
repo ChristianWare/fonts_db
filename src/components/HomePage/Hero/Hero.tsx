@@ -2,7 +2,7 @@ import styles from "./Hero.module.css";
 import Image from "next/image";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Nav from "../../shared/Nav/Nav";
-import BgImage from "../../../../public/images/heroiv.png";
+import BgImage from "../../../../public/images/newHero.png";
 // import HeroScrollButton from "./HeroScrollButton";
 import Button from "@/components/shared/Button/Button";
 
