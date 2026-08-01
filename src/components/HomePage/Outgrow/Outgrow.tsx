@@ -4,7 +4,7 @@ import styles from "./Outgrow.module.css";
 import LayoutWrapper from "../../shared/LayoutWrapper";
 import Image from "next/image";
 import Img1 from "../../../../public/images/stressed.jpg";
-import SectionIntro from "../../shared/SectionIntro/SectionIntro";
+// import SectionIntro from "../../shared/SectionIntro/SectionIntro";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/all";
@@ -68,7 +68,7 @@ export default function Outgrow() {
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.topLeft}>
-                <SectionIntro text='Problem' />
+                {/* <SectionIntro text='Problem' /> */}
 
                 <h2 className={styles.heading}>
                   {text.split("").map((letter, index) => (

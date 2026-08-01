@@ -6,6 +6,8 @@ import styles from "./Solutionii.module.css";
 import LightBulb from "@/components/shared/icons/LightBulb/LightBulb";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Button from "@/components/shared/Button/Button";
+import Image from "next/image";
+import Img1 from '../../../../public/images/subNoBG.png'
 
 type Card = {
   id: number;
@@ -87,15 +89,22 @@ export default function Solutionii() {
           <div className={styles.content}>
             <div className={styles.top}>
               <div className={styles.topLeft}>
-                <div className={styles.imagContainer}>
-                  <LightBulb className={styles.icon} />
+                <div className={styles.imgContainer}>
+                  {/* <LightBulb className={styles.icon} /> */}
+                  <Image
+                    src={Img1}
+                    alt=''
+                    title=''
+                    fill
+                    className={styles.img}
+                  />
                 </div>
               </div>
               <div className={styles.topRight}>
                 <SectionIntro text='SOLUTION' />
                 <h2 className={styles.heading}>
                   How we solve <br />
-                  <span className={styles.accent}> those problems ↑</span>
+                  <span className={styles.accent}> those problems</span>
                 </h2>
                 <h3 className={`${styles.subheading} h6`}>
                   Three solutions. One system. Built to grow your black car
