@@ -10,6 +10,7 @@ import Img1 from "../../../public/images/audit.jpg";
 import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
+import AuditPageIntro from "@/components/AuditPage/AuditPageIntro/AuditPageIntro";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -141,7 +142,8 @@ export default function AuditPage() {
 
   return (
     <main className={styles.container}>
-      <PageIntroHero
+      <AuditPageIntro />
+      {/* <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'
         heading="Find out exactly what's costing you bookings — and how to fix it"
@@ -164,7 +166,7 @@ export default function AuditPage() {
       <AuditParallaxResults />
       <PricingPreview product='audit' />
       <Faq />
-      <ContactSection />
+      <ContactSection /> */}
     </main>
   );
 }

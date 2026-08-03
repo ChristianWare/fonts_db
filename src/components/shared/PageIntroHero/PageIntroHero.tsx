@@ -55,7 +55,7 @@ export default function PageIntroHero({
                   background='bgBlack'
                   color='colorYellow'
                 />
-                <h2 className={`${styles.topHeading} h2ii`}>{heading}</h2>
+                <h1 className={`${styles.topHeading} h2ii`}>{heading}</h1>
                 <h3 className={`${styles.heading} h6`}>{subheading}</h3>
                 <div className={styles.outro}>
                   <p className={styles.outroCopy}>{copy}</p>

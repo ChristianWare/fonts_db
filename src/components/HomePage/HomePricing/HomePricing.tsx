@@ -119,7 +119,7 @@ export default function HomePricing() {
 
   return (
     <section className={styles.container} ref={sectionRef}>
-      <LayoutWrapper borderDarkii>
+      <LayoutWrapper lightGrayBorder>
         <div className={styles.content}>
           <div className={styles.top}>
             <SectionIntro text='Pricing' />

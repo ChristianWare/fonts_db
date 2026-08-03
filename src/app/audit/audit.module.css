@@ -3,7 +3,7 @@
 ───────────────────────────────────────────────────────────────────────────── */
 
 .container {
-  background-color: var(--accent);
+  /* background-color: var(--accent); */
   min-height: 100vh;
 }
 

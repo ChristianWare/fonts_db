@@ -8,6 +8,7 @@
   --grayii: #ebebeb;
   --grayiii: gray;
   --lightGray: #b4b0b080;
+  --lightGrayBorder: #333;
   --lightGrayii: #fafafa;
   --lightGrayiii: #eeebeb;
   --lightGrayiv: #e8e4d6;
@@ -75,7 +76,7 @@ h6 {
 h1,
 .h1 {
   font-family: var(--RobotoFlexii);
-  font-size: 12rem;
+  font-size: 14rem;
   /* font-size: 8.6vw; */
   letter-spacing: -2.8px;
   font-weight: 400;

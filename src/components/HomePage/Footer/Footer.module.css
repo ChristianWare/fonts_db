@@ -78,7 +78,7 @@
 
 .footerBottom {
   padding: 2rem 0;
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--lightGrayBorder);
   display: flex;
   align-items: center;
   justify-content: space-between;

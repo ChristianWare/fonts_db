@@ -5,6 +5,7 @@ interface PaddingProps {
   paddingBottom?: string;
   borderDark?: boolean;
   borderDarkii?: boolean;
+  lightGrayBorder?: boolean;
 }
 
 const ContentPadding = ({
@@ -12,10 +13,13 @@ const ContentPadding = ({
   paddingBottom = "",
   borderDark = false,
   borderDarkii = false,
+  lightGrayBorder = false,
 }: PaddingProps) => {
   return (
     <div
-      className={`${styles.container} ${styles[paddingBottom]} ${borderDark ? styles.borderDark : ""} ${borderDarkii ? styles.borderDarkii : ""}`}
+      className={`${styles.container} ${styles[paddingBottom]} ${borderDark ? styles.borderDark : ""} ${borderDarkii ? styles.borderDarkii : ""}
+        ${lightGrayBorder ? styles.lightGrayBorder : ""}
+        `}
     >
       {children}
     </div>

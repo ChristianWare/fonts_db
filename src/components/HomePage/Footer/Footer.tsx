@@ -39,7 +39,7 @@ export default function Footer() {
 
   return (
     <footer className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper lightGrayBorder>
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>

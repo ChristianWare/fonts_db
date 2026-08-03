@@ -5,16 +5,22 @@ interface Props {
   children: React.ReactNode;
   borderDark?: boolean;
   borderDarkii?: boolean;
+  lightGrayBorder?: boolean;
 }
 
 const LayoutWrapper = ({
   children,
   borderDark = false,
   borderDarkii = false,
+  lightGrayBorder = false,
 }: Props) => {
   return (
     <div className={styles.layout}>
-      <ContentPadding borderDark={borderDark} borderDarkii={borderDarkii}>
+      <ContentPadding
+        borderDark={borderDark}
+        borderDarkii={borderDarkii}
+        lightGrayBorder={lightGrayBorder}
+      >
         {children}
       </ContentPadding>
     </div>

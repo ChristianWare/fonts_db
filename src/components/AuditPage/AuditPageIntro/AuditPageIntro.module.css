@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--white);
+  background-color: var(--black);
 }
 
 .parent {
@@ -9,8 +9,8 @@
   flex-direction: column;
   padding: 5rem;
   width: 100%;
-  border-top: 1px solid var(--lightGray);
-  border-bottom: 1px solid var(--lightGray);
+  border-top: 1px solid var(--lightGrayBorder);
+  border-bottom: 1px solid var(--lightGrayBorder);
 }
 
 .dot1,
@@ -20,7 +20,7 @@
   position: absolute;
   width: 7px;
   height: 7px;
-  background-color: var(--black);
+  background-color: var(--white);
   z-index: 1;
 }
 
@@ -55,7 +55,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10rem;
+  gap: 15rem;
   width: 100%;
   flex: 1;
 }
@@ -83,16 +83,7 @@
 }
 
 .heading {
-  background-image: repeating-linear-gradient(
-    45deg,
-    var(--lightGray) 0,
-    var(--lightGray) 1px,
-    transparent 0,
-    transparent 50%
-  );
-  background-size: 5px 5px;
-  padding: 1rem 2rem;
-  padding-top: 2rem;
+  color: var(--white);
 }
 
 .accent {
@@ -104,7 +95,6 @@
 .b2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  border-bottom: 1px solid var(--lightGray);
 }
 
 .b2Left {
@@ -208,7 +198,7 @@
   }
 
   .content {
-    gap: 7rem;
+    gap: 10rem;
   }
 }
 
@@ -235,12 +225,6 @@
   }
 
   .content {
-    gap: 5rem;
-  }
-}
-
-@media screen and (max-width: 568px) {
-  .heading {
-    background-size: 5px 5px;
+    gap: 7rem;
   }
 }

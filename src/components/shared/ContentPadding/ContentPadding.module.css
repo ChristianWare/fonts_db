@@ -27,6 +27,11 @@
   border-right: 1px solid var(--lightGrayV);
 }
 
+.lightGrayBorder {
+  border-left: 1px solid var(--lightGrayBorder);
+  border-right: 1px solid var(--lightGrayBorder);
+}
+
 /* @media screen and (max-width: 870px) {
   .container {
     padding: 3rem 0;

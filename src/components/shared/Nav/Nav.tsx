@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "../Logo/Logo";
 import Button from "../Button/Button";
 import { useEffect, useState, MouseEvent } from "react";
+import { usePathname } from "next/navigation";
 
 type NavVariant = "white" | "black";
 
@@ -50,6 +51,7 @@ export default function Nav({
   };
 
   const items = [
+    { text: "Home", href: "/" },
     { text: "Free Audit", href: "/audit" },
     { text: "Leads", href: "/leads" },
     { text: "Websites", href: "/websites" },
@@ -68,6 +70,13 @@ export default function Nav({
       ? `${styles.navItem} ${styles.navItemBlack}`
       : styles.navItem;
 
+  const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
+
   return (
     <header className={styles.header}>
       <nav className={styles.navbar}>
@@ -83,16 +92,28 @@ export default function Nav({
               isOpen ? `${styles.navItems} ${styles.active}` : styles.navItems
             }
           >
-            {items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={navItemClass}
-                onClick={(e) => handleNavClick(e, item.href)}
-              >
-                {item.text}
-              </Link>
-            ))}
+            {items.map((item) => {
+              const active = isActive(item.href);
+              const className = [
+                navItemClass,
+                active ? styles.navItemActive : "",
+                active && variant === "black" ? styles.navItemActiveBlack : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={className}
+                  aria-current={active ? "page" : undefined}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                >
+                  {item.text}
+                </Link>
+              );
+            })}
             {/* <div className={styles.menuImage}>
               <Image src={Img1} alt='Menu image' fill className={styles.img} />
             </div> */}

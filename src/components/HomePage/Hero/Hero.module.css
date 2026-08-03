@@ -64,7 +64,7 @@
   position: absolute;
   width: 100vw;
   height: 1px;
-  border-top: 1px solid var(--lightGray);
+  border-top: 1px solid var(--lightGrayBorder);
   left: 50%;
   top: -1px;
   transform: translateX(-50%);

@@ -9,7 +9,7 @@ import Button from "@/components/shared/Button/Button";
 export default function Hero() {
   return (
     <section className={styles.container}>
-      <LayoutWrapper>
+      <LayoutWrapper lightGrayBorder>
         <div className={styles.parent}>
           <div className={styles.dot1} />
           <div className={styles.dot2} />
