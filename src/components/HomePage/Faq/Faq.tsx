@@ -29,7 +29,7 @@ const SECTION_META: Record<
 > = {
   home: {
     title: "FAQ",
-    headingSpan: "Questions teams",
+    headingSpan: "Questions Operators",
     headingRest: "Ask us the most",
   },
   pricing: {
@@ -119,7 +119,7 @@ export default function Faq() {
               <div className={styles.dot2} />
 
               <div className={styles.topLeft}>
-                <SectionIntro text='Help & oinfo' />
+                <SectionIntro text='Help & info' />
                 <h2 className={styles.heading}>
                   {meta.headingSpan}
                   <br />

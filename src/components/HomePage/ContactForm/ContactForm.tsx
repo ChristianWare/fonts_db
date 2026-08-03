@@ -18,13 +18,18 @@ interface Inputs {
 }
 
 const serviceOptions = [
-  "Free booking audit (I already have a site)",
-  "Solo Starter Booking",
-  "Team Booking Platform",
-  "Multi-Location Booking",
-  "Rental Fleet & Inventory",
-  "Custom enterprise solution",
+  "Free website audit (I already have a site)",
+  "Website Only ($199/mo)",
+  "Full Booking Platform ($499/mo)",
+  "Leads tool ($125/mo)",
+  "Not sure yet. Tell me what you'd recommend.",
 ] as const;
+
+const slugify = (value: string) =>
+  `service-${value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`;
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -209,6 +214,7 @@ export default function ContactForm() {
             type='text'
             placeholder='www.example.com'
             maxLength={500}
+            {...register("siteUrl")}
             aria-invalid={!!errors.siteUrl || undefined}
             disabled={loading}
           />
@@ -244,18 +250,19 @@ export default function ContactForm() {
           <div className={styles.serviceCheckboxes}>
             {serviceOptions.map((service) => {
               const checked = selectedServices.includes(service);
+              const id = slugify(service);
               return (
                 <div key={service} className={styles.checkboxContainer}>
                   <input
                     type='checkbox'
-                    id={service}
+                    id={id}
                     value={service}
                     checked={checked}
                     onChange={() => toggleService(service)}
                     className={styles.checkbox}
                     disabled={loading}
                   />
-                  <label htmlFor={service} className={styles.checkboxLabel}>
+                  <label htmlFor={id} className={styles.checkboxLabel}>
                     {service}
                   </label>
                 </div>
@@ -276,8 +283,8 @@ export default function ContactForm() {
       </div>
       <div className={styles.smallParent}>
         <small className={styles.small}>
-          You&apos;ll hear from us within one business day. By submitting, you agree
-          to our Terms and Privacy Policy.
+          You&apos;ll hear from us within one business day. By submitting, you
+          agree to our Terms and Privacy Policy.
         </small>
       </div>
     </form>

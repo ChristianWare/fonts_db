@@ -47,12 +47,12 @@ export default function ParallaxArea() {
             <div className={styles.bottom}>
               <div className={styles.left}>
                 <p className={styles.copy}>
-                  We don&apos;t build for everyone. We work with black car and
-                  limo operators who&apos;ve outgrown generic software — giving
-                  you three ways to grow: a free audit to see where you stand, a
-                  leads tool that finds the work in your market, and a custom
-                  booking platform that lets you own your brand, your clients,
-                  and every dollar you earn.
+                  We don&apos;t build for everyone. We work with black car and limo
+                  operators who&apos;ve outgrown generic software, giving you three
+                  ways to grow: a free audit to see where you stand, a leads
+                  tool that finds the work in your market, and a custom booking
+                  platform that lets you own your brand, your clients, and every
+                  dollar you earn.
                 </p>
               </div>
               <div className={styles.right}>

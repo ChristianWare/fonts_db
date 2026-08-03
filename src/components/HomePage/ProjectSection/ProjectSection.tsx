@@ -54,32 +54,35 @@ export default function ProjectSection() {
                 </div>
                 <p>
                   Nier Transportation has been running black car and private
-                  transportation services in Phoenix since 2004. When they came
-                  to Fonts & Footers, they were managing bookings through
-                  third-party platforms; paying per-booking fees, operating
-                  under someone else&apos;s brand, and losing ownership of their
-                  customer relationships.
+                  transportation in Phoenix since 2004. When Barry came to Fonts
+                  & Footers, bookings ran through third-party platforms:
+                  per-booking fees on every ride, someone else&apos;s brand on
+                  the checkout, and no ownership of the customer relationships
+                  he&apos;d spent two decades earning.
                   <br />
                   <br />
                   <span className={styles.accent}>
-                    We built them a fully custom direct booking platform from
-                    the ground up; branded entirely to Nier, on their own
-                    domain. Complete with a multi-step booking engine, admin
-                    dashboard, driver portal, customer portal, corporate account
-                    management, live flight tracking, and Stripe payment
-                    processing. One system. Every role covered. Zero platform
-                    fees.
+                    We built him a fully custom direct-booking platform from the
+                    ground up, branded entirely to Nier, on his own domain. A
+                    multi-step booking engine, admin dashboard, driver portal,
+                    customer portal, corporate account management, live flight
+                    tracking, and Stripe payment processing. One system. Every
+                    role covered. Zero platform fees.
                   </span>
                 </p>
               </div>
               <div className={styles.statBox}>
                 <div className={styles.statLeft}>
-                  <span className={styles.detail}>Duplicate work</span>
-                  <span className={`${styles.heading} h2`}>-27%</span>
+                  <span className={styles.detail}>
+                    per-booking fees since launch
+                  </span>
+                  <span className={`${styles.heading} h2`}>$0</span>
                 </div>
                 <div className={styles.statRight}>
-                  <span className={styles.detail}>On-time delivery</span>
-                  <span className={`${styles.heading} h2`}>+42%</span>
+                  <span className={styles.detail}>
+                    Books 24/7, no phone call needed
+                  </span>
+                  <span className={`${styles.heading} h2`}>24/7</span>
                 </div>
                 <div className={styles.btnContainer}>
                   <Button

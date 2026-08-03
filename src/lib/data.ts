@@ -54,7 +54,7 @@ export const SolutionData = [
     title: "Start finding leads",
     src: Img2,
     description:
-      "While your website situation becomes clear, you start building your pipeline — reaching out to venues, hotels, and corporate clients. Every new account makes fixing your website more urgent.",
+      "While your website situation becomes clear, you start building your pipeline: reaching out to venues, hotels, and corporate clients. Every new account makes fixing your website more urgent.",
     bullets: [
       "Hot, warm & cold leads",
       "Verified contact info",
@@ -68,7 +68,7 @@ export const SolutionData = [
     title: "Launch your custom website",
     src: Img3,
     description:
-      "Now the system is complete. The audit identified the problems. The leads tool created urgency. The website closes the deals you're finding. Your business has a foundation it didn't have before — and it compounds from here.",
+      "Now the system is complete. The audit identified the problems. The leads tool created urgency. The website closes the deals you're finding. Your business has a foundation it didn't have before, and it compounds from here.",
     bullets: [
       "Direct booking engine",
       "No per-booking fees",
@@ -542,70 +542,77 @@ export const questions: readonly QuestionItem[] = [
     id: 1,
     question: "Do I have to use all three products?",
     answer:
-      "No. Each product works independently. Most operators start with the free audit — it takes 60 seconds and costs nothing. From there you can add the lead tool, the website, or both in whatever order makes sense for where your business is right now.",
+      "No. Each product works independently. Most operators start with the free audit. It takes 60 seconds and costs nothing. From there you can add the lead tool, the website, or both in whatever order makes sense for where your business is right now.",
     sections: ["home"],
   },
   {
     id: 2,
     question: "What does the free audit actually show me?",
     answer:
-      "It analyzes your website across the key factors that determine whether you get found on Google, whether visitors trust you enough to book, and whether your site is technically healthy. You see your score immediately on-screen, and your full detailed report — with prioritized fixes and competitor comparison — is delivered to your inbox in seconds. Free, no payment required, under 60 seconds.",
+      "It analyzes your website across the factors that decide whether you get found on Google, whether visitors trust you enough to book, and whether your site is technically healthy. Your score shows on screen immediately, no email needed. If you want the full report, with prioritized fixes and a competitor comparison, that goes to your inbox. Free, under 60 seconds.",
     sections: ["home"],
   },
   {
     id: 3,
     question: "What kind of leads does the lead tool find?",
     answer:
-      "Three types. Hot leads are people actively requesting transportation right now — in Facebook groups, on Nextdoor, and through event listings with public contact info. Warm leads are businesses showing signals of upcoming transportation need. Cold leads are the B2B accounts that generate consistent recurring demand — wedding venues, hotels, law firms, funeral homes, event planners, and more. Every lead includes the specific contact person and verified contact info when available.",
+      "Three types. Hot leads are people actively requesting transportation right now: in Facebook groups, on Nextdoor, and through event listings with public contact info. Warm leads are businesses showing signals of upcoming transportation need. Cold leads are the B2B accounts that generate consistent recurring demand: wedding venues, hotels, law firms, funeral homes, event planners, and more. Every lead includes the specific contact person and verified contact info when available.",
     sections: ["home"],
   },
   {
     id: 4,
     question: "Do multiple operators in the same city see the same leads?",
     answer:
-      "Yes — the lead database is shared. This works because you're targeting businesses, not individuals. A wedding venue can have relationships with multiple transportation vendors. The operator who wins the account is the one who reaches out first and follows up best — not whoever got an exclusive lead.",
+      "Yes, the lead database is shared. This works because you're targeting businesses, not individuals. A wedding venue can have relationships with multiple transportation vendors. The operator who wins the account is the one who reaches out first and follows up best, not whoever got an exclusive lead.",
     sections: ["home"],
   },
   {
     id: 5,
     question: "How much does the lead tool cost?",
     answer:
-      "$125 per month, full access, no credits, no tiers. Every lead category, every market feature, AI outreach scripts, and the built-in CRM are all included. There's a free 7-day trial with no credit card required so you can see real leads in your market before you commit.",
+      "$125 per month, full access, no credits, no tiers. Every lead category, every market feature, AI outreach scripts, and the built-in CRM are all included. There's a 7-day free trial: you'll enter a card to start, and if you cancel inside the week you pay nothing. You'll see real leads in your market on day one.",
     sections: ["home"],
   },
   {
     id: 6,
     question: "How is the website priced?",
     answer:
-      "$499 per month flat. No setup fee, no per-booking fees, no per-driver fees. Design, development, hosting, booking engine, admin dashboard, driver portal, flight tracking, payment processing, and ongoing support are all included. One number, everything covered.",
+      "Two tiers, both flat. Website Only is $199 a month. The Full Platform, with the booking engine, driver portal, flight tracking, and payments, is $499 a month. Both carry a one-time $500 setup, and if cash flow is tight we can split that across your first couple of months. No per-booking fees on either, ever.",
     sections: ["home"],
   },
   {
     id: 7,
-    question: "How long does it take to launch the website?",
+    question: "Can I start with the $199 site and upgrade later?",
     answer:
-      "Most clients are live within 2 to 3 weeks. The platform is already built and running with real operators — we're configuring it to your company, not starting from scratch.",
+      "Yes, that's the designed path. The site you start with is the site that grows with you. Upgrading to the Full Platform adds the booking engine, portals, and payments to your existing site with no rebuild and no starting over.",
     sections: ["home"],
   },
   {
     id: 8,
-    question: "Do I own my website and customer data?",
+    question: "How long does it take to launch?",
     answer:
-      "Yes — completely. Your brand, your domain, your customer relationships, and your booking data belong to you. We never put our name on your platform and your clients will never see the Fonts & Footers name. If you ever decide to leave, we provide a full data export.",
+      "Most sites are live within 3 weeks. The platform is already built and running with real operators, so we're configuring it to your company, not starting from scratch.",
     sections: ["home"],
   },
   {
     id: 9,
-    question: "What kind of support do I get?",
+    question: "Do I own my website and customer data?",
     answer:
-      "Direct access to Chris — the person who built the platform. Not a ticket system, not a support team. Most issues get resolved same day. New features added to the platform are included in your monthly rate at no extra charge.",
+      "Yes, completely. Your brand, your domain, your customer relationships, and your booking data belong to you. We never put our name on your platform and your clients will never see the Fonts & Footers name. If you ever decide to leave, we provide a full data export.",
     sections: ["home"],
   },
   {
     id: 10,
+    question: "What kind of support do I get?",
+    answer:
+      "Direct access to Chris, the person who built the platform. Not a ticket system, not a support team. Most issues get resolved same day. New features added to the platform are included in your monthly rate at no extra charge.",
+    sections: ["home"],
+  },
+  {
+    id: 11,
     question: "Where do I start?",
     answer:
-      "Run the free audit. It takes 60 seconds, requires no email, and shows you exactly where your website stands right now. Most operators start there and the next steps become obvious from what they find.",
+      "Run the free audit. It takes 60 seconds, shows your score on screen with no email required, and the next steps become obvious from what you find.",
     sections: ["home"],
   },
 

@@ -31,9 +31,9 @@ export default function Solution() {
                   people to your website before it&apos;s fixed. The website
                   converts the leads the lead tool finds.
                   <span className={styles.accent}>
-                    This is the sequence every operator who works with us
-                    follows — and it&apos;s why the solutions are priced and
-                    designed the way they are.
+                    That&apos;s the sequence every operator who works with us
+                    follows, and it&apos;s why the three are priced and designed
+                    the way they are.
                   </span>
                 </p>
                 <div className={styles.btnContainer}>

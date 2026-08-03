@@ -43,8 +43,8 @@ export default function Footer() {
         <div className={styles.content}>
           <div className={styles.top}>
             <h2 className={`${styles.heading} h1`}>
-              Audits. Leads. <br />
-              <span className={styles.accent}>websites.</span>
+              Expand your <br />
+              <span className={styles.accent}>Chauffeur Business</span>
             </h2>
           </div>
           <div className={styles.bottom}>

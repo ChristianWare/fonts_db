@@ -53,14 +53,13 @@ export default function ContactSection() {
           <div className={styles.right}>
             <div className={styles.rightTop}>
               <p className={styles.copy}>
-                Wherever your operation is — chasing more corporate work, losing
+                Wherever your operation is, chasing more corporate work, losing
                 bookings to a slow site, or paying third-party platforms for
-                every ride — start here.
+                every ride, start here.
                 <br />
                 <br />
-                Tell us what you&apos;re working with and we&apos;ll show you the
-                fastest path forward. If none of the three products fit,
-                we&apos;ll say so.
+                Tell us what you&apos;re working with and we&apos;ll show you the fastest
+                path forward. If none of the three products fit, we&apos;ll say so.
               </p>
             </div>
             <ContactForm />

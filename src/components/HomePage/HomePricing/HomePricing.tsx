@@ -10,6 +10,7 @@ type Plan = {
   id: number;
   label: string;
   name: string;
+  pricePrefix?: string;
   price: string;
   priceSuffix: string;
   description: string;
@@ -53,25 +54,25 @@ const plans: Plan[] = [
     ],
     cta: "Get started",
     href: "/leads",
-    footnote: "Flat monthly rate. Cancel anytime.",
+    footnote: "7-day free trial (card required). Flat rate. Cancel anytime.",
     popular: true,
   },
   {
     id: 3,
     label: "Solution 3",
-    name: "Custom Booking Website",
-    price: "$499",
+    name: "Custom Website",
+    pricePrefix: "from",
+    price: "$199",
     priceSuffix: "/mo",
-    description: "Own your booking platform end to end.",
+    description: "Your front door, built to get you found and booked.",
     features: [
-      "Direct booking, zero per-booking fees",
-      "Flight tracking and driver portal",
-      "Payment processing included",
-      "Built for black car operators specifically",
+      "Website Only, $199/mo: custom site, SEO foundation, hosting, edits, and direct support. Keep your current booking software.",
+      "Full Platform, $499/mo: everything above plus the direct booking engine, flight tracking, driver and admin portals, and payments. Zero per-booking fees.",
     ],
-    cta: "Get started",
+    cta: "See both tiers",
     href: "/websites",
-    footnote: "One time $500 set up fee.",
+    footnote:
+      "One-time $500 setup on either tier. Start at $199, upgrade with no rebuild.",
   },
 ];
 
@@ -123,11 +124,12 @@ export default function HomePricing() {
           <div className={styles.top}>
             <SectionIntro text='Pricing' />
             <h2 className={styles.heading}>
-              Three products. <br /> <span className={styles.accent}>Honest pricing.</span>
+              Three products. <br />{" "}
+              <span className={styles.accent}>Honest pricing.</span>
             </h2>
             <p className={styles.copy}>
               No per-booking cuts, no commissions, no platform tax on your own
-              customers. One flat monthly rate per product — start free, scale
+              customers. One flat monthly rate per product. Start free, scale
               into the rest when the timing&apos;s right for your business.
             </p>
           </div>
@@ -150,6 +152,11 @@ export default function HomePricing() {
                     <h3 className={styles.cardName}>{plan.name}</h3>
                     <p className={styles.cardDesc}>{plan.description}</p>
                     <p className={`${styles.price} h2ii`}>
+                      {plan.pricePrefix && (
+                        <span className={styles.pricePrefix}>
+                          {plan.pricePrefix}
+                        </span>
+                      )}
                       {plan.price}
                       {plan.priceSuffix && (
                         <span className={styles.priceSuffix}>
@@ -173,7 +180,6 @@ export default function HomePricing() {
                       <Button
                         href={plan.href}
                         text={plan.cta}
-                        // btnType='accent'
                         btnType={index % 2 === 0 ? "accent" : "white"}
                         arrow
                       />
@@ -183,6 +189,11 @@ export default function HomePricing() {
                 </div>
               ))}
             </div>
+
+            <p className={styles.routingNote}>
+              Not sure which tier fits? Run the free audit and I&apos;ll tell
+              you straight, even when the answer is the cheaper one.
+            </p>
           </div>
         </div>
       </LayoutWrapper>
