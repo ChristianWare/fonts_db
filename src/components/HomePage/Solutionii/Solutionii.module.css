@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--white);
+  background-color: var(--lightGrayii);
 }
 
 .parent {
@@ -84,7 +84,7 @@
   justify-content: space-between;
   gap: 7rem;
   border: 1px solid var(--lightGray);
-  background-color: var(--lightGrayiii);
+  background-color: var(--white);
   padding: 4rem;
   position: relative;
 }
@@ -125,6 +125,14 @@
   padding: 1rem;
   border: 1px solid var(--lightGray);
   width: 100%;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--lightGrayii) 0,
+    var(--lightGrayii) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 7px 7px;
 }
 
 .label {
@@ -150,11 +158,7 @@
 }
 
 .body {
-  font-family: var(--GeistMono);
-  font-weight: 700;
-  letter-spacing: normal;
-  margin: 0;
-  text-transform: uppercase;
+  font-family: var(--Roboto);
   font-size: 1.6rem;
 }
 
@@ -243,5 +247,20 @@
     gap: 5rem;
     min-height: auto;
     padding: 3rem;
+  }
+}
+
+.cardIcon {
+  width: 6.4rem;
+  height: 6.4rem;
+  color: var(--accent);
+  stroke-width: 1.5;
+  flex: none;
+}
+
+@media screen and (max-width: 568px) {
+  .cardIcon {
+    width: 5rem;
+    height: 5rem;
   }
 }
