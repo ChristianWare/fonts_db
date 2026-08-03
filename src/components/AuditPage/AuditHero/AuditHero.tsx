@@ -32,7 +32,7 @@ export default function AuditHero({
           <div className={styles.dot1} />
           <div className={styles.dot2} />
           <div className={styles.dot3} />
-          <div className={styles.dot4} />
+          <div className={styles.dot4} /> 
 
           {/* ── Left: context ── */}
           <div className={styles.left}>
@@ -42,24 +42,28 @@ export default function AuditHero({
                 color='colorWhite'
                 background='bgBlack'
               />
-              <h2 className={styles.heading}>
-                Run your free Website audit here
-              </h2>
+              <h2 className={styles.heading}>Run your free audit here</h2>
             </div>
             <div className={styles.leftBottom}>
               <p className={styles.copy}>
                 Drop in your URL and we&apos;ll score your site across six
-                categories — speed, booking flow, SEO, trust, tech stack, and
-                brand — then estimate the bookings you&apos;re losing every
-                month.
+                categories: speed, booking flow, SEO, trust, tech stack, and
+                brand. Then we&apos;ll estimate the bookings you&apos;re losing
+                every month.
               </p>
               <ul className={styles.metaList}>
-                <li className={styles.metaItem}>$0 · No card required</li>
-                <li className={styles.metaItem}>
-                  Full PDF report emailed to you
-                </li>
-                <li className={styles.metaItem}>Result in ~60 seconds</li>
+                <li className={styles.metaItem}>$0 · No credit card</li>
+                <li className={styles.metaItem}>Full report emailed to you</li>
+                <li className={styles.metaItem}>Result in about 60 seconds</li>
               </ul>
+              <figure className={styles.proof}>
+                <blockquote className={styles.proofQuote}>
+                  &ldquo;It paid for itself in the first month.&rdquo;
+                </blockquote>
+                <figcaption className={styles.proofAttribution}>
+                  Barry LaNier, Owner, Nier Transportation
+                </figcaption>
+              </figure>
             </div>
           </div>
 

@@ -1,0 +1,144 @@
+.content {
+  border-top: 1px solid var(--lightGray);
+  margin-top: 5rem;
+  padding: 10rem 0;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
+  padding: 3rem;
+}
+
+.heading {
+  max-width: 900px;
+}
+
+.copy {
+  color: var(--text);
+  max-width: 470px;
+}
+
+.accent {
+  font-family: inherit;
+  color: var(--black);
+}
+
+.bottom {
+  margin-top: 5rem;
+}
+
+.mapDataContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 10rem;
+}
+
+.cardParent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border: 1px solid var(--lightGray);
+}
+
+.cardParent:nth-child(even) {
+  flex-direction: column-reverse;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5rem;
+  background-color: #3b82f60d;
+}
+
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.step {
+  font-family: var(--GeistMono);
+  font-size: 16px;
+  background-color: var(--lightGrayii);
+  height: 60px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid var(--lightGray);
+  width: 100%;
+}
+
+.iconContainer {
+  margin-left: auto;
+  padding: 2rem;
+}
+
+.icon {
+  font-size: 3rem;
+  color: var(--text);
+}
+
+.cardBottom {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.cardSpace {
+  height: 6rem;
+  border-top: 1px solid var(--lightGray);
+  border-bottom: 1px solid var(--lightGray);
+  width: 100%;
+}
+
+.cardParent:nth-child(even) .cardSpace {
+  border-top: none;
+}
+
+.cardParent:nth-child(odd) .cardSpace {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 1268px) {
+  .heading {
+    max-width: 600px;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 5rem;
+  }
+}
+
+
+
+@media screen and (max-width: 768px) {
+  .top {
+    gap: 2rem;
+  }
+
+  .mapDataContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .cardParent:nth-child(even) {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .step {
+    font-size: 16px;
+  }
+}

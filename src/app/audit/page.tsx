@@ -11,6 +11,7 @@ import PageIntroHero from "@/components/shared/PageIntroHero/PageIntroHero";
 import PricingPreview from "@/components/HomePage/PricingPreview/PricingPreview";
 import ContactSection from "@/components/HomePage/ContactSection/ContactSection";
 import AuditPageIntro from "@/components/AuditPage/AuditPageIntro/AuditPageIntro";
+import AuditCards from "@/components/AuditPage/AuditCards/AuditCards";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface TechStack {
@@ -143,6 +144,22 @@ export default function AuditPage() {
   return (
     <main className={styles.container}>
       <AuditPageIntro />
+      <AuditCards />
+      <AuditExpectations />
+      <AuditParallaxResults />
+      <PricingPreview product='audit' />
+      <Faq />
+      <AuditHero
+        state={modalState}
+        scanStep={scanStep}
+        scanComplete={scanComplete}
+        result={result}
+        error={error}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+      />
+      {/* <ContactSection /> */}
+
       {/* <PageIntroHero
         src={Img1}
         sectionIntroText='Free Website Audit'

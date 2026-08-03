@@ -54,7 +54,7 @@ export default function AuditFormModal({ onSubmit, error }: Props) {
       <span className={styles.pulseRing} aria-hidden='true' />
 
       <div className={styles.formHeading}>
-        <h2 className={styles.heading}>Run Your Free Audit Here</h2>
+        {/* <h2 className={styles.heading}>Run Your Free Audit Here</h2> */}
         <p className={styles.subheading}>
           Enter your details below. We&apos;ll scan your site in 60 seconds and
           email you the full report with personalized fixes.
