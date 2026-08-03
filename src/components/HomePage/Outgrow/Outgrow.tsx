@@ -26,8 +26,7 @@ export default function Outgrow() {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const text =
-    "Most black car operators are losing business every week and don't know exactly why.";
+  const text = "Every operator has slow months. Few know how to fill them.";
 
   useEffect(() => {
     const tl = gsap.timeline({

@@ -7,9 +7,9 @@ import LayoutWrapper from "@/components/shared/LayoutWrapper";
 import SectionIntro from "@/components/shared/SectionIntro/SectionIntro";
 import Arrow from "@/components/shared/icons/Arrow/Arrow";
 import { questions, type SectionKey, type QuestionItem } from "@/lib/data";
-import Button from "@/components/shared/Button/Button";
+// import Button from "@/components/shared/Button/Button";
 import Image from "next/image";
-import ServiceIllustration from "../../../../public/images/cadiv.png";
+import ServiceIllustration from "../../../../public/images/yukonii.png";
 
 function sectionFromPath(pathname: string): SectionKey {
   if (pathname.startsWith("/pricing")) return "pricing";

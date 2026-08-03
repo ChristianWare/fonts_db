@@ -104,8 +104,8 @@ export default function Solutionii() {
               <div className={styles.topRight}>
                 <SectionIntro text='SOLUTION' />
                 <h2 className={styles.heading}>
-                  We help you{" "}
-                  <span className={styles.accent}>get that business back </span>
+                  We can help you{" "} <br />
+                  <span className={styles.accent}>get more bookings</span>
                 </h2>
                 <h3 className={`${styles.subheading} h6`}>
                   Three solutions. One system. Built to grow your black car

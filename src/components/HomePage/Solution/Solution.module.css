@@ -223,16 +223,23 @@
 
   .card {
     grid-template-columns: repeat(2, 1fr);
+    position: static;
+    top: 0;
   }
 
   .cardLeft {
     padding: 3rem;
     gap: 5rem;
+    margin: 1rem;
   }
 
   .imgContainer {
     width: 100%;
     height: 100%;
+  }
+
+  .cardLeftBottom, .bulletList {
+    width: 100%;
   }
 }
 
@@ -269,8 +276,12 @@
     top: 20px;
   }
 
-  .cardLeft {
+  .cardLeftTop {
     gap: 3rem;
+  }
+
+  .cardLeft {
+    gap: 4rem;
   }
 
   .cardRight {
