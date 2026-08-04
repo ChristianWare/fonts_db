@@ -69,7 +69,7 @@ h5,
 h6 {
   font-family: var(--RobotoFlexii);
   color: var(--black);
-  hyphens: auto;
+  hyphens: none;
   text-transform: uppercase;
 }
 
