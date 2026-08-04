@@ -26,7 +26,8 @@ export default function Outgrow() {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const text = "Every operator has slow months. Few know how to fill them.";
+  const text =
+    "Most black car opperators struggle to get consistent work. Is that you?";
 
   useEffect(() => {
     const tl = gsap.timeline({
