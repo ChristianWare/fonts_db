@@ -10,6 +10,12 @@ import {
   sendCancellationConfirmedEmail,
   sendPaymentReceiptEmail,
 } from "@/lib/emails";
+import {
+  alertPaymentReceived,
+  alertPaymentFailed,
+  alertCardUpdated,
+  alertSubscriptionCancelled,
+} from "@/lib/adminAlerts";
 
 const STATUS_MAP: Record<string, SubscriptionStatus> = {
   active: "ACTIVE",
@@ -197,8 +203,13 @@ export async function POST(req: NextRequest) {
           where: { stripeSubscriptionId: sub.id },
           select: {
             productType: true,
+            planAmountCents: true,
             clientProfile: {
-              select: { user: { select: { email: true, name: true } } },
+              select: {
+                id: true,
+                businessName: true,
+                user: { select: { email: true, name: true } },
+              },
             },
           },
         });
@@ -219,6 +230,15 @@ export async function POST(req: NextRequest) {
             to: localSub.clientProfile.user.email,
             name: localSub.clientProfile.user.name?.split(" ")[0] ?? "there",
             productLabel: PRODUCT_LABELS[localSub.productType],
+          });
+        }
+
+        if (localSub) {
+          await alertSubscriptionCancelled({
+            businessName: localSub.clientProfile.businessName,
+            productLabel: PRODUCT_LABELS[localSub.productType],
+            amountCents: localSub.planAmountCents,
+            clientProfileId: localSub.clientProfile.id,
           });
         }
         break;
@@ -242,6 +262,7 @@ export async function POST(req: NextRequest) {
           where: { stripeCustomerId: customerId },
           select: {
             id: true,
+            businessName: true,
             user: { select: { email: true, name: true } },
           },
         });
@@ -342,6 +363,17 @@ export async function POST(req: NextRequest) {
           }
         }
 
+        // 💰 Admin alert — money landed.
+        await alertPaymentReceived({
+          businessName: profile.businessName,
+          productLabel: productType
+            ? PRODUCT_LABELS[productType]
+            : "Subscription",
+          amountCents: invoice.amount_paid,
+          invoiceNumber,
+          clientProfileId: profile.id,
+        });
+
         // Update period dates ONLY on the subscription this invoice is for —
         // scoped by stripeSubscriptionId so a leads invoice doesn't overwrite
         // the website sub's billing window (or vice versa).
@@ -370,7 +402,11 @@ export async function POST(req: NextRequest) {
           select: {
             productType: true,
             clientProfile: {
-              select: { user: { select: { email: true, name: true } } },
+              select: {
+                id: true,
+                businessName: true,
+                user: { select: { email: true, name: true } },
+              },
             },
           },
         });
@@ -393,6 +429,90 @@ export async function POST(req: NextRequest) {
               : null,
           });
         }
+
+        // ⚠️ Admin alert — pull the real decline reason off the latest failed
+        // charge. Charges are stable across API versions; invoice.payment_intent
+        // is not.
+        if (localSub) {
+          let reason: string | null = null;
+          let cardLabel: string | null = null;
+
+          const failedCustomerId =
+            typeof invoice.customer === "string"
+              ? invoice.customer
+              : invoice.customer?.id;
+
+          if (failedCustomerId) {
+            try {
+              const charges = await stripe.charges.list({
+                customer: failedCustomerId,
+                limit: 3,
+              });
+              const failed = charges.data.find((c) => c.status === "failed");
+              if (failed) {
+                reason =
+                  failed.outcome?.seller_message ??
+                  failed.failure_message ??
+                  null;
+                const card = failed.payment_method_details?.card;
+                cardLabel = card ? `${card.brand} ••••${card.last4}` : null;
+              }
+            } catch (err) {
+              console.error("[webhook payment_failed] charge lookup:", err);
+            }
+          }
+
+          await alertPaymentFailed({
+            businessName: localSub.clientProfile.businessName,
+            productLabel: PRODUCT_LABELS[localSub.productType],
+            amountCents: invoice.amount_due,
+            reason,
+            cardLabel,
+            nextRetryAt: invoice.next_payment_attempt
+              ? new Date(invoice.next_payment_attempt * 1000)
+              : null,
+            clientProfileId: localSub.clientProfile.id,
+          });
+        }
+        break;
+      }
+
+      // ── Card attached (client updated their payment method) ───────────────
+      // NOTE: enable `payment_method.attached` on the webhook endpoint in the
+      // Stripe Dashboard or this case never fires.
+      case "payment_method.attached": {
+        const pm = event.data.object as Stripe.PaymentMethod;
+        if (!pm.customer || !pm.card) break;
+
+        const pmCustomerId =
+          typeof pm.customer === "string" ? pm.customer : pm.customer.id;
+
+        const profile = await db.clientProfile.findFirst({
+          where: { stripeCustomerId: pmCustomerId },
+          select: { id: true, businessName: true },
+        });
+        if (!profile) break;
+
+        // Is there money sitting behind this card?
+        let hasOpenInvoice = false;
+        try {
+          const open = await stripe.invoices.list({
+            customer: pmCustomerId,
+            status: "open",
+            limit: 1,
+          });
+          hasOpenInvoice = open.data.length > 0;
+        } catch (err) {
+          console.error("[webhook pm.attached] open invoice lookup:", err);
+        }
+
+        await alertCardUpdated({
+          businessName: profile.businessName,
+          brand: pm.card.brand,
+          last4: pm.card.last4,
+          hasOpenInvoice,
+          clientProfileId: profile.id,
+        });
         break;
       }
 
