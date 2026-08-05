@@ -1,0 +1,357 @@
+/* AdminBillingPanel.module.css
+   Follows the F&F system: square corners, Geist Mono labels, one yellow,
+   gold hairline (--blackii) wherever a rule crosses an amber surface. */
+
+.card {
+  background-color: var(--white);
+  border: 1px solid var(--lightGray);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.headRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cardHeading {
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.testBadge {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+}
+
+.muted {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+/* ── Owed banner ─────────────────────────────────────────────────────── */
+
+.owedBanner {
+  background: var(--accent);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.owedAmount {
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: var(--black);
+  display: block;
+}
+
+.owedLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  opacity: 0.75;
+}
+
+/* ── Failure row ─────────────────────────────────────────────────────── */
+
+.failureRow {
+  display: flex;
+  gap: 2rem;
+  align-items: baseline;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--lightGray);
+  flex-wrap: wrap;
+}
+
+.failureLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--red);
+  flex-shrink: 0;
+}
+
+.failureValue {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--lightGray);
+  flex-wrap: wrap;
+}
+
+.cardLeft,
+.cardRight {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.cardBrand {
+  font-family: var(--GeistMono);
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+
+.cardDigits {
+  font-family: var(--GeistMono);
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+.cardMeta {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.defaultPill {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--black);
+  color: var(--accent);
+  padding: 0.4rem 0.9rem;
+}
+
+.warnPill {
+  font-family: var(--GeistMono);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--accent);
+  color: var(--black);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--blackii);
+}
+
+/* ── Subscriptions ───────────────────────────────────────────────────── */
+
+.subList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px solid var(--lightGray);
+  padding-top: 1.6rem;
+}
+
+.subHeading {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--lightBlack);
+  margin-bottom: 0.6rem;
+}
+
+.subRow {
+  display: flex;
+  gap: 1.6rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.subStatus {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+  background: var(--lightGrayiii);
+  padding: 0.3rem 0.8rem;
+  min-width: 9rem;
+}
+
+.subCard {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+/* ── Boxes ───────────────────────────────────────────────────────────── */
+
+.errorBox {
+  border: 1px solid var(--red);
+  border-left: 4px solid var(--red);
+  padding: 1.8rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.errorTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red);
+}
+
+.errorBody {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+.errorHint {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.warnBox {
+  background: var(--accent);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
+  padding: 1.8rem 2rem;
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btnPrimary {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--black);
+  color: var(--accent);
+  border: none;
+  padding: 1.4rem 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--black);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btnGhost {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+  padding: 1.4rem 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+}
+
+.btnGhost:hover:not(:disabled) {
+  background: var(--lightGrayii);
+  border-color: var(--black);
+}
+
+.btnGhost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btnPrimary:focus-visible,
+.btnGhost:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Portal link box ─────────────────────────────────────────────────── */
+
+.linkBox {
+  border: 1px solid var(--lightGray);
+  padding: 1.6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.linkLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.linkCode {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  color: var(--black);
+  background: var(--lightGrayii);
+  padding: 1rem;
+  word-break: break-all;
+}
+
+.footnote {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
+  border-top: 1px solid var(--lightGray);
+  padding-top: 1.6rem;
+}

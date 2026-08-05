@@ -20,6 +20,7 @@ import { deleteClient } from "@/actions/admin/deleteClient";
 import { toggleStepOverride } from "@/actions/admin/toggleStepOverride";
 import Button from "@/components/shared/Button/Button";
 import toast from "react-hot-toast";
+import AdminBillingPanel from "@/components/admin/AdminBillingPanel/AdminBillingPanel";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -1499,6 +1500,8 @@ export default function ClientDetailClient({
               </div>
             );
           })()}
+
+          <AdminBillingPanel clientProfileId={client.id} />
 
           {/* Website invoices (leads invoices live on the leads page) */}
           <div className={styles.card}>
