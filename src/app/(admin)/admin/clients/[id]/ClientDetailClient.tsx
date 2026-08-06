@@ -12,6 +12,10 @@ import { getCloudinarySignature } from "@/actions/client/getCloudinarySignature"
 import { uploadDocumentToClient } from "@/actions/admin/uploadDocumentToClient";
 import { resolveQuestionnaireSections } from "@/lib/customQuestionnaire";
 import { setCustomQuestionnaire } from "@/actions/admin/setCustomQuestionnaire";
+import {
+  buildQuestionnaireMarkdown,
+  questionnaireMarkdownFileName,
+} from "@/lib/questionnaireMarkdown";
 import DesignOptionsTab from "./DesignOptionsTab";
 import BlueprintTab from "./BlueprintTab";
 import BillingRatesEditor from "@/components/admin/BillingRatesEditor/BillingRatesEditor";
@@ -111,6 +115,7 @@ export default function ClientDetailClient({
   const [uploadingQuestions, setUploadingQuestions] = useState(false);
   const [revertingQuestions, setRevertingQuestions] = useState(false);
   const [questionsError, setQuestionsError] = useState<string | null>(null);
+  const [copiedResponses, setCopiedResponses] = useState(false);
   const customQuestionnaireRaw = (client as any).customQuestionnaire ?? null;
   const hasCustomQuestionnaire = !!customQuestionnaireRaw;
   const effectiveSections = resolveQuestionnaireSections(
@@ -465,6 +470,44 @@ export default function ClientDetailClient({
     (client.brandAssets as any[]).find((a) => a.selected === true) ?? null;
 
   const answers = client.questionnaire?.answers as Record<string, any> | null;
+
+  const hasAnyAnswers = !!answers && Object.keys(answers).length > 0;
+
+  // ── Questionnaire responses → Markdown ────────────────────────────────────
+  const responsesMarkdown = () =>
+    buildQuestionnaireMarkdown({
+      businessName: client.businessName,
+      contactName: client.user?.name ?? null,
+      contactEmail: client.user?.email ?? null,
+      sections: effectiveSections,
+      answers,
+      submittedAt: client.questionnaire?.submittedAt ?? null,
+      lastSavedAt: client.questionnaire?.lastSavedAt ?? null,
+      isCustomSet: hasCustomQuestionnaire,
+    });
+
+  const downloadResponsesMarkdown = () => {
+    const blob = new Blob([responsesMarkdown()], {
+      type: "text/markdown;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = questionnaireMarkdownFileName(client.businessName);
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyResponsesMarkdown = async () => {
+    try {
+      await navigator.clipboard.writeText(responsesMarkdown());
+      setCopiedResponses(true);
+      toast.success("Responses copied as Markdown.");
+      setTimeout(() => setCopiedResponses(false), 2000);
+    } catch {
+      toast.error("Couldn't copy — use the download instead.");
+    }
+  };
 
   const tabs = [
     { key: "overview", label: "Overview" },
@@ -1197,6 +1240,22 @@ export default function ClientDetailClient({
                   "MMMM d, yyyy 'at' h:mm a",
                 )}
               </p>
+            )}
+            {hasAnyAnswers && (
+              <div className={styles.btnRow}>
+                <button
+                  onClick={downloadResponsesMarkdown}
+                  className={styles.uploadBtn}
+                >
+                  Download responses (.md)
+                </button>
+                <button
+                  onClick={copyResponsesMarkdown}
+                  className={styles.uploadBtn}
+                >
+                  {copiedResponses ? "Copied ✓" : "Copy as Markdown"}
+                </button>
+              </div>
             )}
           </div>
 

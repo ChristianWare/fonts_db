@@ -1111,3 +1111,10 @@
     gap: 0;
   }
 }
+
+.btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 2rem;
+}
