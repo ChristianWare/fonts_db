@@ -68,6 +68,46 @@ function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
   return null;
 }
 
+/**
+ * The subscription's CURRENT service period. On this API version it lives on
+ * the subscription item, not the subscription object.
+ */
+function getSubscriptionPeriod(sub: Stripe.Subscription) {
+  const item = sub.items.data[0];
+  return {
+    start: item?.current_period_start
+      ? new Date(item.current_period_start * 1000)
+      : null,
+    end: item?.current_period_end
+      ? new Date(item.current_period_end * 1000)
+      : null,
+  };
+}
+
+/**
+ * The service period a subscription invoice actually pays for. This comes
+ * from the subscription LINE ITEM. The invoice-level period_start/period_end
+ * is Stripe's look-back window ("items added during…") and runs one cycle
+ * behind — writing it into currentPeriodEnd is what made the admin page show
+ * the previous month's date.
+ */
+function getInvoiceServicePeriod(invoice: Stripe.Invoice) {
+  const lines = invoice.lines.data;
+  const line =
+    lines.find(
+      (l) =>
+        l.parent?.type === "subscription_item_details" &&
+        !l.parent.subscription_item_details?.proration,
+    ) ?? lines[0];
+
+  const startSec = line?.period?.start ?? invoice.period_start;
+  const endSec = line?.period?.end ?? invoice.period_end;
+  return {
+    start: startSec ? new Date(startSec * 1000) : null,
+    end: endSec ? new Date(endSec * 1000) : null,
+  };
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
@@ -107,6 +147,7 @@ export async function POST(req: NextRequest) {
           ? new Date(sub.trial_end * 1000)
           : null;
         const cancelAtPeriodEnd = sub.cancel_at_period_end ?? false;
+        const period = getSubscriptionPeriod(sub);
 
         await db.subscription.upsert({
           where: {
@@ -121,6 +162,8 @@ export async function POST(req: NextRequest) {
             planAmountCents,
             trialEndsAt,
             cancelAtPeriodEnd,
+            currentPeriodStart: period.start ?? undefined,
+            currentPeriodEnd: period.end ?? undefined,
             billingAnchorDate: 1,
             // Override website-flavored defaults for the leads product
             ...(productType === "LEADS" && {
@@ -135,6 +178,8 @@ export async function POST(req: NextRequest) {
             planAmountCents,
             trialEndsAt,
             cancelAtPeriodEnd,
+            currentPeriodStart: period.start ?? undefined,
+            currentPeriodEnd: period.end ?? undefined,
           },
         });
 
@@ -288,6 +333,7 @@ export async function POST(req: NextRequest) {
         // Resolve which product this invoice belongs to so the portal can
         // surface website vs leads invoices separately.
         const stripeSubId = getInvoiceSubscriptionId(invoice);
+        const service = getInvoiceServicePeriod(invoice);
 
         let productType: ProductType | null = null;
         if (stripeSubId) {
@@ -321,12 +367,8 @@ export async function POST(req: NextRequest) {
               ? new Date(invoice.status_transitions.paid_at * 1000)
               : new Date(),
             pdfUrl: invoice.invoice_pdf ?? undefined,
-            periodStart: invoice.period_start
-              ? new Date(invoice.period_start * 1000)
-              : undefined,
-            periodEnd: invoice.period_end
-              ? new Date(invoice.period_end * 1000)
-              : undefined,
+            periodStart: service.start ?? undefined,
+            periodEnd: service.end ?? undefined,
             description: invoice.description ?? undefined,
             productType: productType ?? undefined,
           },
@@ -355,12 +397,8 @@ export async function POST(req: NextRequest) {
               paidAt: invoice.status_transitions?.paid_at
                 ? new Date(invoice.status_transitions.paid_at * 1000)
                 : new Date(),
-              periodStart: invoice.period_start
-                ? new Date(invoice.period_start * 1000)
-                : null,
-              periodEnd: invoice.period_end
-                ? new Date(invoice.period_end * 1000)
-                : null,
+              periodStart: service.start,
+              periodEnd: service.end,
               hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
               pdfBuffer,
               pdfFilename: `${invoiceNumber}.pdf`,
@@ -384,12 +422,12 @@ export async function POST(req: NextRequest) {
         // Update period dates ONLY on the subscription this invoice is for —
         // scoped by stripeSubscriptionId so a leads invoice doesn't overwrite
         // the website sub's billing window (or vice versa).
-        if (stripeSubId && invoice.period_start && invoice.period_end) {
+        if (stripeSubId && service.start && service.end) {
           await db.subscription.updateMany({
             where: { stripeSubscriptionId: stripeSubId },
             data: {
-              currentPeriodStart: new Date(invoice.period_start * 1000),
-              currentPeriodEnd: new Date(invoice.period_end * 1000),
+              currentPeriodStart: service.start,
+              currentPeriodEnd: service.end,
               status: "ACTIVE",
             },
           });

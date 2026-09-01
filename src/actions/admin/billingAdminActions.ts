@@ -1,7 +1,11 @@
 "use server";
 
 import Stripe from "stripe";
-import { Prisma, type ProductType } from "@prisma/client";
+import {
+  Prisma,
+  type ProductType,
+  type SubscriptionStatus,
+} from "@prisma/client";
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import stripe from "@/lib/stripe";
@@ -218,6 +222,241 @@ export async function syncClientDefaultCard(
   }
 }
 
+/* ── Stripe → local helpers ─────────────────────────────────────────────── */
+
+// Same mapping the webhook uses.
+const STATUS_MAP: Record<string, SubscriptionStatus> = {
+  active: "ACTIVE",
+  past_due: "PAST_DUE",
+  canceled: "CANCELLED",
+  paused: "PAUSED",
+  incomplete: "INACTIVE",
+  incomplete_expired: "INACTIVE",
+  trialing: "ACTIVE",
+  unpaid: "PAST_DUE",
+};
+
+const STRIPE_DASHBOARD = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live_")
+  ? "https://dashboard.stripe.com"
+  : "https://dashboard.stripe.com/test";
+
+/**
+ * The subscription's CURRENT service period. On this API version it lives on
+ * the subscription item, not the subscription.
+ */
+function periodFromStripeSub(sub: Stripe.Subscription) {
+  const item = sub.items.data[0];
+  return {
+    start: item?.current_period_start
+      ? new Date(item.current_period_start * 1000)
+      : null,
+    end: item?.current_period_end
+      ? new Date(item.current_period_end * 1000)
+      : null,
+  };
+}
+
+/**
+ * The subscription line on an invoice. Its `period` is the service period the
+ * charge pays for. (The invoice-level period_start/period_end is the look-back
+ * window and is one cycle behind — never use it for "paid through".)
+ */
+function serviceLineOf(invoice: Stripe.Invoice) {
+  const lines = invoice.lines.data;
+  return (
+    lines.find(
+      (l) =>
+        l.parent?.type === "subscription_item_details" &&
+        !l.parent.subscription_item_details?.proration,
+    ) ??
+    lines[0] ??
+    null
+  );
+}
+
+/* ── Live snapshot (what Stripe says right now) ─────────────────────────── */
+
+export type LiveSnapshotResult =
+  | { error: string }
+  | { live: false } // free / founding sub — nothing in Stripe
+  | {
+      live: true;
+      stripeStatus: string;
+      status: SubscriptionStatus;
+      cancelAtPeriodEnd: boolean;
+      periodStart: string | null;
+      periodEnd: string | null;
+      /** True when the local row was out of date and has just been corrected. */
+      synced: boolean;
+    };
+
+/**
+ * Read the subscription straight from Stripe and, if the local row has
+ * drifted (stale period dates, status, or cancel flag), correct it. The admin
+ * cancel card uses this so "access continues until…" is the real date.
+ */
+export async function getLiveSubscriptionSnapshot({
+  clientProfileId,
+  productType,
+}: {
+  clientProfileId: string;
+  productType: ProductType;
+}): Promise<LiveSnapshotResult> {
+  const res = await requireAdminClient(clientProfileId);
+  if (!res.ok) return { error: res.error };
+
+  const sub = await db.subscription.findUnique({
+    where: { clientProfileId_productType: { clientProfileId, productType } },
+  });
+  if (!sub) return { error: "No subscription found" };
+  if (!sub.stripeSubscriptionId) return { live: false };
+
+  try {
+    const stripeSub = await stripe.subscriptions.retrieve(
+      sub.stripeSubscriptionId,
+    );
+    const status = STATUS_MAP[stripeSub.status] ?? "INACTIVE";
+    const cancelAtPeriodEnd = stripeSub.cancel_at_period_end ?? false;
+    const { start, end } = periodFromStripeSub(stripeSub);
+
+    const drifted =
+      status !== sub.status ||
+      cancelAtPeriodEnd !== sub.cancelAtPeriodEnd ||
+      (end?.getTime() ?? null) !== (sub.currentPeriodEnd?.getTime() ?? null);
+
+    if (drifted) {
+      await db.subscription.update({
+        where: { id: sub.id },
+        data: {
+          status,
+          cancelAtPeriodEnd,
+          currentPeriodStart: start ?? undefined,
+          currentPeriodEnd: end ?? undefined,
+          ...(status === "CANCELLED" && !sub.cancelledAt
+            ? {
+                cancelledAt: stripeSub.canceled_at
+                  ? new Date(stripeSub.canceled_at * 1000)
+                  : new Date(),
+              }
+            : {}),
+        },
+      });
+    }
+
+    return {
+      live: true,
+      stripeStatus: stripeSub.status,
+      status,
+      cancelAtPeriodEnd,
+      periodStart: start?.toISOString() ?? null,
+      periodEnd: end?.toISOString() ?? null,
+      synced: drifted,
+    };
+  } catch (err) {
+    const e = err as Stripe.errors.StripeError;
+    console.error("[getLiveSubscriptionSnapshot]", e.code, e.message);
+    return { error: e.message ?? "Could not reach Stripe." };
+  }
+}
+
+/* ── Invoice sweep after an immediate cancel ───────────────────────────── */
+
+export type InvoiceSweep = {
+  /** Draft renewal invoices deleted (never finalized, never charged). */
+  deletedDrafts: number;
+  /** Finalized-but-unpaid invoices for an unconsumed period, voided. */
+  voidedOpen: number;
+  /** Unpaid invoices for periods already used up — left for you to decide. */
+  leftOpen: { invoiceId: string; amountCents: number; dashboardUrl: string }[];
+  /** A paid invoice covering a period that hasn't been used up yet. */
+  refundCandidate: {
+    invoiceId: string;
+    amountCents: number;
+    paidThrough: string;
+    dashboardUrl: string;
+    hostedInvoiceUrl: string | null;
+  } | null;
+  error: string | null;
+};
+
+/**
+ * Cancelling a subscription stops future renewals, but it does NOT touch the
+ * invoice that may already exist for the period that just started. This
+ * cleans that up: drafts are deleted, unpaid invoices for unconsumed time are
+ * voided, and a paid invoice for unconsumed time is flagged for a manual
+ * refund (money decisions stay with you).
+ */
+async function sweepInvoicesAfterCancel(
+  stripeSubscriptionId: string,
+): Promise<InvoiceSweep> {
+  const nowSec = Date.now() / 1000;
+  const dash = (id: string) => `${STRIPE_DASHBOARD}/invoices/${id}`;
+  const out: InvoiceSweep = {
+    deletedDrafts: 0,
+    voidedOpen: 0,
+    leftOpen: [],
+    refundCandidate: null,
+    error: null,
+  };
+
+  try {
+    const drafts = await stripe.invoices.list({
+      subscription: stripeSubscriptionId,
+      status: "draft",
+      limit: 10,
+    });
+    for (const inv of drafts.data) {
+      await stripe.invoices.del(inv.id);
+      out.deletedDrafts++;
+    }
+
+    const open = await stripe.invoices.list({
+      subscription: stripeSubscriptionId,
+      status: "open",
+      limit: 10,
+    });
+    for (const inv of open.data) {
+      const line = serviceLineOf(inv);
+      const unconsumed = (line?.period.end ?? 0) > nowSec;
+      if (unconsumed) {
+        await stripe.invoices.voidInvoice(inv.id);
+        out.voidedOpen++;
+      } else {
+        out.leftOpen.push({
+          invoiceId: inv.id,
+          amountCents: inv.amount_due,
+          dashboardUrl: dash(inv.id),
+        });
+      }
+    }
+
+    const paid = await stripe.invoices.list({
+      subscription: stripeSubscriptionId,
+      status: "paid",
+      limit: 3,
+    });
+    for (const inv of paid.data) {
+      const line = serviceLineOf(inv);
+      if (line && line.period.end > nowSec && inv.amount_paid > 0) {
+        out.refundCandidate = {
+          invoiceId: inv.id,
+          amountCents: inv.amount_paid,
+          paidThrough: new Date(line.period.end * 1000).toISOString(),
+          dashboardUrl: dash(inv.id),
+          hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
+        };
+        break;
+      }
+    }
+  } catch (err) {
+    const e = err as Stripe.errors.StripeError;
+    console.error("[sweepInvoicesAfterCancel]", e.code, e.message);
+    out.error = e.message ?? "Could not check this subscription's invoices.";
+  }
+
+  return out;
+}
+
 /* ── Cancel / resume ONE product (admin-initiated) ──────────────────────── */
 
 const PRODUCT_LABELS: Record<ProductType, string> = {
@@ -229,7 +468,7 @@ export type CancelMode = "period_end" | "now";
 
 export type AdminCancelResult =
   | { error: string }
-  | { success: true; immediate: true }
+  | { success: true; immediate: true; invoices: InvoiceSweep | null }
   | { success: true; immediate: false; accessUntil: string | null };
 
 export type AdminResumeResult = { error: string } | { success: true };
@@ -331,7 +570,7 @@ export async function adminCancelSubscription({
   if (!sub.stripeSubscriptionId) {
     await endNow();
     await notifyClient(null);
-    return { success: true, immediate: true };
+    return { success: true, immediate: true, invoices: null };
   }
 
   if (mode === "now") {
@@ -352,8 +591,9 @@ export async function adminCancelSubscription({
         return { error: e.message ?? "Could not cancel the subscription." };
       }
     }
+    const invoices = await sweepInvoicesAfterCancel(sub.stripeSubscriptionId);
     await notifyClient(null);
-    return { success: true, immediate: true };
+    return { success: true, immediate: true, invoices };
   }
 
   // mode === "period_end"
@@ -361,8 +601,9 @@ export async function adminCancelSubscription({
     return { error: "Cancellation is already scheduled" };
   }
 
+  let updated: Stripe.Subscription;
   try {
-    await stripe.subscriptions.update(sub.stripeSubscriptionId, {
+    updated = await stripe.subscriptions.update(sub.stripeSubscriptionId, {
       cancel_at_period_end: true,
     });
   } catch (err) {
@@ -371,16 +612,25 @@ export async function adminCancelSubscription({
     return { error: e.message ?? "Could not schedule the cancellation." };
   }
 
+  // Stripe's answer is the truth for when access ends — the local row can be
+  // a cycle behind. Store it so the admin page and client portal agree.
+  const { start, end } = periodFromStripeSub(updated);
+  const accessEndsAt = end ?? sub.currentPeriodEnd;
+
   await db.subscription.update({
     where: { id: sub.id },
-    data: { cancelAtPeriodEnd: true },
+    data: {
+      cancelAtPeriodEnd: true,
+      currentPeriodStart: start ?? undefined,
+      currentPeriodEnd: end ?? undefined,
+    },
   });
-  await notifyClient(sub.currentPeriodEnd);
+  await notifyClient(accessEndsAt);
 
   return {
     success: true,
     immediate: false,
-    accessUntil: sub.currentPeriodEnd?.toISOString() ?? null,
+    accessUntil: accessEndsAt?.toISOString() ?? null,
   };
 }
 
