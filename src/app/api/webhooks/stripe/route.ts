@@ -202,6 +202,7 @@ export async function POST(req: NextRequest) {
         const localSub = await db.subscription.findUnique({
           where: { stripeSubscriptionId: sub.id },
           select: {
+            status: true,
             productType: true,
             planAmountCents: true,
             clientProfile: {
@@ -225,7 +226,13 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        if (localSub?.clientProfile.user.email) {
+        // Already CANCELLED locally means an admin cancelled it from the admin
+        // page moments ago and the client was emailed the full details there.
+        // Skipping here avoids a second, generic email (and a churn text to
+        // yourself). It also makes Stripe's retry deliveries idempotent.
+        const alreadyHandled = localSub?.status === "CANCELLED";
+
+        if (!alreadyHandled && localSub?.clientProfile.user.email) {
           await sendCancellationConfirmedEmail({
             to: localSub.clientProfile.user.email,
             name: localSub.clientProfile.user.name?.split(" ")[0] ?? "there",
@@ -233,7 +240,7 @@ export async function POST(req: NextRequest) {
           });
         }
 
-        if (localSub) {
+        if (!alreadyHandled && localSub) {
           await alertSubscriptionCancelled({
             businessName: localSub.clientProfile.businessName,
             productLabel: PRODUCT_LABELS[localSub.productType],

@@ -1,0 +1,257 @@
+/* AdminCancelSubscription.module.css
+   Same tokens as AdminBillingPanel. Destructive actions use the same red the
+   admin page already uses for its Danger Zone (#c53030). */
+
+.card {
+  background-color: var(--white);
+  border: 1px solid var(--lightGray);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.cardHeading {
+  background-color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  width: fit-content;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.body {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Scheduled state ─────────────────────────────────────────────────── */
+
+.scheduledBox {
+  background: var(--accent);
+  border-top: 1px solid var(--blackii);
+  border-bottom: 1px solid var(--blackii);
+  padding: 1.8rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.scheduledBox .body {
+  color: var(--black);
+}
+
+.scheduledTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--black);
+}
+
+/* ── Mode choice ─────────────────────────────────────────────────────── */
+
+.choices {
+  border: 1px solid var(--lightGray);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.choices:disabled {
+  opacity: 0.6;
+}
+
+.legend {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+  padding: 0 0.8rem;
+  margin-left: 1.2rem;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.4rem;
+  padding: 1.6rem 2rem;
+  cursor: pointer;
+}
+
+.choice + .choice {
+  border-top: 1px solid var(--lightGray);
+}
+
+.choice input {
+  margin-top: 0.3rem;
+  accent-color: var(--black);
+  flex-shrink: 0;
+}
+
+.choiceText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.choiceTitle {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--black);
+}
+
+.choiceDesc {
+  font-family: var(--Roboto);
+  font-size: 1.4rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── Note to client ──────────────────────────────────────────────────── */
+
+.noteField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.noteLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.noteInput {
+  font-family: var(--Roboto);
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--black);
+  background: var(--white);
+  border: 1px solid var(--lightGray);
+  padding: 1.2rem 1.4rem;
+  resize: vertical;
+  min-height: 8rem;
+}
+
+.noteInput::placeholder {
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.noteInput:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: -2px;
+}
+
+.noteInput:disabled {
+  opacity: 0.6;
+}
+
+.noteHint {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.confirmRow {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.confirmLabel {
+  font-family: var(--GeistMono);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #c53030;
+}
+
+.btnGhost,
+.btnDanger,
+.btnDangerSolid {
+  font-family: var(--GeistMono);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1.4rem 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btnGhost {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--lightGray);
+}
+
+.btnGhost:hover:not(:disabled) {
+  background: var(--lightGrayii);
+  border-color: var(--black);
+}
+
+.btnDanger {
+  background: none;
+  color: #c53030;
+  border: 1px solid #c53030;
+}
+
+.btnDanger:hover:not(:disabled) {
+  background: #c53030;
+  color: var(--white);
+}
+
+.btnDangerSolid {
+  background: #c53030;
+  color: var(--white);
+  border: none;
+}
+
+.btnDangerSolid:hover:not(:disabled) {
+  background: var(--black);
+}
+
+.btnGhost:disabled,
+.btnDanger:disabled,
+.btnDangerSolid:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btnGhost:focus-visible,
+.btnDanger:focus-visible,
+.btnDangerSolid:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.footnote {
+  font-family: var(--Roboto);
+  font-size: 1.3rem;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}

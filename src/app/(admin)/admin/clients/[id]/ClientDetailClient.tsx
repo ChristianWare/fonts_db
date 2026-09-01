@@ -25,6 +25,7 @@ import { toggleStepOverride } from "@/actions/admin/toggleStepOverride";
 import Button from "@/components/shared/Button/Button";
 import toast from "react-hot-toast";
 import AdminBillingPanel from "@/components/admin/AdminBillingPanel/AdminBillingPanel";
+import AdminCancelSubscription from "@/components/admin/AdminCancelSubscription/AdminCancelSubscription";
 
 type OnboardingStage =
   | "REGISTERED"
@@ -1561,6 +1562,12 @@ export default function ClientDetailClient({
           })()}
 
           <AdminBillingPanel clientProfileId={client.id} />
+
+          <AdminCancelSubscription
+            clientProfileId={client.id}
+            productType='WEBSITE'
+            subscription={websiteSubscription}
+          />
 
           {/* Website invoices (leads invoices live on the leads page) */}
           <div className={styles.card}>

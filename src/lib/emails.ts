@@ -890,6 +890,145 @@ export async function sendCancellationConfirmedEmail({
   return sendEmail({ to, subject, html });
 }
 
+// ── Plan cancelled by admin (sent the moment you cancel from the admin page) ──
+//
+// Distinct from sendCancellationConfirmedEmail, which the Stripe webhook sends
+// when a subscription actually ends. This one goes out immediately and says
+// who cancelled, when, and when access ends — so the client is never surprised.
+
+const BUSINESS_TIMEZONE = "America/Phoenix";
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function formatDateTz(d: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: BUSINESS_TIMEZONE,
+  }).format(d);
+}
+
+function formatDateTimeTz(d: Date) {
+  return `${new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: BUSINESS_TIMEZONE,
+  }).format(d)} (Arizona time)`;
+}
+
+export async function sendPlanCancelledByAdminEmail({
+  to,
+  name,
+  businessName,
+  productType,
+  productLabel,
+  cancelledBy,
+  cancelledAt,
+  accessEndsAt,
+  planAmountCents,
+  note,
+}: {
+  to: string;
+  name: string;
+  businessName: string;
+  productType: "WEBSITE" | "LEADS";
+  productLabel: string;
+  /** Display name of the admin who cancelled, e.g. "Chris". */
+  cancelledBy: string;
+  cancelledAt: Date;
+  /** null = access ended immediately. */
+  accessEndsAt: Date | null;
+  planAmountCents: number;
+  /** Optional free-text message from the admin, shown verbatim (escaped). */
+  note?: string | null;
+}) {
+  const firstName = escapeHtml(name.split(" ")[0] || "there");
+  const who = escapeHtml(cancelledBy);
+  const biz = escapeHtml(businessName);
+  const immediate = accessEndsAt === null;
+  const endsOn = accessEndsAt ? formatDateTz(accessEndsAt) : null;
+
+  const subject = immediate
+    ? `Your ${productLabel} plan has been cancelled`
+    : `Your ${productLabel} plan ends ${endsOn}`;
+
+  const preheader = immediate
+    ? `Cancelled by ${cancelledBy} on ${formatDateTz(cancelledAt)}. No further charges.`
+    : `Cancelled by ${cancelledBy}. Access continues through ${endsOn}. No further charges.`;
+
+  const intro = immediate
+    ? bodyText(
+        `Hi ${firstName}, ${who} cancelled the <strong>${productLabel}</strong> plan for ${biz} on ${formatDateTz(cancelledAt)}. Your access has ended and no further charges will be made.`,
+      )
+    : bodyText(
+        `Hi ${firstName}, ${who} cancelled the <strong>${productLabel}</strong> plan for ${biz}. You've already paid through the current billing period, so nothing changes until <strong>${endsOn}</strong> — after that, access ends and no further charges will be made.`,
+      );
+
+  const details =
+    bodyDetail("Plan", productLabel) +
+    bodyDetail("Account", biz) +
+    bodyDetail("Cancelled by", `${who} · Fonts &amp; Footers`) +
+    bodyDetail("Cancelled on", formatDateTimeTz(cancelledAt)) +
+    bodyDetail("Access ends", immediate ? "Immediately" : endsOn!) +
+    bodyDetail("Plan rate", `${formatCentsPlain(planAmountCents)}/month`) +
+    bodyDetail("Further charges", "None");
+
+  const noteBlock = note?.trim()
+    ? `
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin:24px 0 8px;">
+    <tr>
+      <td style="border-left:4px solid #ffc809;background-color:#fafafa;padding:14px 18px;">
+        <p style="font-family:'Courier New',Courier,monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#555555;margin:0 0 8px 0;">A note from ${who}</p>
+        <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;color:#0a0a0a;line-height:1.6;margin:0;white-space:pre-line;">${escapeHtml(note.trim())}</p>
+      </td>
+    </tr>
+  </table>`
+    : "";
+
+  const closes = immediate ? "is now closed" : `closes on ${endsOn}`;
+  const offline = immediate ? "shortly" : "after that date";
+
+  const whatThisMeans =
+    productType === "WEBSITE"
+      ? bodyText(
+          `<strong>What this means.</strong> Your website portal — blueprint, design options, and change requests — ${closes}. If Fonts &amp; Footers hosts your live site, it will be taken offline ${offline}. Your account, signed documents, and invoice history stay available on your billing page.`,
+        )
+      : bodyText(
+          `<strong>What this means.</strong> Your leads dashboard — saved leads, pipeline, and outreach scripts — ${closes}. Your account and invoice history stay available on your billing page.`,
+        );
+
+  const comeBack = bodyText(
+    `<strong>Changed your mind?</strong> Your account isn't deleted. Re-enrolling takes about a minute from your billing page${immediate ? "" : ", and if you do it before " + endsOn + " nothing is interrupted"}.`,
+  );
+
+  const closing = bodyText(
+    `If this was unexpected or you have questions, just reply to this email — it goes straight to ${who}.`,
+  );
+
+  await sendEmail({
+    to,
+    subject,
+    html: buildEmailHTML({
+      preheader,
+      heading: immediate ? "Plan cancelled." : "Cancellation scheduled.",
+      body: intro + details + noteBlock + whatThisMeans + comeBack + closing,
+      ctaLabel: "View billing →",
+      ctaUrl: `${APP_URL}/dashboard/billing`,
+    }),
+  });
+}
+
 // ── Leads welcome (sent right after enrollment) ──
 export async function sendLeadsWelcomeEmail({
   to,

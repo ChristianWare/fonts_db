@@ -1,11 +1,12 @@
 "use server";
 
 import Stripe from "stripe";
-import { Prisma } from "@prisma/client";
+import { Prisma, type ProductType } from "@prisma/client";
 import { auth } from "../../../auth";
 import { db } from "@/lib/db";
 import stripe from "@/lib/stripe";
 import { APP_URL } from "@/lib/email";
+import { sendPlanCancelledByAdminEmail } from "@/lib/emails";
 import {
   getBillingState,
   retryOpenInvoices,
@@ -41,7 +42,11 @@ type AdminClient = Prisma.ClientProfileGetPayload<{
   select: typeof adminClientSelect;
 }>;
 
-type Guard = { ok: false; error: string } | { ok: true; profile: AdminClient };
+type AdminIdentity = { name: string | null; email: string | null };
+
+type Guard =
+  | { ok: false; error: string }
+  | { ok: true; profile: AdminClient; admin: AdminIdentity };
 
 /**
  * Every action here resolves the Stripe customer id from the client record
@@ -60,7 +65,14 @@ async function requireAdminClient(clientProfileId: string): Promise<Guard> {
   });
 
   if (!profile) return { ok: false, error: "Client not found" };
-  return { ok: true, profile };
+  return {
+    ok: true,
+    profile,
+    admin: {
+      name: session.user.name ?? null,
+      email: session.user.email ?? null,
+    },
+  };
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -203,5 +215,209 @@ export async function syncClientDefaultCard(
     const e = err as Stripe.errors.StripeError;
     console.error("[syncClientDefaultCard]", e.code, e.message);
     return { error: e.message ?? "Sync failed." };
+  }
+}
+
+/* ── Cancel / resume ONE product (admin-initiated) ──────────────────────── */
+
+const PRODUCT_LABELS: Record<ProductType, string> = {
+  WEBSITE: "Custom Website",
+  LEADS: "Leads Tool",
+};
+
+export type CancelMode = "period_end" | "now";
+
+export type AdminCancelResult =
+  | { error: string }
+  | { success: true; immediate: true }
+  | { success: true; immediate: false; accessUntil: string | null };
+
+export type AdminResumeResult = { error: string } | { success: true };
+
+/**
+ * Cancel a single product for a client. The other product and the client
+ * record itself are untouched — this is the opposite of deleteClient.
+ *
+ * Stripe-backed sub:
+ *   - "period_end"  → cancel_at_period_end in Stripe. Client keeps access
+ *                     until currentPeriodEnd. The existing
+ *                     customer.subscription.deleted webhook flips the row to
+ *                     CANCELLED when the period actually ends.
+ *   - "now"         → row is marked CANCELLED locally FIRST, then cancelled in
+ *                     Stripe. The webhook sees the row already CANCELLED and
+ *                     skips its generic email, so the client gets exactly one
+ *                     notice — the detailed one sent here. If Stripe rejects
+ *                     the cancel, the local row is rolled back.
+ *
+ * Free / founding sub (no Stripe id): there is no period to run out, so both
+ * modes end it right now.
+ *
+ * In every success path the client is emailed who cancelled, when, when
+ * access ends, and any note you attach.
+ *
+ * Note: this ends billing and portal access. It does NOT take a live site
+ * offline — that's still a manual step.
+ */
+export async function adminCancelSubscription({
+  clientProfileId,
+  productType,
+  mode,
+  note,
+}: {
+  clientProfileId: string;
+  productType: ProductType;
+  mode: CancelMode;
+  /** Optional message to the client, included in the email. */
+  note?: string;
+}): Promise<AdminCancelResult> {
+  const res = await requireAdminClient(clientProfileId);
+  if (!res.ok) return { error: res.error };
+  const { profile, admin } = res;
+  const label = PRODUCT_LABELS[productType];
+
+  const sub = await db.subscription.findUnique({
+    where: { clientProfileId_productType: { clientProfileId, productType } },
+  });
+
+  if (!sub) return { error: `No ${label} subscription on this client` };
+  if (sub.status === "CANCELLED") {
+    return { error: `${label} is already cancelled` };
+  }
+  if (sub.status === "INACTIVE") {
+    return { error: `${label} was never activated — nothing to cancel` };
+  }
+
+  const cancelledAt = new Date();
+  const cleanNote = note?.trim().slice(0, 1000) || undefined;
+
+  const endNow = () =>
+    db.subscription.update({
+      where: { id: sub.id },
+      data: {
+        status: "CANCELLED",
+        cancelledAt,
+        cancelAtPeriodEnd: false,
+      },
+    });
+
+  // Put the row back exactly as we found it if Stripe refuses the cancel.
+  const rollback = () =>
+    db.subscription.update({
+      where: { id: sub.id },
+      data: {
+        status: sub.status,
+        cancelledAt: sub.cancelledAt,
+        cancelAtPeriodEnd: sub.cancelAtPeriodEnd,
+      },
+    });
+
+  const notifyClient = async (accessEndsAt: Date | null) => {
+    if (!profile.user.email) return;
+    await sendPlanCancelledByAdminEmail({
+      to: profile.user.email,
+      name: profile.user.name ?? "there",
+      businessName: profile.businessName,
+      productType,
+      productLabel: label,
+      cancelledBy: admin.name?.trim() || "Fonts & Footers",
+      cancelledAt,
+      accessEndsAt,
+      planAmountCents: sub.planAmountCents,
+      note: cleanNote,
+    });
+  };
+
+  // Free / founding subscription — nothing in Stripe to schedule against.
+  if (!sub.stripeSubscriptionId) {
+    await endNow();
+    await notifyClient(null);
+    return { success: true, immediate: true };
+  }
+
+  if (mode === "now") {
+    await endNow();
+    try {
+      await stripe.subscriptions.cancel(sub.stripeSubscriptionId);
+    } catch (err) {
+      const e = err as Stripe.errors.StripeError;
+      console.error("[adminCancelSubscription:now]", e.code, e.message);
+
+      // Stripe already considers this sub gone (deleted or cancelled there
+      // directly). Our local row is now correct — keep it.
+      const goneInStripe =
+        e.code === "resource_missing" ||
+        /canceled subscription/i.test(e.message ?? "");
+      if (!goneInStripe) {
+        await rollback();
+        return { error: e.message ?? "Could not cancel the subscription." };
+      }
+    }
+    await notifyClient(null);
+    return { success: true, immediate: true };
+  }
+
+  // mode === "period_end"
+  if (sub.cancelAtPeriodEnd) {
+    return { error: "Cancellation is already scheduled" };
+  }
+
+  try {
+    await stripe.subscriptions.update(sub.stripeSubscriptionId, {
+      cancel_at_period_end: true,
+    });
+  } catch (err) {
+    const e = err as Stripe.errors.StripeError;
+    console.error("[adminCancelSubscription:period_end]", e.code, e.message);
+    return { error: e.message ?? "Could not schedule the cancellation." };
+  }
+
+  await db.subscription.update({
+    where: { id: sub.id },
+    data: { cancelAtPeriodEnd: true },
+  });
+  await notifyClient(sub.currentPeriodEnd);
+
+  return {
+    success: true,
+    immediate: false,
+    accessUntil: sub.currentPeriodEnd?.toISOString() ?? null,
+  };
+}
+
+/** Undo a scheduled period-end cancellation. Only meaningful for Stripe subs. */
+export async function adminResumeSubscription({
+  clientProfileId,
+  productType,
+}: {
+  clientProfileId: string;
+  productType: ProductType;
+}): Promise<AdminResumeResult> {
+  const res = await requireAdminClient(clientProfileId);
+  if (!res.ok) return { error: res.error };
+
+  const sub = await db.subscription.findUnique({
+    where: { clientProfileId_productType: { clientProfileId, productType } },
+  });
+
+  if (!sub) {
+    return { error: `No ${PRODUCT_LABELS[productType]} subscription found` };
+  }
+  if (!sub.cancelAtPeriodEnd || !sub.stripeSubscriptionId) {
+    return { error: "No scheduled cancellation to undo" };
+  }
+
+  try {
+    await stripe.subscriptions.update(sub.stripeSubscriptionId, {
+      cancel_at_period_end: false,
+    });
+    await db.subscription.update({
+      where: { id: sub.id },
+      data: { cancelAtPeriodEnd: false },
+    });
+    return { success: true };
+  } catch (err) {
+    const e = err as Stripe.errors.StripeError;
+    console.error("[adminResumeSubscription]", e.code, e.message);
+    return { error: e.message ?? "Could not resume the subscription." };
   }
 }
