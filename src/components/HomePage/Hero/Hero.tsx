@@ -42,7 +42,7 @@ export default function Hero() {
                 {/* Black Car & Limo Operators <br /> */}
                 {/* Black Car & limo <br /> Growth Solutions */}
                 Expand your
-                <br /> Chauffeur Business
+                <br /> Black Car Business
               </h1>
               <div className={styles.copyBtnContainer}>
                 <p className={styles.copy}>
